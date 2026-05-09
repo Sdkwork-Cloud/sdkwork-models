@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.4-nano",
+  "colorToken": "#475569",
+  "contextTokens": 400000,
+  "description": "Smallest GPT-5.4 model for high-throughput, low-cost routing.",
+  "displayName": "GPT-5.4 Nano",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 320,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "maxInputTokens": 400000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.4-nano",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "910.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Low latency",
+    "Low cost",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.850000"
+}

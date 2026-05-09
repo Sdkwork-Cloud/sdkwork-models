@@ -1,0 +1,112 @@
+{
+  "catalogKey": "google/global/gemini-3.1-pro-preview",
+  "currency": "USD",
+  "modelId": "gemini-3.1-pro-preview",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-3.1-pro-preview-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "200000",
+      "priceId": "google-gemini-3.1-pro-preview-input-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "4.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-3.1-pro-preview-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "12.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "200000",
+      "priceId": "google-gemini-3.1-pro-preview-output-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "18.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-3.1-pro-preview-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "0.200000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "200000",
+      "priceId": "google-gemini-3.1-pro-preview-cache-read-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "0.400000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

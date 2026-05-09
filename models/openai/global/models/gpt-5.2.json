@@ -1,0 +1,50 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.2",
+  "colorToken": "#111827",
+  "contextTokens": 400000,
+  "description": "Previous GPT-5 generation kept for historical pricing and migration reference.",
+  "displayName": "GPT-5.2",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 950,
+  "latencyP95Ms": 3200,
+  "lifecycle": "deprecated",
+  "maxInputTokens": 400000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.2",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1120.000000",
+  "regionCode": "global",
+  "releaseStage": "deprecated",
+  "replacementModel": "gpt-5.5",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models/gpt-5.2"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.995000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.985000"
+}

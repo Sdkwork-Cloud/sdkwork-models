@@ -1,0 +1,46 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "openai/global/gpt-image-1.5",
+  "colorToken": "#0f766e",
+  "description": "Previous GPT Image generation kept for historical pricing and migration reference.",
+  "displayName": "GPT Image 1.5",
+  "familyCode": "gpt-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4200,
+  "latencyP95Ms": 16000,
+  "lifecycle": "deprecated",
+  "modelId": "gpt-image-1.5",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "790.000000",
+  "regionCode": "global",
+  "releaseStage": "deprecated",
+  "replacementModel": "gpt-image-2",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Image generation",
+    "Image editing",
+    "Multimodal input"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.960000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.940000"
+}

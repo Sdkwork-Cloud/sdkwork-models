@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "CN",
+  "description": "DeepSeek mainland China API operation billed in CNY.",
+  "displayName": "DeepSeek",
+  "docsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+  "legalName": "DeepSeek",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "deepseek"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 60,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+  },
+  "vendorCode": "deepseek",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.deepseek.com"
+}

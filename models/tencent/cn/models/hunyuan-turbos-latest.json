@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "tencent/cn/hunyuan-turbos-latest",
+  "colorToken": "#0f766e",
+  "contextTokens": 32768,
+  "description": "Tencent Hunyuan model for Chinese assistant workloads.",
+  "displayName": "Hunyuan Turbos Latest",
+  "familyCode": "hunyuan",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 760,
+  "latencyP95Ms": 2400,
+  "lifecycle": "active",
+  "maxInputTokens": 32768,
+  "maxOutputTokens": 16384,
+  "modelId": "hunyuan-turbos-latest",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "800.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
+  },
+  "strengths": [
+    "Chinese",
+    "Enterprise",
+    "Cost efficient"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.800000",
+  "vendorCode": "tencent",
+  "vendorName": "Tencent Cloud",
+  "winRate": "0.800000"
+}

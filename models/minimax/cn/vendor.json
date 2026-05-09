@@ -1,0 +1,35 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat",
+    "audio",
+    "video",
+    "music",
+    "image",
+    "tool"
+  ],
+  "countryRegion": "CN",
+  "description": "MiniMax mainland China API operation billed in CNY.",
+  "displayName": "MiniMax",
+  "docsUrl": "https://platform.minimaxi.com/docs",
+  "legalName": "MiniMax",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "minimax"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 121,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/models-intro"
+  },
+  "vendorCode": "minimax",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.minimaxi.com"
+}

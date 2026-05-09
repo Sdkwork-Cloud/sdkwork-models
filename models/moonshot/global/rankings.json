@@ -1,0 +1,26 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "moonshot/global/kimi-k2.6",
+          "modelId": "kimi-k2.6",
+          "pricingText": "USD 0.950000 / 1M input; USD 0.160000 / 1M cache read; USD 4.000000 / 1M output",
+          "rankNo": 14
+        },
+        {
+          "catalogKey": "moonshot/global/kimi-k2.5",
+          "modelId": "kimi-k2.5",
+          "pricingText": "USD 0.600000 / 1M input; USD 0.100000 / 1M cache read; USD 3.000000 / 1M output",
+          "rankNo": 15
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "moonshot"
+}

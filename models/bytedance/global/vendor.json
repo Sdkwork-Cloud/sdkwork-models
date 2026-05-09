@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "video"
+  ],
+  "countryRegion": "GLOBAL",
+  "description": "ByteDance international model operation billed in USD. Seedance is modeled as a model family.",
+  "displayName": "ByteDance",
+  "docsUrl": "https://seed.bytedance.com/en/seed2",
+  "legalName": "ByteDance",
+  "marketScope": "international",
+  "modelFamilies": [
+    "seedance"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 111,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://seed.bytedance.com/en/seed2"
+  },
+  "vendorCode": "bytedance",
+  "vendorType": "commercial",
+  "websiteUrl": "https://seed.bytedance.com"
+}

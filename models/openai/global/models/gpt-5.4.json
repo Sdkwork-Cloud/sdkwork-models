@@ -1,0 +1,50 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.4",
+  "colorToken": "#1f2937",
+  "contextTokens": 1050000,
+  "description": "OpenAI GPT-5.4 multimodal model for high-quality reasoning and generation.",
+  "displayName": "GPT-5.4",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 960,
+  "latencyP95Ms": 3300,
+  "lifecycle": "active",
+  "maxInputTokens": 1050000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.4",
+  "outputModalities": [
+    "text",
+    "image"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1160.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Vision",
+    "Multimodal output"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.980000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.985000"
+}

@@ -1,0 +1,146 @@
+{
+  "catalogKey": "anthropic/global/claude-sonnet-4-6",
+  "currency": "USD",
+  "modelId": "claude-sonnet-4-6",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-sonnet-4-6-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "3.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-sonnet-4-6-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "15.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "200000",
+      "priceId": "anthropic-claude-sonnet-4-6-input-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "200000",
+      "priceId": "anthropic-claude-sonnet-4-6-output-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "22.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-sonnet-4-6-cache-write",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "3.750000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "200000",
+      "priceId": "anthropic-claude-sonnet-4-6-cache-write-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "7.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-sonnet-4-6-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "0.300000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "200000",
+      "priceId": "anthropic-claude-sonnet-4-6-cache-read-above-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "thresholdTokens": 200000,
+      "tierCode": "above_200k_tokens",
+      "unitPrice": "0.600000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "anthropic"
+}

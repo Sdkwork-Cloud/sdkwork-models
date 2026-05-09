@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/meter.schema.json",
+  "title": "Sdkwork Billing Meters",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "meters"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "meters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "meterCode",
+          "displayName",
+          "modality",
+          "defaultUnitSize"
+        ],
+        "properties": {
+          "meterCode": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "modality": {
+            "enum": [
+              "text",
+              "image",
+              "audio",
+              "music",
+              "video",
+              "embedding",
+              "rerank",
+              "tool",
+              "storage",
+              "network",
+              "unknown"
+            ]
+          },
+          "usageType": {
+            "type": "string"
+          },
+          "billingMode": {
+            "type": "string"
+          },
+          "defaultUnit": {
+            "type": "string"
+          },
+          "defaultUnitSize": {
+            "$ref": "#/$defs/decimalString"
+          },
+          "quantityPrecision": {
+            "type": "integer"
+          },
+          "sortOrder": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "$defs": {
+    "decimalString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    }
+  }
+}

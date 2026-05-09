@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "stability_ai/global/stable-image-ultra",
+          "modelId": "stable-image-ultra",
+          "pricingText": "$0.08 / image result",
+          "rankNo": 26
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "stability_ai"
+}

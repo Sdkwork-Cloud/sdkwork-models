@@ -1,0 +1,137 @@
+{
+  "catalogVersion": "2026.05.08.1",
+  "observedAt": "2026-05-08T00:00:00Z",
+  "schemaVersion": "1.1.0",
+  "vendors": [
+    {
+      "models": [
+        {
+          "modelId": "deepseek-v4-flash"
+        },
+        {
+          "modelId": "deepseek-v4-pro"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+      ],
+      "regionCode": "cn",
+      "sourceSnapshotHash": "8df40886dd1e6087b5ad479474396d1c56799bbad673bc95fc1104455fd170dd",
+      "vendorCode": "deepseek"
+    },
+    {
+      "models": [
+        {
+          "modelId": "deepseek-v4-flash"
+        },
+        {
+          "modelId": "deepseek-v4-pro"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://api-docs.deepseek.com/quick_start/pricing"
+      ],
+      "regionCode": "global",
+      "sourceSnapshotHash": "39649affcd4bc398a9c2476369cd32228e85febe5fd81f8fcb8103218ac40588",
+      "vendorCode": "deepseek"
+    },
+    {
+      "models": [
+        {
+          "modelId": "MiniMax-M2.7"
+        },
+        {
+          "modelId": "MiniMax-M2.7-highspeed"
+        },
+        {
+          "modelId": "MiniMax-M2.5"
+        },
+        {
+          "modelId": "MiniMax-M2.5-highspeed"
+        },
+        {
+          "modelId": "M2-her"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://platform.minimaxi.com/docs/guides/models-intro",
+        "https://platform.minimaxi.com/docs/guides/pricing-paygo",
+        "https://platform.minimaxi.com/docs/guides/text-generation",
+        "https://platform.minimaxi.com/docs/guides/text-chat"
+      ],
+      "regionCode": "cn",
+      "sourceSnapshotHash": "8416d9024210e2936ee874c1c532ae0ad9178e3695af48ffc4394c990b4ed7ed",
+      "vendorCode": "minimax"
+    },
+    {
+      "models": [
+        {
+          "modelId": "MiniMax-M2.7"
+        },
+        {
+          "modelId": "MiniMax-M2.7-highspeed"
+        },
+        {
+          "modelId": "MiniMax-M2.5"
+        },
+        {
+          "modelId": "MiniMax-M2.5-highspeed"
+        },
+        {
+          "modelId": "M2-her"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://platform.minimax.io/docs/guides/models-intro",
+        "https://platform.minimax.io/docs/guides/pricing-paygo",
+        "https://platform.minimax.io/docs/guides/text-generation",
+        "https://platform.minimax.io/docs/guides/text-chat"
+      ],
+      "regionCode": "global",
+      "sourceSnapshotHash": "eee18d9b6caa89d8fdae81e37189d35a95b37534b0989a21edd2c3e3623ae8ad",
+      "vendorCode": "minimax"
+    },
+    {
+      "models": [
+        {
+          "modelId": "kimi-k2.6"
+        },
+        {
+          "modelId": "kimi-k2.5"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://platform.kimi.com/",
+        "https://platform.kimi.com/docs/pricing/chat-k26",
+        "https://platform.kimi.com/docs/pricing/chat-k25"
+      ],
+      "regionCode": "cn",
+      "sourceSnapshotHash": "7cac1b72d1b8415593d9564fe75eacff2142645104337bc91c87f37ea029d173",
+      "vendorCode": "moonshot"
+    },
+    {
+      "models": [
+        {
+          "modelId": "kimi-k2.6"
+        },
+        {
+          "modelId": "kimi-k2.5"
+        }
+      ],
+      "observedAt": "2026-05-08T00:00:00Z",
+      "officialUrls": [
+        "https://platform.kimi.ai/",
+        "https://platform.kimi.ai/docs/pricing/chat-k26",
+        "https://platform.kimi.ai/docs/pricing/chat-k25"
+      ],
+      "regionCode": "global",
+      "sourceSnapshotHash": "9d4adb4f3331bd905e35e9faddd493882a7b3fe539a1f29ee748c8d6bed4a759",
+      "vendorCode": "moonshot"
+    }
+  ]
+}

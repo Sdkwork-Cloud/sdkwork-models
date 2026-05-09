@@ -1,0 +1,26 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "deepseek/global/deepseek-v4-pro",
+          "modelId": "deepseek-v4-pro",
+          "pricingText": "USD 0.435000 / 1M input; USD 0.003625 / 1M cache read; USD 0.870000 / 1M output",
+          "rankNo": 11
+        },
+        {
+          "catalogKey": "deepseek/global/deepseek-v4-flash",
+          "modelId": "deepseek-v4-flash",
+          "pricingText": "USD 0.140000 / 1M input; USD 0.002800 / 1M cache read; USD 0.280000 / 1M output",
+          "rankNo": 21
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "deepseek"
+}

@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "minimax/global/MiniMax-M2.7-highspeed",
+  "colorToken": "#4338ca",
+  "contextTokens": 204800,
+  "description": "MiniMax M2.7 high-speed variant with the same model quality and lower latency.",
+  "displayName": "MiniMax M2.7 Highspeed",
+  "familyCode": "minimax",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 420,
+  "latencyP95Ms": 1500,
+  "lifecycle": "active",
+  "maxInputTokens": 204800,
+  "maxOutputTokens": 32768,
+  "modelId": "MiniMax-M2.7-highspeed",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "795.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/text-generation"
+  },
+  "strengths": [
+    "Low latency",
+    "Code",
+    "Tools"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.820000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.795000"
+}

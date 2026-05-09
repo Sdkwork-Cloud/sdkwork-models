@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "deepseek-v4-pro",
+      "displayName": "DeepSeek",
+      "familyCode": "deepseek",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "deepseek"
+}

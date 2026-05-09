@@ -1,0 +1,31 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "video",
+    "image"
+  ],
+  "countryRegion": "CN",
+  "description": "Kuaishou mainland China AI platform operation; Kling is modeled as a model family. Domestic pricing remains pending official confirmation.",
+  "displayName": "Kuaishou",
+  "docsUrl": "https://app.klingai.com/cn/dev/document-api/",
+  "legalName": "Kuaishou",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "kling"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 130,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"
+  },
+  "vendorCode": "kuaishou",
+  "vendorType": "commercial",
+  "websiteUrl": "https://klingai.kuaishou.com"
+}

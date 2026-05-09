@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "minimax/cn/M2-her",
+  "colorToken": "#a855f7",
+  "contextTokens": 65536,
+  "description": "MiniMax M2-her text chat model for role-playing and long-horizon multi-turn dialogue.",
+  "displayName": "MiniMax M2-her",
+  "familyCode": "minimax",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 640,
+  "latencyP95Ms": 2100,
+  "lifecycle": "active",
+  "maxInputTokens": 65536,
+  "maxOutputTokens": 2048,
+  "modelId": "M2-her",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "735.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/text-chat"
+  },
+  "strengths": [
+    "Role play",
+    "Dialogue",
+    "Character customization"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.760000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.735000"
+}

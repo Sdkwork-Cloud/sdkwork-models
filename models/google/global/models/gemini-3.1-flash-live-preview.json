@@ -1,0 +1,51 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat",
+    "audio"
+  ],
+  "catalogKey": "google/global/gemini-3.1-flash-live-preview",
+  "colorToken": "#0f766e",
+  "contextTokens": 131072,
+  "description": "Gemini 3.1 Flash Live preview model for low-latency multimodal realtime sessions.",
+  "displayName": "Gemini 3.1 Flash Live Preview",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 240,
+  "latencyP95Ms": 900,
+  "lifecycle": "preview",
+  "maxInputTokens": 131072,
+  "maxOutputTokens": 8192,
+  "modelId": "gemini-3.1-flash-live-preview",
+  "outputModalities": [
+    "text",
+    "audio"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "900.000000",
+  "regionCode": "global",
+  "releaseStage": "preview",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "strengths": [
+    "Realtime",
+    "Audio",
+    "Multimodal"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.870000"
+}

@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "stability_ai/global/stable-image-ultra",
+  "colorToken": "#0f766e",
+  "description": "Stability AI high-quality image generation model.",
+  "displayName": "Stable Image Ultra",
+  "familyCode": "stable-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4800,
+  "latencyP95Ms": 17000,
+  "lifecycle": "active",
+  "modelId": "stable-image-ultra",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.stability.ai/docs"
+  },
+  "strengths": [
+    "Image generation",
+    "Creative imagery"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.860000",
+  "vendorCode": "stability_ai",
+  "vendorName": "Stability AI",
+  "winRate": "0.880000"
+}

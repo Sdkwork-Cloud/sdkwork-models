@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "eleven_text_to_sound_v2",
+      "displayName": "ElevenLabs Audio",
+      "familyCode": "elevenlabs-audio",
+      "familyType": "audio",
+      "primaryModality": "audio",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "elevenlabs"
+}

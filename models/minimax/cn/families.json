@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "MiniMax-M2.7",
+      "displayName": "MiniMax",
+      "familyCode": "minimax",
+      "familyType": "multimodal",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

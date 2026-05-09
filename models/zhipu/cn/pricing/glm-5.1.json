@@ -1,0 +1,112 @@
+{
+  "catalogKey": "zhipu/cn/glm-5.1",
+  "currency": "CNY",
+  "modelId": "glm-5.1",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-glm-5.1-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "32000",
+      "priceId": "zhipu-cn-glm-5.1-input-above-32k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "thresholdTokens": 32000,
+      "tierCode": "above_32k_tokens",
+      "unitPrice": "8.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-glm-5.1-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "unitPrice": "1.300000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "32000",
+      "priceId": "zhipu-cn-glm-5.1-cache-read-above-32k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "thresholdTokens": 32000,
+      "tierCode": "above_32k_tokens",
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-glm-5.1-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "unitPrice": "24.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "32000",
+      "priceId": "zhipu-cn-glm-5.1-output-above-32k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "thresholdTokens": 32000,
+      "tierCode": "above_32k_tokens",
+      "unitPrice": "28.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "zhipu"
+}

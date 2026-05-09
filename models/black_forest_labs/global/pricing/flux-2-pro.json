@@ -1,0 +1,44 @@
+{
+  "catalogKey": "black_forest_labs/global/flux-2-pro",
+  "currency": "USD",
+  "modelId": "flux-2-pro",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "mediaDirection": "output",
+      "meterCode": "image_megapixel",
+      "minimumQuantity": "0",
+      "priceId": "bfl-flux-2-pro-output-megapixel",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "unitPrice": "0.030000",
+      "unitSize": "1"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "mediaDirection": "input",
+      "meterCode": "image_megapixel",
+      "minimumQuantity": "0",
+      "priceId": "bfl-flux-2-pro-input-megapixel",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "unitPrice": "0.015000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "black_forest_labs"
+}

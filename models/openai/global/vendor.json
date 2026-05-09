@@ -1,0 +1,37 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "US",
+  "capabilities": [
+    "chat",
+    "embedding",
+    "image",
+    "audio",
+    "video"
+  ],
+  "countryRegion": "US",
+  "description": "OpenAI commercial AI model vendor.",
+  "displayName": "OpenAI",
+  "docsUrl": "https://platform.openai.com/docs/models",
+  "legalName": "OpenAI, Inc.",
+  "marketScope": "global",
+  "modelFamilies": [
+    "gpt-5",
+    "gpt-image",
+    "audio",
+    "embedding-3"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 10,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "vendorCode": "openai",
+  "vendorType": "commercial",
+  "websiteUrl": "https://openai.com"
+}

@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/model.schema.json",
+  "title": "Sdkwork Model",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "modelId",
+    "displayName",
+    "vendorCode",
+    "regionCode",
+    "catalogKey",
+    "familyCode",
+    "primaryCapability",
+    "inputModalities",
+    "outputModalities",
+    "apiFormat",
+    "lifecycle",
+    "releaseStage",
+    "shelfState",
+    "routingState",
+    "source"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "modelId": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "catalogKey": {
+      "type": "string"
+    },
+    "familyCode": {
+      "type": "string"
+    },
+    "primaryCapability": {
+      "$ref": "#/$defs/capability"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "inputModalities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/modality"
+      }
+    },
+    "outputModalities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/modality"
+      }
+    },
+    "apiFormat": {
+      "enum": [
+        "openai_compatible",
+        "openai_responses",
+        "anthropic_messages",
+        "google_gemini",
+        "vendor_native"
+      ]
+    },
+    "lifecycle": {
+      "enum": [
+        "active",
+        "preview",
+        "deprecated",
+        "catalog_only",
+        "retired"
+      ]
+    },
+    "releaseStage": {
+      "enum": [
+        "active",
+        "preview",
+        "deprecated",
+        "retired"
+      ]
+    },
+    "shelfState": {
+      "enum": [
+        "listed",
+        "hidden",
+        "archived"
+      ]
+    },
+    "routingState": {
+      "enum": [
+        "enabled",
+        "disabled",
+        "catalog_only"
+      ]
+    },
+    "source": {
+      "$ref": "#/$defs/sourceEvidence"
+    }
+  },
+  "$defs": {
+    "capability": {
+      "enum": [
+        "chat",
+        "embedding",
+        "image",
+        "audio",
+        "music",
+        "video",
+        "rerank",
+        "tool"
+      ]
+    },
+    "modality": {
+      "enum": [
+        "text",
+        "image",
+        "audio",
+        "music",
+        "video",
+        "embedding",
+        "rerank",
+        "tool"
+      ]
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "required": [
+        "sourceUrl",
+        "observedAt"
+      ],
+      "properties": {
+        "sourceUrl": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

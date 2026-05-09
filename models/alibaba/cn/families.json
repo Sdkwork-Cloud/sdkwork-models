@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "qwen3.6-max-preview",
+      "displayName": "Qwen",
+      "familyCode": "qwen",
+      "familyType": "multimodal",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

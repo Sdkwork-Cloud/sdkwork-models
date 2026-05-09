@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "defaultMaxSourceAgeDays": 30,
+  "rules": [
+    {
+      "scope": "pricing",
+      "vendorCode": "*",
+      "maxSourceAgeDays": 14,
+      "severity": "error"
+    },
+    {
+      "scope": "model",
+      "vendorCode": "*",
+      "maxSourceAgeDays": 45,
+      "severity": "warning"
+    },
+    {
+      "scope": "pricing",
+      "vendorCode": "openai",
+      "maxSourceAgeDays": 7,
+      "severity": "error"
+    }
+  ],
+  "waivers": []
+}

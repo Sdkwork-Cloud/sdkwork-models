@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "GLOBAL",
+  "description": "Moonshot Kimi international API operation billed in USD.",
+  "displayName": "Moonshot Kimi",
+  "docsUrl": "https://platform.kimi.ai/",
+  "legalName": "Moonshot AI",
+  "marketScope": "international",
+  "modelFamilies": [
+    "kimi"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 70,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.kimi.ai/"
+  },
+  "vendorCode": "moonshot",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.kimi.com"
+}

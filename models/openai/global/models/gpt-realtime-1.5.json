@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "audio"
+  ],
+  "catalogKey": "openai/global/gpt-realtime-1.5",
+  "colorToken": "#6366f1",
+  "description": "Current OpenAI realtime speech-to-speech and multimodal conversation model.",
+  "displayName": "GPT Realtime 1.5",
+  "familyCode": "gpt-realtime",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio"
+  ],
+  "latencyP50Ms": 180,
+  "latencyP95Ms": 700,
+  "lifecycle": "active",
+  "modelId": "gpt-realtime-1.5",
+  "outputModalities": [
+    "text",
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "820.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Realtime",
+    "Voice",
+    "Multimodal conversation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.970000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.920000"
+}

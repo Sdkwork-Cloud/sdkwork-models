@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/pricing.schema.json",
+  "title": "Sdkwork Model Pricing",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "catalogKey",
+    "modelId",
+    "currency",
+    "prices"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "catalogKey": {
+      "type": "string"
+    },
+    "modelId": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "prices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "priceId",
+          "priceSide",
+          "meterCode",
+          "unitSize",
+          "unitPrice",
+          "minimumQuantity",
+          "source",
+          "effectiveFrom"
+        ],
+        "properties": {
+          "priceId": {
+            "type": "string"
+          },
+          "priceSide": {
+            "enum": [
+              "official",
+              "reference",
+              "upstream",
+              "customer"
+            ]
+          },
+          "pricingScope": {
+            "enum": [
+              "model",
+              "provider",
+              "channel",
+              "plan"
+            ]
+          },
+          "meterCode": {
+            "type": "string"
+          },
+          "unitSize": {
+            "$ref": "#/$defs/decimalString"
+          },
+          "unitPrice": {
+            "$ref": "#/$defs/decimalString"
+          },
+          "minimumQuantity": {
+            "$ref": "#/$defs/decimalString"
+          },
+          "quantityStep": {
+            "$ref": "#/$defs/decimalString"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "effectiveFrom": {
+            "type": "string"
+          },
+          "effectiveTo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "$ref": "#/$defs/sourceEvidence"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "$defs": {
+    "decimalString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "required": [
+        "sourceUrl",
+        "observedAt"
+      ],
+      "properties": {
+        "sourceUrl": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string"
+        },
+        "sourceHash": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

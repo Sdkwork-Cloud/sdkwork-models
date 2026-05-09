@@ -1,0 +1,26 @@
+{
+  "catalogKey": "openai/global/text-embedding-3-small",
+  "currency": "USD",
+  "modelId": "text-embedding-3-small",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "embedding_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-text-embedding-3-small-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "0.020000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

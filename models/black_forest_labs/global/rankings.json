@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "black_forest_labs/global/flux-2-pro",
+          "modelId": "flux-2-pro",
+          "pricingText": "$0.015 / input MP; $0.030 / output MP",
+          "rankNo": 24
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "black_forest_labs"
+}

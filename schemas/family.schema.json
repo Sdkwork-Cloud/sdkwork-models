@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/family.schema.json",
+  "title": "Sdkwork Model Families",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "families"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "familyCode",
+          "displayName",
+          "familyType",
+          "primaryModality"
+        ],
+        "properties": {
+          "familyCode": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "familyType": {
+            "enum": [
+              "llm",
+              "embedding",
+              "image",
+              "audio",
+              "music",
+              "video",
+              "rerank",
+              "multimodal"
+            ]
+          },
+          "primaryModality": {
+            "type": "string"
+          },
+          "defaultModel": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/global/gpt-4o-transcribe",
+  "colorToken": "#6366f1",
+  "description": "Speech-to-text model for transcription and audio understanding.",
+  "displayName": "GPT-4o transcribe",
+  "familyCode": "audio",
+  "inputModalities": [
+    "audio"
+  ],
+  "latencyP50Ms": 700,
+  "latencyP95Ms": 2400,
+  "lifecycle": "active",
+  "modelId": "gpt-4o-transcribe",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "500.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models/gpt-4o-transcribe"
+  },
+  "strengths": [
+    "STT",
+    "Transcription",
+    "Audio understanding"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.730000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.840000"
+}

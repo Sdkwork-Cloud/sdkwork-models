@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/vendor.schema.json",
+  "title": "Sdkwork Model Vendor",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "displayName",
+    "vendorType",
+    "marketScope",
+    "billingCurrency",
+    "billingJurisdiction",
+    "operatingRegions",
+    "capabilities",
+    "source"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "regionCode": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "legalName": {
+      "type": "string"
+    },
+    "websiteUrl": {
+      "type": "string"
+    },
+    "docsUrl": {
+      "type": "string"
+    },
+    "countryRegion": {
+      "type": "string"
+    },
+    "marketScope": {
+      "enum": [
+        "china_mainland",
+        "global",
+        "international"
+      ]
+    },
+    "billingCurrency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "billingJurisdiction": {
+      "type": "string"
+    },
+    "operatingRegions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vendorType": {
+      "enum": [
+        "commercial",
+        "open_source",
+        "research",
+        "community"
+      ]
+    },
+    "modelFamilies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "openSource": {
+      "type": "boolean"
+    },
+    "sortOrder": {
+      "type": "integer"
+    },
+    "source": {
+      "$ref": "#/$defs/sourceEvidence"
+    }
+  },
+  "$defs": {
+    "capability": {
+      "enum": [
+        "chat",
+        "embedding",
+        "image",
+        "audio",
+        "music",
+        "video",
+        "rerank",
+        "tool"
+      ]
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "required": [
+        "sourceUrl",
+        "observedAt"
+      ],
+      "properties": {
+        "sourceUrl": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,26 @@
+{
+  "catalogKey": "bytedance/global/doubao-seedance-2-0-260128",
+  "currency": "USD",
+  "modelId": "doubao-seedance-2-0-260128",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-global-doubao-seedance-2-0-260128-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "unitPrice": "0.120000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}

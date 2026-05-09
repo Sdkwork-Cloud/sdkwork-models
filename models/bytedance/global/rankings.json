@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "bytedance/global/doubao-seedance-2-0-260128",
+          "modelId": "doubao-seedance-2-0-260128",
+          "pricingText": "USD 0.12 / output second",
+          "rankNo": 21
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "bytedance"
+}

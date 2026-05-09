@@ -1,0 +1,58 @@
+{
+  "catalogKey": "deepseek/global/deepseek-v4-pro",
+  "currency": "USD",
+  "modelId": "deepseek-v4-pro",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-08T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "deepseek-global-deepseek-v4-pro-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-08T00:00:00Z",
+        "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      },
+      "unitPrice": "0.003625",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-08T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "deepseek-global-deepseek-v4-pro-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-08T00:00:00Z",
+        "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      },
+      "unitPrice": "0.435000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-08T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "deepseek-global-deepseek-v4-pro-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-08T00:00:00Z",
+        "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      },
+      "unitPrice": "0.870000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "deepseek"
+}

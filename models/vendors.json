@@ -1,0 +1,712 @@
+{
+  "catalogVersion": "2026.05.08.1",
+  "schemaVersion": "1.1.0",
+  "vendors": [
+    {
+      "capabilities": [
+        "audio",
+        "chat",
+        "embedding",
+        "image",
+        "video"
+      ],
+      "displayName": "OpenAI",
+      "legalName": "OpenAI, Inc.",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "chat",
+            "embedding",
+            "image",
+            "audio",
+            "video"
+          ],
+          "displayName": "OpenAI",
+          "legalName": "OpenAI, Inc.",
+          "marketScope": "global",
+          "modelCount": 12,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "openai/global/vendor.json",
+          "pricingFileCount": 12,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 10
+        }
+      ],
+      "sortOrder": 10,
+      "vendorCode": "openai",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "Anthropic",
+      "legalName": "Anthropic, PBC",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Anthropic",
+          "legalName": "Anthropic, PBC",
+          "marketScope": "global",
+          "modelCount": 3,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "anthropic/global/vendor.json",
+          "pricingFileCount": 3,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 20
+        }
+      ],
+      "sortOrder": 20,
+      "vendorCode": "anthropic",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat",
+        "image",
+        "video"
+      ],
+      "displayName": "Google",
+      "legalName": "Google LLC",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "chat",
+            "image",
+            "video"
+          ],
+          "displayName": "Google",
+          "legalName": "Google LLC",
+          "marketScope": "global",
+          "modelCount": 11,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "google/global/vendor.json",
+          "pricingFileCount": 11,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 30
+        }
+      ],
+      "sortOrder": 30,
+      "vendorCode": "google",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat",
+        "image",
+        "video"
+      ],
+      "displayName": "xAI",
+      "legalName": "xAI",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "chat",
+            "image",
+            "video"
+          ],
+          "displayName": "xAI",
+          "legalName": "xAI",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "xai/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 40
+        }
+      ],
+      "sortOrder": 40,
+      "vendorCode": "xai",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat",
+        "image",
+        "video"
+      ],
+      "displayName": "Alibaba Cloud",
+      "legalName": "Alibaba Cloud",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat",
+            "image",
+            "video"
+          ],
+          "displayName": "Alibaba Cloud",
+          "legalName": "Alibaba Cloud",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "alibaba/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 50
+        }
+      ],
+      "sortOrder": 50,
+      "vendorCode": "alibaba",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "DeepSeek",
+      "legalName": "DeepSeek",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "DeepSeek",
+          "legalName": "DeepSeek",
+          "marketScope": "china_mainland",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "deepseek/cn/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 60
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "DeepSeek",
+          "legalName": "DeepSeek",
+          "marketScope": "international",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "deepseek/global/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 60
+        }
+      ],
+      "sortOrder": 60,
+      "vendorCode": "deepseek",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "Moonshot Kimi",
+      "legalName": "Moonshot AI",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Moonshot Kimi",
+          "legalName": "Moonshot AI",
+          "marketScope": "china_mainland",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "moonshot/cn/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 70
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Moonshot Kimi",
+          "legalName": "Moonshot AI",
+          "marketScope": "international",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "moonshot/global/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 70
+        }
+      ],
+      "sortOrder": 70,
+      "vendorCode": "moonshot",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "Zhipu AI",
+      "legalName": "Zhipu AI",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Zhipu AI",
+          "legalName": "Zhipu AI",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "zhipu/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 80
+        }
+      ],
+      "sortOrder": 80,
+      "vendorCode": "zhipu",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "Baidu AI Cloud",
+      "legalName": "Baidu AI Cloud",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Baidu AI Cloud",
+          "legalName": "Baidu AI Cloud",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "baidu/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 90
+        }
+      ],
+      "sortOrder": 90,
+      "vendorCode": "baidu",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "chat"
+      ],
+      "displayName": "Tencent Cloud",
+      "legalName": "Tencent Cloud",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "displayName": "Tencent Cloud",
+          "legalName": "Tencent Cloud",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "tencent/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 100
+        }
+      ],
+      "sortOrder": 100,
+      "vendorCode": "tencent",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "audio",
+        "chat",
+        "image",
+        "video"
+      ],
+      "displayName": "ByteDance",
+      "legalName": "ByteDance",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat",
+            "image",
+            "audio"
+          ],
+          "displayName": "ByteDance",
+          "legalName": "ByteDance",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "bytedance/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 110
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "video"
+          ],
+          "displayName": "ByteDance",
+          "legalName": "ByteDance",
+          "marketScope": "international",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "bytedance/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 111
+        }
+      ],
+      "sortOrder": 110,
+      "vendorCode": "bytedance",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "audio",
+        "chat",
+        "image",
+        "music",
+        "tool",
+        "video"
+      ],
+      "displayName": "MiniMax",
+      "legalName": "MiniMax",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat",
+            "audio",
+            "video",
+            "music",
+            "image",
+            "tool"
+          ],
+          "displayName": "MiniMax",
+          "legalName": "MiniMax",
+          "marketScope": "china_mainland",
+          "modelCount": 5,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "minimax/cn/vendor.json",
+          "pricingFileCount": 5,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 121
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "chat",
+            "audio",
+            "video",
+            "music",
+            "image",
+            "tool"
+          ],
+          "displayName": "MiniMax",
+          "legalName": "MiniMax",
+          "marketScope": "international",
+          "modelCount": 5,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "minimax/global/vendor.json",
+          "pricingFileCount": 5,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 120
+        }
+      ],
+      "sortOrder": 120,
+      "vendorCode": "minimax",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "image",
+        "video"
+      ],
+      "displayName": "Kuaishou",
+      "legalName": "Kuaishou",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "video",
+            "image"
+          ],
+          "displayName": "Kuaishou",
+          "legalName": "Kuaishou",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "kuaishou/cn/vendor.json",
+          "pricingFileCount": 0,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 130
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "video",
+            "image"
+          ],
+          "displayName": "Kuaishou",
+          "legalName": "Kuaishou",
+          "marketScope": "international",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "kuaishou/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 130
+        }
+      ],
+      "sortOrder": 130,
+      "vendorCode": "kuaishou",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "image"
+      ],
+      "displayName": "Stability AI",
+      "legalName": "Stability AI Ltd.",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "image"
+          ],
+          "displayName": "Stability AI",
+          "legalName": "Stability AI Ltd.",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "stability_ai/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 140
+        }
+      ],
+      "sortOrder": 140,
+      "vendorCode": "stability_ai",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "image"
+      ],
+      "displayName": "Black Forest Labs",
+      "legalName": "Black Forest Labs",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "image"
+          ],
+          "displayName": "Black Forest Labs",
+          "legalName": "Black Forest Labs",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "black_forest_labs/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 150
+        }
+      ],
+      "sortOrder": 150,
+      "vendorCode": "black_forest_labs",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "music"
+      ],
+      "displayName": "Suno",
+      "legalName": "Suno",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "music"
+          ],
+          "displayName": "Suno",
+          "legalName": "Suno",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "suno/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 160
+        }
+      ],
+      "sortOrder": 160,
+      "vendorCode": "suno",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "audio",
+        "music"
+      ],
+      "displayName": "ElevenLabs",
+      "legalName": "ElevenLabs",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "audio",
+            "music"
+          ],
+          "displayName": "ElevenLabs",
+          "legalName": "ElevenLabs",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "elevenlabs/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 170
+        }
+      ],
+      "sortOrder": 170,
+      "vendorCode": "elevenlabs",
+      "vendorType": "commercial"
+    }
+  ]
+}

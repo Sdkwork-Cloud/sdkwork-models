@@ -1,0 +1,42 @@
+{
+  "catalogKey": "tencent/cn/hunyuan-turbos-latest",
+  "currency": "CNY",
+  "modelId": "hunyuan-turbos-latest",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "tencent-cn-hunyuan-turbos-latest-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.tencent.com/document/product/1729/97731"
+      },
+      "unitPrice": "0.800000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "tencent-cn-hunyuan-turbos-latest-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.tencent.com/document/product/1729/97731"
+      },
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "tencent"
+}

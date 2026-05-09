@@ -1,0 +1,20 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "bytedance/cn/doubao-seed-2-0-pro-260215",
+          "modelId": "doubao-seed-2-0-pro-260215",
+          "pricingText": "CNY 3.20 / 1M input; CNY 16.00 / 1M output",
+          "rankNo": 13
+        }
+      ],
+      "rankScope": "china-mainland-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "bytedance"
+}

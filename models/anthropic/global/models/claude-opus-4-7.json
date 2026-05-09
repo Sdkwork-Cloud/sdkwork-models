@@ -1,0 +1,49 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/global/claude-opus-4-7",
+  "colorToken": "#7c2d12",
+  "contextTokens": 1000000,
+  "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",
+  "displayName": "Claude Opus 4.7",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1150,
+  "latencyP95Ms": 4200,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-opus-4-7",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1170.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.990000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.985000"
+}

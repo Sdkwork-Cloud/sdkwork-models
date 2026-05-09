@@ -1,0 +1,26 @@
+{
+  "catalogKey": "elevenlabs/global/eleven_text_to_sound_v2",
+  "currency": "USD",
+  "modelId": "eleven_text_to_sound_v2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "priceId": "elevenlabs-eleven-text-to-sound-v2-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://elevenlabs.io/docs/api-reference"
+      },
+      "unitPrice": "0.050000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "elevenlabs"
+}

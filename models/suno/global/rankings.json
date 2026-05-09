@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "suno/global/suno-v5",
+          "modelId": "suno-v5",
+          "pricingText": "$0.02 / music output second",
+          "rankNo": 30
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "suno"
+}

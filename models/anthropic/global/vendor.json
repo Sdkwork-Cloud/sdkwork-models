@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "US",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "US",
+  "description": "Anthropic Claude model vendor.",
+  "displayName": "Anthropic",
+  "docsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+  "legalName": "Anthropic, PBC",
+  "marketScope": "global",
+  "modelFamilies": [
+    "claude"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 20,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
+  },
+  "vendorCode": "anthropic",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.anthropic.com"
+}

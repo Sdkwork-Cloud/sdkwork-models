@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/vendor-sources.schema.json",
+  "title": "Sdkwork Models Vendor Source Manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "catalogVersion",
+    "observedAt",
+    "policy",
+    "vendors"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "catalogVersion": {
+      "type": "string",
+      "pattern": "^\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+$"
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "officialFirst",
+        "referenceRule",
+        "requiredModelRule"
+      ],
+      "properties": {
+        "officialFirst": {
+          "type": "boolean"
+        },
+        "referenceRule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requiredModelRule": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/referenceSource"
+      }
+    },
+    "vendors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/vendorSource"
+      }
+    }
+  },
+  "$defs": {
+    "referenceSource": {
+      "type": "object",
+      "required": [
+        "code",
+        "url",
+        "observedAt"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "vendorSource": {
+      "type": "object",
+      "required": [
+        "vendorCode",
+        "regionCode",
+        "verificationStatus",
+        "official",
+        "lastCheckedAt",
+        "requiredModels"
+      ],
+      "properties": {
+        "vendorCode": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "regionCode": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "verificationStatus": {
+          "enum": [
+            "official_url_declared",
+            "official_verified"
+          ]
+        },
+        "official": {
+          "$ref": "#/$defs/officialSource"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/vendorReference"
+          }
+        },
+        "lastCheckedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "requiredModels": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supportedModels": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "officialSource": {
+      "type": "object",
+      "required": [
+        "modelsUrl",
+        "pricingUrl"
+      ],
+      "properties": {
+        "modelsUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "pricingUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "additionalUrls": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "vendorReference": {
+      "type": "object",
+      "required": [
+        "code",
+        "url"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

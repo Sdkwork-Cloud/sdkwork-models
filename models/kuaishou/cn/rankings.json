@@ -1,0 +1,20 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "kuaishou/cn/kling-v3-0-preview",
+          "modelId": "kling-v3-0-preview",
+          "pricingText": "CNY pricing pending official confirmation",
+          "rankNo": 22
+        }
+      ],
+      "rankScope": "china-mainland-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "kuaishou"
+}

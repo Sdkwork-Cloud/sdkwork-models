@@ -1,0 +1,46 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "google/global/gemini-3.1-flash-tts-preview",
+  "colorToken": "#7c3aed",
+  "contextTokens": 32768,
+  "description": "Gemini 3.1 Flash preview text-to-speech model.",
+  "displayName": "Gemini 3.1 Flash TTS Preview",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 650,
+  "latencyP95Ms": 2400,
+  "lifecycle": "preview",
+  "maxInputTokens": 32768,
+  "maxOutputTokens": 8192,
+  "modelId": "gemini-3.1-flash-tts-preview",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "840.000000",
+  "regionCode": "global",
+  "releaseStage": "preview",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "strengths": [
+    "Text to speech",
+    "Low latency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.850000"
+}

@@ -1,0 +1,49 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/global/claude-sonnet-4-6",
+  "colorToken": "#d97706",
+  "contextTokens": 1000000,
+  "description": "Claude Sonnet model for reasoning, coding, and agent workflows.",
+  "displayName": "Claude Sonnet 4.6",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 900,
+  "latencyP95Ms": 3100,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-sonnet-4-6",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1080.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Long context",
+    "Agents"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.950000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.960000"
+}

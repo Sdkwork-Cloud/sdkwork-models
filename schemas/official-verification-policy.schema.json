@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/official-verification-policy.schema.json",
+  "title": "Sdkwork Models Official Verification Policy",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "catalogVersion",
+    "generatedAt",
+    "policy",
+    "requiredVerifiedVendorRegions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "catalogVersion": {
+      "type": "string",
+      "pattern": "^\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+$"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    },
+    "requiredVerifiedVendorRegions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requiredVerifiedVendorRegion"
+      }
+    }
+  },
+  "$defs": {
+    "policy": {
+      "type": "object",
+      "required": [
+        "mode",
+        "description"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "release_gate"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "requiredVerifiedVendorRegion": {
+      "type": "object",
+      "required": [
+        "vendorCode",
+        "regionCode",
+        "reason"
+      ],
+      "properties": {
+        "vendorCode": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "regionCode": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

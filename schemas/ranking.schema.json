@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/ranking.schema.json",
+  "title": "Sdkwork Model Rankings",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "snapshots"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "snapshotDate",
+          "rankScope",
+          "items"
+        ],
+        "properties": {
+          "snapshotDate": {
+            "type": "string"
+          },
+          "snapshotPeriod": {
+            "type": "string"
+          },
+          "rankScope": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "modelId",
+                "rankNo"
+              ],
+              "properties": {
+                "modelId": {
+                  "type": "string"
+                },
+                "rankNo": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

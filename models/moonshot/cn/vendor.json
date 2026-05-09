@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "CN",
+  "description": "Moonshot Kimi mainland China API operation billed in CNY.",
+  "displayName": "Moonshot Kimi",
+  "docsUrl": "https://platform.kimi.com/",
+  "legalName": "Moonshot AI",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "kimi"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 70,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.kimi.com/"
+  },
+  "vendorCode": "moonshot",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.moonshot.cn"
+}

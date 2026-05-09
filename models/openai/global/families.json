@@ -1,0 +1,47 @@
+{
+  "families": [
+    {
+      "defaultModel": "gpt-5.5",
+      "displayName": "GPT-5",
+      "familyCode": "gpt-5",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    },
+    {
+      "defaultModel": "gpt-image-2",
+      "displayName": "GPT Image",
+      "familyCode": "gpt-image",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "gpt-realtime-1.5",
+      "displayName": "GPT Realtime",
+      "familyCode": "gpt-realtime",
+      "familyType": "audio",
+      "primaryModality": "audio",
+      "sortOrder": 30
+    },
+    {
+      "defaultModel": "gpt-4o-transcribe",
+      "displayName": "OpenAI Audio",
+      "familyCode": "audio",
+      "familyType": "audio",
+      "primaryModality": "audio",
+      "sortOrder": 40
+    },
+    {
+      "defaultModel": "text-embedding-3-small",
+      "displayName": "Embedding 3",
+      "familyCode": "embedding-3",
+      "familyType": "embedding",
+      "primaryModality": "embedding",
+      "sortOrder": 50
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

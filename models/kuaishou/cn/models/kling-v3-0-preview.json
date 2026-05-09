@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "kuaishou/cn/kling-v3-0-preview",
+  "colorToken": "#6d28d9",
+  "description": "Kling preview video generation model.",
+  "displayName": "Kling v3.0 Preview",
+  "familyCode": "kling",
+  "inputModalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "latencyP50Ms": 54000,
+  "latencyP95Ms": 160000,
+  "lifecycle": "catalog_only",
+  "modelId": "kling-v3-0-preview",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "790.000000",
+  "regionCode": "cn",
+  "releaseStage": "preview",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"
+  },
+  "strengths": [
+    "Video generation",
+    "Motion quality"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.880000"
+}

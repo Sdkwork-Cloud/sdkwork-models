@@ -1,0 +1,78 @@
+{
+  "catalogKey": "alibaba/cn/qwen3.6-max-preview",
+  "currency": "CNY",
+  "modelId": "qwen3.6-max-preview",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-qwen3.6-max-preview-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
+      },
+      "unitPrice": "9.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "128000",
+      "priceId": "alibaba-qwen3.6-max-preview-input-above-128k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
+      },
+      "thresholdTokens": 128000,
+      "tierCode": "above_128k_tokens",
+      "unitPrice": "15.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-qwen3.6-max-preview-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
+      },
+      "unitPrice": "54.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "128000",
+      "priceId": "alibaba-qwen3.6-max-preview-output-above-128k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
+      },
+      "thresholdTokens": 128000,
+      "tierCode": "above_128k_tokens",
+      "unitPrice": "90.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

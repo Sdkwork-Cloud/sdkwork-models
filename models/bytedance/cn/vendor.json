@@ -1,0 +1,35 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat",
+    "image",
+    "audio"
+  ],
+  "countryRegion": "CN",
+  "description": "ByteDance mainland China model operation billed in CNY. Doubao, Seedream, Seedance and audio products are modeled as families.",
+  "displayName": "ByteDance",
+  "docsUrl": "https://www.volcengine.com/docs/82379",
+  "legalName": "ByteDance",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "doubao-seed",
+    "seedream",
+    "seedance",
+    "audio"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 110,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/82379"
+  },
+  "vendorCode": "bytedance",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.volcengine.com"
+}

@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "image"
+  ],
+  "countryRegion": "DE",
+  "description": "Black Forest Labs FLUX image model vendor.",
+  "displayName": "Black Forest Labs",
+  "docsUrl": "https://docs.bfl.ai",
+  "legalName": "Black Forest Labs",
+  "marketScope": "global",
+  "modelFamilies": [
+    "flux"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 150,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.bfl.ai"
+  },
+  "vendorCode": "black_forest_labs",
+  "vendorType": "commercial",
+  "websiteUrl": "https://blackforestlabs.ai"
+}

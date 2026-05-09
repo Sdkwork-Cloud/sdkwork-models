@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "CN",
+  "description": "Tencent Cloud mainland China model operation billed in CNY. Hunyuan is modeled as a model family.",
+  "displayName": "Tencent Cloud",
+  "docsUrl": "https://cloud.tencent.com/document/product/1729",
+  "legalName": "Tencent Cloud",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "hunyuan"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 100,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://cloud.tencent.com/document/product/1729"
+  },
+  "vendorCode": "tencent",
+  "vendorType": "commercial",
+  "websiteUrl": "https://cloud.tencent.com"
+}

@@ -1,0 +1,13 @@
+[package]
+name = "sdkwork-models"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Sdkwork vendor-scoped AI model catalog loader and query SDK"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tempfile = "3"

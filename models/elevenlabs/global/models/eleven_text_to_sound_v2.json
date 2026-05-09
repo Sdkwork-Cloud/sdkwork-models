@@ -1,0 +1,43 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "elevenlabs/global/eleven_text_to_sound_v2",
+  "colorToken": "#7c2d12",
+  "description": "Sound effect generation model.",
+  "displayName": "Eleven Text to Sound v2",
+  "familyCode": "elevenlabs-audio",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 5000,
+  "latencyP95Ms": 24000,
+  "lifecycle": "active",
+  "modelId": "eleven_text_to_sound_v2",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "700.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/models"
+  },
+  "strengths": [
+    "Sound effects",
+    "Audio generation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.820000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.820000"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@sdkwork/models-catalog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node tools/validate-catalog.mjs",
+    "build:index": "node tools/build-index.mjs",
+    "audit": "node tools/catalog-audit.mjs",
+    "freshness": "node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json",
+    "diff": "node tools/catalog-diff.mjs",
+    "release:check": "node tools/release-catalog.mjs --check",
+    "check": "node tools/build-index.mjs --check && node tools/validate-catalog.mjs && node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json && node tools/catalog-audit.mjs && node tools/release-catalog.mjs --check"
+  }
+}

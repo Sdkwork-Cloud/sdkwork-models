@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "stable-image-ultra",
+      "displayName": "Stable Image",
+      "familyCode": "stable-image",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "stability_ai"
+}

@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "zhipu/cn/glm-5.1",
+  "colorToken": "#7c2d12",
+  "contextTokens": 200000,
+  "description": "GLM model for Chinese and multimodal assistance.",
+  "displayName": "GLM-5.1",
+  "familyCode": "glm",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 790,
+  "latencyP95Ms": 2600,
+  "lifecycle": "active",
+  "maxInputTokens": 200000,
+  "maxOutputTokens": 131072,
+  "modelId": "glm-5.1",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "840.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.1"
+  },
+  "strengths": [
+    "Chinese",
+    "Reasoning",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.830000",
+  "vendorCode": "zhipu",
+  "vendorName": "Zhipu AI",
+  "winRate": "0.840000"
+}

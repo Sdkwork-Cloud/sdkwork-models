@@ -1,0 +1,20 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "tencent/cn/hunyuan-turbos-latest",
+          "modelId": "hunyuan-turbos-latest",
+          "pricingText": "CNY 0.80 / 1M input; CNY 2.00 / 1M output",
+          "rankNo": 17
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "tencent"
+}

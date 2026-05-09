@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "deepseek/cn/deepseek-v4-pro",
+  "colorToken": "#0f766e",
+  "contextTokens": 1048576,
+  "description": "DeepSeek reasoning and coding model.",
+  "displayName": "DeepSeek V4 Pro",
+  "familyCode": "deepseek",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 760,
+  "latencyP95Ms": 2500,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 393216,
+  "modelId": "deepseek-v4-pro",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "900.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Cost efficient"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.910000",
+  "vendorCode": "deepseek",
+  "vendorName": "DeepSeek",
+  "winRate": "0.890000"
+}

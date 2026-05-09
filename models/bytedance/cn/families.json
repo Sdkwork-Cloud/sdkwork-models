@@ -1,0 +1,29 @@
+{
+  "families": [
+    {
+      "defaultModel": "doubao-seed-2-0-pro-260215",
+      "displayName": "Doubao Seed",
+      "familyCode": "doubao-seed",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    },
+    {
+      "displayName": "Seedream",
+      "familyCode": "seedream",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    },
+    {
+      "displayName": "Volcengine Audio",
+      "familyCode": "audio",
+      "familyType": "audio",
+      "primaryModality": "audio",
+      "sortOrder": 40
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}

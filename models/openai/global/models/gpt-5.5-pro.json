@@ -1,0 +1,49 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.5-pro",
+  "colorToken": "#030712",
+  "contextTokens": 1050000,
+  "description": "OpenAI GPT-5.5 Pro frontier model for maximum reasoning depth, coding, and agentic workloads.",
+  "displayName": "GPT-5.5 Pro",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1240,
+  "latencyP95Ms": 4200,
+  "lifecycle": "active",
+  "maxInputTokens": 1050000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.5-pro",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1190.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.5-pro"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.995000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.995000"
+}

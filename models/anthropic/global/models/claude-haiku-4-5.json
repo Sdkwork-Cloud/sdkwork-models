@@ -1,0 +1,49 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/global/claude-haiku-4-5",
+  "colorToken": "#ea580c",
+  "contextTokens": 200000,
+  "description": "Fast Claude model for cost-sensitive chat, coding assistance, and agent sub-tasks.",
+  "displayName": "Claude Haiku 4.5",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 420,
+  "latencyP95Ms": 1600,
+  "lifecycle": "active",
+  "maxInputTokens": 200000,
+  "maxOutputTokens": 64000,
+  "modelId": "claude-haiku-4-5",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "980.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
+  },
+  "strengths": [
+    "Low latency",
+    "Cost efficient",
+    "Vision",
+    "Tool use"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.940000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.910000"
+}

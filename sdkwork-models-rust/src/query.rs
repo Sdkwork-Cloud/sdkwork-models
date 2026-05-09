@@ -1,0 +1,245 @@
+use std::collections::BTreeSet;
+
+use crate::types::{
+    BillingMeter, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity, VendorRegionRef,
+};
+
+#[derive(Debug, Clone, Default)]
+pub struct ModelFilter<'a> {
+    pub vendor_code: Option<&'a str>,
+    pub region_code: Option<&'a str>,
+    pub family_code: Option<&'a str>,
+    pub capability: Option<&'a str>,
+    pub input_modality: Option<&'a str>,
+    pub output_modality: Option<&'a str>,
+    pub release_stage: Option<&'a str>,
+    pub shelf_state: Option<&'a str>,
+    pub routing_state: Option<&'a str>,
+    pub api_format: Option<&'a str>,
+}
+
+pub fn list_vendors(catalog: &ModelCatalog) -> Vec<ModelVendorIdentity> {
+    let mut seen = BTreeSet::new();
+    let mut vendors = Vec::new();
+    for region_catalog in &catalog.vendors {
+        let vendor = &region_catalog.vendor;
+        if !seen.insert(vendor.vendor_code.clone()) {
+            continue;
+        }
+        vendors.push(ModelVendorIdentity {
+            vendor_code: vendor.vendor_code.clone(),
+            display_name: vendor.display_name.clone(),
+            legal_name: vendor.legal_name.clone(),
+            vendor_type: vendor.vendor_type.clone(),
+            capabilities: vendor.capabilities.clone(),
+            open_source: vendor.open_source.unwrap_or(false),
+        });
+    }
+    vendors
+}
+
+pub fn list_vendor_regions(catalog: &ModelCatalog) -> Vec<VendorRegionRef> {
+    catalog
+        .vendors
+        .iter()
+        .map(|vendor| VendorRegionRef {
+            vendor_code: vendor.vendor_code.clone(),
+            region_code: vendor.region_code.clone(),
+        })
+        .collect()
+}
+
+pub fn catalog_key(vendor_code: &str, region_code: &str, model_id: &str) -> String {
+    format!("{vendor_code}/{region_code}/{model_id}")
+}
+
+pub fn list_meters(catalog: &ModelCatalog) -> Vec<&BillingMeter> {
+    catalog.meters.iter().collect()
+}
+
+pub fn find_meter<'a>(catalog: &'a ModelCatalog, meter_code: &str) -> Option<&'a BillingMeter> {
+    catalog
+        .meters
+        .iter()
+        .find(|meter| meter.meter_code == meter_code)
+}
+
+pub fn list_models<'a>(catalog: &'a ModelCatalog, filter: ModelFilter<'_>) -> Vec<&'a ModelInfo> {
+    catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.models.iter())
+        .filter(|model| {
+            filter
+                .vendor_code
+                .map(|value| model.vendor_code == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .region_code
+                .map(|value| model.region_code == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .family_code
+                .map(|value| model.family_code == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .capability
+                .map(|value| model.capabilities.iter().any(|item| item == value))
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .input_modality
+                .map(|value| model.input_modalities.iter().any(|item| item == value))
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .output_modality
+                .map(|value| model.output_modalities.iter().any(|item| item == value))
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .release_stage
+                .map(|value| model.release_stage == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .shelf_state
+                .map(|value| model.shelf_state == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .routing_state
+                .map(|value| model.routing_state == value)
+                .unwrap_or(true)
+        })
+        .filter(|model| {
+            filter
+                .api_format
+                .map(|value| model.api_format == value)
+                .unwrap_or(true)
+        })
+        .collect()
+}
+
+pub fn list_available_models<'a>(
+    catalog: &'a ModelCatalog,
+    filter: ModelFilter<'_>,
+) -> Vec<&'a ModelInfo> {
+    list_models(
+        catalog,
+        ModelFilter {
+            routing_state: Some("enabled"),
+            shelf_state: Some("listed"),
+            ..filter
+        },
+    )
+    .into_iter()
+    .filter(|model| !get_model_prices(catalog, &model.catalog_key).is_empty())
+    .collect()
+}
+
+pub fn find_model<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Option<&'a ModelInfo> {
+    let mut parts = catalog_key.split('/');
+    let vendor_code = parts.next()?;
+    let region_code = parts.next()?;
+    let model_id = parts.next()?;
+    if parts.next().is_some()
+        || vendor_code.is_empty()
+        || region_code.is_empty()
+        || model_id.is_empty()
+    {
+        return None;
+    }
+    find_model_by_vendor_region(catalog, vendor_code, region_code, model_id)
+}
+
+pub fn find_model_by_vendor_region<'a>(
+    catalog: &'a ModelCatalog,
+    vendor_code: &str,
+    region_code: &str,
+    model_id: &str,
+) -> Option<&'a ModelInfo> {
+    catalog
+        .vendors
+        .iter()
+        .filter(|vendor| vendor.vendor_code == vendor_code && vendor.region_code == region_code)
+        .flat_map(|vendor| vendor.models.iter())
+        .find(|model| model.model_id == model_id && model.region_code == region_code)
+}
+
+pub fn get_model_prices<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Vec<&'a ModelPrice> {
+    let mut parts = catalog_key.split('/');
+    let Some(vendor_code) = parts.next() else {
+        return Vec::new();
+    };
+    let Some(region_code) = parts.next() else {
+        return Vec::new();
+    };
+    let Some(model_id) = parts.next() else {
+        return Vec::new();
+    };
+    if parts.next().is_some()
+        || vendor_code.is_empty()
+        || region_code.is_empty()
+        || model_id.is_empty()
+    {
+        return Vec::new();
+    }
+    catalog
+        .vendors
+        .iter()
+        .filter(|vendor| vendor.vendor_code == vendor_code && vendor.region_code == region_code)
+        .flat_map(|vendor| vendor.pricing.iter())
+        .find(|pricing| pricing.model_id == model_id && pricing.region_code == region_code)
+        .map(|pricing| pricing.prices.iter().collect())
+        .unwrap_or_default()
+}
+
+pub fn get_best_reference_price<'a>(
+    catalog: &'a ModelCatalog,
+    catalog_key: &str,
+    meter_code: &str,
+) -> Option<&'a ModelPrice> {
+    get_model_prices(catalog, catalog_key)
+        .into_iter()
+        .find(|price| price.meter_code == meter_code)
+}
+
+pub fn list_models_by_capability<'a>(
+    catalog: &'a ModelCatalog,
+    capability: &'a str,
+) -> Vec<&'a ModelInfo> {
+    list_models(
+        catalog,
+        ModelFilter {
+            capability: Some(capability),
+            ..ModelFilter::default()
+        },
+    )
+}
+
+pub fn list_models_by_modality<'a>(
+    catalog: &'a ModelCatalog,
+    input_modality: &'a str,
+    output_modality: &'a str,
+) -> Vec<&'a ModelInfo> {
+    list_models(
+        catalog,
+        ModelFilter {
+            input_modality: Some(input_modality),
+            output_modality: Some(output_modality),
+            ..ModelFilter::default()
+        },
+    )
+}

@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.4-mini",
+  "colorToken": "#334155",
+  "contextTokens": 400000,
+  "description": "Compact GPT-5.4 model for cost-sensitive chat, coding, and agent workloads.",
+  "displayName": "GPT-5.4 Mini",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 520,
+  "latencyP95Ms": 1900,
+  "lifecycle": "active",
+  "maxInputTokens": 400000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.4-mini",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1030.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Cost efficient",
+    "Reasoning",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.960000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.930000"
+}

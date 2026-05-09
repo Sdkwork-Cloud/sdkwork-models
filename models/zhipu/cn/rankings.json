@@ -1,0 +1,20 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "zhipu/cn/glm-5.1",
+          "modelId": "glm-5.1",
+          "pricingText": "CNY 6.00 / 1M input; CNY 1.30 / 1M cache read; CNY 24.00 / 1M output",
+          "rankNo": 15
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "zhipu"
+}

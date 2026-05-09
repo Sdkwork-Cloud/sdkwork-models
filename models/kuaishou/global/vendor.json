@@ -1,0 +1,31 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "video",
+    "image"
+  ],
+  "countryRegion": "GLOBAL",
+  "description": "Kuaishou international AI platform operation billed in USD; Kling is modeled as a model family.",
+  "displayName": "Kuaishou",
+  "docsUrl": "https://app.klingai.com/global/dev/document-api",
+  "legalName": "Kuaishou",
+  "marketScope": "international",
+  "modelFamilies": [
+    "kling"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 130,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/global/dev/document-api"
+  },
+  "vendorCode": "kuaishou",
+  "vendorType": "commercial",
+  "websiteUrl": "https://klingai.com"
+}

@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "claude-opus-4-7",
+      "displayName": "Claude",
+      "familyCode": "claude",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "anthropic"
+}

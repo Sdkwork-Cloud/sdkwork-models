@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "image"
+  ],
+  "countryRegion": "GB",
+  "description": "Stability AI image model vendor.",
+  "displayName": "Stability AI",
+  "docsUrl": "https://platform.stability.ai/docs",
+  "legalName": "Stability AI Ltd.",
+  "marketScope": "global",
+  "modelFamilies": [
+    "stable-image"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 140,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.stability.ai/docs"
+  },
+  "vendorCode": "stability_ai",
+  "vendorType": "commercial",
+  "websiteUrl": "https://stability.ai"
+}

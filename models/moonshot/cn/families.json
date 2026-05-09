@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "kimi-k2.6",
+      "displayName": "Kimi",
+      "familyCode": "kimi",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "moonshot"
+}

@@ -1,0 +1,32 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "US",
+  "capabilities": [
+    "chat",
+    "image",
+    "video"
+  ],
+  "countryRegion": "US",
+  "description": "xAI Grok model vendor.",
+  "displayName": "xAI",
+  "docsUrl": "https://docs.x.ai/docs/models",
+  "legalName": "xAI",
+  "marketScope": "global",
+  "modelFamilies": [
+    "grok"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 40,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/docs/models"
+  },
+  "vendorCode": "xai",
+  "vendorType": "commercial",
+  "websiteUrl": "https://x.ai"
+}

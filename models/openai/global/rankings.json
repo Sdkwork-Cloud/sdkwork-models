@@ -1,0 +1,80 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "openai/global/gpt-5.5-pro",
+          "modelId": "gpt-5.5-pro",
+          "pricingText": "$15.00 / 1M input; $120.00 / 1M output",
+          "rankNo": 1
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.5",
+          "modelId": "gpt-5.5",
+          "pricingText": "$5.00 / 1M input; $30.00 / 1M output",
+          "rankNo": 2
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.4-pro",
+          "modelId": "gpt-5.4-pro",
+          "pricingText": "$15.00 / 1M input; $120.00 / 1M output",
+          "rankNo": 3
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.4",
+          "modelId": "gpt-5.4",
+          "pricingText": "$2.50 / 1M input; $15.00 / 1M output",
+          "rankNo": 4
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.4-mini",
+          "modelId": "gpt-5.4-mini",
+          "pricingText": "$0.75 / 1M input; $4.50 / 1M output",
+          "rankNo": 12
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.4-nano",
+          "modelId": "gpt-5.4-nano",
+          "pricingText": "$0.20 / 1M input; $1.25 / 1M output",
+          "rankNo": 22
+        },
+        {
+          "catalogKey": "openai/global/gpt-image-2",
+          "modelId": "gpt-image-2",
+          "pricingText": "$5.00 / 1M text input; $8.00 / 1M image input; $30.00 / 1M output",
+          "rankNo": 20
+        },
+        {
+          "catalogKey": "openai/global/gpt-realtime-1.5",
+          "modelId": "gpt-realtime-1.5",
+          "pricingText": "$4.00 / 1M text input; $16.00 / 1M text output; $32.00 / 1M audio input; $64.00 / 1M audio output",
+          "rankNo": 30
+        },
+        {
+          "catalogKey": "openai/global/gpt-5.2",
+          "modelId": "gpt-5.2",
+          "pricingText": "Deprecated reference; $1.75 / 1M input; $14.00 / 1M output",
+          "rankNo": 35
+        },
+        {
+          "catalogKey": "openai/global/text-embedding-3-small",
+          "modelId": "text-embedding-3-small",
+          "pricingText": "$0.02 / 1M input",
+          "rankNo": 40
+        },
+        {
+          "catalogKey": "openai/global/gpt-4o-transcribe",
+          "modelId": "gpt-4o-transcribe",
+          "pricingText": "$0.006 / audio minute",
+          "rankNo": 50
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "openai"
+}

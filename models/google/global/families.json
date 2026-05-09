@@ -1,0 +1,31 @@
+{
+  "families": [
+    {
+      "defaultModel": "gemini-3.1-pro-preview",
+      "displayName": "Gemini",
+      "familyCode": "gemini",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    },
+    {
+      "defaultModel": "imagen-4.0-generate-001",
+      "displayName": "Imagen",
+      "familyCode": "imagen",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "veo-3.1-generate-preview",
+      "displayName": "Veo",
+      "familyCode": "veo",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 30
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

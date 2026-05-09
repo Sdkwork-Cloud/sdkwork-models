@@ -1,0 +1,32 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat",
+    "image",
+    "video"
+  ],
+  "countryRegion": "CN",
+  "description": "Alibaba Cloud mainland China AI platform operation billed in CNY. Qwen is modeled as a model family.",
+  "displayName": "Alibaba Cloud",
+  "docsUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model",
+  "legalName": "Alibaba Cloud",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "qwen"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 50,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
+  },
+  "vendorCode": "alibaba",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.aliyun.com"
+}

@@ -1,0 +1,78 @@
+{
+  "catalogKey": "baidu/cn/ernie-5.0-thinking-preview",
+  "currency": "CNY",
+  "modelId": "ernie-5.0-thinking-preview",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "baidu-cn-ernie-5.0-thinking-preview-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+      },
+      "unitPrice": "4.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "32000",
+      "priceId": "baidu-cn-ernie-5.0-thinking-preview-input-above-32k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+      },
+      "thresholdTokens": 32000,
+      "tierCode": "above_32k_tokens",
+      "unitPrice": "8.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "baidu-cn-ernie-5.0-thinking-preview-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+      },
+      "unitPrice": "16.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "32000",
+      "priceId": "baidu-cn-ernie-5.0-thinking-preview-output-above-32k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+      },
+      "thresholdTokens": 32000,
+      "tierCode": "above_32k_tokens",
+      "unitPrice": "32.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "baidu"
+}

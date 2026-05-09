@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "minimax/cn/MiniMax-M2.7",
+  "colorToken": "#4f46e5",
+  "contextTokens": 204800,
+  "description": "MiniMax M2.7 text model for long-context coding, office, agent and tool workflows.",
+  "displayName": "MiniMax M2.7",
+  "familyCode": "minimax",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 740,
+  "latencyP95Ms": 2400,
+  "lifecycle": "active",
+  "maxInputTokens": 204800,
+  "maxOutputTokens": 32768,
+  "modelId": "MiniMax-M2.7",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "805.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/text-generation"
+  },
+  "strengths": [
+    "Code",
+    "Tools",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.820000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.805000"
+}

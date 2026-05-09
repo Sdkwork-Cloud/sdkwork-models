@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat"
+  ],
+  "countryRegion": "CN",
+  "description": "Baidu AI Cloud mainland China model operation billed in CNY. ERNIE is modeled as a model family.",
+  "displayName": "Baidu AI Cloud",
+  "docsUrl": "https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html",
+  "legalName": "Baidu AI Cloud",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "ernie"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 90,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html"
+  },
+  "vendorCode": "baidu",
+  "vendorType": "commercial",
+  "websiteUrl": "https://cloud.baidu.com"
+}

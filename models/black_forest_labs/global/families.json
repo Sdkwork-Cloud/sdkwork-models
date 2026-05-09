@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "flux-2-pro",
+      "displayName": "FLUX",
+      "familyCode": "flux",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "black_forest_labs"
+}

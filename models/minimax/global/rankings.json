@@ -1,0 +1,44 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "minimax/global/MiniMax-M2.7",
+          "modelId": "MiniMax-M2.7",
+          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
+          "rankNo": 19
+        },
+        {
+          "catalogKey": "minimax/global/MiniMax-M2.7-highspeed",
+          "modelId": "MiniMax-M2.7-highspeed",
+          "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
+          "rankNo": 20
+        },
+        {
+          "catalogKey": "minimax/global/MiniMax-M2.5",
+          "modelId": "MiniMax-M2.5",
+          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
+          "rankNo": 21
+        },
+        {
+          "catalogKey": "minimax/global/MiniMax-M2.5-highspeed",
+          "modelId": "MiniMax-M2.5-highspeed",
+          "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
+          "rankNo": 22
+        },
+        {
+          "catalogKey": "minimax/global/M2-her",
+          "modelId": "M2-her",
+          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
+          "rankNo": 23
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-08",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "minimax"
+}

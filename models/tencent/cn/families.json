@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "hunyuan-turbos-latest",
+      "displayName": "Hunyuan",
+      "familyCode": "hunyuan",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "tencent"
+}

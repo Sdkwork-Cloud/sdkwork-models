@@ -1,0 +1,49 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/global/gpt-5.4-pro",
+  "colorToken": "#111827",
+  "contextTokens": 1050000,
+  "description": "OpenAI GPT-5.4 Pro model for the highest reasoning, coding, and agent workloads on the GPT-5.4 generation.",
+  "displayName": "GPT-5.4 Pro",
+  "familyCode": "gpt-5",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1180,
+  "latencyP95Ms": 3900,
+  "lifecycle": "active",
+  "maxInputTokens": 1050000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-5.4-pro",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1170.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.4-pro"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.980000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.990000"
+}

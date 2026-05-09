@@ -1,0 +1,600 @@
+{
+  "catalogVersion": "2026.05.08.1",
+  "observedAt": "2026-05-08T00:00:00Z",
+  "policy": {
+    "officialFirst": true,
+    "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
+    "requiredModelRule": "Every enabled frontier/default model and every current vendor default must be listed in requiredModels with a model file and a pricing file."
+  },
+  "references": [
+    {
+      "code": "new-api-ratio-setting",
+      "commit": "fc377dae3e3994dc4b076e678704e1c5ef7a5e90",
+      "observedAt": "2026-05-07T00:00:00Z",
+      "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+    },
+    {
+      "code": "new-api-cache-ratio",
+      "commit": "fc377dae3e3994dc4b076e678704e1c5ef7a5e90",
+      "observedAt": "2026-05-07T00:00:00Z",
+      "url": "external/new-api/setting/ratio_setting/cache_ratio.go"
+    },
+    {
+      "code": "sub2api-model-prices",
+      "commit": "b0a2252ed19c3720e6adafde6083e64fbac2efa9",
+      "observedAt": "2026-05-07T00:00:00Z",
+      "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+    }
+  ],
+  "schemaVersion": "1.1.0",
+  "vendors": [
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Alibaba Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; Qwen is a family/product line, not the vendor identity.",
+      "official": {
+        "additionalUrls": [
+          "https://help.aliyun.com/zh/model-studio/"
+        ],
+        "modelsUrl": "https://help.aliyun.com/zh/model-studio/text-generation-model",
+        "pricingUrl": "https://help.aliyun.com/zh/model-studio/billing"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "qwen3.6-max-preview"
+      ],
+      "vendorCode": "alibaba",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "Official current Claude families plus local new-api/sub2api cross-checks. Pending independent official snapshot re-verification before official_verified status.",
+      "official": {
+        "additionalUrls": [
+          "https://www.anthropic.com/pricing",
+          "https://www.anthropic.com/news/claude-opus-4-7",
+          "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
+          "https://platform.claude.com/docs/en/docs/about-claude/pricing"
+        ],
+        "modelsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+        "pricingUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        },
+        {
+          "code": "new-api-cache-ratio",
+          "url": "external/new-api/setting/ratio_setting/cache_ratio.go"
+        },
+        {
+          "code": "sub2api-model-prices",
+          "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "claude-opus-4-7",
+        "claude-sonnet-4-6",
+        "claude-haiku-4-5"
+      ],
+      "vendorCode": "anthropic",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Baidu AI Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; ERNIE/Qianfan product names are not vendor identities.",
+      "official": {
+        "additionalUrls": [
+          "https://cloud.baidu.com/doc/WENXINWORKSHOP/",
+          "https://cloud.baidu.com/doc/qianfan-docs/"
+        ],
+        "modelsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43",
+        "pricingUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "ernie-5.0-thinking-preview"
+      ],
+      "vendorCode": "baidu",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "FLUX.2 Pro pricing uses official per-megapixel BFL rows rather than synthetic per-result pricing. Pending independent official snapshot re-verification before official_verified status.",
+      "official": {
+        "additionalUrls": [
+          "https://bfl.ai/pricing",
+          "https://docs.bfl.ai/"
+        ],
+        "modelsUrl": "https://docs.bfl.ai",
+        "pricingUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "flux-2-pro"
+      ],
+      "vendorCode": "black_forest_labs",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing; Volcengine/Doubao/Seed product names are platform or family names.",
+      "official": {
+        "additionalUrls": [
+          "https://www.volcengine.com/docs/",
+          "https://seed.bytedance.com/en/seed2"
+        ],
+        "modelsUrl": "https://www.volcengine.com/docs/82379",
+        "pricingUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "doubao-seed-2-0-pro-260215"
+      ],
+      "vendorCode": "bytedance",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "ByteDance international operation is modeled as the global region of the vendor with USD billing; Seedance is a model family, not the vendor identity.",
+      "official": {
+        "additionalUrls": [
+          "https://www.volcengine.com/docs/82379"
+        ],
+        "modelsUrl": "https://seed.bytedance.com/en/seed2",
+        "pricingUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "doubao-seedance-2-0-260128"
+      ],
+      "vendorCode": "bytedance",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "DeepSeek international API operation is modeled as the global region of the vendor with USD billing. Official English pricing page provides USD cache-hit, cache-miss input, and output prices.",
+      "official": {
+        "additionalUrls": [
+          "https://api-docs.deepseek.com/"
+        ],
+        "modelsUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+        "pricingUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        },
+        {
+          "code": "sub2api-model-prices",
+          "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "deepseek-v4-flash",
+        "deepseek-v4-pro"
+      ],
+      "vendorCode": "deepseek",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "DeepSeek mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese pricing page provides CNY cache-hit, cache-miss input, and output prices.",
+      "official": {
+        "additionalUrls": [
+          "https://api-docs.deepseek.com/zh-cn/"
+        ],
+        "modelsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+        "pricingUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        },
+        {
+          "code": "sub2api-model-prices",
+          "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "deepseek-v4-flash",
+        "deepseek-v4-pro"
+      ],
+      "vendorCode": "deepseek",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "ElevenLabs audio model catalog source.",
+      "official": {
+        "additionalUrls": [
+          "https://elevenlabs.io/docs/"
+        ],
+        "modelsUrl": "https://elevenlabs.io/docs/models",
+        "pricingUrl": "https://elevenlabs.io/docs/api-reference"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "eleven_text_to_sound_v2"
+      ],
+      "vendorCode": "elevenlabs",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "Gemini 3.1 and Veo 3.1 model IDs and multimodal/token meters are sourced from official Gemini API model and pricing docs. Pending independent official snapshot re-verification before official_verified status.",
+      "official": {
+        "additionalUrls": [
+          "https://ai.google.dev/pricing",
+          "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
+          "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+          "https://ai.google.dev/gemini-api/docs/models/gemini"
+        ],
+        "modelsUrl": "https://ai.google.dev/gemini-api/docs/models",
+        "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        },
+        {
+          "code": "new-api-cache-ratio",
+          "url": "external/new-api/setting/ratio_setting/cache_ratio.go"
+        },
+        {
+          "code": "sub2api-model-prices",
+          "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "gemini-3.1-pro-preview",
+        "gemini-3-flash-preview",
+        "gemini-3.1-flash-lite",
+        "gemini-3.1-flash-lite-preview",
+        "gemini-3.1-flash-live-preview",
+        "gemini-3.1-flash-image-preview",
+        "gemini-3.1-flash-tts-preview",
+        "imagen-4.0-generate-001",
+        "veo-3.1-generate-preview",
+        "veo-3.1-fast-generate-preview",
+        "veo-3.1-lite-generate-preview"
+      ],
+      "vendorCode": "google",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Kuaishou international operation is modeled as the global region of the vendor with USD billing; Kling is a model family, not the vendor identity.",
+      "official": {
+        "additionalUrls": [
+          "https://klingai.com"
+        ],
+        "modelsUrl": "https://app.klingai.com/global/dev/document-api",
+        "pricingUrl": "https://app.klingai.com/global/dev/document-api"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "kling-v3-0-preview"
+      ],
+      "supportedModels": [
+        "kling-v3-0-preview"
+      ],
+      "vendorCode": "kuaishou",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Kuaishou mainland China operation is modeled as the cn region of the vendor with CNY billing. Supported Kling model metadata is listed, but pricing is intentionally not published until official domestic CNY price rows are confirmed.",
+      "official": {
+        "additionalUrls": [
+          "https://klingai.kuaishou.com"
+        ],
+        "modelsUrl": "https://app.klingai.com/cn/dev/document-api/",
+        "pricingUrl": "https://app.klingai.com/cn/dev/document-api/"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [],
+      "supportedModels": [
+        "kling-v3-0-preview"
+      ],
+      "vendorCode": "kuaishou",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "MiniMax international operation is modeled as the global region of the vendor with USD billing. Current non-legacy text models are sourced from official MiniMax Global models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.minimax.io/docs/guides/text-generation",
+          "https://platform.minimax.io/docs/guides/text-chat",
+          "https://platform.minimax.io/docs/api-reference/api-overview",
+          "https://www.minimax.io/"
+        ],
+        "modelsUrl": "https://platform.minimax.io/docs/guides/models-intro",
+        "pricingUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "MiniMax-M2.7",
+        "MiniMax-M2.7-highspeed",
+        "MiniMax-M2.5",
+        "MiniMax-M2.5-highspeed",
+        "M2-her"
+      ],
+      "vendorCode": "minimax",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Current non-legacy text models are sourced from official MiniMax China models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.minimaxi.com/docs/guides/text-generation",
+          "https://platform.minimaxi.com/docs/guides/text-chat",
+          "https://platform.minimaxi.com/docs/api-reference/api-overview",
+          "https://www.minimaxi.com/"
+        ],
+        "modelsUrl": "https://platform.minimaxi.com/docs/guides/models-intro",
+        "pricingUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "MiniMax-M2.7",
+        "MiniMax-M2.7-highspeed",
+        "MiniMax-M2.5",
+        "MiniMax-M2.5-highspeed",
+        "M2-her"
+      ],
+      "vendorCode": "minimax",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Moonshot/Kimi international API operation is modeled as the global region of the vendor with USD billing. Official international landing and pricing pages list K2.6 and K2.5 token prices.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.kimi.ai/docs/pricing/chat-k26",
+          "https://platform.kimi.ai/docs/pricing/chat-k25",
+          "https://platform.kimi.ai/docs/llms.txt"
+        ],
+        "modelsUrl": "https://platform.kimi.ai/",
+        "pricingUrl": "https://platform.kimi.ai/"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "vendorCode": "moonshot",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Moonshot/Kimi mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese landing and pricing pages list K2.6 and K2.5 token prices.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.kimi.com/docs/pricing/chat-k26",
+          "https://platform.kimi.com/docs/pricing/chat-k25",
+          "https://platform.kimi.com/docs/llms.txt"
+        ],
+        "modelsUrl": "https://platform.kimi.com/",
+        "pricingUrl": "https://platform.kimi.com/"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "kimi-k2.6",
+        "kimi-k2.5"
+      ],
+      "vendorCode": "moonshot",
+      "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "OpenAI official API pricing and model docs; gpt-5.2 and gpt-image-1.5 are kept as deprecated catalog entries. Pending independent official snapshot re-verification before official_verified status.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.openai.com/docs/pricing",
+          "https://platform.openai.com/docs/guides/embeddings",
+          "https://platform.openai.com/docs/models/gpt-4o-transcribe",
+          "https://platform.openai.com/docs/models/gpt-5.2",
+          "https://developers.openai.com/api/docs/models/"
+        ],
+        "modelsUrl": "https://platform.openai.com/docs/models",
+        "pricingUrl": "https://openai.com/api/pricing/"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        },
+        {
+          "code": "new-api-cache-ratio",
+          "url": "external/new-api/setting/ratio_setting/cache_ratio.go"
+        },
+        {
+          "code": "sub2api-model-prices",
+          "url": "external/sub2api/backend/resources/model-pricing/model_prices_and_context_window.json"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "gpt-5.5",
+        "gpt-5.5-pro",
+        "gpt-5.4-pro",
+        "gpt-5.4",
+        "gpt-5.4-mini",
+        "gpt-5.4-nano",
+        "gpt-image-2",
+        "gpt-realtime-1.5",
+        "text-embedding-3-small",
+        "gpt-4o-transcribe"
+      ],
+      "vendorCode": "openai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "Stability AI image API public docs.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.stability.ai/docs/"
+        ],
+        "modelsUrl": "https://platform.stability.ai/docs",
+        "pricingUrl": "https://platform.stability.ai/docs"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "stable-image-ultra"
+      ],
+      "vendorCode": "stability_ai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "Suno API source.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.suno.com/"
+        ],
+        "modelsUrl": "https://suno.com/api",
+        "pricingUrl": "https://suno.com/api"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "suno-v5"
+      ],
+      "vendorCode": "suno",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Tencent Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; Hunyuan is a model family, not the vendor identity.",
+      "official": {
+        "additionalUrls": [
+          "https://cloud.tencent.com/document/product/1729/"
+        ],
+        "modelsUrl": "https://cloud.tencent.com/document/product/1729/104753",
+        "pricingUrl": "https://cloud.tencent.com/document/product/1729/97731"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "hunyuan-turbos-latest"
+      ],
+      "vendorCode": "tencent",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "notes": "xAI official docs list Grok 4.3 pricing and old 4.x model shutdown dates. Pending independent official snapshot re-verification before official_verified status.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.x.ai/"
+        ],
+        "modelsUrl": "https://docs.x.ai/docs/models",
+        "pricingUrl": "https://docs.x.ai/docs/models"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "global",
+      "requiredModels": [
+        "grok-4.3"
+      ],
+      "vendorCode": "xai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "notes": "Zhipu AI mainland China operation is modeled as the cn region of the vendor with CNY billing; GLM/BigModel product names are not vendor identities.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.bigmodel.cn/"
+        ],
+        "modelsUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.1",
+        "pricingUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+      },
+      "references": [
+        {
+          "code": "new-api-ratio-setting",
+          "url": "external/new-api/setting/ratio_setting/model_ratio.go"
+        }
+      ],
+      "regionCode": "cn",
+      "requiredModels": [
+        "glm-5.1"
+      ],
+      "vendorCode": "zhipu",
+      "verificationStatus": "official_url_declared"
+    }
+  ]
+}

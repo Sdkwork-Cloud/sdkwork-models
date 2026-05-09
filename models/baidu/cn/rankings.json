@@ -1,0 +1,20 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "baidu/cn/ernie-5.0-thinking-preview",
+          "modelId": "ernie-5.0-thinking-preview",
+          "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output; doubles above 32K",
+          "rankNo": 16
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-05-07",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "baidu"
+}

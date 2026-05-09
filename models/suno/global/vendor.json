@@ -1,0 +1,30 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "US",
+  "capabilities": [
+    "music"
+  ],
+  "countryRegion": "US",
+  "description": "Suno music model vendor.",
+  "displayName": "Suno",
+  "docsUrl": "https://suno.com/api",
+  "legalName": "Suno",
+  "marketScope": "global",
+  "modelFamilies": [
+    "suno"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 160,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://suno.com/api"
+  },
+  "vendorCode": "suno",
+  "vendorType": "commercial",
+  "websiteUrl": "https://suno.com"
+}

@@ -1,0 +1,62 @@
+{
+  "catalogKey": "openai/global/gpt-image-1.5",
+  "currency": "USD",
+  "modelId": "gpt-image-1.5",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "inputType": "text",
+      "mediaType": "text",
+      "meterCode": "image_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-image-1.5-input",
+      "priceSide": "reference",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "5.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "inputType": "image",
+      "mediaType": "image",
+      "meterCode": "image_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-image-1.5-image-input",
+      "priceSide": "reference",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "7.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "image_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-image-1.5-output",
+      "priceSide": "reference",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "30.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

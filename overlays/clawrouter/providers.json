@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "overlayCode": "clawrouter",
+  "description": "ClawRouter access-provider overlay. This file maps vendor-owned model facts to provider and channel defaults without redefining public model metadata.",
+  "providers": [
+    {
+      "providerCode": "openai_direct",
+      "displayName": "OpenAI direct",
+      "vendorCode": "openai",
+      "protocol": "openai_compatible",
+      "baseUrlTemplate": "https://api.openai.com/v1",
+      "capabilities": [
+        "chat",
+        "embedding",
+        "image",
+        "audio",
+        "video"
+      ]
+    },
+    {
+      "providerCode": "anthropic_direct",
+      "displayName": "Anthropic direct",
+      "vendorCode": "anthropic",
+      "protocol": "anthropic_messages",
+      "baseUrlTemplate": "https://api.anthropic.com",
+      "capabilities": [
+        "chat"
+      ]
+    },
+    {
+      "providerCode": "google_ai_direct",
+      "displayName": "Google AI direct",
+      "vendorCode": "google",
+      "protocol": "google_gemini",
+      "baseUrlTemplate": "https://generativelanguage.googleapis.com",
+      "capabilities": [
+        "chat",
+        "image",
+        "video"
+      ]
+    }
+  ],
+  "channels": [],
+  "routes": []
+}

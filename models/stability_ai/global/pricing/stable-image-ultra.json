@@ -1,0 +1,26 @@
+{
+  "catalogKey": "stability_ai/global/stable-image-ultra",
+  "currency": "USD",
+  "modelId": "stable-image-ultra",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-05-07T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "stability-ai-stable-image-ultra-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-05-07T00:00:00Z",
+        "sourceUrl": "https://platform.stability.ai/docs"
+      },
+      "unitPrice": "0.080000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "stability_ai"
+}

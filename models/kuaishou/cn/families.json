@@ -1,0 +1,14 @@
+{
+  "families": [
+    {
+      "displayName": "Kling",
+      "familyCode": "kling",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "kuaishou"
+}

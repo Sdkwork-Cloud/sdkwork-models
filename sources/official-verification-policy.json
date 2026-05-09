@@ -1,0 +1,41 @@
+{
+  "catalogVersion": "2026.05.08.1",
+  "generatedAt": "2026-05-08T00:00:00Z",
+  "policy": {
+    "description": "Vendor-regions listed here must be official_verified and must have an independent official model snapshot for the same catalog release.",
+    "mode": "release_gate"
+  },
+  "requiredVerifiedVendorRegions": [
+    {
+      "reason": "Current release gate for DeepSeek mainland China official price and model evidence.",
+      "regionCode": "cn",
+      "vendorCode": "deepseek"
+    },
+    {
+      "reason": "Current release gate for DeepSeek international official price and model evidence.",
+      "regionCode": "global",
+      "vendorCode": "deepseek"
+    },
+    {
+      "reason": "Current release gate for MiniMax mainland China official price and model evidence.",
+      "regionCode": "cn",
+      "vendorCode": "minimax"
+    },
+    {
+      "reason": "Current release gate for MiniMax international official price and model evidence.",
+      "regionCode": "global",
+      "vendorCode": "minimax"
+    },
+    {
+      "reason": "Current release gate for Moonshot mainland China official price and model evidence.",
+      "regionCode": "cn",
+      "vendorCode": "moonshot"
+    },
+    {
+      "reason": "Current release gate for Moonshot international official price and model evidence.",
+      "regionCode": "global",
+      "vendorCode": "moonshot"
+    }
+  ],
+  "schemaVersion": "1.1.0"
+}

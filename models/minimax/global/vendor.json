@@ -1,0 +1,35 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "chat",
+    "audio",
+    "video",
+    "music",
+    "image",
+    "tool"
+  ],
+  "countryRegion": "GLOBAL",
+  "description": "MiniMax international API operation billed in USD.",
+  "displayName": "MiniMax",
+  "docsUrl": "https://platform.minimax.io/docs",
+  "legalName": "MiniMax",
+  "marketScope": "international",
+  "modelFamilies": [
+    "minimax"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 120,
+  "source": {
+    "observedAt": "2026-05-08T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/models-intro"
+  },
+  "vendorCode": "minimax",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.minimax.io"
+}

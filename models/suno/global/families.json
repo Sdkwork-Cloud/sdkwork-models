@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "suno-v5",
+      "displayName": "Suno",
+      "familyCode": "suno",
+      "familyType": "music",
+      "primaryModality": "music",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "suno"
+}

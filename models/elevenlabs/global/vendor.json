@@ -1,0 +1,31 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "US",
+  "capabilities": [
+    "audio",
+    "music"
+  ],
+  "countryRegion": "US",
+  "description": "ElevenLabs audio model vendor.",
+  "displayName": "ElevenLabs",
+  "docsUrl": "https://elevenlabs.io/docs/models",
+  "legalName": "ElevenLabs",
+  "marketScope": "global",
+  "modelFamilies": [
+    "elevenlabs-audio"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 170,
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/models"
+  },
+  "vendorCode": "elevenlabs",
+  "vendorType": "commercial",
+  "websiteUrl": "https://elevenlabs.io"
+}

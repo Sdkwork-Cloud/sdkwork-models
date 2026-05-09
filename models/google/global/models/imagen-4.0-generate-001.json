@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "google/global/imagen-4.0-generate-001",
+  "colorToken": "#0891b2",
+  "description": "Google image generation model.",
+  "displayName": "Imagen 4.0 Generate",
+  "familyCode": "imagen",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4800,
+  "latencyP95Ms": 18000,
+  "lifecycle": "active",
+  "modelId": "imagen-4.0-generate-001",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://cloud.google.com/vertex-ai/generative-ai/docs/models"
+  },
+  "strengths": [
+    "Image generation",
+    "Product imagery"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.900000"
+}

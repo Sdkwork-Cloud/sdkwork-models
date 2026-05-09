@@ -1,0 +1,323 @@
+#!/usr/bin/env node
+import { existsSync, statSync } from "node:fs";
+import { pathToFileURL } from "node:url";
+import { join } from "node:path";
+import {
+  buildCatalogIndex,
+  buildVendorList,
+  catalogKey,
+  collectRegionalCatalogDirectories,
+  isDecimalString,
+  issue,
+  loadManifest,
+  loadMeters,
+  loadVendorBundle,
+  projectRootFromTool,
+  readJsonFile,
+  stableJson,
+} from "./catalog-lib.mjs";
+
+export function validateCatalog(root) {
+  const issues = [];
+
+  function requireFile(rel) {
+    const path = join(root, rel);
+    if (!existsSync(path) || !statSync(path).isFile()) {
+      issues.push(issue("file.missing", rel, `${rel} is required`));
+    }
+  }
+
+  for (const rel of [
+    "sdkwork-models.json",
+    "models/meters.json",
+    "models/vendors.json",
+    "models/index.json",
+    "schemas/catalog.schema.json",
+    "schemas/index.schema.json",
+    "schemas/model.schema.json",
+    "schemas/pricing.schema.json",
+  ]) {
+    requireFile(rel);
+  }
+
+  const manifest = loadManifest(root);
+  const modelsRoot = join(root, manifest.modelsRoot);
+  const meterCodes = new Set(loadMeters(root).map((meter) => meter.meterCode));
+  const seenVendorRegions = new Set();
+  const seenModels = new Map();
+
+  for (const regionDir of collectRegionalCatalogDirectories(modelsRoot)) {
+    const bundle = loadVendorBundle(regionDir);
+    const pathPrefix = `models/${bundle.vendorCode}/${bundle.regionCode}`;
+    if (bundle.vendor.vendorCode !== bundle.vendorCode) {
+      issues.push(
+        issue(
+          "vendor.directory.mismatch",
+          `${pathPrefix}/vendor.json#/vendorCode`,
+          `vendorCode ${bundle.vendor.vendorCode} must match directory ${bundle.vendorCode}`,
+        ),
+      );
+    }
+    if (bundle.vendor.regionCode !== bundle.regionCode) {
+      issues.push(
+        issue(
+          "vendor.region_directory.mismatch",
+          `${pathPrefix}/vendor.json#/regionCode`,
+          `regionCode ${bundle.vendor.regionCode} must match directory ${bundle.regionCode}`,
+        ),
+      );
+    }
+    if (bundle.vendor.vendorCode && /_(cn|global)$/.test(bundle.vendor.vendorCode)) {
+      issues.push(issue("vendor.code.region_suffix", `${pathPrefix}/vendor.json#/vendorCode`, "vendorCode must be the unique vendor identity; put operating context in regionCode"));
+    }
+    const vendorRegionKey = `${bundle.vendor.vendorCode}/${bundle.vendor.regionCode}`;
+    if (seenVendorRegions.has(vendorRegionKey)) {
+      issues.push(issue("vendor_region.duplicate", pathPrefix, `${vendorRegionKey} is duplicated`));
+    }
+    seenVendorRegions.add(vendorRegionKey);
+    for (const field of ["regionCode", "marketScope", "billingCurrency", "billingJurisdiction", "operatingRegions"]) {
+      const value = bundle.vendor[field];
+      if (value === undefined || value === null || (Array.isArray(value) && value.length === 0)) {
+        issues.push(issue("vendor.operating_context.missing", `${pathPrefix}/vendor.json#/${field}`, `${field} is required for vendor operating and billing context`));
+      }
+    }
+    if (/\b(qwen|kling|hunyuan|bigmodel|seedance)\b/i.test(bundle.vendor.vendorCode.replace(/_/g, " "))) {
+      issues.push(issue("vendor.code.product_line", `${pathPrefix}/vendor.json#/vendorCode`, "vendorCode must identify the unique vendor identity, not a product line"));
+    }
+
+    const familyCodes = new Set((bundle.families.families ?? []).map((family) => family.familyCode));
+    if (bundle.families.vendorCode !== bundle.vendorCode) {
+      issues.push(issue("family.vendor.mismatch", `${pathPrefix}/families.json`, "families vendorCode must match directory"));
+    }
+    if (bundle.families.regionCode !== bundle.regionCode) {
+      issues.push(issue("family.region.mismatch", `${pathPrefix}/families.json`, "families regionCode must match directory"));
+    }
+
+    const modelsById = new Map(bundle.models.map((model) => [model.modelId, model]));
+    const pricedModelIds = new Set(bundle.pricing.map((pricing) => pricing.modelId));
+    for (const [index, family] of (bundle.families.families ?? []).entries()) {
+      if (!family.defaultModel) {
+        continue;
+      }
+      const defaultModel = modelsById.get(family.defaultModel);
+      if (!defaultModel) {
+        issues.push(issue("family.default_model.missing", `${pathPrefix}/families.json#/families/${index}/defaultModel`, `${family.defaultModel} is not defined for ${bundle.vendorCode}/${bundle.regionCode}`));
+        continue;
+      }
+      if (defaultModel.routingState !== "enabled" || defaultModel.shelfState !== "listed") {
+        issues.push(issue("family.default_model.not_routable", `${pathPrefix}/families.json#/families/${index}/defaultModel`, `${family.defaultModel} must be enabled and listed to be a family default`));
+      }
+      if (!pricedModelIds.has(family.defaultModel)) {
+        issues.push(issue("family.default_model.pricing_missing", `${pathPrefix}/families.json#/families/${index}/defaultModel`, `${family.defaultModel} must have pricing to be a family default`));
+      }
+    }
+
+    for (const model of bundle.models) {
+      const modelPath = `${pathPrefix}/models/${model.modelId}.json`;
+      if (model.vendorCode !== bundle.vendorCode) {
+        issues.push(issue("model.vendor.mismatch", `${modelPath}#/vendorCode`, "model vendorCode must match directory"));
+      }
+      if (model.regionCode !== bundle.regionCode) {
+        issues.push(issue("model.region.mismatch", `${modelPath}#/regionCode`, "model regionCode must match directory"));
+      }
+      const expectedCatalogKey = catalogKey(bundle.vendorCode, bundle.regionCode, model.modelId);
+      if (model.catalogKey !== expectedCatalogKey) {
+        issues.push(issue("model.catalog_key.mismatch", `${modelPath}#/catalogKey`, `catalogKey must be ${expectedCatalogKey}`));
+      }
+      if (!familyCodes.has(model.familyCode)) {
+        issues.push(issue("model.family.missing", `${modelPath}#/familyCode`, `familyCode ${model.familyCode} is not defined`));
+      }
+      if (!model.source?.sourceUrl || !model.source?.observedAt) {
+        issues.push(issue("model.source.missing", `${modelPath}#/source`, "model sourceUrl and observedAt are required"));
+      }
+      const modelCatalogKey = expectedCatalogKey;
+      if (seenModels.has(modelCatalogKey)) {
+        issues.push(issue("model.duplicate", modelPath, `${modelCatalogKey} is already defined in ${seenModels.get(modelCatalogKey)}`));
+      }
+      seenModels.set(modelCatalogKey, modelPath);
+    }
+
+    const vendorModelIds = new Set(bundle.models.map((model) => model.modelId));
+    for (const model of bundle.models) {
+      if (
+        (model.routingState === "enabled" || model.shelfState === "listed" || model.releaseStage === "active") &&
+        !pricedModelIds.has(model.modelId)
+      ) {
+        issues.push(
+          issue(
+            "model.pricing.required",
+            `${pathPrefix}/models/${model.modelId}.json`,
+            `${model.catalogKey} is enabled, listed, or active and must have a pricing file with billable rows`,
+          ),
+        );
+      }
+    }
+    for (const pricing of bundle.pricing) {
+      const pricingPath = `${pathPrefix}/pricing/${pricing.modelId}.json`;
+      if (pricing.vendorCode !== bundle.vendorCode) {
+        issues.push(issue("pricing.vendor.mismatch", `${pricingPath}#/vendorCode`, "pricing vendorCode must match directory"));
+      }
+      if (pricing.regionCode !== bundle.regionCode) {
+        issues.push(issue("pricing.region.mismatch", `${pricingPath}#/regionCode`, "pricing regionCode must match directory"));
+      }
+      const expectedCatalogKey = catalogKey(bundle.vendorCode, bundle.regionCode, pricing.modelId);
+      if (pricing.catalogKey !== expectedCatalogKey) {
+        issues.push(issue("pricing.catalog_key.mismatch", `${pricingPath}#/catalogKey`, `catalogKey must be ${expectedCatalogKey}`));
+      }
+      if (bundle.vendor.billingCurrency && pricing.currency !== bundle.vendor.billingCurrency) {
+        issues.push(issue("pricing.currency.vendor_mismatch", `${pricingPath}#/currency`, `${pricing.modelId} currency must match vendor billingCurrency ${bundle.vendor.billingCurrency}`));
+      }
+      if (!vendorModelIds.has(pricing.modelId)) {
+        issues.push(issue("pricing.model.missing", `${pricingPath}#/modelId`, `${pricing.modelId} is not defined for ${bundle.vendorCode}`));
+      }
+      const seenPriceIds = new Set();
+      const seenPriceKeys = new Set();
+      if (!Array.isArray(pricing.prices) || pricing.prices.length === 0) {
+        issues.push(issue("pricing.prices.empty", `${pricingPath}#/prices`, `${pricing.modelId} pricing must contain at least one billable row`));
+      }
+      for (const [index, price] of (pricing.prices ?? []).entries()) {
+        if (seenPriceIds.has(price.priceId)) {
+          issues.push(issue("price.id.duplicate", `${pricingPath}#/prices/${index}/priceId`, `${price.priceId} is duplicated in ${pricing.modelId}`));
+        }
+        seenPriceIds.add(price.priceId);
+
+        const priceKey = [
+          price.priceSide,
+          price.pricingScope ?? "model",
+          price.meterCode,
+          price.mediaType ?? "",
+          price.mediaDirection ?? "",
+          price.inputType ?? "",
+          price.outputType ?? "",
+          price.tierCode ?? "",
+          price.currency ?? pricing.currency,
+          price.minimumQuantity ?? "0",
+          price.effectiveFrom,
+        ].join("|");
+        if (seenPriceKeys.has(priceKey)) {
+          issues.push(issue("price.key.duplicate", `${pricingPath}#/prices/${index}`, `${pricing.modelId} has duplicate effective pricing key ${priceKey}`));
+        }
+        seenPriceKeys.add(priceKey);
+
+        for (const field of ["unitSize", "unitPrice", "minimumQuantity"]) {
+          if (!isDecimalString(price[field])) {
+            issues.push(issue("price.decimal.invalid", `${pricingPath}#/prices/${index}/${field}`, `${field} must be a decimal string`));
+          }
+        }
+        if (bundle.vendor.billingCurrency && (price.currency ?? pricing.currency) !== bundle.vendor.billingCurrency) {
+          issues.push(issue("price.currency.vendor_mismatch", `${pricingPath}#/prices/${index}/currency`, `${price.priceId} currency must match vendor billingCurrency ${bundle.vendor.billingCurrency}`));
+        }
+        if (!meterCodes.has(price.meterCode)) {
+          issues.push(issue("price.meter.missing", `${pricingPath}#/prices/${index}/meterCode`, `meterCode ${price.meterCode} is not defined`));
+        }
+        if (!price.source?.sourceUrl || !price.source?.observedAt || !price.effectiveFrom) {
+          issues.push(issue("price.source.missing", `${pricingPath}#/prices/${index}`, "sourceUrl, observedAt, and effectiveFrom are required"));
+        }
+      }
+    }
+
+    for (const snapshot of bundle.rankings.snapshots ?? []) {
+      for (const [index, item] of (snapshot.items ?? []).entries()) {
+        if (!vendorModelIds.has(item.modelId)) {
+          issues.push(issue("ranking.model.missing", `${pathPrefix}/rankings.json#/snapshots/${snapshot.snapshotDate}/items/${index}/modelId`, `${item.modelId} is not defined for ${bundle.vendorCode}`));
+        }
+      }
+    }
+  }
+
+  const expectedIndex = buildCatalogIndex(root);
+  const expectedVendors = buildVendorList(root);
+  const currentIndex = readJsonFile(join(root, "models", "index.json"));
+  const currentVendors = readJsonFile(join(root, "models", "vendors.json"));
+
+  const currentIndexVendors = new Map(
+    (currentIndex.vendors ?? []).map((vendor, index) => [
+      `${vendor.vendorCode}/${vendor.regionCode}`,
+      { vendor, index },
+    ]),
+  );
+  const expectedIndexVendors = new Map(
+    (expectedIndex.vendors ?? []).map((vendor) => [`${vendor.vendorCode}/${vendor.regionCode}`, vendor]),
+  );
+  for (const [vendorRegionKey, expectedVendor] of expectedIndexVendors) {
+    const current = currentIndexVendors.get(vendorRegionKey);
+    if (!current) {
+      issues.push(issue("index.vendor_region.missing", "models/index.json#/vendors", `${vendorRegionKey} is missing from models/index.json`));
+      continue;
+    }
+    const path = `models/index.json#/vendors/${current.index}`;
+    const checks = [
+      ["path", "index.path.mismatch"],
+      ["familiesPath", "index.families_path.mismatch"],
+      ["modelsPath", "index.models_path.mismatch"],
+      ["pricingPath", "index.pricing_path.mismatch"],
+      ["rankingsPath", "index.rankings_path.mismatch"],
+      ["catalogKeyPrefix", "index.catalog_key_prefix.mismatch"],
+      ["modelCount", "index.model_count.mismatch"],
+      ["pricingFileCount", "index.pricing_file_count.mismatch"],
+      ["familyCount", "index.family_count.mismatch"],
+      ["rankingSnapshotCount", "index.ranking_snapshot_count.mismatch"],
+      ["sha256", "index.sha256.mismatch"],
+    ];
+    for (const [field, code] of checks) {
+      if (stableJson(current.vendor[field]) !== stableJson(expectedVendor[field])) {
+        issues.push(issue(code, `${path}/${field}`, `${vendorRegionKey} ${field} must match generated catalog index`));
+      }
+    }
+    for (const [field, code] of [
+      ["modelFiles", "index.model_files.mismatch"],
+      ["pricingFiles", "index.pricing_files.mismatch"],
+    ]) {
+      if (stableJson(current.vendor[field]) !== stableJson(expectedVendor[field])) {
+        issues.push(issue(code, `${path}/${field}`, `${vendorRegionKey} ${field} must exactly match published JSON files`));
+      }
+    }
+  }
+  for (const [vendorRegionKey, current] of currentIndexVendors) {
+    if (!expectedIndexVendors.has(vendorRegionKey)) {
+      issues.push(issue("index.vendor_region.extra", `models/index.json#/vendors/${current.index}`, `${vendorRegionKey} is not backed by a catalog directory`));
+    }
+  }
+  for (const vendor of currentIndex.vendors ?? []) {
+    const pathPrefix = `models/${vendor.vendorCode}/${vendor.regionCode}`;
+    for (const [field, directory] of [
+      ["modelFiles", "models"],
+      ["pricingFiles", "pricing"],
+    ]) {
+      const files = vendor[field];
+      if (!Array.isArray(files)) {
+        issues.push(issue(`index.${field}.invalid`, `models/index.json#/${vendor.vendorCode}/${vendor.regionCode}/${field}`, `${field} must be an array`));
+        continue;
+      }
+      for (const [index, relPath] of files.entries()) {
+        if (typeof relPath !== "string") {
+          issues.push(issue(`index.${field}.invalid`, `models/index.json#/${vendor.vendorCode}/${vendor.regionCode}/${field}/${index}`, `${field} entries must be strings`));
+          continue;
+        }
+        if (!relPath.startsWith(`${vendor.vendorCode}/${vendor.regionCode}/${directory}/`)) {
+          issues.push(issue(`index.${field}.path_scope`, `models/index.json#/${vendor.vendorCode}/${vendor.regionCode}/${field}/${index}`, `${relPath} must stay inside ${pathPrefix}/${directory}`));
+        }
+      }
+    }
+  }
+
+  if (stableJson(currentIndex) !== stableJson(expectedIndex)) {
+    issues.push(issue("index.stale", "models/index.json", "models/index.json must be regenerated with tools/build-index.mjs"));
+  }
+  if (stableJson(currentVendors) !== stableJson(expectedVendors)) {
+    issues.push(issue("vendors.stale", "models/vendors.json", "models/vendors.json must be regenerated with tools/build-index.mjs"));
+  }
+
+  return {
+    ok: issues.every((item) => item.severity !== "error"),
+    issues,
+  };
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const payload = validateCatalog(projectRootFromTool(import.meta.url));
+  console.log(JSON.stringify(payload, null, 2));
+  if (!payload.ok) {
+    process.exit(1);
+  }
+}

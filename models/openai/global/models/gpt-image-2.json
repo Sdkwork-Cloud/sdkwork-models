@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "openai/global/gpt-image-2",
+  "colorToken": "#0f766e",
+  "description": "Current OpenAI image generation and editing model.",
+  "displayName": "GPT Image 2",
+  "familyCode": "gpt-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4200,
+  "latencyP95Ms": 16000,
+  "lifecycle": "active",
+  "modelId": "gpt-image-2",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "850.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-05-07T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Image generation",
+    "Image editing",
+    "Multimodal input"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.985000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.960000"
+}
