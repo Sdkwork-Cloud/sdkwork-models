@@ -18,7 +18,6 @@ const root = projectRootFromTool(import.meta.url);
 const args = process.argv.slice(2);
 const check = args.includes("--check");
 const asOfArg = args.indexOf("--as-of");
-const asOf = asOfArg >= 0 ? args[asOfArg + 1] : undefined;
 
 const expectedIndex = buildCatalogIndex(root);
 const currentIndex = readJsonFile(join(root, "models", "index.json"));
@@ -32,6 +31,8 @@ if (!validation.ok) {
   console.error(JSON.stringify(validation, null, 2));
   process.exit(1);
 }
+const manifest = readJsonFile(join(root, "sdkwork-models.json"));
+const asOf = asOfArg >= 0 ? args[asOfArg + 1] : manifest.generatedAt.slice(0, 10);
 const freshness = createFreshnessReport(root, {
   policyPath: "catalog-freshness-policy.json",
   asOf,
@@ -45,7 +46,6 @@ if (!sourceAudit.ok) {
   console.error(JSON.stringify(sourceAudit, null, 2));
   process.exit(1);
 }
-const manifest = readJsonFile(join(root, "sdkwork-models.json"));
 const vendorSources = readJsonFile(join(root, "sources", "vendor-sources.json"));
 const officialModelSnapshots = readJsonFile(join(root, "sources", "official-model-snapshots.json"));
 const officialVerificationPolicy = readJsonFile(join(root, "sources", "official-verification-policy.json"));

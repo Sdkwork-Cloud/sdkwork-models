@@ -95,3 +95,38 @@ Human-readable messages are not enough for application integration.
 
 This package must not depend on ClawRouter app/backend SDKs. It is a portable
 catalog SDK.
+
+## npm Release
+
+Build and test the package before publishing:
+
+```powershell
+npm.cmd install
+npm.cmd test
+npm.cmd run pack:dry-run
+```
+
+The published npm package is intentionally limited to:
+
+- `dist/`
+- `README.md`
+- `LICENSE`
+- `package.json`
+
+Publish from this directory with an npm account that has access to the
+`@sdkwork` scope:
+
+```powershell
+npm.cmd login
+npm.cmd run release:publish
+```
+
+For CI, set `NPM_TOKEN` and run:
+
+```powershell
+npm.cmd install
+npm.cmd publish
+```
+
+`prepublishOnly` runs the build, tests, and package dry run before the publish
+request is sent to the npm registry.

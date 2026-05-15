@@ -497,7 +497,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "openai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "7b43478c1b0f6c3e280fb959d177aa14edd893b8649a49b8dfb9a3f029a0ed3a",
+      "sha256": "b85fb1df0f03589fe5797760ece16a31d72f0a8d15854f513b328024dca7b623",
       "vendorCode": "openai"
     },
     {

@@ -16,7 +16,7 @@ import {
   listVendors,
   loadBundledCatalog,
   loadCatalog,
-} from "../src/index.js";
+} from "../dist/index.js";
 
 test("loads local catalog", async () => {
   const catalog = await loadCatalog("..");
