@@ -29,7 +29,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "521748710465c40308233ffa8bbf63ff3311c5c7b724c9db0525cae45f297762",
+      "sha256": "b30fd725752b501b01e52a08b94d9fd37ad73589864e1048703e8e08e56c3216",
       "vendorCode": "alibaba"
     },
     {
@@ -58,7 +58,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "anthropic/global/rankings.json",
       "regionCode": "global",
-      "sha256": "1c8c34eefd15196e4eea587a1055a8040ea9da6ce11b3815eac73e0c3d1b001f",
+      "sha256": "b389b628dda1cae19ab9f3388871963d43ea5479316e650652ece1ee611707d7",
       "vendorCode": "anthropic"
     },
     {
@@ -83,7 +83,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "baidu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "837697350b09823a5a2c8550749a63e655d6561c8323cb8ba937806b11b83c68",
+      "sha256": "3c928fcc7623e9270989ac69fe5db6c41e498e3e9b20a20b9edb0c7a4f277ee5",
       "vendorCode": "baidu"
     },
     {
@@ -108,7 +108,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "black_forest_labs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "9a8604e6e11b3493bcf4a47219f9895d3ad15b2585cad83d213c30cc53627fd2",
+      "sha256": "4d105c388c4e5a47555c797d597e282da60994b50944a0e291fc1b495b14fbd8",
       "vendorCode": "black_forest_labs"
     },
     {
@@ -133,7 +133,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "9495ea1ee1f7143a21db0b2dcc1da2c5eba07b495a82a0704284fc2089ca4a6d",
+      "sha256": "e7be23f1fee4ae741b27cfe3ad350f22ec5ff53ab23a09c6222f5630c8e3ac5f",
       "vendorCode": "bytedance"
     },
     {
@@ -158,7 +158,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/global/rankings.json",
       "regionCode": "global",
-      "sha256": "f4029c11e856c86341d114228b896305f2effe795580c7aefd8fc86f393ba3d0",
+      "sha256": "e89fb438009638ec41dda11f7dc9ace03b8f983c94f7c7628ad2250ea045d4cb",
       "vendorCode": "bytedance"
     },
     {
@@ -185,7 +185,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "deepseek/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "47ee34ac2c250eb95e745743dd862c6ac3a90d8dc3e52e6cbdd7238af38d710b",
+      "sha256": "2a06f88facfe78153d2e30927e794f0094df72a17c574ea12ce64dc144df729c",
       "vendorCode": "deepseek"
     },
     {
@@ -212,7 +212,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "deepseek/global/rankings.json",
       "regionCode": "global",
-      "sha256": "ea136110e16eec71b5707884582482fbd5581fef5656a20be6bda69e2a19d85b",
+      "sha256": "faf91e68f03727056872b9e0038d8b3d8dbc89f3f3c1bdaf7223be61b4e40750",
       "vendorCode": "deepseek"
     },
     {
@@ -237,7 +237,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "elevenlabs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "0ddbdf678623b7c82b13ae40212fa3f5371ca25964ddee0c25e901ac8aecd880",
+      "sha256": "74b934190c1dcd63f14a3ef6cc66b4c1657a1bb4123c2652cd9ee660c8ecf801",
       "vendorCode": "elevenlabs"
     },
     {
@@ -282,7 +282,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "google/global/rankings.json",
       "regionCode": "global",
-      "sha256": "393366c38e18bb746d8264104d6f5548f5c8bc04dbcdc9816f65818a9e15f3db",
+      "sha256": "903f7065779373fdd5765961649d808c06b38870194dc7abca0c8005c091851c",
       "vendorCode": "google"
     },
     {
@@ -305,7 +305,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "cf0918d0a187d88c717a5683dad0b52c653dc16bd51323beaaf34f437196015c",
+      "sha256": "918e75691420906fb2a9a7b5be91e5c98e1d5f992f48d8352a83852492defdd1",
       "vendorCode": "kuaishou"
     },
     {
@@ -330,7 +330,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/global/rankings.json",
       "regionCode": "global",
-      "sha256": "094087bca5871eca985597f618c4a4d76cba23f827555b45bf12877bf9965071",
+      "sha256": "25fbf527ef1da25cade268ca800206e07e8a5697b9a36d7ed7476ffc38267c13",
       "vendorCode": "kuaishou"
     },
     {
@@ -363,7 +363,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "4b68a590bcae614f8f1ff8360be0d586570df306cdacc8144e1bb7934f9ee9ce",
+      "sha256": "87cedb85485c7263f91afe586e0f1d8b0aa707c9d92d8bcfed6f2f139b7f9f1f",
       "vendorCode": "minimax"
     },
     {
@@ -396,7 +396,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/global/rankings.json",
       "regionCode": "global",
-      "sha256": "9baf2df228fc20443db4173d550436ab43a0f99d2e99e0f963fa676d386cd51c",
+      "sha256": "216822c15e5b31096d9003ae40e9ed12577e618d41d572ef1c7ccf7857b08c89",
       "vendorCode": "minimax"
     },
     {
@@ -423,7 +423,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "00cb64fc22b66121c05c3b514d7534340f5e1b7c82a726887c6310962c170e0b",
+      "sha256": "794ee9fe95835235f2ca3e1e8d492d71b43c2326f5a4e698335d8a6d3fdefaa4",
       "vendorCode": "moonshot"
     },
     {
@@ -450,7 +450,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/global/rankings.json",
       "regionCode": "global",
-      "sha256": "aac3f1a0405c1d65a9d91e35c15207944ac0e331cc90cf5cf89d862a271f0488",
+      "sha256": "407b3f2f8f8f1359e6716aad4e45355b99dd8d423ce05d2493d8f9e8f3eec119",
       "vendorCode": "moonshot"
     },
     {
@@ -497,7 +497,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "openai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "b85fb1df0f03589fe5797760ece16a31d72f0a8d15854f513b328024dca7b623",
+      "sha256": "eb56378e816860c4e224f83b32cc84988f27064a20083ff5dae34b28f2a19d38",
       "vendorCode": "openai"
     },
     {
@@ -522,7 +522,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "stability_ai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "832359b309e73d5338ebe1e8e8c8a8d35cd6bc3a77ec53b3d82e98b484fd1942",
+      "sha256": "d5245000cebe3d798f054b53c07df892b72ed240f68d47f1b773cd392afecd68",
       "vendorCode": "stability_ai"
     },
     {
@@ -547,7 +547,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "suno/global/rankings.json",
       "regionCode": "global",
-      "sha256": "8f7121e4e49b1acda66448c7b1cc125782933452f87813f099b238b4ac4bcca8",
+      "sha256": "261d3c17baab80b7e302e692ce02c0ce6e917ebfbbe62d2bc0deef28553ddd61",
       "vendorCode": "suno"
     },
     {
@@ -572,7 +572,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "tencent/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "4d900c7b9de54b188271f4db4308607811d9751db3145e92a60e32a8dff226fb",
+      "sha256": "2d691a033ef147fa9879b0adf99914bf5edcb1ff0049bcf43d5e248a1f5600f9",
       "vendorCode": "tencent"
     },
     {
@@ -597,7 +597,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "2a4c35a0f0049799597cbe692b6c5e60afbbe873cedd8b2e5d633a5dfe3994d4",
+      "sha256": "064f477a6f0a73ef19e92709d486f8d1a94c135fed1e73a8dc6fc79346bd94e5",
       "vendorCode": "xai"
     },
     {
@@ -622,7 +622,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "zhipu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "1ae7e6fdfb1301e6bb18e2e6a0e40593f073e9a3a7dd684bba910fdc93445573",
+      "sha256": "ecf608b0319bb87f486f0f9d9919f123ef7837979ed785c18d19e18328e7f3d2",
       "vendorCode": "zhipu"
     }
   ]

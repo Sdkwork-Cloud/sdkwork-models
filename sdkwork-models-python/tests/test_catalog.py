@@ -3,10 +3,12 @@ from pathlib import Path
 from sdkwork_models import (
     JsonObject,
     ModelCatalog,
+    ProtocolStandard,
     catalog_key,
     find_model,
     find_model_by_vendor_region,
     find_meter,
+    find_protocol,
     get_best_reference_price,
     get_model_prices,
     list_available_models,
@@ -14,6 +16,9 @@ from sdkwork_models import (
     list_models,
     list_models_by_capability,
     list_models_by_modality,
+    list_models_by_protocol,
+    list_protocols,
+    list_protocols_by_vendor,
     list_vendor_regions,
     list_vendors,
     load_catalog,
@@ -61,6 +66,38 @@ def test_load_catalog() -> None:
     prices = get_model_prices(catalog, "openai/global/gpt-5.5")
     assert prices
     assert get_best_reference_price(catalog, "openai/global/gpt-5.5", "llm_input_token")["unitPrice"] == "5.000000"
+
+
+def test_protocol_queries() -> None:
+    catalog = load_catalog(Path(__file__).resolve().parents[2])
+    protocols = list_protocols(catalog)
+    assert len(protocols) >= 4
+    assert any(p["protocolCode"] == "openai_responses" for p in protocols)
+    assert any(p["protocolCode"] == "openai_compatible" for p in protocols)
+    assert any(p["protocolCode"] == "anthropic_messages" for p in protocols)
+    assert any(p["protocolCode"] == "google_gemini" for p in protocols)
+
+    assert find_protocol(catalog, "openai_responses")["displayName"] == "OpenAI Responses API"
+    assert find_protocol(catalog, "nonexistent") is None
+
+    openai_protocols = list_protocols_by_vendor(catalog, "openai")
+    assert len(openai_protocols) >= 2
+    assert any(p["protocolCode"] == "openai_responses" for p in openai_protocols)
+    assert any(p["protocolCode"] == "openai_compatible" for p in openai_protocols)
+
+    anthropic_protocols = list_protocols_by_vendor(catalog, "anthropic")
+    assert any(p["protocolCode"] == "anthropic_messages" for p in anthropic_protocols)
+
+    ds_protocols = list_protocols_by_vendor(catalog, "deepseek")
+    assert any(p["protocolCode"] == "anthropic_messages" for p in ds_protocols), "deepseek supports anthropic_messages"
+
+    responses_models = list_models_by_protocol(catalog, "openai_responses")
+    assert len(responses_models) > 0
+    assert all(m["apiFormat"] == "openai_responses" for m in responses_models)
+
+    vendor = next(v for v in list_vendors(catalog) if v["vendorCode"] == "openai")
+    assert "supportedProtocols" in vendor
+    assert "openai_responses" in vendor["supportedProtocols"]
 
 
 def test_load_bundled_catalog_from_environment(monkeypatch=None) -> None:

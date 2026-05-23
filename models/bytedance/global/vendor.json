@@ -26,5 +26,8 @@
   },
   "vendorCode": "bytedance",
   "vendorType": "commercial",
-  "websiteUrl": "https://seed.bytedance.com"
+  "websiteUrl": "https://seed.bytedance.com",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

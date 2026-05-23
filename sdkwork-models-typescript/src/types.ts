@@ -31,6 +31,15 @@ export interface BillingMeter {
   defaultUnitSize: string;
 }
 
+export interface ProtocolStandard {
+  protocolCode: string;
+  vendorOrigin: string;
+  displayName: string;
+  family: string;
+  docsUrl: string;
+  maturity: string;
+}
+
 export interface ModelVendor {
   vendorCode: string;
   regionCode: string;
@@ -42,6 +51,7 @@ export interface ModelVendor {
   billingJurisdiction: string;
   operatingRegions: string[];
   capabilities: ModelCapability[];
+  supportedProtocols: string[];
   openSource: boolean;
 }
 
@@ -103,6 +113,7 @@ export interface ModelCatalog {
   catalogVersion: string;
   schemaVersion: string;
   meters: BillingMeter[];
+  protocols: ProtocolStandard[];
   vendors: VendorCatalog[];
 }
 
@@ -112,5 +123,6 @@ export interface ModelVendorIdentity {
   legalName?: string;
   vendorType: string;
   capabilities: ModelCapability[];
+  supportedProtocols: string[];
   openSource: boolean;
 }

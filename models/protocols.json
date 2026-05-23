@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "protocols": [
+    {
+      "protocolCode": "openai_compatible",
+      "vendorOrigin": "openai",
+      "displayName": "OpenAI Chat Completions Compatible",
+      "family": "openai",
+      "docsUrl": "https://platform.openai.com/docs/api-reference/chat/create",
+      "maturity": "stable"
+    },
+    {
+      "protocolCode": "openai_responses",
+      "vendorOrigin": "openai",
+      "displayName": "OpenAI Responses API",
+      "family": "openai",
+      "docsUrl": "https://platform.openai.com/docs/api-reference/responses",
+      "maturity": "stable"
+    },
+    {
+      "protocolCode": "anthropic_messages",
+      "vendorOrigin": "anthropic",
+      "displayName": "Anthropic Messages API",
+      "family": "anthropic",
+      "docsUrl": "https://docs.anthropic.com/en/api/messages",
+      "maturity": "stable"
+    },
+    {
+      "protocolCode": "google_gemini",
+      "vendorOrigin": "google",
+      "displayName": "Google Gemini API",
+      "family": "google",
+      "docsUrl": "https://ai.google.dev/gemini-api/docs",
+      "maturity": "stable"
+    },
+    {
+      "protocolCode": "vendor_native",
+      "vendorOrigin": "sdkwork",
+      "displayName": "Vendor Native API",
+      "family": "vendor_native",
+      "docsUrl": "https://github.com/Sdkwork-Cloud/sdkwork-models",
+      "maturity": "stable"
+    }
+  ]
+}

@@ -26,5 +26,8 @@
   },
   "vendorCode": "moonshot",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.kimi.com"
+  "websiteUrl": "https://www.kimi.com",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }

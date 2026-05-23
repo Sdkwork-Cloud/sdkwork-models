@@ -26,5 +26,8 @@
   },
   "vendorCode": "suno",
   "vendorType": "commercial",
-  "websiteUrl": "https://suno.com"
+  "websiteUrl": "https://suno.com",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

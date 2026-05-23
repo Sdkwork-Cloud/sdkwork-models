@@ -96,4 +96,20 @@ public final class SdkworkModels {
     ) {
         return ModelCatalogQuery.listModelsByModality(catalog, inputModality, outputModality);
     }
+
+    public static List<Map<String, Object>> listProtocols(ModelCatalog catalog) {
+        return ModelCatalogQuery.listProtocols(catalog);
+    }
+
+    public static Map<String, Object> findProtocol(ModelCatalog catalog, String protocolCode) {
+        return ModelCatalogQuery.findProtocol(catalog, protocolCode);
+    }
+
+    public static List<Map<String, Object>> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) {
+        return ModelCatalogQuery.listProtocolsByVendor(catalog, vendorCode);
+    }
+
+    public static List<Map<String, Object>> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {
+        return ModelCatalogQuery.listModelsByProtocol(catalog, protocolCode);
+    }
 }

@@ -41,6 +41,10 @@ get_model_prices(&catalog, catalog_key)
 get_best_reference_price(&catalog, catalog_key, meter_code)
 list_models_by_capability(&catalog, capability)
 list_models_by_modality(&catalog, input, output)
+list_protocols(&catalog)
+find_protocol(&catalog, protocol_code)
+list_protocols_by_vendor(&catalog, vendor_code)
+list_models_by_protocol(&catalog, protocol_code)
 list_meters(&catalog)
 find_meter(&catalog, meter_code)
 ```
@@ -57,6 +61,10 @@ find_meter(&catalog, meter_code)
 - `shelfState`
 - `routingState`
 - `apiFormat`
+
+`apiFormat` values are protocol codes from `models/protocols.json`. Use the
+protocol query helpers to discover protocol metadata, inspect vendor support,
+and list models by protocol.
 
 ## Decimal Rule
 

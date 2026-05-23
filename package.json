@@ -9,6 +9,6 @@
     "freshness": "node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json",
     "diff": "node tools/catalog-diff.mjs",
     "release:check": "node tools/release-catalog.mjs --check",
-    "check": "node tools/build-index.mjs --check && node tools/validate-catalog.mjs && node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json && node tools/catalog-audit.mjs && node tools/release-catalog.mjs --check"
+    "check": "node tools/build-index.mjs --check && node tools/validate-catalog.mjs && node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json --as-of-catalog-generated-at && node tools/catalog-audit.mjs && node tools/release-catalog.mjs --check"
   }
 }

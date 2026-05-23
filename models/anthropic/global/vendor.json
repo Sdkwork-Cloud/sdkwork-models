@@ -26,5 +26,8 @@
   },
   "vendorCode": "anthropic",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.anthropic.com"
+  "websiteUrl": "https://www.anthropic.com",
+  "supportedProtocols": [
+    "anthropic_messages"
+  ]
 }

@@ -13,6 +13,7 @@ public record ModelCatalog(
         String catalogVersion,
         String schemaVersion,
         List<Map<String, Object>> meters,
+        List<Map<String, Object>> protocols,
         List<Map<String, Object>> vendors,
         List<Map<String, Object>> models,
         List<Map<String, Object>> pricing

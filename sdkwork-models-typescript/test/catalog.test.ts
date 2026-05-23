@@ -5,6 +5,7 @@ import {
   findModel,
   findModelByVendorRegion,
   findMeter,
+  findProtocol,
   getBestReferencePrice,
   getModelPrices,
   listAvailableModels,
@@ -12,6 +13,9 @@ import {
   listModels,
   listModelsByCapability,
   listModelsByModality,
+  listModelsByProtocol,
+  listProtocols,
+  listProtocolsByVendor,
   listVendorRegions,
   listVendors,
   loadBundledCatalog,
@@ -40,6 +44,15 @@ test("loads local catalog", async () => {
   assert.ok(listModels(catalog, { apiFormat: "openai_compatible" }).length > 0);
   assert.ok(listModelsByCapability(catalog, "chat").length > 0);
   assert.ok(listModelsByModality(catalog, "text", "text").length > 0);
+  assert.ok(listProtocols(catalog).length >= 4);
+  assert.equal(findProtocol(catalog, "openai_responses")?.displayName, "OpenAI Responses API");
+  assert.equal(findProtocol(catalog, "missing_protocol"), undefined);
+  assert.ok(listProtocolsByVendor(catalog, "openai").some((protocol) => protocol.protocolCode === "openai_responses"));
+  assert.equal(
+    listModelsByProtocol(catalog, "openai_responses").every((model) => model.apiFormat === "openai_responses"),
+    true,
+  );
+  assert.ok(listVendors(catalog).some((vendor) => vendor.supportedProtocols.includes("openai_responses")));
   assert.ok(listAvailableModels(catalog).length > 0);
   assert.equal(
     listAvailableModels(catalog).some((model) => getModelPrices(catalog, model.catalogKey).length === 0),

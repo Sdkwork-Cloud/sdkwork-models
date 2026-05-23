@@ -33,5 +33,9 @@
   },
   "vendorCode": "openai",
   "vendorType": "commercial",
-  "websiteUrl": "https://openai.com"
+  "websiteUrl": "https://openai.com",
+  "supportedProtocols": [
+    "openai_responses",
+    "openai_compatible"
+  ]
 }

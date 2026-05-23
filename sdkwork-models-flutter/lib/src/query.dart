@@ -13,6 +13,7 @@ List<JsonObject> listVendors(ModelCatalog catalog) {
       'legalName': vendor['legalName'],
       'vendorType': vendor['vendorType'],
       'capabilities': ((vendor['capabilities'] as List?) ?? const []).cast<Object?>(),
+      'supportedProtocols': ((vendor['supportedProtocols'] as List?) ?? const []).cast<Object?>(),
       'openSource': vendor['openSource'] ?? false,
     };
   }
@@ -221,6 +222,37 @@ List<JsonObject> listModelsByCapability(ModelCatalog catalog, String capability)
 
 List<JsonObject> listModelsByModality(ModelCatalog catalog, String inputModality, String outputModality) {
   return listModelsWhere(catalog, inputModality: inputModality, outputModality: outputModality);
+}
+
+List<JsonObject> listProtocols(ModelCatalog catalog) {
+  return catalog.protocols;
+}
+
+JsonObject? findProtocol(ModelCatalog catalog, String protocolCode) {
+  for (final p in catalog.protocols) {
+    if (p['protocolCode'] == protocolCode) {
+      return p;
+    }
+  }
+  return null;
+}
+
+List<JsonObject> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) {
+  final vendor = catalog.vendors.cast<JsonObject?>().firstWhere(
+        (v) => v?['vendorCode'] == vendorCode,
+        orElse: () => null,
+      );
+  if (vendor == null) {
+    return const [];
+  }
+  final supported = ((vendor['supportedProtocols'] as List?) ?? const [])
+      .whereType<String>()
+      .toSet();
+  return catalog.protocols.where((p) => supported.contains(p['protocolCode'])).toList();
+}
+
+List<JsonObject> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {
+  return listModelsWhere(catalog, apiFormat: protocolCode);
 }
 
 String? _filterString(JsonObject? filter, String key) {

@@ -24,6 +24,7 @@ def _read_json(root: str | Path, rel_path: str) -> dict:
 def load_catalog(path_or_url: str | Path) -> ModelCatalog:
     manifest = _read_json(path_or_url, "sdkwork-models.json")
     meters = _read_json(path_or_url, "models/meters.json")["meters"]
+    protocols = _read_json(path_or_url, "models/protocols.json")["protocols"]
     index = _read_json(path_or_url, "models/index.json")
     vendors: list[dict] = []
     vendor_codes: set[str] = set()
@@ -44,6 +45,7 @@ def load_catalog(path_or_url: str | Path) -> ModelCatalog:
         catalog_version=manifest["catalogVersion"],
         schema_version=manifest["schemaVersion"],
         meters=meters,
+        protocols=protocols,
         vendors=vendors,
         vendor_catalogs=vendor_catalogs,
         models=models,

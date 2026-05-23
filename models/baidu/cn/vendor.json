@@ -26,5 +26,8 @@
   },
   "vendorCode": "baidu",
   "vendorType": "commercial",
-  "websiteUrl": "https://cloud.baidu.com"
+  "websiteUrl": "https://cloud.baidu.com",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

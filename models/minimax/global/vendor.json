@@ -31,5 +31,8 @@
   },
   "vendorCode": "minimax",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.minimax.io"
+  "websiteUrl": "https://www.minimax.io",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }

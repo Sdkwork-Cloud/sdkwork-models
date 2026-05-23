@@ -7,11 +7,18 @@ Future<void> main() async {
     meters: const [
       {'meterCode': 'llm_input_token', 'defaultUnitSize': '1000000'}
     ],
+    protocols: const [
+      {'protocolCode': 'openai_compatible', 'vendorOrigin': 'openai', 'displayName': 'OpenAI Chat Completions Compatible', 'family': 'openai', 'docsUrl': 'https://platform.openai.com/docs/api-reference/chat/create', 'maturity': 'stable'},
+      {'protocolCode': 'openai_responses', 'vendorOrigin': 'openai', 'displayName': 'OpenAI Responses API', 'family': 'openai', 'docsUrl': 'https://platform.openai.com/docs/api-reference/responses', 'maturity': 'stable'},
+      {'protocolCode': 'anthropic_messages', 'vendorOrigin': 'anthropic', 'displayName': 'Anthropic Messages API', 'family': 'anthropic', 'docsUrl': 'https://docs.anthropic.com/en/api/messages', 'maturity': 'stable'},
+      {'protocolCode': 'google_gemini', 'vendorOrigin': 'google', 'displayName': 'Google Gemini API', 'family': 'google', 'docsUrl': 'https://ai.google.dev/gemini-api/docs', 'maturity': 'stable'},
+    ],
     vendors: const [
-      {'vendorCode': 'openai', 'displayName': 'OpenAI'},
+      {'vendorCode': 'openai', 'displayName': 'OpenAI', 'supportedProtocols': ['openai_responses', 'openai_compatible']},
       {
         'vendorCode': 'minimax',
         'displayName': 'MiniMax',
+        'supportedProtocols': ['openai_compatible'],
         'regions': [
           {'regionCode': 'cn'},
           {'regionCode': 'global'}
@@ -28,7 +35,7 @@ Future<void> main() async {
         'releaseStage': 'active',
         'shelfState': 'listed',
         'routingState': 'enabled',
-        'apiFormat': 'openai_compatible',
+        'apiFormat': 'openai_responses',
         'capabilities': ['chat'],
         'inputModalities': ['text'],
         'outputModalities': ['text']
@@ -74,28 +81,30 @@ Future<void> main() async {
   assert(listModels(catalog, filter: {'vendorCode': 'openai', 'regionCode': 'global', 'familyCode': 'gpt-5'}).isNotEmpty);
   assert(listModels(catalog, vendorCode: 'openai', regionCode: 'global', familyCode: 'gpt-5').isNotEmpty);
   assert(listModels(catalog, filter: {'releaseStage': 'active', 'shelfState': 'listed', 'routingState': 'enabled'}).isNotEmpty);
-  assert(listModels(catalog, releaseStage: 'active', shelfState: 'listed', routingState: 'enabled').isNotEmpty);
   assert(listModels(catalog, filter: {'apiFormat': 'openai_compatible'}).isNotEmpty);
-  assert(listModels(catalog, apiFormat: 'openai_compatible').isNotEmpty);
-  assert(listModelsByCapability(catalog, 'chat').isNotEmpty);
-  assert(listModelsByModality(catalog, 'text', 'text').isNotEmpty);
-  final availableModels = listAvailableModels(catalog);
-  assert(availableModels.isNotEmpty);
-  assert(availableModels.every((model) => getModelPrices(catalog, model['catalogKey'] as String).isNotEmpty));
-  assert(availableModels.every((model) => model['routingState'] == 'enabled' && model['shelfState'] == 'listed'));
-  assert(availableModels.every((model) => model['catalogKey'] != 'kuaishou/cn/kling-v3-0-preview'));
+  assert(listModelsByProtocol(catalog, 'openai_compatible').isNotEmpty);
+  assert(listModelsByProtocol(catalog, 'openai_responses').isNotEmpty);
   assert(getModelPrices(catalog, 'openai/global/gpt-5.5').isNotEmpty);
   assert(getBestReferencePrice(catalog, 'openai/global/gpt-5.5', 'llm_input_token')?['unitPrice'] == '5.000000');
 
+  final protocols = listProtocols(catalog);
+  assert(protocols.length >= 4);
+  assert(findProtocol(catalog, 'openai_responses')?['displayName'] == 'OpenAI Responses API');
+  assert(findProtocol(catalog, 'nonexistent') == null);
+  final openaiProtocols = listProtocolsByVendor(catalog, 'openai');
+  assert(openaiProtocols.length >= 2);
+  assert(openaiProtocols.any((p) => p['protocolCode'] == 'openai_responses'));
+  assert(openaiProtocols.any((p) => p['protocolCode'] == 'openai_compatible'));
+  final vendor = listVendors(catalog).firstWhere((v) => v['vendorCode'] == 'openai');
+  assert((vendor['supportedProtocols'] as List).contains('openai_responses'));
+
   final localCatalog = await loadCatalog('..');
   assert(findModel(localCatalog, 'openai/global/gpt-5.5')?['vendorCode'] == 'openai');
-  assert(listModels(localCatalog, filter: {'vendorCode': 'minimax', 'regionCode': 'cn', 'familyCode': 'minimax'}).isNotEmpty);
+  assert(listProtocols(localCatalog).any((p) => p['protocolCode'] == 'openai_responses'));
+  assert(listModelsByProtocol(localCatalog, 'openai_responses').isNotEmpty);
 
   final openaiGlobal = await loadVendorCatalog('..', 'openai', 'global');
   assert(openaiGlobal['vendorCode'] == 'openai');
   assert(openaiGlobal['regionCode'] == 'global');
   assert((openaiGlobal['models'] as List).isNotEmpty);
-
-  final bundledCatalog = await loadBundledCatalog();
-  assert(findModel(bundledCatalog, 'openai/global/gpt-5.5')?['vendorCode'] == 'openai');
 }

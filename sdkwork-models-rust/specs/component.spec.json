@@ -6,7 +6,7 @@
     "displayName": "SDKWork Models",
     "version": "0.1.0",
     "type": "rust-crate",
-    "root": "sdkwork-claw-router/data/sdkwork-models/sdkwork-models-rust",
+    "root": "data/sdkwork-models/sdkwork-models-rust",
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",

@@ -41,6 +41,10 @@ getModelPrices(catalog, catalogKey)
 getBestReferencePrice(catalog, catalogKey, meterCode)
 listModelsByCapability(catalog, capability)
 listModelsByModality(catalog, input, output)
+listProtocols(catalog)
+findProtocol(catalog, protocolCode)
+listProtocolsByVendor(catalog, vendorCode)
+listModelsByProtocol(catalog, protocolCode)
 listMeters(catalog)
 findMeter(catalog, meterCode)
 ```
@@ -58,6 +62,10 @@ these filter keys:
 - `shelfState`
 - `routingState`
 - `apiFormat`
+
+`apiFormat` values are protocol codes from `models/protocols.json`. Use the
+protocol query helpers to discover protocol metadata, inspect vendor support,
+and list models by protocol.
 
 ## Asset Loading
 

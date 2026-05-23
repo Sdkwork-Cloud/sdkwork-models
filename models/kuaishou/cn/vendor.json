@@ -27,5 +27,8 @@
   },
   "vendorCode": "kuaishou",
   "vendorType": "commercial",
-  "websiteUrl": "https://klingai.kuaishou.com"
+  "websiteUrl": "https://klingai.kuaishou.com",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

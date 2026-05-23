@@ -30,6 +30,7 @@ public final class ModelCatalogLoader {
             Path catalogRoot = root.toAbsolutePath().normalize();
             Map<String, Object> manifest = readJsonObject(catalogRoot.resolve("sdkwork-models.json"));
             Map<String, Object> meterFile = readJsonObject(catalogRoot.resolve("models").resolve("meters.json"));
+            Map<String, Object> protocolFile = readJsonObject(catalogRoot.resolve("models").resolve("protocols.json"));
             Map<String, Object> index = readJsonObject(catalogRoot.resolve("models").resolve("index.json"));
 
             List<Map<String, Object>> vendors = new ArrayList<>();
@@ -52,6 +53,7 @@ public final class ModelCatalogLoader {
                     stringValue(manifest.get("catalogVersion"), "catalogVersion"),
                     stringValue(manifest.get("schemaVersion"), "schemaVersion"),
                     mapList(meterFile.get("meters")),
+                    mapList(protocolFile.get("protocols")),
                     vendors,
                     models,
                     pricing
@@ -138,7 +140,19 @@ public final class ModelCatalogLoader {
             List<Map<String, Object>> models,
             List<Map<String, Object>> pricing
     ) {
-        return new ModelCatalog(catalogVersion, schemaVersion, meters, vendors, models, pricing);
+        return fromParts(catalogVersion, schemaVersion, meters, List.of(), vendors, models, pricing);
+    }
+
+    public static ModelCatalog fromParts(
+            String catalogVersion,
+            String schemaVersion,
+            List<Map<String, Object>> meters,
+            List<Map<String, Object>> protocols,
+            List<Map<String, Object>> vendors,
+            List<Map<String, Object>> models,
+            List<Map<String, Object>> pricing
+    ) {
+        return new ModelCatalog(catalogVersion, schemaVersion, meters, protocols, vendors, models, pricing);
     }
 
     @SuppressWarnings("unchecked")
@@ -177,6 +191,7 @@ public final class ModelCatalogLoader {
     private static ModelCatalog loadRemoteCatalog(URI root) {
         Map<String, Object> manifest = readRemoteJsonObject(root, "sdkwork-models.json");
         Map<String, Object> meterFile = readRemoteJsonObject(root, "models/meters.json");
+        Map<String, Object> protocolFile = readRemoteJsonObject(root, "models/protocols.json");
         Map<String, Object> index = readRemoteJsonObject(root, "models/index.json");
         List<Map<String, Object>> vendors = new ArrayList<>();
         Set<String> vendorCodes = new LinkedHashSet<>();
@@ -196,6 +211,7 @@ public final class ModelCatalogLoader {
                 stringValue(manifest.get("catalogVersion"), "catalogVersion"),
                 stringValue(manifest.get("schemaVersion"), "schemaVersion"),
                 mapList(meterFile.get("meters")),
+                mapList(protocolFile.get("protocols")),
                 vendors,
                 models,
                 pricing

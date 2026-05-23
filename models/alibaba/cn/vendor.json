@@ -28,5 +28,8 @@
   },
   "vendorCode": "alibaba",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.aliyun.com"
+  "websiteUrl": "https://www.aliyun.com",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }

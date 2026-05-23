@@ -4,6 +4,7 @@ export async function loadCatalog(root: string): Promise<ModelCatalog> {
   const source = catalogSource(root);
   const manifest = await readJson(source, "sdkwork-models.json");
   const meters = (await readJson(source, "models/meters.json")).meters;
+  const protocols = (await readJson(source, "models/protocols.json")).protocols;
   const index = await readJson(source, "models/index.json");
   const vendors: VendorCatalog[] = [];
   for (const vendor of index.vendors ?? []) {
@@ -13,6 +14,7 @@ export async function loadCatalog(root: string): Promise<ModelCatalog> {
     catalogVersion: manifest.catalogVersion,
     schemaVersion: manifest.schemaVersion,
     meters,
+    protocols,
     vendors,
   };
 }

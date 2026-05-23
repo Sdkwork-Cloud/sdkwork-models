@@ -26,5 +26,8 @@
   },
   "vendorCode": "tencent",
   "vendorType": "commercial",
-  "websiteUrl": "https://cloud.tencent.com"
+  "websiteUrl": "https://cloud.tencent.com",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }

@@ -27,5 +27,8 @@
   },
   "vendorCode": "elevenlabs",
   "vendorType": "commercial",
-  "websiteUrl": "https://elevenlabs.io"
+  "websiteUrl": "https://elevenlabs.io",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

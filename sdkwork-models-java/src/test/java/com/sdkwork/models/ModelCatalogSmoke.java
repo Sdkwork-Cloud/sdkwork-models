@@ -19,10 +19,27 @@ public final class ModelCatalogSmoke {
                 "1.0.0",
                 List.of(Map.of("meterCode", "llm_input_token", "defaultUnitSize", "1000000")),
                 List.of(
-                        Map.of("vendorCode", "openai", "displayName", "OpenAI"),
+                        Map.of(
+                                "protocolCode", "openai_compatible",
+                                "vendorOrigin", "openai",
+                                "displayName", "OpenAI Chat Completions Compatible"
+                        ),
+                        Map.of(
+                                "protocolCode", "openai_responses",
+                                "vendorOrigin", "openai",
+                                "displayName", "OpenAI Responses API"
+                        )
+                ),
+                List.of(
+                        Map.of(
+                                "vendorCode", "openai",
+                                "displayName", "OpenAI",
+                                "supportedProtocols", List.of("openai_compatible", "openai_responses")
+                        ),
                         Map.of(
                                 "vendorCode", "minimax",
                                 "displayName", "MiniMax",
+                                "supportedProtocols", List.of("openai_compatible"),
                                 "regions", List.of(
                                         Map.of("regionCode", "cn"),
                                         Map.of("regionCode", "global")
@@ -91,6 +108,11 @@ public final class ModelCatalogSmoke {
         )).isEmpty());
         require(SdkworkModels.listModelsByCapability(catalog, "chat").size() == 2);
         require(SdkworkModels.listModelsByModality(catalog, "text", "text").size() == 2);
+        require(SdkworkModels.listProtocols(catalog).size() == 2);
+        require("OpenAI Responses API".equals(SdkworkModels.findProtocol(catalog, "openai_responses").get("displayName")));
+        require(SdkworkModels.findProtocol(catalog, "missing_protocol") == null);
+        require(SdkworkModels.listProtocolsByVendor(catalog, "openai").size() == 2);
+        require(SdkworkModels.listModelsByProtocol(catalog, "openai_compatible").size() == 2);
         require(SdkworkModels.listAvailableModels(catalog).size() == 1);
         require("openai/global/gpt-5.5".equals(SdkworkModels.listAvailableModels(catalog).getFirst().get("catalogKey")));
         require(SdkworkModels.getModelPrices(catalog, "openai/global/gpt-5.5").size() == 1);

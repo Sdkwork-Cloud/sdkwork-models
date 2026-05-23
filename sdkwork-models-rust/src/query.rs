@@ -1,7 +1,8 @@
 use std::collections::BTreeSet;
 
 use crate::types::{
-    BillingMeter, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity, VendorRegionRef,
+    BillingMeter, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity, ProtocolStandard,
+    VendorRegionRef,
 };
 
 #[derive(Debug, Clone, Default)]
@@ -32,6 +33,7 @@ pub fn list_vendors(catalog: &ModelCatalog) -> Vec<ModelVendorIdentity> {
             legal_name: vendor.legal_name.clone(),
             vendor_type: vendor.vendor_type.clone(),
             capabilities: vendor.capabilities.clone(),
+            supported_protocols: vendor.supported_protocols.clone(),
             open_source: vendor.open_source.unwrap_or(false),
         });
     }
@@ -239,6 +241,57 @@ pub fn list_models_by_modality<'a>(
         ModelFilter {
             input_modality: Some(input_modality),
             output_modality: Some(output_modality),
+            ..ModelFilter::default()
+        },
+    )
+}
+
+pub fn list_protocols(catalog: &ModelCatalog) -> Vec<&ProtocolStandard> {
+    catalog.protocols.iter().collect()
+}
+
+pub fn find_protocol<'a>(
+    catalog: &'a ModelCatalog,
+    protocol_code: &str,
+) -> Option<&'a ProtocolStandard> {
+    catalog
+        .protocols
+        .iter()
+        .find(|protocol| protocol.protocol_code == protocol_code)
+}
+
+pub fn list_protocols_by_vendor<'a>(
+    catalog: &'a ModelCatalog,
+    vendor_code: &str,
+) -> Vec<&'a ProtocolStandard> {
+    let Some(vendor) = catalog
+        .vendors
+        .iter()
+        .map(|region_catalog| &region_catalog.vendor)
+        .find(|vendor| vendor.vendor_code == vendor_code)
+    else {
+        return Vec::new();
+    };
+    catalog
+        .protocols
+        .iter()
+        .filter(|protocol| {
+            vendor
+                .supported_protocols
+                .iter()
+                .any(|supported| supported == &protocol.protocol_code)
+        })
+        .collect()
+}
+
+pub fn list_models_by_protocol<'a>(
+    catalog: &'a ModelCatalog,
+    protocol_code: &'a str,
+) -> Vec<&'a ModelInfo> {
+    list_models(
+        catalog,
+        ModelFilter {
+            api_format: Some(protocol_code),
             ..ModelFilter::default()
         },
     )

@@ -26,5 +26,9 @@
   },
   "vendorCode": "zhipu",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.zhipuai.cn"
+  "websiteUrl": "https://www.zhipuai.cn",
+  "supportedProtocols": [
+    "openai_compatible",
+    "anthropic_messages"
+  ]
 }

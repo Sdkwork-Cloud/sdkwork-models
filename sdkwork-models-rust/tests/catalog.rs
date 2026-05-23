@@ -1,9 +1,10 @@
 use sdkwork_models::validation::is_decimal_string;
 use sdkwork_models::{
-    find_meter, find_model, find_model_by_vendor_region, get_best_reference_price,
+    find_meter, find_model, find_model_by_vendor_region, find_protocol, get_best_reference_price,
     list_available_models, list_meters, list_models, list_models_by_capability,
-    list_models_by_modality, list_vendor_regions, list_vendors, load_bundled_catalog, load_catalog,
-    validate_catalog, ModelFilter,
+    list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
+    list_vendor_regions, list_vendors, load_bundled_catalog, load_catalog, validate_catalog,
+    ModelFilter,
 };
 use std::fs;
 
@@ -71,6 +72,25 @@ fn bundled_catalog_loads_and_queries_models() {
     .is_empty());
     assert!(!list_models_by_capability(&catalog, "chat").is_empty());
     assert!(!list_models_by_modality(&catalog, "text", "text").is_empty());
+    assert!(list_protocols(&catalog).len() >= 4);
+    assert_eq!(
+        Some("OpenAI Responses API"),
+        find_protocol(&catalog, "openai_responses").map(|protocol| protocol.display_name.as_str())
+    );
+    assert!(find_protocol(&catalog, "missing_protocol").is_none());
+    assert!(list_protocols_by_vendor(&catalog, "openai")
+        .iter()
+        .any(|protocol| protocol.protocol_code == "openai_responses"));
+    assert!(list_models_by_protocol(&catalog, "openai_responses")
+        .iter()
+        .all(|model| model.api_format == "openai_responses"));
+    assert!(list_vendors(&catalog)
+        .iter()
+        .any(|vendor| vendor.vendor_code == "openai"
+            && vendor
+                .supported_protocols
+                .iter()
+                .any(|protocol| protocol == "openai_responses")));
     let available_models = list_available_models(&catalog, ModelFilter::default());
     assert!(!available_models.is_empty());
     assert!(available_models
@@ -123,13 +143,18 @@ fn local_loader_uses_index_as_source_of_truth() {
     )
     .expect("meters");
     fs::write(
+        root.join("models/protocols.json"),
+        r#"{"protocols":[{"protocolCode":"openai_compatible","vendorOrigin":"openai","displayName":"OpenAI Chat Completions Compatible","family":"openai","docsUrl":"https://example.com","maturity":"stable"}]}"#,
+    )
+    .expect("protocols");
+    fs::write(
         root.join("models/index.json"),
         r#"{"schemaVersion":"1.1.0","catalogVersion":"2026.05.08.1","generatedAt":"2026-05-08T00:00:00Z","vendorCount":1,"regionCount":1,"modelCount":1,"pricingFileCount":1,"vendors":[{"vendorCode":"openai","regionCode":"global","path":"openai/global/vendor.json","familiesPath":"openai/global/families.json","modelsPath":"openai/global/models","modelFiles":["openai/global/models/gpt-5.5.json"],"pricingPath":"openai/global/pricing","pricingFiles":["openai/global/pricing/gpt-5.5.json"],"rankingsPath":"openai/global/rankings.json","modelCount":1,"pricingFileCount":1,"rankingSnapshotCount":0,"sha256":"test"}]}"#,
     )
     .expect("index");
     fs::write(
         root.join("models/openai/global/vendor.json"),
-        r#"{"vendorCode":"openai","regionCode":"global","displayName":"OpenAI","vendorType":"commercial","marketScope":"global","billingCurrency":"USD","billingJurisdiction":"US","operatingRegions":["GLOBAL"],"capabilities":["chat"],"source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
+        r#"{"vendorCode":"openai","regionCode":"global","displayName":"OpenAI","vendorType":"commercial","marketScope":"global","billingCurrency":"USD","billingJurisdiction":"US","operatingRegions":["GLOBAL"],"capabilities":["chat"],"supportedProtocols":["openai_compatible"],"source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
     )
     .expect("vendor");
     fs::write(
@@ -154,7 +179,7 @@ fn local_loader_uses_index_as_source_of_truth() {
     .expect("pricing");
     fs::write(
         root.join("models/unlisted/global/vendor.json"),
-        r#"{"vendorCode":"unlisted","regionCode":"global","displayName":"Unlisted","vendorType":"commercial","marketScope":"global","billingCurrency":"USD","billingJurisdiction":"US","operatingRegions":["GLOBAL"],"capabilities":["chat"],"source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
+        r#"{"vendorCode":"unlisted","regionCode":"global","displayName":"Unlisted","vendorType":"commercial","marketScope":"global","billingCurrency":"USD","billingJurisdiction":"US","operatingRegions":["GLOBAL"],"capabilities":["chat"],"supportedProtocols":["openai_compatible"],"source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
     )
     .expect("unlisted vendor");
 

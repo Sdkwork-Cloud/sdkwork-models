@@ -31,5 +31,9 @@
   },
   "vendorCode": "bytedance",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.volcengine.com"
+  "websiteUrl": "https://www.volcengine.com",
+  "supportedProtocols": [
+    "openai_compatible",
+    "vendor_native"
+  ]
 }

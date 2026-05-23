@@ -26,5 +26,8 @@
   },
   "vendorCode": "stability_ai",
   "vendorType": "commercial",
-  "websiteUrl": "https://stability.ai"
+  "websiteUrl": "https://stability.ai",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

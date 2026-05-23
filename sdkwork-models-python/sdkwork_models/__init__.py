@@ -4,6 +4,7 @@ from .query import (
     find_meter,
     find_model,
     find_model_by_vendor_region,
+    find_protocol,
     get_best_reference_price,
     get_model_prices,
     list_available_models,
@@ -11,15 +12,19 @@ from .query import (
     list_models,
     list_models_by_capability,
     list_models_by_modality,
+    list_models_by_protocol,
+    list_protocols,
+    list_protocols_by_vendor,
     list_vendor_regions,
     list_vendors,
 )
-from .types import JsonObject, ModelCatalog
+from .types import JsonObject, ModelCatalog, ProtocolStandard
 from .validation import validate_catalog
 
 __all__ = [
     "JsonObject",
     "ModelCatalog",
+    "ProtocolStandard",
     "load_catalog",
     "load_bundled_catalog",
     "load_vendor_catalog",
@@ -37,4 +42,8 @@ __all__ = [
     "get_best_reference_price",
     "list_models_by_capability",
     "list_models_by_modality",
+    "list_protocols",
+    "find_protocol",
+    "list_protocols_by_vendor",
+    "list_models_by_protocol",
 ]

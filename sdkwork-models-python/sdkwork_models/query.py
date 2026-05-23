@@ -15,6 +15,7 @@ def list_vendors(catalog: ModelCatalog) -> list[dict]:
             "legalName": vendor.get("legalName"),
             "vendorType": vendor.get("vendorType"),
             "capabilities": list(vendor.get("capabilities", [])),
+            "supportedProtocols": list(vendor.get("supportedProtocols", [])),
             "openSource": vendor.get("openSource", False),
         }
     return list(vendors.values())
@@ -140,3 +141,23 @@ def list_models_by_capability(catalog: ModelCatalog, capability: str) -> list[di
 
 def list_models_by_modality(catalog: ModelCatalog, input_modality: str, output_modality: str) -> list[dict]:
     return list_models(catalog, input_modality=input_modality, output_modality=output_modality)
+
+
+def list_protocols(catalog: ModelCatalog) -> list[dict]:
+    return catalog.protocols
+
+
+def find_protocol(catalog: ModelCatalog, protocol_code: str) -> dict | None:
+    return next((p for p in catalog.protocols if p.get("protocolCode") == protocol_code), None)
+
+
+def list_protocols_by_vendor(catalog: ModelCatalog, vendor_code: str) -> list[dict]:
+    vendor = next((v for v in catalog.vendors if v.get("vendorCode") == vendor_code), None)
+    if vendor is None:
+        return []
+    supported = set(vendor.get("supportedProtocols", []))
+    return [p for p in catalog.protocols if p.get("protocolCode") in supported]
+
+
+def list_models_by_protocol(catalog: ModelCatalog, protocol_code: str) -> list[dict]:
+    return list_models(catalog, api_format=protocol_code)

@@ -6,6 +6,7 @@ import 'types.dart';
 Future<ModelCatalog> loadCatalog(String pathOrUrl) async {
   final manifest = await _readJsonObject(pathOrUrl, 'sdkwork-models.json');
   final meterFile = await _readJsonObject(pathOrUrl, 'models/meters.json');
+  final protocolFile = await _readJsonObject(pathOrUrl, 'models/protocols.json');
   final index = await _readJsonObject(pathOrUrl, 'models/index.json');
   final vendors = <JsonObject>[];
   final seenVendorCodes = <String>{};
@@ -32,6 +33,7 @@ Future<ModelCatalog> loadCatalog(String pathOrUrl) async {
     catalogVersion: _requiredString(manifest['catalogVersion'], 'catalogVersion'),
     schemaVersion: _requiredString(manifest['schemaVersion'], 'schemaVersion'),
     meters: _objectList(meterFile['meters']),
+    protocols: _objectList(protocolFile['protocols']),
     vendors: vendors,
     models: models,
     pricing: pricing,

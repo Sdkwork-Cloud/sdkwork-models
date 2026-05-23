@@ -65,13 +65,9 @@
       }
     },
     "apiFormat": {
-      "enum": [
-        "openai_compatible",
-        "openai_responses",
-        "anthropic_messages",
-        "google_gemini",
-        "vendor_native"
-      ]
+      "description": "The standard API protocol this model conforms to. References a protocolCode defined in schemas/protocol.schema.json. Each value is named after the originating vendor that defines the protocol standard.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
     },
     "lifecycle": {
       "enum": [

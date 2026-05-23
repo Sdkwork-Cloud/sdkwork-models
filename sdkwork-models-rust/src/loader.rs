@@ -6,7 +6,7 @@ use serde::Deserialize;
 
 use crate::types::{
     BillingMeter, CatalogIndex, CatalogIndexVendor, CatalogManifest, FamilyFile, ModelCatalog,
-    ModelInfo, ModelPricing, ModelVendor, RankingFile, VendorCatalog,
+    ModelInfo, ModelPricing, ModelVendor, ProtocolStandard, RankingFile, VendorCatalog,
 };
 use crate::CatalogError;
 
@@ -16,10 +16,18 @@ struct MeterFile {
     meters: Vec<BillingMeter>,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ProtocolFile {
+    protocols: Vec<ProtocolStandard>,
+}
+
 pub fn load_catalog(root: impl AsRef<Path>) -> Result<ModelCatalog, CatalogError> {
     let root = root.as_ref();
     let manifest: CatalogManifest = read_json(root.join("sdkwork-models.json"))?;
     let meters_file: MeterFile = read_json(root.join(&manifest.models_root).join("meters.json"))?;
+    let protocols_file: ProtocolFile =
+        read_json(root.join(&manifest.models_root).join("protocols.json"))?;
     let index: CatalogIndex = read_json(root.join(&manifest.models_root).join("index.json"))?;
 
     let vendors = index
@@ -31,6 +39,7 @@ pub fn load_catalog(root: impl AsRef<Path>) -> Result<ModelCatalog, CatalogError
     Ok(ModelCatalog {
         manifest,
         meters: meters_file.meters,
+        protocols: protocols_file.protocols,
         vendors,
     })
 }

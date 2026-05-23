@@ -8,7 +8,7 @@
       "displayName": "OpenAI direct",
       "vendorCode": "openai",
       "protocol": "openai_compatible",
-      "baseUrlTemplate": "https://api.openai.com/v1",
+      "baseUrl": "https://api.openai.com/v1",
       "capabilities": [
         "chat",
         "embedding",
@@ -22,7 +22,7 @@
       "displayName": "Anthropic direct",
       "vendorCode": "anthropic",
       "protocol": "anthropic_messages",
-      "baseUrlTemplate": "https://api.anthropic.com",
+      "baseUrl": "https://api.anthropic.com",
       "capabilities": [
         "chat"
       ]
@@ -32,7 +32,7 @@
       "displayName": "Google AI direct",
       "vendorCode": "google",
       "protocol": "google_gemini",
-      "baseUrlTemplate": "https://generativelanguage.googleapis.com",
+      "baseUrl": "https://generativelanguage.googleapis.com",
       "capabilities": [
         "chat",
         "image",

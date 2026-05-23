@@ -5,11 +5,14 @@ import { loadCatalog, projectRootFromTool, readJsonFile } from "./catalog-lib.mj
 
 export function createFreshnessReport(root, options = {}) {
   const policyPath = options.policyPath ?? "catalog-freshness-policy.json";
-  const asOfDate = options.asOf
-    ? new Date(`${options.asOf}T00:00:00Z`)
+  const catalog = loadCatalog(root);
+  const asOf = options.asOf ?? (
+    options.asOfCatalogGeneratedAt ? catalog.manifest.generatedAt?.slice(0, 10) : undefined
+  );
+  const asOfDate = asOf
+    ? new Date(`${asOf}T00:00:00Z`)
     : new Date();
   const policy = readJsonFile(join(root, policyPath));
-  const catalog = loadCatalog(root);
   const staleSources = [];
   const warnings = [];
 
@@ -88,9 +91,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const args = process.argv.slice(2);
   const policyArg = args.indexOf("--max-age-policy");
   const asOfArg = args.indexOf("--as-of");
+  const asOfCatalogGeneratedAt = args.includes("--as-of-catalog-generated-at");
   const report = createFreshnessReport(root, {
     policyPath: policyArg >= 0 ? args[policyArg + 1] : "catalog-freshness-policy.json",
     asOf: asOfArg >= 0 ? args[asOfArg + 1] : undefined,
+    asOfCatalogGeneratedAt,
   });
   console.log(JSON.stringify(report, null, 2));
   if (!report.ok) {

@@ -28,6 +28,17 @@ pub struct BillingMeter {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct ProtocolStandard {
+    pub protocol_code: String,
+    pub vendor_origin: String,
+    pub display_name: String,
+    pub family: String,
+    pub docs_url: String,
+    pub maturity: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct ModelVendor {
     pub vendor_code: String,
     pub region_code: String,
@@ -47,6 +58,8 @@ pub struct ModelVendor {
     pub model_families: Vec<String>,
     #[serde(default)]
     pub capabilities: Vec<String>,
+    #[serde(default)]
+    pub supported_protocols: Vec<String>,
     pub open_source: Option<bool>,
     pub sort_order: Option<i32>,
     pub source: SourceEvidence,
@@ -224,6 +237,7 @@ pub struct ModelVendorIdentity {
     pub legal_name: Option<String>,
     pub vendor_type: String,
     pub capabilities: Vec<String>,
+    pub supported_protocols: Vec<String>,
     pub open_source: bool,
 }
 
@@ -238,5 +252,6 @@ pub struct VendorRegionRef {
 pub struct ModelCatalog {
     pub manifest: CatalogManifest,
     pub meters: Vec<BillingMeter>,
+    pub protocols: Vec<ProtocolStandard>,
     pub vendors: Vec<VendorCatalog>,
 }

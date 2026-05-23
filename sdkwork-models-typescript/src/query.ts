@@ -4,6 +4,7 @@ import type {
   ModelInfo,
   ModelPrice,
   ModelVendorIdentity,
+  ProtocolStandard,
   VendorRegionRef,
 } from "./types.js";
 
@@ -33,6 +34,7 @@ export function listVendors(catalog: ModelCatalog): ModelVendorIdentity[] {
       legalName: vendor.legalName,
       vendorType: vendor.vendorType,
       capabilities: [...vendor.capabilities],
+      supportedProtocols: [...(vendor.supportedProtocols ?? [])],
       openSource: vendor.openSource,
     });
   }
@@ -74,11 +76,8 @@ export function listModels(catalog: ModelCatalog, filter: ModelFilter = {}): Mod
 }
 
 export function listAvailableModels(catalog: ModelCatalog, filter: ModelFilter = {}): ModelInfo[] {
-  return listModels(catalog, {
-    ...filter,
-    routingState: "enabled",
-    shelfState: "listed",
-  }).filter((model) => getModelPrices(catalog, model.catalogKey).length > 0);
+  return listModels(catalog, { ...filter, routingState: "enabled", shelfState: "listed" })
+    .filter((model) => getModelPrices(catalog, model.catalogKey).length > 0);
 }
 
 export function findModel(catalog: ModelCatalog, catalogKeyValue: string): ModelInfo | undefined {
@@ -128,6 +127,29 @@ export function listModelsByModality(
   outputModality: string,
 ): ModelInfo[] {
   return listModels(catalog, { inputModality, outputModality });
+}
+
+export function listProtocols(catalog: ModelCatalog): ProtocolStandard[] {
+  return catalog.protocols;
+}
+
+export function findProtocol(catalog: ModelCatalog, protocolCode: string): ProtocolStandard | undefined {
+  return catalog.protocols.find((p) => p.protocolCode === protocolCode);
+}
+
+export function listProtocolsByVendor(catalog: ModelCatalog, vendorCode: string): ProtocolStandard[] {
+  const vendorIdentity = catalog.vendors
+    .map((vc) => vc.vendor)
+    .find((vendor) => vendor.vendorCode === vendorCode);
+  if (!vendorIdentity) {
+    return [];
+  }
+  const supported = new Set(vendorIdentity.supportedProtocols ?? []);
+  return catalog.protocols.filter((p) => supported.has(p.protocolCode));
+}
+
+export function listModelsByProtocol(catalog: ModelCatalog, protocolCode: string): ModelInfo[] {
+  return listModels(catalog, { apiFormat: protocolCode });
 }
 
 function splitCatalogKey(value: string): [string | undefined, string | undefined, string | undefined] {

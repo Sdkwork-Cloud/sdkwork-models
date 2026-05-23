@@ -26,5 +26,9 @@
   },
   "vendorCode": "deepseek",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.deepseek.com"
+  "websiteUrl": "https://www.deepseek.com",
+  "supportedProtocols": [
+    "openai_compatible",
+    "anthropic_messages"
+  ]
 }

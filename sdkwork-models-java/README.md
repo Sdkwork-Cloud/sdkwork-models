@@ -47,6 +47,10 @@ SdkworkModels.getModelPrices(ModelCatalog catalog, String catalogKey)
 SdkworkModels.getBestReferencePrice(ModelCatalog catalog, String catalogKey, String meterCode)
 SdkworkModels.listModelsByCapability(ModelCatalog catalog, String capability)
 SdkworkModels.listModelsByModality(ModelCatalog catalog, String input, String output)
+SdkworkModels.listProtocols(ModelCatalog catalog)
+SdkworkModels.findProtocol(ModelCatalog catalog, String protocolCode)
+SdkworkModels.listProtocolsByVendor(ModelCatalog catalog, String vendorCode)
+SdkworkModels.listModelsByProtocol(ModelCatalog catalog, String protocolCode)
 SdkworkModels.listMeters(ModelCatalog catalog)
 SdkworkModels.findMeter(ModelCatalog catalog, String meterCode)
 ```
@@ -64,6 +68,10 @@ must support these filter keys:
 - `shelfState`
 - `routingState`
 - `apiFormat`
+
+`apiFormat` values are protocol codes from `models/protocols.json`. Use the
+protocol query helpers to discover protocol metadata, inspect vendor support,
+and list models by protocol.
 
 ## Decimal Rule
 

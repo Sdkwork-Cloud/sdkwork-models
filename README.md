@@ -254,6 +254,10 @@ getModelPrices(catalog, catalogKey)
 getBestReferencePrice(catalog, catalogKey, meterCode)
 listModelsByCapability(catalog, capability)
 listModelsByModality(catalog, input, output)
+listProtocols(catalog)
+findProtocol(catalog, protocolCode)
+listProtocolsByVendor(catalog, vendorCode)
+listModelsByProtocol(catalog, protocolCode)
 listMeters(catalog)
 findMeter(catalog, meterCode)
 ```
@@ -270,6 +274,10 @@ findMeter(catalog, meterCode)
 - `shelfState`
 - `routingState`
 - `apiFormat`
+
+`apiFormat` values are protocol codes from `models/protocols.json`. SDKs expose
+protocol queries so applications can discover protocol metadata, inspect which
+protocols a vendor supports, and list models that conform to a protocol.
 
 `listAvailableModels` is the safe default for application selectors, routing
 configuration, and pricing previews. It returns only enabled, listed models

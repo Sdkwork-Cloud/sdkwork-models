@@ -30,12 +30,14 @@ export function validateCatalog(root) {
   for (const rel of [
     "sdkwork-models.json",
     "models/meters.json",
+    "models/protocols.json",
     "models/vendors.json",
     "models/index.json",
     "schemas/catalog.schema.json",
     "schemas/index.schema.json",
     "schemas/model.schema.json",
     "schemas/pricing.schema.json",
+    "schemas/protocol.schema.json",
   ]) {
     requireFile(rel);
   }
@@ -43,6 +45,18 @@ export function validateCatalog(root) {
   const manifest = loadManifest(root);
   const modelsRoot = join(root, manifest.modelsRoot);
   const meterCodes = new Set(loadMeters(root).map((meter) => meter.meterCode));
+  const protocolFile = readJsonFile(join(root, manifest.modelsRoot, "protocols.json"));
+  const protocolCodes = new Set();
+  for (const [index, protocol] of (protocolFile.protocols ?? []).entries()) {
+    if (typeof protocol.protocolCode !== "string" || protocol.protocolCode.length === 0) {
+      issues.push(issue("protocol.code.invalid", `models/protocols.json#/protocols/${index}/protocolCode`, "protocolCode must be a non-empty string"));
+      continue;
+    }
+    if (protocolCodes.has(protocol.protocolCode)) {
+      issues.push(issue("protocol.code.duplicate", `models/protocols.json#/protocols/${index}/protocolCode`, `${protocol.protocolCode} is duplicated`));
+    }
+    protocolCodes.add(protocol.protocolCode);
+  }
   const seenVendorRegions = new Set();
   const seenModels = new Map();
 
@@ -80,6 +94,16 @@ export function validateCatalog(root) {
       if (value === undefined || value === null || (Array.isArray(value) && value.length === 0)) {
         issues.push(issue("vendor.operating_context.missing", `${pathPrefix}/vendor.json#/${field}`, `${field} is required for vendor operating and billing context`));
       }
+    }
+    const supportedProtocols = new Set();
+    if (!Array.isArray(bundle.vendor.supportedProtocols) || bundle.vendor.supportedProtocols.length === 0) {
+      issues.push(issue("vendor.protocols.missing", `${pathPrefix}/vendor.json#/supportedProtocols`, "supportedProtocols must declare at least one protocolCode"));
+    }
+    for (const [index, protocolCode] of (bundle.vendor.supportedProtocols ?? []).entries()) {
+      if (!protocolCodes.has(protocolCode)) {
+        issues.push(issue("vendor.protocol.unknown", `${pathPrefix}/vendor.json#/supportedProtocols/${index}`, `${protocolCode} is not defined in models/protocols.json`));
+      }
+      supportedProtocols.add(protocolCode);
     }
     if (/\b(qwen|kling|hunyuan|bigmodel|seedance)\b/i.test(bundle.vendor.vendorCode.replace(/_/g, " "))) {
       issues.push(issue("vendor.code.product_line", `${pathPrefix}/vendor.json#/vendorCode`, "vendorCode must identify the unique vendor identity, not a product line"));
@@ -129,6 +153,11 @@ export function validateCatalog(root) {
       }
       if (!model.source?.sourceUrl || !model.source?.observedAt) {
         issues.push(issue("model.source.missing", `${modelPath}#/source`, "model sourceUrl and observedAt are required"));
+      }
+      if (!protocolCodes.has(model.apiFormat)) {
+        issues.push(issue("model.protocol.unknown", `${modelPath}#/apiFormat`, `${model.apiFormat} is not defined in models/protocols.json`));
+      } else if (!supportedProtocols.has(model.apiFormat)) {
+        issues.push(issue("model.protocol.unsupported_by_vendor", `${modelPath}#/apiFormat`, `${bundle.vendorCode}/${bundle.regionCode} must include ${model.apiFormat} in supportedProtocols`));
       }
       const modelCatalogKey = expectedCatalogKey;
       if (seenModels.has(modelCatalogKey)) {

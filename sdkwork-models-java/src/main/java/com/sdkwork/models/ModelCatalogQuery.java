@@ -2,27 +2,28 @@ package com.sdkwork.models;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public final class ModelCatalogQuery {
-    private ModelCatalogQuery() {
-    }
+    private ModelCatalogQuery() {}
 
+    @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> listVendors(ModelCatalog catalog) {
         Map<String, Map<String, Object>> vendors = new LinkedHashMap<>();
         for (Map<String, Object> vendor : catalog.vendors()) {
             Object vendorCode = vendor.get("vendorCode");
-            if (!(vendorCode instanceof String code) || vendors.containsKey(code)) {
-                continue;
-            }
+            if (!(vendorCode instanceof String code) || vendors.containsKey(code)) continue;
             Map<String, Object> identity = new LinkedHashMap<>();
             identity.put("vendorCode", code);
             identity.put("displayName", vendor.get("displayName"));
             identity.put("legalName", vendor.get("legalName"));
             identity.put("vendorType", vendor.get("vendorType"));
             identity.put("capabilities", vendor.getOrDefault("capabilities", List.of()));
+            identity.put("supportedProtocols", vendor.getOrDefault("supportedProtocols", List.of()));
             identity.put("openSource", vendor.getOrDefault("openSource", false));
             vendors.put(code, identity);
         }
@@ -65,8 +66,7 @@ public final class ModelCatalogQuery {
         normalized.put("routingState", "enabled");
         normalized.put("shelfState", "listed");
         return listModels(catalog, normalized).stream()
-                .filter(model -> model.get("catalogKey") instanceof String key
-                        && !getModelPrices(catalog, key).isEmpty())
+                .filter(model -> model.get("catalogKey") instanceof String key && !getModelPrices(catalog, key).isEmpty())
                 .toList();
     }
 
@@ -81,37 +81,26 @@ public final class ModelCatalogQuery {
     public static Map<String, Object> findMeter(ModelCatalog catalog, String meterCode) {
         return catalog.meters().stream()
                 .filter(meter -> Objects.equals(meter.get("meterCode"), meterCode))
-                .findFirst()
-                .orElse(null);
+                .findFirst().orElse(null);
     }
 
     public static Map<String, Object> findModel(ModelCatalog catalog, String catalogKey) {
         String[] parts = catalogKey.split("/", -1);
-        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
-            return null;
-        }
+        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) return null;
         return findModelByVendorRegion(catalog, parts[0], parts[1], parts[2]);
     }
 
-    public static Map<String, Object> findModelByVendorRegion(
-            ModelCatalog catalog,
-            String vendorCode,
-            String regionCode,
-            String modelId
-    ) {
+    public static Map<String, Object> findModelByVendorRegion(ModelCatalog catalog, String vendorCode, String regionCode, String modelId) {
         return catalog.models().stream()
                 .filter(model -> Objects.equals(model.get("vendorCode"), vendorCode))
                 .filter(model -> Objects.equals(model.get("regionCode"), regionCode))
                 .filter(model -> Objects.equals(model.get("modelId"), modelId))
-                .findFirst()
-                .orElse(null);
+                .findFirst().orElse(null);
     }
 
     public static List<Map<String, Object>> getModelPrices(ModelCatalog catalog, String catalogKey) {
         String[] parts = catalogKey.split("/", -1);
-        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
-            return List.of();
-        }
+        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) return List.of();
         return catalog.pricing().stream()
                 .filter(item -> Objects.equals(item.get("vendorCode"), parts[0]))
                 .filter(item -> Objects.equals(item.get("regionCode"), parts[1]))
@@ -124,31 +113,54 @@ public final class ModelCatalogQuery {
     public static Map<String, Object> getBestReferencePrice(ModelCatalog catalog, String catalogKey, String meterCode) {
         return getModelPrices(catalog, catalogKey).stream()
                 .filter(price -> Objects.equals(price.get("meterCode"), meterCode))
-                .findFirst()
-                .orElse(null);
+                .findFirst().orElse(null);
     }
 
     public static List<Map<String, Object>> listModelsByCapability(ModelCatalog catalog, String capability) {
-        return catalog.models().stream()
-                .filter(model -> containsString(model.get("capabilities"), capability))
-                .toList();
+        return catalog.models().stream().filter(model -> containsString(model.get("capabilities"), capability)).toList();
     }
 
-    public static List<Map<String, Object>> listModelsByModality(
-            ModelCatalog catalog,
-            String inputModality,
-            String outputModality
-    ) {
+    public static List<Map<String, Object>> listModelsByModality(ModelCatalog catalog, String inputModality, String outputModality) {
         return catalog.models().stream()
                 .filter(model -> containsString(model.get("inputModalities"), inputModality))
                 .filter(model -> containsString(model.get("outputModalities"), outputModality))
                 .toList();
     }
 
-    private static boolean containsString(Object value, String expected) {
-        if (!(value instanceof List<?> list)) {
-            return false;
+    public static List<Map<String, Object>> listProtocols(ModelCatalog catalog) {
+        return catalog.protocols();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> findProtocol(ModelCatalog catalog, String protocolCode) {
+        return catalog.protocols().stream()
+                .filter(p -> Objects.equals(p.get("protocolCode"), protocolCode))
+                .findFirst().orElse(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Map<String, Object>> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) {
+        Map<String, Object> vendor = catalog.vendors().stream()
+                .filter(v -> Objects.equals(v.get("vendorCode"), vendorCode))
+                .findFirst().orElse(null);
+        if (vendor == null) return List.of();
+        Object sp = vendor.get("supportedProtocols");
+        if (!(sp instanceof List<?> list)) return List.of();
+        Set<String> supported = new LinkedHashSet<>();
+        for (Object item : list) {
+            if (item instanceof String s) supported.add(s);
         }
+        return catalog.protocols().stream()
+                .filter(p -> supported.contains(p.get("protocolCode")))
+                .toList();
+    }
+
+    public static List<Map<String, Object>> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {
+        return listModels(catalog, Map.of("apiFormat", protocolCode));
+    }
+
+    private static boolean containsString(Object value, String expected) {
+        if (!(value instanceof List<?> list)) return false;
         return list.stream().anyMatch(item -> Objects.equals(item, expected));
     }
 
@@ -160,26 +172,22 @@ public final class ModelCatalogQuery {
         return expected == null || Objects.equals(model.get(field), expected);
     }
 
+    @SuppressWarnings("unchecked")
     private static List<Map<String, Object>> mapList(Object value) {
-        if (!(value instanceof List<?> list)) {
-            return List.of();
-        }
+        if (!(value instanceof List<?> list)) return List.of();
         List<Map<String, Object>> items = new ArrayList<>();
         for (Object item : list) {
-            if (!(item instanceof Map<?, ?> source)) {
-                continue;
-            }
+            if (!(item instanceof Map<?, ?> source)) continue;
             Map<String, Object> normalized = new LinkedHashMap<>();
             for (Map.Entry<?, ?> entry : source.entrySet()) {
-                if (entry.getKey() instanceof String key) {
-                    normalized.put(key, entry.getValue());
-                }
+                if (entry.getKey() instanceof String key) normalized.put(key, entry.getValue());
             }
             items.add(normalized);
         }
         return items;
     }
 
+    @SuppressWarnings("unchecked")
     private static List<Map<String, Object>> regionRefs(Map<String, Object> vendor) {
         Object regions = vendor.get("regions");
         if (regions instanceof List<?> list) {
@@ -187,16 +195,11 @@ public final class ModelCatalogQuery {
                     .filter(region -> region instanceof Map<?, ?>)
                     .map(region -> (Map<?, ?>) region)
                     .filter(region -> region.get("regionCode") instanceof String)
-                    .map(region -> Map.of(
-                            "vendorCode", vendor.get("vendorCode"),
-                            "regionCode", region.get("regionCode")
-                    ))
+                    .map(region -> Map.of("vendorCode", vendor.get("vendorCode"), "regionCode", region.get("regionCode")))
                     .toList();
         }
         Object regionCode = vendor.get("regionCode");
-        if (regionCode instanceof String) {
-            return List.of(Map.of("vendorCode", vendor.get("vendorCode"), "regionCode", regionCode));
-        }
+        if (regionCode instanceof String) return List.of(Map.of("vendorCode", vendor.get("vendorCode"), "regionCode", regionCode));
         return List.of();
     }
 }

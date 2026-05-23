@@ -26,5 +26,8 @@
   },
   "vendorCode": "black_forest_labs",
   "vendorType": "commercial",
-  "websiteUrl": "https://blackforestlabs.ai"
+  "websiteUrl": "https://blackforestlabs.ai",
+  "supportedProtocols": [
+    "vendor_native"
+  ]
 }

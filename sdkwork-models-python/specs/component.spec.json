@@ -6,7 +6,7 @@
     "displayName": "SDKWork Models Python",
     "version": "0.1.0",
     "type": "python-package",
-    "root": "sdkwork-claw-router/data/sdkwork-models/sdkwork-models-python",
+    "root": "data/sdkwork-models/sdkwork-models-python",
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",

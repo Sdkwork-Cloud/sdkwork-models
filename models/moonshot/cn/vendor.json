@@ -26,5 +26,8 @@
   },
   "vendorCode": "moonshot",
   "vendorType": "commercial",
-  "websiteUrl": "https://www.moonshot.cn"
+  "websiteUrl": "https://www.moonshot.cn",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }

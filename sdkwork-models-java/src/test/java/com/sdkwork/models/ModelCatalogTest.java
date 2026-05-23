@@ -16,10 +16,27 @@ class ModelCatalogTest {
                 "1.0.0",
                 List.of(Map.of("meterCode", "llm_input_token", "defaultUnitSize", "1000000")),
                 List.of(
-                        Map.of("vendorCode", "openai", "displayName", "OpenAI"),
+                        Map.of(
+                                "protocolCode", "openai_compatible",
+                                "vendorOrigin", "openai",
+                                "displayName", "OpenAI Chat Completions Compatible"
+                        ),
+                        Map.of(
+                                "protocolCode", "openai_responses",
+                                "vendorOrigin", "openai",
+                                "displayName", "OpenAI Responses API"
+                        )
+                ),
+                List.of(
+                        Map.of(
+                                "vendorCode", "openai",
+                                "displayName", "OpenAI",
+                                "supportedProtocols", List.of("openai_compatible", "openai_responses")
+                        ),
                         Map.of(
                                 "vendorCode", "minimax",
                                 "displayName", "MiniMax",
+                                "supportedProtocols", List.of("openai_compatible"),
                                 "regions", List.of(
                                         Map.of("regionCode", "cn"),
                                         Map.of("regionCode", "global")
@@ -91,6 +108,11 @@ class ModelCatalogTest {
         )).size());
         assertEquals(2, ModelCatalogQuery.listModelsByCapability(catalog, "chat").size());
         assertEquals(2, ModelCatalogQuery.listModelsByModality(catalog, "text", "text").size());
+        assertEquals(2, ModelCatalogQuery.listProtocols(catalog).size());
+        assertEquals("OpenAI Responses API", ModelCatalogQuery.findProtocol(catalog, "openai_responses").get("displayName"));
+        assertEquals(null, ModelCatalogQuery.findProtocol(catalog, "missing_protocol"));
+        assertEquals(2, SdkworkModels.listProtocolsByVendor(catalog, "openai").size());
+        assertEquals(2, SdkworkModels.listModelsByProtocol(catalog, "openai_compatible").size());
         assertEquals(1, ModelCatalogQuery.listAvailableModels(catalog).size());
         assertEquals("openai/global/gpt-5.5", ModelCatalogQuery.listAvailableModels(catalog).getFirst().get("catalogKey"));
         assertEquals(1, ModelCatalogQuery.getModelPrices(catalog, "openai/global/gpt-5.5").size());

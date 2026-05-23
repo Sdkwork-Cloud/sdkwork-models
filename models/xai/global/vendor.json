@@ -28,5 +28,8 @@
   },
   "vendorCode": "xai",
   "vendorType": "commercial",
-  "websiteUrl": "https://x.ai"
+  "websiteUrl": "https://x.ai",
+  "supportedProtocols": [
+    "openai_compatible"
+  ]
 }
