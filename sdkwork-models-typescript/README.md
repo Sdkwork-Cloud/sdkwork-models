@@ -24,7 +24,7 @@ catalog roots use the same file manifest. `loadBundledCatalog()` resolves
 for monorepo development.
 
 Model and price lookups use the stable `vendorCode/regionCode/modelId`
-catalog key, for example `openai/global/gpt-5.5`.
+catalog key, for example `openai/gpt-5.5`.
 
 ## Required Public API
 

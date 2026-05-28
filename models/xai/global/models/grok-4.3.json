@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "xai/global/grok-4.3",
+  "catalogKey": "xai/grok-4.3",
   "colorToken": "#111827",
   "contextTokens": 1000000,
   "description": "Grok model for general chat, reasoning, and multimodal assistance.",

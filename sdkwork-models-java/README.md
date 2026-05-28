@@ -20,7 +20,7 @@ The core package must not require Spring. Spring integration may live in a
 separate optional module later.
 
 Model and price lookups use the stable `vendorCode/regionCode/modelId`
-catalog key, for example `openai/global/gpt-5.5`.
+catalog key, for example `openai/gpt-5.5`.
 `SdkworkModels.loadCatalog(Path)` and `SdkworkModels.loadCatalog(URI)` read
 `models/index.json` and load the declared `modelFiles` and `pricingFiles`.
 `SdkworkModels.loadBundledCatalog()` resolves `sdkwork.models.catalogRoot` or

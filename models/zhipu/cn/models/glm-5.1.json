@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "zhipu/cn/glm-5.1",
+  "catalogKey": "zhipu/glm-5.1",
   "colorToken": "#7c2d12",
   "contextTokens": 200000,
   "description": "GLM model for Chinese and multimodal assistance.",

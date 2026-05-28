@@ -48,7 +48,7 @@ public final class ModelCatalogSmoke {
                 ),
                 List.of(
                         Map.ofEntries(
-                                entry("catalogKey", "openai/global/gpt-5.5"),
+                                entry("catalogKey", "openai/gpt-5.5"),
                                 entry("modelId", "gpt-5.5"),
                                 entry("vendorCode", "openai"),
                                 entry("regionCode", "global"),
@@ -62,7 +62,7 @@ public final class ModelCatalogSmoke {
                                 entry("outputModalities", List.of("text"))
                         ),
                         Map.ofEntries(
-                                entry("catalogKey", "minimax/cn/MiniMax-M2.7"),
+                                entry("catalogKey", "minimax/MiniMax-M2.7"),
                                 entry("modelId", "MiniMax-M2.7"),
                                 entry("vendorCode", "minimax"),
                                 entry("regionCode", "cn"),
@@ -77,7 +77,7 @@ public final class ModelCatalogSmoke {
                         )
                 ),
                 List.of(Map.of(
-                        "catalogKey", "openai/global/gpt-5.5",
+                        "catalogKey", "openai/gpt-5.5",
                         "vendorCode", "openai",
                         "regionCode", "global",
                         "modelId", "gpt-5.5",
@@ -85,10 +85,10 @@ public final class ModelCatalogSmoke {
                 ))
         );
 
-        require("openai".equals(SdkworkModels.findModel(catalog, "openai/global/gpt-5.5").get("vendorCode")));
-        require("global".equals(SdkworkModels.findModel(catalog, "openai/global/gpt-5.5").get("regionCode")));
-        require(SdkworkModels.findModel(catalog, "openai/gpt-5.5") == null);
-        require("openai/global/gpt-5.5".equals(SdkworkModels.catalogKey("openai", "global", "gpt-5.5")));
+        require("openai".equals(SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("vendorCode")));
+        require("global".equals(SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("regionCode")));
+        require(SdkworkModels.findModel(catalog, "openai/global/gpt-5.5") == null);
+        require("openai/gpt-5.5".equals(SdkworkModels.catalogKey("openai", "global", "gpt-5.5")));
         require(SdkworkModels.listVendors(catalog).stream().noneMatch(vendor -> vendor.containsKey("regionCode")));
         require(SdkworkModels.listVendorRegions(catalog).size() == 2);
         require(SdkworkModels.listMeters(catalog).stream()
@@ -114,15 +114,16 @@ public final class ModelCatalogSmoke {
         require(SdkworkModels.listProtocolsByVendor(catalog, "openai").size() == 2);
         require(SdkworkModels.listModelsByProtocol(catalog, "openai_compatible").size() == 2);
         require(SdkworkModels.listAvailableModels(catalog).size() == 1);
-        require("openai/global/gpt-5.5".equals(SdkworkModels.listAvailableModels(catalog).getFirst().get("catalogKey")));
-        require(SdkworkModels.getModelPrices(catalog, "openai/global/gpt-5.5").size() == 1);
+        require("openai/gpt-5.5".equals(SdkworkModels.listAvailableModels(catalog).getFirst().get("catalogKey")));
+        require(SdkworkModels.getModelPrices(catalog, "openai/gpt-5.5").size() == 1);
+        require(SdkworkModels.getModelPrices(catalog, "openai/global/gpt-5.5").isEmpty());
         require("5.000000".equals(
-                SdkworkModels.getBestReferencePrice(catalog, "openai/global/gpt-5.5", "llm_input_token")
+                SdkworkModels.getBestReferencePrice(catalog, "openai/gpt-5.5", "llm_input_token")
                         .get("unitPrice")
         ));
 
         ModelCatalog localCatalog = SdkworkModels.loadCatalog(Path.of("data", "sdkwork-models"));
-        require("openai".equals(SdkworkModels.findModel(localCatalog, "openai/global/gpt-5.5").get("vendorCode")));
+        require("openai".equals(SdkworkModels.findModel(localCatalog, "openai/gpt-5.5").get("vendorCode")));
         require(SdkworkModels.listModels(localCatalog, Map.of(
                 "vendorCode", "minimax",
                 "regionCode", "cn",

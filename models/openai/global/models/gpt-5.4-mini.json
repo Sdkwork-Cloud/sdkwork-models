@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "openai/global/gpt-5.4-mini",
+  "catalogKey": "openai/gpt-5.4-mini",
   "colorToken": "#334155",
   "contextTokens": 400000,
   "description": "Compact GPT-5.4 model for cost-sensitive chat, coding, and agent workloads.",

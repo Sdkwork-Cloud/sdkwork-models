@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "openai/global/gpt-5.4-nano",
+  "catalogKey": "openai/gpt-5.4-nano",
   "colorToken": "#475569",
   "contextTokens": 400000,
   "description": "Smallest GPT-5.4 model for high-throughput, low-cost routing.",

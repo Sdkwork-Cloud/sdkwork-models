@@ -1,5 +1,5 @@
 {
-  "catalogKey": "openai/global/text-embedding-3-small",
+  "catalogKey": "openai/text-embedding-3-small",
   "currency": "USD",
   "modelId": "text-embedding-3-small",
   "prices": [

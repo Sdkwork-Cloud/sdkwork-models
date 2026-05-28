@@ -3,7 +3,7 @@
   "capabilities": [
     "embedding"
   ],
-  "catalogKey": "openai/global/text-embedding-3-small",
+  "catalogKey": "openai/text-embedding-3-small",
   "colorToken": "#64748b",
   "description": "Text embedding baseline for retrieval, search, and semantic indexing.",
   "displayName": "Text embedding 3 small",

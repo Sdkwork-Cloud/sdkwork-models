@@ -7,6 +7,7 @@ export {
   findProtocol,
   getBestReferencePrice,
   getModelPrices,
+  getModelRegionPrices,
   listAvailableModels,
   listMeters,
   listModels,

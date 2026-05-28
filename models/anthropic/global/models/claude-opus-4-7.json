@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "anthropic/global/claude-opus-4-7",
+  "catalogKey": "anthropic/claude-opus-4-7",
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
   "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",

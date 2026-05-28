@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "anthropic/global/claude-sonnet-4-6",
+  "catalogKey": "anthropic/claude-sonnet-4-6",
   "colorToken": "#d97706",
   "contextTokens": 1000000,
   "description": "Claude Sonnet model for reasoning, coding, and agent workflows.",

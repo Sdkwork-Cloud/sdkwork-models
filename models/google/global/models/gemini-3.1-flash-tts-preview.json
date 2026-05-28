@@ -3,7 +3,7 @@
   "capabilities": [
     "audio"
   ],
-  "catalogKey": "google/global/gemini-3.1-flash-tts-preview",
+  "catalogKey": "google/gemini-3.1-flash-tts-preview",
   "colorToken": "#7c3aed",
   "contextTokens": 32768,
   "description": "Gemini 3.1 Flash preview text-to-speech model.",

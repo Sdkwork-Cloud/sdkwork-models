@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "minimax/global/MiniMax-M2.7",
+  "catalogKey": "minimax/MiniMax-M2.7",
   "colorToken": "#4f46e5",
   "contextTokens": 204800,
   "description": "MiniMax M2.7 text model for long-context coding, office, agent and tool workflows.",

@@ -3,7 +3,7 @@
   "capabilities": [
     "video"
   ],
-  "catalogKey": "google/global/veo-3.1-lite-generate-preview",
+  "catalogKey": "google/veo-3.1-lite-generate-preview",
   "colorToken": "#5b21b6",
   "description": "Cost-optimized Veo 3.1 Lite preview model for video generation.",
   "displayName": "Veo 3.1 Lite Generate Preview",

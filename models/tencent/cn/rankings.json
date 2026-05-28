@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "tencent/cn/hunyuan-turbos-latest",
+          "catalogKey": "tencent/hunyuan-turbos-latest",
           "modelId": "hunyuan-turbos-latest",
           "pricingText": "CNY 0.80 / 1M input; CNY 2.00 / 1M output",
           "rankNo": 17

@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "baidu/cn/ernie-5.0-thinking-preview",
+  "catalogKey": "baidu/ernie-5.0-thinking-preview",
   "colorToken": "#1d4ed8",
   "contextTokens": 128000,
   "description": "ERNIE thinking preview model for Chinese reasoning workloads.",

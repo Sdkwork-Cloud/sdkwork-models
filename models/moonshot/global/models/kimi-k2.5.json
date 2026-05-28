@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "moonshot/global/kimi-k2.5",
+  "catalogKey": "moonshot/kimi-k2.5",
   "colorToken": "#334155",
   "contextTokens": 262144,
   "description": "Kimi model for long-context Chinese and multilingual workloads.",

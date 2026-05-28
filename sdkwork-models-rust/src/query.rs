@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::types::{
     BillingMeter, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity, ProtocolStandard,
@@ -51,8 +51,8 @@ pub fn list_vendor_regions(catalog: &ModelCatalog) -> Vec<VendorRegionRef> {
         .collect()
 }
 
-pub fn catalog_key(vendor_code: &str, region_code: &str, model_id: &str) -> String {
-    format!("{vendor_code}/{region_code}/{model_id}")
+pub fn catalog_key(vendor_code: &str, _region_code: &str, model_id: &str) -> String {
+    format!("{vendor_code}/{model_id}")
 }
 
 pub fn list_meters(catalog: &ModelCatalog) -> Vec<&BillingMeter> {
@@ -67,11 +67,20 @@ pub fn find_meter<'a>(catalog: &'a ModelCatalog, meter_code: &str) -> Option<&'a
 }
 
 pub fn list_models<'a>(catalog: &'a ModelCatalog, filter: ModelFilter<'_>) -> Vec<&'a ModelInfo> {
-    catalog
+    let mut models = catalog
         .vendors
         .iter()
-        .flat_map(|vendor| vendor.models.iter())
-        .filter(|model| {
+        .flat_map(|vendor| {
+            vendor.models.iter().map(move |model| {
+                (
+                    vendor.pricing.iter().any(|pricing| {
+                        pricing.model_id == model.model_id && !pricing.prices.is_empty()
+                    }),
+                    model,
+                )
+            })
+        })
+        .filter(|(_, model)| {
             filter
                 .vendor_code
                 .map(|value| model.vendor_code == value)
@@ -80,58 +89,75 @@ pub fn list_models<'a>(catalog: &'a ModelCatalog, filter: ModelFilter<'_>) -> Ve
         .filter(|model| {
             filter
                 .region_code
-                .map(|value| model.region_code == value)
+                .map(|value| model.1.region_code == value)
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .family_code
-                .map(|value| model.family_code == value)
+                .map(|value| model.1.family_code == value)
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .capability
-                .map(|value| model.capabilities.iter().any(|item| item == value))
+                .map(|value| model.1.capabilities.iter().any(|item| item == value))
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .input_modality
-                .map(|value| model.input_modalities.iter().any(|item| item == value))
+                .map(|value| model.1.input_modalities.iter().any(|item| item == value))
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .output_modality
-                .map(|value| model.output_modalities.iter().any(|item| item == value))
+                .map(|value| model.1.output_modalities.iter().any(|item| item == value))
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .release_stage
-                .map(|value| model.release_stage == value)
+                .map(|value| model.1.release_stage == value)
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .shelf_state
-                .map(|value| model.shelf_state == value)
+                .map(|value| model.1.shelf_state == value)
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .routing_state
-                .map(|value| model.routing_state == value)
+                .map(|value| model.1.routing_state == value)
                 .unwrap_or(true)
         })
         .filter(|model| {
             filter
                 .api_format
-                .map(|value| model.api_format == value)
+                .map(|value| model.1.api_format == value)
                 .unwrap_or(true)
         })
-        .collect()
+        .collect::<Vec<_>>();
+    if filter.region_code.is_none() {
+        let mut deduped: BTreeMap<String, (bool, &ModelInfo)> = BTreeMap::new();
+        for (has_region_pricing, model) in models {
+            let replace = deduped
+                .get(&model.catalog_key)
+                .map(|(existing_has_pricing, existing_model)| {
+                    model_identity_score(has_region_pricing, model)
+                        > model_identity_score(*existing_has_pricing, existing_model)
+                })
+                .unwrap_or(true);
+            if replace {
+                deduped.insert(model.catalog_key.clone(), (has_region_pricing, model));
+            }
+        }
+        return deduped.into_values().map(|(_, model)| model).collect();
+    }
+    models.drain(..).map(|(_, model)| model).collect()
 }
 
 pub fn list_available_models<'a>(
@@ -147,23 +173,22 @@ pub fn list_available_models<'a>(
         },
     )
     .into_iter()
-    .filter(|model| !get_model_prices(catalog, &model.catalog_key).is_empty())
+    .filter(|model| {
+        !get_model_region_prices(catalog, &model.catalog_key, &model.region_code).is_empty()
+    })
     .collect()
 }
 
 pub fn find_model<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Option<&'a ModelInfo> {
     let mut parts = catalog_key.split('/');
     let vendor_code = parts.next()?;
-    let region_code = parts.next()?;
     let model_id = parts.next()?;
-    if parts.next().is_some()
-        || vendor_code.is_empty()
-        || region_code.is_empty()
-        || model_id.is_empty()
-    {
+    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
         return None;
     }
-    find_model_by_vendor_region(catalog, vendor_code, region_code, model_id)
+    list_models(catalog, ModelFilter::default())
+        .into_iter()
+        .find(|model| model.vendor_code == vendor_code && model.model_id == model_id)
 }
 
 pub fn find_model_by_vendor_region<'a>(
@@ -185,17 +210,35 @@ pub fn get_model_prices<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Vec
     let Some(vendor_code) = parts.next() else {
         return Vec::new();
     };
-    let Some(region_code) = parts.next() else {
+    let Some(model_id) = parts.next() else {
+        return Vec::new();
+    };
+    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
+        return Vec::new();
+    }
+    catalog
+        .vendors
+        .iter()
+        .filter(|vendor| vendor.vendor_code == vendor_code)
+        .flat_map(|vendor| vendor.pricing.iter())
+        .find(|pricing| pricing.model_id == model_id)
+        .map(|pricing| pricing.prices.iter().collect())
+        .unwrap_or_default()
+}
+
+pub fn get_model_region_prices<'a>(
+    catalog: &'a ModelCatalog,
+    catalog_key: &str,
+    region_code: &str,
+) -> Vec<&'a ModelPrice> {
+    let mut parts = catalog_key.split('/');
+    let Some(vendor_code) = parts.next() else {
         return Vec::new();
     };
     let Some(model_id) = parts.next() else {
         return Vec::new();
     };
-    if parts.next().is_some()
-        || vendor_code.is_empty()
-        || region_code.is_empty()
-        || model_id.is_empty()
-    {
+    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
         return Vec::new();
     }
     catalog
@@ -203,7 +246,7 @@ pub fn get_model_prices<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Vec
         .iter()
         .filter(|vendor| vendor.vendor_code == vendor_code && vendor.region_code == region_code)
         .flat_map(|vendor| vendor.pricing.iter())
-        .find(|pricing| pricing.model_id == model_id && pricing.region_code == region_code)
+        .find(|pricing| pricing.model_id == model_id)
         .map(|pricing| pricing.prices.iter().collect())
         .unwrap_or_default()
 }
@@ -295,4 +338,27 @@ pub fn list_models_by_protocol<'a>(
             ..ModelFilter::default()
         },
     )
+}
+
+fn model_identity_score(has_region_pricing: bool, model: &ModelInfo) -> i32 {
+    let mut score = 0;
+    if has_region_pricing {
+        score += 100;
+    }
+    if model.routing_state == "enabled" {
+        score += 40;
+    }
+    if model.shelf_state == "listed" {
+        score += 20;
+    }
+    if model.release_stage == "active" {
+        score += 10;
+    }
+    if matches!(model.lifecycle.as_str(), "current" | "preview") {
+        score += 5;
+    }
+    if model.region_code == "global" {
+        score += 1;
+    }
+    score
 }

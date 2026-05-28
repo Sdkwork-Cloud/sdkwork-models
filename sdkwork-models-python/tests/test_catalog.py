@@ -11,6 +11,7 @@ from sdkwork_models import (
     find_protocol,
     get_best_reference_price,
     get_model_prices,
+    get_model_region_prices,
     list_available_models,
     list_meters,
     list_models,
@@ -34,11 +35,11 @@ def test_package_root_exports_catalog_types() -> None:
 def test_load_catalog() -> None:
     catalog = load_catalog(Path(__file__).resolve().parents[2])
     assert catalog.catalog_version == "2026.05.08.1"
-    assert find_model(catalog, "openai/global/gpt-5.5")["vendorCode"] == "openai"
-    assert find_model(catalog, "openai/global/gpt-5.5")["regionCode"] == "global"
+    assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"
+    assert find_model(catalog, "openai/gpt-5.5")["regionCode"] == "global"
     assert find_model_by_vendor_region(catalog, "openai", "global", "gpt-5.5")["vendorCode"] == "openai"
-    assert catalog_key("openai", "global", "gpt-5.5") == "openai/global/gpt-5.5"
-    assert find_model(catalog, "openai/gpt-5.5") is None
+    assert catalog_key("openai", "global", "gpt-5.5") == "openai/gpt-5.5"
+    assert find_model(catalog, "openai/global/gpt-5.5") is None
     assert all("regionCode" not in vendor for vendor in list_vendors(catalog))
     assert ("minimax", "cn") in {
         (item["vendorCode"], item["regionCode"]) for item in list_vendor_regions(catalog)
@@ -57,15 +58,34 @@ def test_load_catalog() -> None:
     assert list_models_by_modality(catalog, "text", "text")
     available_models = list_available_models(catalog)
     assert available_models
+    model_keys = [model["catalogKey"] for model in list_models(catalog)]
+    assert len(model_keys) == len(set(model_keys))
     assert all(get_model_prices(catalog, model["catalogKey"]) for model in available_models)
     assert all(
         model["routingState"] == "enabled" and model["shelfState"] == "listed"
         for model in available_models
     )
-    assert all(model["catalogKey"] != "kuaishou/cn/kling-v3-0-preview" for model in available_models)
-    prices = get_model_prices(catalog, "openai/global/gpt-5.5")
+    assert any(
+        model["catalogKey"] == "kuaishou/kling-v3-0-preview"
+        and model["regionCode"] == "global"
+        for model in available_models
+    )
+    assert find_model(catalog, "kuaishou/kling-v3-0-preview")["regionCode"] == "global"
+    assert find_model_by_vendor_region(catalog, "kuaishou", "cn", "kling-v3-0-preview")["regionCode"] == "cn"
+    assert not any(
+        model["catalogKey"] == "kuaishou/kling-v3-0-preview"
+        for model in list_available_models(catalog, region_code="cn")
+    )
+    assert any(
+        model["catalogKey"] == "kuaishou/kling-v3-0-preview"
+        for model in list_available_models(catalog, region_code="global")
+    )
+    prices = get_model_prices(catalog, "openai/gpt-5.5")
     assert prices
-    assert get_best_reference_price(catalog, "openai/global/gpt-5.5", "llm_input_token")["unitPrice"] == "5.000000"
+    assert get_model_region_prices(catalog, "openai/gpt-5.5", "global")
+    assert get_model_region_prices(catalog, "openai/gpt-5.5", "cn") == []
+    assert get_model_prices(catalog, "openai/global/gpt-5.5") == []
+    assert get_best_reference_price(catalog, "openai/gpt-5.5", "llm_input_token")["unitPrice"] == "5.000000"
 
 
 def test_protocol_queries() -> None:
@@ -118,4 +138,4 @@ def test_load_bundled_catalog_from_environment(monkeypatch=None) -> None:
     else:
         monkeypatch.setenv("SDKWORK_MODELS_CATALOG_ROOT", str(catalog_root))
         catalog = load_bundled_catalog()
-    assert find_model(catalog, "openai/global/gpt-5.5")["vendorCode"] == "openai"
+    assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"

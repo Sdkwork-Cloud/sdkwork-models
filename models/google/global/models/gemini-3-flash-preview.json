@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "google/global/gemini-3-flash-preview",
+  "catalogKey": "google/gemini-3-flash-preview",
   "colorToken": "#1d4ed8",
   "contextTokens": 1048576,
   "description": "Fast Gemini 3 preview model for multimodal chat and cost-sensitive reasoning.",

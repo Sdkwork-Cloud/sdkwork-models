@@ -6,11 +6,14 @@ import 'types.dart';
 Future<ModelCatalog> loadCatalog(String pathOrUrl) async {
   final manifest = await _readJsonObject(pathOrUrl, 'sdkwork-models.json');
   final meterFile = await _readJsonObject(pathOrUrl, 'models/meters.json');
-  final protocolFile = await _readJsonObject(pathOrUrl, 'models/protocols.json');
+  final protocolFile =
+      await _readJsonObject(pathOrUrl, 'models/protocols.json');
   final index = await _readJsonObject(pathOrUrl, 'models/index.json');
   final vendors = <JsonObject>[];
   final seenVendorCodes = <String>{};
-  final models = <JsonObject>[];
+  final modelScores = <String, int>{};
+  final vendorCatalogs = <JsonObject>[];
+  final models = <String, JsonObject>{};
   final pricing = <JsonObject>[];
   for (final vendorIndex in _objectList(index['vendors'])) {
     final vendorCode = vendorIndex['vendorCode'];
@@ -21,21 +24,27 @@ Future<ModelCatalog> loadCatalog(String pathOrUrl) async {
     if (regionCode is! String) {
       continue;
     }
-    final vendorCatalog = await loadVendorCatalog(pathOrUrl, vendorCode, regionCode);
+    final vendorCatalog =
+        await loadVendorCatalog(pathOrUrl, vendorCode, regionCode);
+    vendorCatalogs.add(vendorCatalog);
     final vendor = vendorCatalog['vendor'];
     if (seenVendorCodes.add(vendorCode) && vendor is JsonObject) {
       vendors.add(vendor);
     }
-    models.addAll(_objectList(vendorCatalog['models']));
+    for (final model in _objectList(vendorCatalog['models'])) {
+      _putBestModelIdentity(models, modelScores, vendorCatalog, model);
+    }
     pricing.addAll(_objectList(vendorCatalog['pricing']));
   }
   return ModelCatalog(
-    catalogVersion: _requiredString(manifest['catalogVersion'], 'catalogVersion'),
+    catalogVersion:
+        _requiredString(manifest['catalogVersion'], 'catalogVersion'),
     schemaVersion: _requiredString(manifest['schemaVersion'], 'schemaVersion'),
     meters: _objectList(meterFile['meters']),
     protocols: _objectList(protocolFile['protocols']),
     vendors: vendors,
-    models: models,
+    vendorCatalogs: vendorCatalogs,
+    models: models.values.toList(),
     pricing: pricing,
   );
 }
@@ -52,12 +61,16 @@ Future<ModelCatalog> loadBundledCatalog() async {
   return loadCatalog('data/sdkwork-models');
 }
 
-Future<Map<String, Object?>> loadVendorCatalog(String pathOrUrl, String vendorCode, String regionCode) async {
+Future<Map<String, Object?>> loadVendorCatalog(
+    String pathOrUrl, String vendorCode, String regionCode) async {
   final index = await _readJsonObject(pathOrUrl, 'models/index.json');
-  final vendorIndex = _objectList(index['vendors']).cast<JsonObject?>().firstWhere(
-        (item) => item?['vendorCode'] == vendorCode && item?['regionCode'] == regionCode,
-        orElse: () => null,
-      );
+  final vendorIndex =
+      _objectList(index['vendors']).cast<JsonObject?>().firstWhere(
+            (item) =>
+                item?['vendorCode'] == vendorCode &&
+                item?['regionCode'] == regionCode,
+            orElse: () => null,
+          );
   if (vendorIndex == null) {
     throw StateError('vendor region $vendorCode/$regionCode is not indexed');
   }
@@ -65,9 +78,12 @@ Future<Map<String, Object?>> loadVendorCatalog(String pathOrUrl, String vendorCo
     'vendorCode': vendorCode,
     'regionCode': regionCode,
     'vendor': await _readJsonObject(pathOrUrl, 'models/${vendorIndex['path']}'),
-    'families': await _readJsonObject(pathOrUrl, 'models/${vendorIndex['familiesPath']}'),
-    'models': await _readJsonObjectsByRef(pathOrUrl, _stringList(vendorIndex['modelFiles'])),
-    'pricing': await _readJsonObjectsByRef(pathOrUrl, _stringList(vendorIndex['pricingFiles'])),
+    'families': await _readJsonObject(
+        pathOrUrl, 'models/${vendorIndex['familiesPath']}'),
+    'models': await _readJsonObjectsByRef(
+        pathOrUrl, _stringList(vendorIndex['modelFiles'])),
+    'pricing': await _readJsonObjectsByRef(
+        pathOrUrl, _stringList(vendorIndex['pricingFiles'])),
   };
 }
 
@@ -89,16 +105,20 @@ Future<JsonObject> _readJsonObject(String root, String relPath) async {
 
 Future<String> _readText(String root, String relPath) async {
   if (_isRemoteUrl(root)) {
-    final response = await HttpClient().getUrl(Uri.parse('${root.replaceFirst(RegExp(r'/+$'), '')}/$relPath')).then((request) => request.close());
+    final response = await HttpClient()
+        .getUrl(Uri.parse('${root.replaceFirst(RegExp(r'/+$'), '')}/$relPath'))
+        .then((request) => request.close());
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException('failed to fetch sdkwork-models catalog file $relPath: ${response.statusCode}');
+      throw HttpException(
+          'failed to fetch sdkwork-models catalog file $relPath: ${response.statusCode}');
     }
     return utf8.decode(await response.expand((chunk) => chunk).toList());
   }
   return File('${Directory(root).path}/$relPath').readAsString();
 }
 
-Future<List<JsonObject>> _readJsonObjectsByRef(String root, List<String> refs) async {
+Future<List<JsonObject>> _readJsonObjectsByRef(
+    String root, List<String> refs) async {
   final result = <JsonObject>[];
   for (final ref in refs) {
     result.add(await _readJsonObject(root, 'models/$ref'));
@@ -128,4 +148,55 @@ String _requiredString(Object? value, String field) {
     return value;
   }
   throw FormatException('$field must be a non-empty string');
+}
+
+void _putBestModelIdentity(
+  Map<String, JsonObject> models,
+  Map<String, int> scores,
+  JsonObject vendorCatalog,
+  JsonObject model,
+) {
+  final catalogKey = model['catalogKey'];
+  if (catalogKey is! String || catalogKey.isEmpty) {
+    return;
+  }
+  final score = _modelIdentityScore(vendorCatalog, model);
+  final existingScore = scores[catalogKey];
+  if (existingScore == null || score > existingScore) {
+    models[catalogKey] = model;
+    scores[catalogKey] = score;
+  }
+}
+
+int _modelIdentityScore(JsonObject vendorCatalog, JsonObject model) {
+  var score = 0;
+  if (_hasRegionPricing(vendorCatalog, model)) {
+    score += 100;
+  }
+  if (model['routingState'] == 'enabled') {
+    score += 40;
+  }
+  if (model['shelfState'] == 'listed') {
+    score += 20;
+  }
+  if (model['releaseStage'] == 'active') {
+    score += 10;
+  }
+  if (model['lifecycle'] == 'current' || model['lifecycle'] == 'preview') {
+    score += 5;
+  }
+  if (model['regionCode'] == 'global') {
+    score += 1;
+  }
+  return score;
+}
+
+bool _hasRegionPricing(JsonObject vendorCatalog, JsonObject model) {
+  final modelId = model['modelId'];
+  if (modelId is! String) {
+    return false;
+  }
+  return _objectList(vendorCatalog['pricing']).any((item) {
+    return item['modelId'] == modelId && _objectList(item['prices']).isNotEmpty;
+  });
 }

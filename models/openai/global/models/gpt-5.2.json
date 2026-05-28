@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "openai/global/gpt-5.2",
+  "catalogKey": "openai/gpt-5.2",
   "colorToken": "#111827",
   "contextTokens": 400000,
   "description": "Previous GPT-5 generation kept for historical pricing and migration reference.",

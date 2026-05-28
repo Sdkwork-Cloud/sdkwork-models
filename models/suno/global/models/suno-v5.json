@@ -3,7 +3,7 @@
   "capabilities": [
     "music"
   ],
-  "catalogKey": "suno/global/suno-v5",
+  "catalogKey": "suno/suno-v5",
   "colorToken": "#ca8a04",
   "description": "Music generation model.",
   "displayName": "Suno v5",

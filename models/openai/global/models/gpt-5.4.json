@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "openai/global/gpt-5.4",
+  "catalogKey": "openai/gpt-5.4",
   "colorToken": "#1f2937",
   "contextTokens": 1050000,
   "description": "OpenAI GPT-5.4 multimodal model for high-quality reasoning and generation.",

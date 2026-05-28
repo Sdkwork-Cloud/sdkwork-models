@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "baidu/cn/ernie-5.0-thinking-preview",
+          "catalogKey": "baidu/ernie-5.0-thinking-preview",
           "modelId": "ernie-5.0-thinking-preview",
           "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output; doubles above 32K",
           "rankNo": 16

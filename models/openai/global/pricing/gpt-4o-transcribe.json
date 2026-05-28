@@ -1,5 +1,5 @@
 {
-  "catalogKey": "openai/global/gpt-4o-transcribe",
+  "catalogKey": "openai/gpt-4o-transcribe",
   "currency": "USD",
   "modelId": "gpt-4o-transcribe",
   "prices": [

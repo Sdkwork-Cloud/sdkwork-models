@@ -3,7 +3,7 @@
   "capabilities": [
     "image"
   ],
-  "catalogKey": "stability_ai/global/stable-image-ultra",
+  "catalogKey": "stability_ai/stable-image-ultra",
   "colorToken": "#0f766e",
   "description": "Stability AI high-quality image generation model.",
   "displayName": "Stable Image Ultra",

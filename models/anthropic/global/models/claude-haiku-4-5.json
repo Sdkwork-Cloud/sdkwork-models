@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "anthropic/global/claude-haiku-4-5",
+  "catalogKey": "anthropic/claude-haiku-4-5",
   "colorToken": "#ea580c",
   "contextTokens": 200000,
   "description": "Fast Claude model for cost-sensitive chat, coding assistance, and agent sub-tasks.",

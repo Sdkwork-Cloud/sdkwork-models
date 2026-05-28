@@ -100,8 +100,8 @@ export function regionCodeFromDirectory(regionDir) {
   return basename(regionDir);
 }
 
-export function catalogKey(vendorCode, regionCode, modelId) {
-  return `${vendorCode}/${regionCode}/${modelId}`;
+export function catalogKey(vendorCode, _regionCode, modelId) {
+  return `${vendorCode}/${modelId}`;
 }
 
 export function projectRootFromTool(importMetaUrl) {
@@ -165,7 +165,7 @@ export function buildCatalogIndex(root) {
     return {
       vendorCode,
       regionCode,
-      catalogKeyPrefix: `${vendorCode}/${regionCode}/`,
+      catalogKeyPrefix: `${vendorCode}/`,
       displayName: vendor.displayName,
       marketScope: vendor.marketScope,
       billingCurrency: vendor.billingCurrency,

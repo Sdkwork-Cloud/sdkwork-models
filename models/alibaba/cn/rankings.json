@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "alibaba/cn/qwen3.6-max-preview",
+          "catalogKey": "alibaba/qwen3.6-max-preview",
           "modelId": "qwen3.6-max-preview",
           "pricingText": "CNY 9.00 / 1M input; CNY 54.00 / 1M output; CNY 15.00 / CNY 90.00 above 128K",
           "rankNo": 12

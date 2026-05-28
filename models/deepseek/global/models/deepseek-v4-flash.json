@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "deepseek/global/deepseek-v4-flash",
+  "catalogKey": "deepseek/deepseek-v4-flash",
   "colorToken": "#0f766e",
   "contextTokens": 1048576,
   "description": "Fast DeepSeek V4 model for cost-sensitive reasoning and coding traffic.",

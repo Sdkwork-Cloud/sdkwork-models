@@ -3,7 +3,7 @@
   "capabilities": [
     "video"
   ],
-  "catalogKey": "bytedance/global/doubao-seedance-2-0-260128",
+  "catalogKey": "bytedance/doubao-seedance-2-0-260128",
   "colorToken": "#dc2626",
   "description": "ByteDance Seedance video generation model.",
   "displayName": "Doubao Seedance 2.0",

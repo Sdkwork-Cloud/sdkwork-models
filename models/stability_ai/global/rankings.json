@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "stability_ai/global/stable-image-ultra",
+          "catalogKey": "stability_ai/stable-image-ultra",
           "modelId": "stable-image-ultra",
           "pricingText": "$0.08 / image result",
           "rankNo": 26

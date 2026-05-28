@@ -3,7 +3,7 @@
   "capabilities": [
     "image"
   ],
-  "catalogKey": "black_forest_labs/global/flux-2-pro",
+  "catalogKey": "black_forest_labs/flux-2-pro",
   "colorToken": "#18181b",
   "description": "FLUX image generation model.",
   "displayName": "FLUX.2 Pro",

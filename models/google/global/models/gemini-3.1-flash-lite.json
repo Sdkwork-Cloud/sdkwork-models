@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "google/global/gemini-3.1-flash-lite",
+  "catalogKey": "google/gemini-3.1-flash-lite",
   "colorToken": "#1d4ed8",
   "contextTokens": 1048576,
   "description": "Fast, low-cost Gemini 3.1 Flash Lite model for high-throughput multimodal workloads.",

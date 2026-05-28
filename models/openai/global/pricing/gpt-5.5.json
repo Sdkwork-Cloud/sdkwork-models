@@ -1,5 +1,5 @@
 {
-  "catalogKey": "openai/global/gpt-5.5",
+  "catalogKey": "openai/gpt-5.5",
   "currency": "USD",
   "modelId": "gpt-5.5",
   "prices": [

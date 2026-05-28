@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "xai/global/grok-4.3",
+          "catalogKey": "xai/grok-4.3",
           "modelId": "grok-4.3",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
           "rankNo": 10

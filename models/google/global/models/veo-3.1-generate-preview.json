@@ -3,7 +3,7 @@
   "capabilities": [
     "video"
   ],
-  "catalogKey": "google/global/veo-3.1-generate-preview",
+  "catalogKey": "google/veo-3.1-generate-preview",
   "colorToken": "#7c3aed",
   "description": "Google Veo 3.1 preview video generation model.",
   "displayName": "Veo 3.1 Generate Preview",

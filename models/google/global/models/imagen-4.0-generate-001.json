@@ -3,7 +3,7 @@
   "capabilities": [
     "image"
   ],
-  "catalogKey": "google/global/imagen-4.0-generate-001",
+  "catalogKey": "google/imagen-4.0-generate-001",
   "colorToken": "#0891b2",
   "description": "Google image generation model.",
   "displayName": "Imagen 4.0 Generate",

@@ -161,9 +161,20 @@ export function validateCatalog(root) {
       }
       const modelCatalogKey = expectedCatalogKey;
       if (seenModels.has(modelCatalogKey)) {
-        issues.push(issue("model.duplicate", modelPath, `${modelCatalogKey} is already defined in ${seenModels.get(modelCatalogKey)}`));
+        const previous = seenModels.get(modelCatalogKey);
+        const differences = modelIdentityDifferences(previous.model, model);
+        if (differences.length > 0) {
+          issues.push(
+            issue(
+              "model.identity_conflict",
+              modelPath,
+              `${modelCatalogKey} differs from ${previous.path} on ${differences.join(", ")}; region-specific data belongs in pricing, ranking, and provider endpoint resources`,
+            ),
+          );
+        }
+        continue;
       }
-      seenModels.set(modelCatalogKey, modelPath);
+      seenModels.set(modelCatalogKey, { path: modelPath, model });
     }
 
     const vendorModelIds = new Set(bundle.models.map((model) => model.modelId));
@@ -328,6 +339,9 @@ export function validateCatalog(root) {
         }
       }
     }
+    if (vendor.catalogKeyPrefix !== `${vendor.vendorCode}/`) {
+      issues.push(issue("index.catalog_key_prefix.identity", `models/index.json#/${vendor.vendorCode}/${vendor.regionCode}/catalogKeyPrefix`, "catalogKeyPrefix must use vendor/model identity and must not include regionCode"));
+    }
   }
 
   if (stableJson(currentIndex) !== stableJson(expectedIndex)) {
@@ -341,6 +355,29 @@ export function validateCatalog(root) {
     ok: issues.every((item) => item.severity !== "error"),
     issues,
   };
+}
+
+function modelIdentityDifferences(left, right) {
+  const fields = [
+    "catalogKey",
+    "modelId",
+    "displayName",
+    "vendorCode",
+    "familyCode",
+    "primaryCapability",
+    "capabilities",
+    "inputModalities",
+    "outputModalities",
+    "apiFormat",
+    "contextTokens",
+    "maxInputTokens",
+    "maxOutputTokens",
+    "supportsStreaming",
+    "supportsTools",
+    "supportsJsonSchema",
+    "replacementModel",
+  ];
+  return fields.filter((field) => stableJson(left[field] ?? null) !== stableJson(right[field] ?? null));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

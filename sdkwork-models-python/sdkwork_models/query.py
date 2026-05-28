@@ -37,28 +37,33 @@ def list_vendor_regions(catalog: ModelCatalog) -> list[dict]:
 def list_models(catalog: ModelCatalog, filter: dict | None = None, **filters: str) -> list[dict]:
     standard_filters = dict(filter or {})
     standard_filters.update(filters)
-    result = catalog.models
+    result = [
+        {"model": model, "has_region_pricing": _has_region_pricing(catalog, model)}
+        for model in _regional_models(catalog)
+    ]
     if vendor_code := _filter_value(standard_filters, "vendorCode", "vendor_code"):
-        result = [model for model in result if model.get("vendorCode") == vendor_code]
+        result = [item for item in result if item["model"].get("vendorCode") == vendor_code]
     if region_code := _filter_value(standard_filters, "regionCode", "region_code"):
-        result = [model for model in result if model.get("regionCode") == region_code]
+        result = [item for item in result if item["model"].get("regionCode") == region_code]
     if family_code := _filter_value(standard_filters, "familyCode", "family_code"):
-        result = [model for model in result if model.get("familyCode") == family_code]
+        result = [item for item in result if item["model"].get("familyCode") == family_code]
     if capability := _filter_value(standard_filters, "capability"):
-        result = [model for model in result if capability in model.get("capabilities", [])]
+        result = [item for item in result if capability in item["model"].get("capabilities", [])]
     if input_modality := _filter_value(standard_filters, "inputModality", "input_modality"):
-        result = [model for model in result if input_modality in model.get("inputModalities", [])]
+        result = [item for item in result if input_modality in item["model"].get("inputModalities", [])]
     if output_modality := _filter_value(standard_filters, "outputModality", "output_modality"):
-        result = [model for model in result if output_modality in model.get("outputModalities", [])]
+        result = [item for item in result if output_modality in item["model"].get("outputModalities", [])]
     if release_stage := _filter_value(standard_filters, "releaseStage", "release_stage"):
-        result = [model for model in result if model.get("releaseStage") == release_stage]
+        result = [item for item in result if item["model"].get("releaseStage") == release_stage]
     if shelf_state := _filter_value(standard_filters, "shelfState", "shelf_state"):
-        result = [model for model in result if model.get("shelfState") == shelf_state]
+        result = [item for item in result if item["model"].get("shelfState") == shelf_state]
     if routing_state := _filter_value(standard_filters, "routingState", "routing_state"):
-        result = [model for model in result if model.get("routingState") == routing_state]
+        result = [item for item in result if item["model"].get("routingState") == routing_state]
     if api_format := _filter_value(standard_filters, "apiFormat", "api_format"):
-        result = [model for model in result if model.get("apiFormat") == api_format]
-    return result
+        result = [item for item in result if item["model"].get("apiFormat") == api_format]
+    if not _filter_value(standard_filters, "regionCode", "region_code"):
+        result = _dedupe_model_identity_items(result)
+    return [item["model"] for item in result]
 
 
 def list_available_models(catalog: ModelCatalog, filter: dict | None = None, **filters: str) -> list[dict]:
@@ -69,7 +74,7 @@ def list_available_models(catalog: ModelCatalog, filter: dict | None = None, **f
     return [
         model
         for model in list_models(catalog, standard_filters)
-        if get_model_prices(catalog, model.get("catalogKey", ""))
+        if get_model_region_prices(catalog, model.get("catalogKey", ""), model.get("regionCode", ""))
     ]
 
 
@@ -82,7 +87,8 @@ def _filter_value(filters: dict, *keys: str) -> str | None:
 
 
 def catalog_key(vendor_code: str, region_code: str, model_id: str) -> str:
-    return f"{vendor_code}/{region_code}/{model_id}"
+    del region_code
+    return f"{vendor_code}/{model_id}"
 
 
 def list_meters(catalog: ModelCatalog) -> list[dict]:
@@ -95,16 +101,24 @@ def find_meter(catalog: ModelCatalog, meter_code: str) -> dict | None:
 
 def find_model(catalog: ModelCatalog, catalog_key_value: str) -> dict | None:
     parts = catalog_key_value.split("/")
-    if len(parts) != 3 or not parts[0] or not parts[1] or not parts[2]:
+    if len(parts) != 2 or not parts[0] or not parts[1]:
         return None
-    return find_model_by_vendor_region(catalog, parts[0], parts[1], parts[2])
+    return next(
+        (
+            model
+            for model in list_models(catalog)
+            if model.get("vendorCode") == parts[0]
+            and model.get("modelId") == parts[1]
+        ),
+        None,
+    )
 
 
 def find_model_by_vendor_region(catalog: ModelCatalog, vendor_code: str, region_code: str, model_id: str) -> dict | None:
     return next(
         (
             model
-            for model in catalog.models
+            for model in list_models(catalog, vendor_code=vendor_code, region_code=region_code)
             if model.get("vendorCode") == vendor_code
             and model.get("regionCode") == region_code
             and model.get("modelId") == model_id
@@ -115,9 +129,34 @@ def find_model_by_vendor_region(catalog: ModelCatalog, vendor_code: str, region_
 
 def get_model_prices(catalog: ModelCatalog, catalog_key_value: str) -> list[dict]:
     parts = catalog_key_value.split("/")
-    if len(parts) != 3 or not parts[0] or not parts[1] or not parts[2]:
+    if len(parts) != 2 or not parts[0] or not parts[1]:
         return []
-    vendor_code, region_code, model_id = parts
+    vendor_code, model_id = parts
+    pricing = next(
+        (
+            item
+            for item in catalog.pricing
+            if item.get("vendorCode") == vendor_code
+            and item.get("modelId") == model_id
+        ),
+        None,
+    )
+    return [] if pricing is None else pricing.get("prices", [])
+
+
+def get_model_region_prices(catalog: ModelCatalog, catalog_key_value: str, region_code: str) -> list[dict]:
+    parts = catalog_key_value.split("/")
+    if len(parts) != 2 or not parts[0] or not parts[1]:
+        return []
+    vendor_code, model_id = parts
+    for vendor_catalog in catalog.vendor_catalogs:
+        if vendor_catalog.get("vendorCode") != vendor_code or vendor_catalog.get("regionCode") != region_code:
+            continue
+        pricing = next(
+            (item for item in vendor_catalog.get("pricing", []) if item.get("modelId") == model_id),
+            None,
+        )
+        return [] if pricing is None else pricing.get("prices", [])
     pricing = next(
         (
             item
@@ -161,3 +200,53 @@ def list_protocols_by_vendor(catalog: ModelCatalog, vendor_code: str) -> list[di
 
 def list_models_by_protocol(catalog: ModelCatalog, protocol_code: str) -> list[dict]:
     return list_models(catalog, api_format=protocol_code)
+
+
+def _regional_models(catalog: ModelCatalog) -> list[dict]:
+    if catalog.vendor_catalogs:
+        return [
+            model
+            for vendor_catalog in catalog.vendor_catalogs
+            for model in vendor_catalog.get("models", [])
+        ]
+    return catalog.models
+
+
+def _has_region_pricing(catalog: ModelCatalog, model: dict) -> bool:
+    return bool(
+        get_model_region_prices(
+            catalog,
+            model.get("catalogKey", ""),
+            model.get("regionCode", ""),
+        )
+    )
+
+
+def _dedupe_model_identity_items(items: list[dict]) -> list[dict]:
+    deduped: dict[str, dict] = {}
+    for item in items:
+        catalog_key = item["model"].get("catalogKey")
+        if not catalog_key:
+            continue
+        existing = deduped.get(catalog_key)
+        if existing is None or _model_identity_score(item) > _model_identity_score(existing):
+            deduped[catalog_key] = item
+    return list(deduped.values())
+
+
+def _model_identity_score(item: dict) -> int:
+    model = item["model"]
+    score = 0
+    if item["has_region_pricing"]:
+        score += 100
+    if model.get("routingState") == "enabled":
+        score += 40
+    if model.get("shelfState") == "listed":
+        score += 20
+    if model.get("releaseStage") == "active":
+        score += 10
+    if model.get("lifecycle") in {"current", "preview"}:
+        score += 5
+    if model.get("regionCode") == "global":
+        score += 1
+    return score

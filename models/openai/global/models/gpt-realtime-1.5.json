@@ -4,7 +4,7 @@
     "chat",
     "audio"
   ],
-  "catalogKey": "openai/global/gpt-realtime-1.5",
+  "catalogKey": "openai/gpt-realtime-1.5",
   "colorToken": "#6366f1",
   "description": "Current OpenAI realtime speech-to-speech and multimodal conversation model.",
   "displayName": "GPT Realtime 1.5",

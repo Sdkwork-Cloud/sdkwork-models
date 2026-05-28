@@ -6,8 +6,9 @@ import java.util.Map;
 /**
  * Dependency-free Java catalog view.
  *
- * <p>{@code vendors} contains unique vendor identities. Model and pricing facts
- * are flattened and keyed by {@code vendorCode/regionCode/modelId}.</p>
+ * <p>{@code vendors} contains unique vendor identities. {@code vendorCatalogs}
+ * preserves regional supply catalogs, while {@code models} exposes canonical
+ * {@code vendorCode/modelId} identities.</p>
  */
 public record ModelCatalog(
         String catalogVersion,
@@ -15,6 +16,7 @@ public record ModelCatalog(
         List<Map<String, Object>> meters,
         List<Map<String, Object>> protocols,
         List<Map<String, Object>> vendors,
+        List<Map<String, Object>> vendorCatalogs,
         List<Map<String, Object>> models,
         List<Map<String, Object>> pricing
 ) {

@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "openai/global/gpt-5.5-pro",
+  "catalogKey": "openai/gpt-5.5-pro",
   "colorToken": "#030712",
   "contextTokens": 1050000,
   "description": "OpenAI GPT-5.5 Pro frontier model for maximum reasoning depth, coding, and agentic workloads.",

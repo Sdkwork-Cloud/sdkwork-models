@@ -5,67 +5,67 @@
     {
       "items": [
         {
-          "catalogKey": "google/global/gemini-3.1-pro-preview",
+          "catalogKey": "google/gemini-3.1-pro-preview",
           "modelId": "gemini-3.1-pro-preview",
           "pricingText": "$2.00 / 1M input; $12.00 / 1M output",
           "rankNo": 3
         },
         {
-          "catalogKey": "google/global/gemini-3-flash-preview",
+          "catalogKey": "google/gemini-3-flash-preview",
           "modelId": "gemini-3-flash-preview",
           "pricingText": "$0.50 / 1M input; $3.00 / 1M output",
           "rankNo": 13
         },
         {
-          "catalogKey": "google/global/gemini-3.1-flash-lite",
+          "catalogKey": "google/gemini-3.1-flash-lite",
           "modelId": "gemini-3.1-flash-lite",
           "pricingText": "$0.10 / 1M input; $0.40 / 1M output",
           "rankNo": 14
         },
         {
-          "catalogKey": "google/global/gemini-3.1-flash-lite-preview",
+          "catalogKey": "google/gemini-3.1-flash-lite-preview",
           "modelId": "gemini-3.1-flash-lite-preview",
           "pricingText": "$0.10 / 1M input; $0.40 / 1M output",
           "rankNo": 15
         },
         {
-          "catalogKey": "google/global/gemini-3.1-flash-live-preview",
+          "catalogKey": "google/gemini-3.1-flash-live-preview",
           "modelId": "gemini-3.1-flash-live-preview",
           "pricingText": "$0.50 / 1M text input; $3.00 / 1M audio/video input; $12.00 / 1M audio output",
           "rankNo": 16
         },
         {
-          "catalogKey": "google/global/gemini-3.1-flash-image-preview",
+          "catalogKey": "google/gemini-3.1-flash-image-preview",
           "modelId": "gemini-3.1-flash-image-preview",
           "pricingText": "$0.30 / 1M text input; $30.00 / 1M image output",
           "rankNo": 17
         },
         {
-          "catalogKey": "google/global/gemini-3.1-flash-tts-preview",
+          "catalogKey": "google/gemini-3.1-flash-tts-preview",
           "modelId": "gemini-3.1-flash-tts-preview",
           "pricingText": "$0.50 / 1M text input; $10.00 / 1M audio output",
           "rankNo": 18
         },
         {
-          "catalogKey": "google/global/veo-3.1-generate-preview",
+          "catalogKey": "google/veo-3.1-generate-preview",
           "modelId": "veo-3.1-generate-preview",
           "pricingText": "$0.40 / output second",
           "rankNo": 19
         },
         {
-          "catalogKey": "google/global/veo-3.1-fast-generate-preview",
+          "catalogKey": "google/veo-3.1-fast-generate-preview",
           "modelId": "veo-3.1-fast-generate-preview",
           "pricingText": "$0.15 / output second",
           "rankNo": 20
         },
         {
-          "catalogKey": "google/global/veo-3.1-lite-generate-preview",
+          "catalogKey": "google/veo-3.1-lite-generate-preview",
           "modelId": "veo-3.1-lite-generate-preview",
           "pricingText": "$0.10 / output second",
           "rankNo": 21
         },
         {
-          "catalogKey": "google/global/imagen-4.0-generate-001",
+          "catalogKey": "google/imagen-4.0-generate-001",
           "modelId": "imagen-4.0-generate-001",
           "pricingText": "$0.04 / image result",
           "rankNo": 25

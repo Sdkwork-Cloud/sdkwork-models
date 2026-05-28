@@ -31,6 +31,14 @@ public final class ModelCatalogQuery {
     }
 
     public static List<Map<String, Object>> listVendorRegions(ModelCatalog catalog) {
+        List<Map<String, Object>> regions = catalog.vendorCatalogs().stream()
+                .filter(vendor -> vendor.get("vendorCode") instanceof String)
+                .filter(vendor -> vendor.get("regionCode") instanceof String)
+                .map(vendor -> Map.of("vendorCode", vendor.get("vendorCode"), "regionCode", vendor.get("regionCode")))
+                .toList();
+        if (!regions.isEmpty()) {
+            return regions;
+        }
         return catalog.vendors().stream()
                 .filter(vendor -> vendor.get("vendorCode") instanceof String)
                 .filter(vendor -> vendor.get("regions") instanceof List<?> || vendor.get("regionCode") instanceof String)
@@ -39,22 +47,37 @@ public final class ModelCatalogQuery {
     }
 
     public static List<Map<String, Object>> listModels(ModelCatalog catalog) {
-        return catalog.models();
+        return listModels(catalog, Map.of());
     }
 
     public static List<Map<String, Object>> listModels(ModelCatalog catalog, Map<String, String> filter) {
-        return catalog.models().stream()
-                .filter(model -> matchesScalar(model, "vendorCode", filter.get("vendorCode")))
-                .filter(model -> matchesScalar(model, "regionCode", filter.get("regionCode")))
-                .filter(model -> matchesScalar(model, "familyCode", filter.get("familyCode")))
-                .filter(model -> containsIfPresent(model, "capabilities", filter.get("capability")))
-                .filter(model -> containsIfPresent(model, "inputModalities", filter.get("inputModality")))
-                .filter(model -> containsIfPresent(model, "outputModalities", filter.get("outputModality")))
-                .filter(model -> matchesScalar(model, "releaseStage", filter.get("releaseStage")))
-                .filter(model -> matchesScalar(model, "shelfState", filter.get("shelfState")))
-                .filter(model -> matchesScalar(model, "routingState", filter.get("routingState")))
-                .filter(model -> matchesScalar(model, "apiFormat", filter.get("apiFormat")))
+        List<ModelObservation> matches = regionalModels(catalog).stream()
+                .filter(item -> matchesScalar(item.model(), "vendorCode", filter.get("vendorCode")))
+                .filter(item -> matchesScalar(item.model(), "regionCode", filter.get("regionCode")))
+                .filter(item -> matchesScalar(item.model(), "familyCode", filter.get("familyCode")))
+                .filter(item -> containsIfPresent(item.model(), "capabilities", filter.get("capability")))
+                .filter(item -> containsIfPresent(item.model(), "inputModalities", filter.get("inputModality")))
+                .filter(item -> containsIfPresent(item.model(), "outputModalities", filter.get("outputModality")))
+                .filter(item -> matchesScalar(item.model(), "releaseStage", filter.get("releaseStage")))
+                .filter(item -> matchesScalar(item.model(), "shelfState", filter.get("shelfState")))
+                .filter(item -> matchesScalar(item.model(), "routingState", filter.get("routingState")))
+                .filter(item -> matchesScalar(item.model(), "apiFormat", filter.get("apiFormat")))
                 .toList();
+        if (filter.get("regionCode") != null) {
+            return matches.stream().map(ModelObservation::model).toList();
+        }
+        Map<String, ModelObservation> deduped = new LinkedHashMap<>();
+        for (ModelObservation item : matches) {
+            Object keyValue = item.model().get("catalogKey");
+            if (!(keyValue instanceof String key)) {
+                continue;
+            }
+            ModelObservation existing = deduped.get(key);
+            if (existing == null || modelIdentityScore(item) > modelIdentityScore(existing)) {
+                deduped.put(key, item);
+            }
+        }
+        return deduped.values().stream().map(ModelObservation::model).toList();
     }
 
     public static List<Map<String, Object>> listAvailableModels(ModelCatalog catalog) {
@@ -66,12 +89,14 @@ public final class ModelCatalogQuery {
         normalized.put("routingState", "enabled");
         normalized.put("shelfState", "listed");
         return listModels(catalog, normalized).stream()
-                .filter(model -> model.get("catalogKey") instanceof String key && !getModelPrices(catalog, key).isEmpty())
+                .filter(model -> model.get("catalogKey") instanceof String key
+                        && model.get("regionCode") instanceof String regionCode
+                        && !getModelRegionPrices(catalog, key, regionCode).isEmpty())
                 .toList();
     }
 
     public static String catalogKey(String vendorCode, String regionCode, String modelId) {
-        return vendorCode + "/" + regionCode + "/" + modelId;
+        return vendorCode + "/" + modelId;
     }
 
     public static List<Map<String, Object>> listMeters(ModelCatalog catalog) {
@@ -86,25 +111,37 @@ public final class ModelCatalogQuery {
 
     public static Map<String, Object> findModel(ModelCatalog catalog, String catalogKey) {
         String[] parts = catalogKey.split("/", -1);
-        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) return null;
-        return findModelByVendorRegion(catalog, parts[0], parts[1], parts[2]);
+        if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) return null;
+        return listModels(catalog).stream()
+                .filter(model -> Objects.equals(model.get("vendorCode"), parts[0]))
+                .filter(model -> Objects.equals(model.get("modelId"), parts[1]))
+                .findFirst().orElse(null);
     }
 
     public static Map<String, Object> findModelByVendorRegion(ModelCatalog catalog, String vendorCode, String regionCode, String modelId) {
-        return catalog.models().stream()
-                .filter(model -> Objects.equals(model.get("vendorCode"), vendorCode))
-                .filter(model -> Objects.equals(model.get("regionCode"), regionCode))
+        return listModels(catalog, Map.of("vendorCode", vendorCode, "regionCode", regionCode)).stream()
                 .filter(model -> Objects.equals(model.get("modelId"), modelId))
                 .findFirst().orElse(null);
     }
 
     public static List<Map<String, Object>> getModelPrices(ModelCatalog catalog, String catalogKey) {
         String[] parts = catalogKey.split("/", -1);
-        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) return List.of();
+        if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) return List.of();
         return catalog.pricing().stream()
                 .filter(item -> Objects.equals(item.get("vendorCode"), parts[0]))
-                .filter(item -> Objects.equals(item.get("regionCode"), parts[1]))
-                .filter(item -> Objects.equals(item.get("modelId"), parts[2]))
+                .filter(item -> Objects.equals(item.get("modelId"), parts[1]))
+                .findFirst()
+                .map(item -> mapList(item.get("prices")))
+                .orElse(List.of());
+    }
+
+    public static List<Map<String, Object>> getModelRegionPrices(ModelCatalog catalog, String catalogKey, String regionCode) {
+        String[] parts = catalogKey.split("/", -1);
+        if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) return List.of();
+        return regionalPricing(catalog).stream()
+                .filter(item -> Objects.equals(item.get("vendorCode"), parts[0]))
+                .filter(item -> Objects.equals(item.get("regionCode"), regionCode))
+                .filter(item -> Objects.equals(item.get("modelId"), parts[1]))
                 .findFirst()
                 .map(item -> mapList(item.get("prices")))
                 .orElse(List.of());
@@ -117,14 +154,11 @@ public final class ModelCatalogQuery {
     }
 
     public static List<Map<String, Object>> listModelsByCapability(ModelCatalog catalog, String capability) {
-        return catalog.models().stream().filter(model -> containsString(model.get("capabilities"), capability)).toList();
+        return listModels(catalog, Map.of("capability", capability));
     }
 
     public static List<Map<String, Object>> listModelsByModality(ModelCatalog catalog, String inputModality, String outputModality) {
-        return catalog.models().stream()
-                .filter(model -> containsString(model.get("inputModalities"), inputModality))
-                .filter(model -> containsString(model.get("outputModalities"), outputModality))
-                .toList();
+        return listModels(catalog, Map.of("inputModality", inputModality, "outputModality", outputModality));
     }
 
     public static List<Map<String, Object>> listProtocols(ModelCatalog catalog) {
@@ -157,6 +191,58 @@ public final class ModelCatalogQuery {
 
     public static List<Map<String, Object>> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {
         return listModels(catalog, Map.of("apiFormat", protocolCode));
+    }
+
+    private static List<ModelObservation> regionalModels(ModelCatalog catalog) {
+        if (catalog.vendorCatalogs().isEmpty()) {
+            return catalog.models().stream()
+                    .map(model -> new ModelObservation(model, hasFlatPricing(catalog, model)))
+                    .toList();
+        }
+        List<ModelObservation> models = new ArrayList<>();
+        for (Map<String, Object> vendorCatalog : catalog.vendorCatalogs()) {
+            for (Map<String, Object> model : mapList(vendorCatalog.get("models"))) {
+                models.add(new ModelObservation(model, hasRegionPricing(vendorCatalog, model)));
+            }
+        }
+        return models;
+    }
+
+    private static List<Map<String, Object>> regionalPricing(ModelCatalog catalog) {
+        if (catalog.vendorCatalogs().isEmpty()) {
+            return catalog.pricing();
+        }
+        return catalog.vendorCatalogs().stream()
+                .flatMap(vendorCatalog -> mapList(vendorCatalog.get("pricing")).stream())
+                .toList();
+    }
+
+    private static boolean hasRegionPricing(Map<String, Object> vendorCatalog, Map<String, Object> model) {
+        Object modelId = model.get("modelId");
+        return modelId instanceof String && mapList(vendorCatalog.get("pricing")).stream()
+                .anyMatch(pricing -> Objects.equals(pricing.get("modelId"), modelId) && !mapList(pricing.get("prices")).isEmpty());
+    }
+
+    private static boolean hasFlatPricing(ModelCatalog catalog, Map<String, Object> model) {
+        Object catalogKey = model.get("catalogKey");
+        return catalogKey instanceof String key && !getModelPrices(catalog, key).isEmpty();
+    }
+
+    private static int modelIdentityScore(ModelObservation item) {
+        Map<String, Object> model = item.model();
+        int score = 0;
+        if (item.hasRegionPricing()) score += 100;
+        if (Objects.equals(model.get("routingState"), "enabled")) score += 40;
+        if (Objects.equals(model.get("shelfState"), "listed")) score += 20;
+        if (Objects.equals(model.get("releaseStage"), "active")) score += 10;
+        if (Objects.equals(model.get("lifecycle"), "current") || Objects.equals(model.get("lifecycle"), "preview")) {
+            score += 5;
+        }
+        if (Objects.equals(model.get("regionCode"), "global")) score += 1;
+        return score;
+    }
+
+    private record ModelObservation(Map<String, Object> model, boolean hasRegionPricing) {
     }
 
     private static boolean containsString(Object value, String expected) {

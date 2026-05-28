@@ -12,8 +12,10 @@ List<JsonObject> listVendors(ModelCatalog catalog) {
       'displayName': vendor['displayName'],
       'legalName': vendor['legalName'],
       'vendorType': vendor['vendorType'],
-      'capabilities': ((vendor['capabilities'] as List?) ?? const []).cast<Object?>(),
-      'supportedProtocols': ((vendor['supportedProtocols'] as List?) ?? const []).cast<Object?>(),
+      'capabilities':
+          ((vendor['capabilities'] as List?) ?? const []).cast<Object?>(),
+      'supportedProtocols':
+          ((vendor['supportedProtocols'] as List?) ?? const []).cast<Object?>(),
       'openSource': vendor['openSource'] ?? false,
     };
   }
@@ -21,6 +23,17 @@ List<JsonObject> listVendors(ModelCatalog catalog) {
 }
 
 List<JsonObject> listVendorRegions(ModelCatalog catalog) {
+  if (catalog.vendorCatalogs.isNotEmpty) {
+    return [
+      for (final vendorCatalog in catalog.vendorCatalogs)
+        if (vendorCatalog['vendorCode'] is String &&
+            vendorCatalog['regionCode'] is String)
+          {
+            'vendorCode': vendorCatalog['vendorCode'],
+            'regionCode': vendorCatalog['regionCode']
+          }
+    ];
+  }
   final regions = <JsonObject>[];
   for (final vendor in catalog.vendors) {
     final vendorCode = vendor['vendorCode'];
@@ -31,7 +44,8 @@ List<JsonObject> listVendorRegions(ModelCatalog catalog) {
     if (vendorRegions is List) {
       for (final region in vendorRegions) {
         if (region is JsonObject && region['regionCode'] is String) {
-          regions.add({'vendorCode': vendorCode, 'regionCode': region['regionCode']});
+          regions.add(
+              {'vendorCode': vendorCode, 'regionCode': region['regionCode']});
         }
       }
       continue;
@@ -86,7 +100,13 @@ List<JsonObject> listModelsWhere(
   String? routingState,
   String? apiFormat,
 }) {
-  return catalog.models.where((model) {
+  final matches = _regionalModels(catalog)
+      .map((model) => {
+            'model': model,
+            'hasRegionPricing': _hasRegionPricing(catalog, model),
+          })
+      .where((item) {
+    final model = item['model'] as JsonObject;
     if (vendorCode != null && model['vendorCode'] != vendorCode) {
       return false;
     }
@@ -128,6 +148,23 @@ List<JsonObject> listModelsWhere(
     }
     return true;
   }).toList();
+  if (regionCode != null) {
+    return matches.map((item) => item['model'] as JsonObject).toList();
+  }
+  final deduped = <String, JsonObject>{};
+  for (final item in matches) {
+    final model = item['model'] as JsonObject;
+    final catalogKey = model['catalogKey'];
+    if (catalogKey is! String) {
+      continue;
+    }
+    final existing = deduped[catalogKey];
+    if (existing == null ||
+        _modelIdentityScore(item) > _modelIdentityScore(existing)) {
+      deduped[catalogKey] = item;
+    }
+  }
+  return deduped.values.map((item) => item['model'] as JsonObject).toList();
 }
 
 List<JsonObject> listAvailableModels(
@@ -157,11 +194,15 @@ List<JsonObject> listAvailableModels(
     apiFormat: apiFormat,
   ).where((model) {
     final catalogKeyValue = model['catalogKey'];
-    return catalogKeyValue is String && getModelPrices(catalog, catalogKeyValue).isNotEmpty;
+    final regionCode = model['regionCode'];
+    return catalogKeyValue is String &&
+        regionCode is String &&
+        getModelRegionPrices(catalog, catalogKeyValue, regionCode).isNotEmpty;
   }).toList();
 }
 
-String catalogKey(String vendorCode, String regionCode, String modelId) => '$vendorCode/$regionCode/$modelId';
+String catalogKey(String vendorCode, String regionCode, String modelId) =>
+    '$vendorCode/$modelId';
 
 List<JsonObject> listMeters(ModelCatalog catalog) => catalog.meters;
 
@@ -176,15 +217,24 @@ JsonObject? findMeter(ModelCatalog catalog, String meterCode) {
 
 JsonObject? findModel(ModelCatalog catalog, String catalogKeyValue) {
   final parts = catalogKeyValue.split('/');
-  if (parts.length != 3 || parts[0].isEmpty || parts[1].isEmpty || parts[2].isEmpty) {
+  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
     return null;
   }
-  return findModelByVendorRegion(catalog, parts[0], parts[1], parts[2]);
+  for (final model in listModels(catalog)) {
+    if (model['vendorCode'] == parts[0] && model['modelId'] == parts[1]) {
+      return model;
+    }
+  }
+  return null;
 }
 
-JsonObject? findModelByVendorRegion(ModelCatalog catalog, String vendorCode, String regionCode, String modelId) {
-  for (final model in catalog.models) {
-    if (model['vendorCode'] == vendorCode && model['regionCode'] == regionCode && model['modelId'] == modelId) {
+JsonObject? findModelByVendorRegion(ModelCatalog catalog, String vendorCode,
+    String regionCode, String modelId) {
+  for (final model
+      in listModels(catalog, vendorCode: vendorCode, regionCode: regionCode)) {
+    if (model['vendorCode'] == vendorCode &&
+        model['regionCode'] == regionCode &&
+        model['modelId'] == modelId) {
       return model;
     }
   }
@@ -193,21 +243,51 @@ JsonObject? findModelByVendorRegion(ModelCatalog catalog, String vendorCode, Str
 
 List<JsonObject> getModelPrices(ModelCatalog catalog, String catalogKeyValue) {
   final parts = catalogKeyValue.split('/');
-  if (parts.length != 3 || parts[0].isEmpty || parts[1].isEmpty || parts[2].isEmpty) {
+  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
     return const [];
   }
   final vendorCode = parts[0];
-  final regionCode = parts[1];
-  final modelId = parts[2];
+  final modelId = parts[1];
   for (final item in catalog.pricing) {
-    if (item['vendorCode'] == vendorCode && item['regionCode'] == regionCode && item['modelId'] == modelId) {
+    if (item['vendorCode'] == vendorCode && item['modelId'] == modelId) {
       return ((item['prices'] as List?) ?? const []).cast<JsonObject>();
     }
   }
   return const [];
 }
 
-JsonObject? getBestReferencePrice(ModelCatalog catalog, String catalogKeyValue, String meterCode) {
+List<JsonObject> getModelRegionPrices(
+    ModelCatalog catalog, String catalogKeyValue, String regionCode) {
+  final parts = catalogKeyValue.split('/');
+  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
+    return const [];
+  }
+  final vendorCode = parts[0];
+  final modelId = parts[1];
+  for (final vendorCatalog in catalog.vendorCatalogs) {
+    if (vendorCatalog['vendorCode'] != vendorCode ||
+        vendorCatalog['regionCode'] != regionCode) {
+      continue;
+    }
+    for (final item in _objectList(vendorCatalog['pricing'])) {
+      if (item['modelId'] == modelId) {
+        return _objectList(item['prices']);
+      }
+    }
+    return const [];
+  }
+  for (final item in catalog.pricing) {
+    if (item['vendorCode'] == vendorCode &&
+        item['regionCode'] == regionCode &&
+        item['modelId'] == modelId) {
+      return _objectList(item['prices']);
+    }
+  }
+  return const [];
+}
+
+JsonObject? getBestReferencePrice(
+    ModelCatalog catalog, String catalogKeyValue, String meterCode) {
   for (final price in getModelPrices(catalog, catalogKeyValue)) {
     if (price['meterCode'] == meterCode) {
       return price;
@@ -216,12 +296,15 @@ JsonObject? getBestReferencePrice(ModelCatalog catalog, String catalogKeyValue, 
   return null;
 }
 
-List<JsonObject> listModelsByCapability(ModelCatalog catalog, String capability) {
+List<JsonObject> listModelsByCapability(
+    ModelCatalog catalog, String capability) {
   return listModelsWhere(catalog, capability: capability);
 }
 
-List<JsonObject> listModelsByModality(ModelCatalog catalog, String inputModality, String outputModality) {
-  return listModelsWhere(catalog, inputModality: inputModality, outputModality: outputModality);
+List<JsonObject> listModelsByModality(
+    ModelCatalog catalog, String inputModality, String outputModality) {
+  return listModelsWhere(catalog,
+      inputModality: inputModality, outputModality: outputModality);
 }
 
 List<JsonObject> listProtocols(ModelCatalog catalog) {
@@ -237,7 +320,8 @@ JsonObject? findProtocol(ModelCatalog catalog, String protocolCode) {
   return null;
 }
 
-List<JsonObject> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) {
+List<JsonObject> listProtocolsByVendor(
+    ModelCatalog catalog, String vendorCode) {
   final vendor = catalog.vendors.cast<JsonObject?>().firstWhere(
         (v) => v?['vendorCode'] == vendorCode,
         orElse: () => null,
@@ -248,14 +332,69 @@ List<JsonObject> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) 
   final supported = ((vendor['supportedProtocols'] as List?) ?? const [])
       .whereType<String>()
       .toSet();
-  return catalog.protocols.where((p) => supported.contains(p['protocolCode'])).toList();
+  return catalog.protocols
+      .where((p) => supported.contains(p['protocolCode']))
+      .toList();
 }
 
-List<JsonObject> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {
+List<JsonObject> listModelsByProtocol(
+    ModelCatalog catalog, String protocolCode) {
   return listModelsWhere(catalog, apiFormat: protocolCode);
 }
 
 String? _filterString(JsonObject? filter, String key) {
   final value = filter?[key];
   return value is String && value.isNotEmpty ? value : null;
+}
+
+List<JsonObject> _regionalModels(ModelCatalog catalog) {
+  if (catalog.vendorCatalogs.isNotEmpty) {
+    return [
+      for (final vendorCatalog in catalog.vendorCatalogs)
+        ..._objectList(vendorCatalog['models'])
+    ];
+  }
+  return catalog.models;
+}
+
+bool _hasRegionPricing(ModelCatalog catalog, JsonObject model) {
+  final catalogKey = model['catalogKey'];
+  final regionCode = model['regionCode'];
+  return catalogKey is String &&
+      regionCode is String &&
+      getModelRegionPrices(catalog, catalogKey, regionCode).isNotEmpty;
+}
+
+int _modelIdentityScore(JsonObject item) {
+  final model = item['model'] as JsonObject;
+  var score = 0;
+  if (item['hasRegionPricing'] == true) {
+    score += 100;
+  }
+  if (model['routingState'] == 'enabled') {
+    score += 40;
+  }
+  if (model['shelfState'] == 'listed') {
+    score += 20;
+  }
+  if (model['releaseStage'] == 'active') {
+    score += 10;
+  }
+  if (model['lifecycle'] == 'current' || model['lifecycle'] == 'preview') {
+    score += 5;
+  }
+  if (model['regionCode'] == 'global') {
+    score += 1;
+  }
+  return score;
+}
+
+List<JsonObject> _objectList(Object? value) {
+  if (value is! List) {
+    return const [];
+  }
+  return value
+      .whereType<Map>()
+      .map((item) => item.map((key, value) => MapEntry(key.toString(), value)))
+      .toList();
 }

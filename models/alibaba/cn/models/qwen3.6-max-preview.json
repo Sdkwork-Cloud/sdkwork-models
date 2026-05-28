@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "alibaba/cn/qwen3.6-max-preview",
+  "catalogKey": "alibaba/qwen3.6-max-preview",
   "colorToken": "#2563eb",
   "contextTokens": 262144,
   "description": "Qwen preview flagship model for Chinese and multilingual workflows.",

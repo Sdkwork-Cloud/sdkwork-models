@@ -8,6 +8,7 @@ import {
   findProtocol,
   getBestReferencePrice,
   getModelPrices,
+  getModelRegionPrices,
   listAvailableModels,
   listMeters,
   listModels,
@@ -25,11 +26,11 @@ import {
 test("loads local catalog", async () => {
   const catalog = await loadCatalog("..");
   assert.equal(catalog.catalogVersion, "2026.05.08.1");
-  assert.equal(findModel(catalog, "openai/global/gpt-5.5")?.vendorCode, "openai");
-  assert.equal(findModel(catalog, "openai/global/gpt-5.5")?.regionCode, "global");
+  assert.equal(findModel(catalog, "openai/gpt-5.5")?.vendorCode, "openai");
+  assert.equal(findModel(catalog, "openai/gpt-5.5")?.regionCode, "global");
   assert.equal(findModelByVendorRegion(catalog, "openai", "global", "gpt-5.5")?.vendorCode, "openai");
-  assert.equal(catalogKey("openai", "global", "gpt-5.5"), "openai/global/gpt-5.5");
-  assert.equal(findModel(catalog, "openai/gpt-5.5"), undefined);
+  assert.equal(catalogKey("openai", "global", "gpt-5.5"), "openai/gpt-5.5");
+  assert.equal(findModel(catalog, "openai/global/gpt-5.5"), undefined);
   assert.equal(listVendors(catalog).every((vendor) => !("regionCode" in vendor)), true);
   assert.equal(
     listVendorRegions(catalog).some((item) => item.vendorCode === "minimax" && item.regionCode === "cn"),
@@ -54,6 +55,8 @@ test("loads local catalog", async () => {
   );
   assert.ok(listVendors(catalog).some((vendor) => vendor.supportedProtocols.includes("openai_responses")));
   assert.ok(listAvailableModels(catalog).length > 0);
+  const modelKeys = listModels(catalog).map((model) => model.catalogKey);
+  assert.equal(new Set(modelKeys).size, modelKeys.length);
   assert.equal(
     listAvailableModels(catalog).some((model) => getModelPrices(catalog, model.catalogKey).length === 0),
     false,
@@ -63,12 +66,31 @@ test("loads local catalog", async () => {
     false,
   );
   assert.equal(
-    listAvailableModels(catalog).some((model) => model.catalogKey === "kuaishou/cn/kling-v3-0-preview"),
+    listAvailableModels(catalog).some(
+      (model) => model.catalogKey === "kuaishou/kling-v3-0-preview" && model.regionCode === "global",
+    ),
+    true,
+  );
+  assert.equal(findModel(catalog, "kuaishou/kling-v3-0-preview")?.regionCode, "global");
+  assert.equal(findModelByVendorRegion(catalog, "kuaishou", "cn", "kling-v3-0-preview")?.regionCode, "cn");
+  assert.equal(
+    listAvailableModels(catalog, { regionCode: "cn" }).some(
+      (model) => model.catalogKey === "kuaishou/kling-v3-0-preview",
+    ),
     false,
   );
-  assert.ok(getModelPrices(catalog, "openai/global/gpt-5.5").length > 0);
   assert.equal(
-    getBestReferencePrice(catalog, "openai/global/gpt-5.5", "llm_input_token")?.unitPrice,
+    listAvailableModels(catalog, { regionCode: "global" }).some(
+      (model) => model.catalogKey === "kuaishou/kling-v3-0-preview",
+    ),
+    true,
+  );
+  assert.ok(getModelPrices(catalog, "openai/gpt-5.5").length > 0);
+  assert.ok(getModelRegionPrices(catalog, "openai/gpt-5.5", "global").length > 0);
+  assert.equal(getModelRegionPrices(catalog, "openai/gpt-5.5", "cn").length, 0);
+  assert.equal(getModelPrices(catalog, "openai/global/gpt-5.5").length, 0);
+  assert.equal(
+    getBestReferencePrice(catalog, "openai/gpt-5.5", "llm_input_token")?.unitPrice,
     "5.000000",
   );
 });
@@ -79,7 +101,7 @@ test("loads bundled catalog from SDKWORK_MODELS_CATALOG_ROOT", async () => {
   try {
     const catalog = await loadBundledCatalog();
     assert.equal(catalog.catalogVersion, "2026.05.08.1");
-    assert.equal(findModel(catalog, "openai/global/gpt-5.5")?.vendorCode, "openai");
+    assert.equal(findModel(catalog, "openai/gpt-5.5")?.vendorCode, "openai");
   } finally {
     if (previousRoot === undefined) {
       delete process.env.SDKWORK_MODELS_CATALOG_ROOT;

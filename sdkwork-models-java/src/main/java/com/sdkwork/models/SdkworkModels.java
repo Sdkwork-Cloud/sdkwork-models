@@ -81,6 +81,14 @@ public final class SdkworkModels {
         return ModelCatalogQuery.getModelPrices(catalog, catalogKey);
     }
 
+    public static List<Map<String, Object>> getModelRegionPrices(
+            ModelCatalog catalog,
+            String catalogKey,
+            String regionCode
+    ) {
+        return ModelCatalogQuery.getModelRegionPrices(catalog, catalogKey, regionCode);
+    }
+
     public static Map<String, Object> getBestReferencePrice(ModelCatalog catalog, String catalogKey, String meterCode) {
         return ModelCatalogQuery.getBestReferencePrice(catalog, catalogKey, meterCode);
     }

@@ -17,7 +17,7 @@ sdkwork_models
 - Dart CLI tools
 
 Model and price lookups use the stable `vendorCode/regionCode/modelId`
-catalog key, for example `openai/global/gpt-5.5`.
+catalog key, for example `openai/gpt-5.5`.
 `loadCatalog(pathOrUrl)` reads `models/index.json` and then loads the declared
 `modelFiles` and `pricingFiles`, so Dart CLI/desktop local paths and HTTP(S)
 catalog roots use the same file manifest. `loadBundledCatalog()` resolves

@@ -1,5 +1,5 @@
 {
-  "catalogKey": "openai/global/gpt-realtime-1.5",
+  "catalogKey": "openai/gpt-realtime-1.5",
   "currency": "USD",
   "modelId": "gpt-realtime-1.5",
   "prices": [

@@ -49,7 +49,8 @@ export function listVendorRegions(catalog: ModelCatalog): VendorRegionRef[] {
 }
 
 export function catalogKey(vendorCode: string, regionCode: string, modelId: string): string {
-  return `${vendorCode}/${regionCode}/${modelId}`;
+  void regionCode;
+  return `${vendorCode}/${modelId}`;
 }
 
 export function listMeters(catalog: ModelCatalog): BillingMeter[] {
@@ -61,31 +62,46 @@ export function findMeter(catalog: ModelCatalog, meterCode: string): BillingMete
 }
 
 export function listModels(catalog: ModelCatalog, filter: ModelFilter = {}): ModelInfo[] {
-  return catalog.vendors
-    .flatMap((vendor) => vendor.models)
-    .filter((model) => !filter.vendorCode || model.vendorCode === filter.vendorCode)
-    .filter((model) => !filter.regionCode || model.regionCode === filter.regionCode)
-    .filter((model) => !filter.familyCode || model.familyCode === filter.familyCode)
-    .filter((model) => !filter.capability || model.capabilities.includes(filter.capability as never))
-    .filter((model) => !filter.inputModality || model.inputModalities.includes(filter.inputModality as never))
-    .filter((model) => !filter.outputModality || model.outputModalities.includes(filter.outputModality as never))
-    .filter((model) => !filter.releaseStage || model.releaseStage === filter.releaseStage)
-    .filter((model) => !filter.shelfState || model.shelfState === filter.shelfState)
-    .filter((model) => !filter.routingState || model.routingState === filter.routingState)
-    .filter((model) => !filter.apiFormat || model.apiFormat === filter.apiFormat);
+  const matches = catalog.vendors
+    .flatMap((vendor) => vendor.models.map((model) => ({
+      model,
+      hasRegionPricing: vendor.pricing.some((pricing) => pricing.modelId === model.modelId && pricing.prices.length > 0),
+    })))
+    .filter(({ model }) => !filter.vendorCode || model.vendorCode === filter.vendorCode)
+    .filter(({ model }) => !filter.regionCode || model.regionCode === filter.regionCode)
+    .filter(({ model }) => !filter.familyCode || model.familyCode === filter.familyCode)
+    .filter(({ model }) => !filter.capability || model.capabilities.includes(filter.capability as never))
+    .filter(({ model }) => !filter.inputModality || model.inputModalities.includes(filter.inputModality as never))
+    .filter(({ model }) => !filter.outputModality || model.outputModalities.includes(filter.outputModality as never))
+    .filter(({ model }) => !filter.releaseStage || model.releaseStage === filter.releaseStage)
+    .filter(({ model }) => !filter.shelfState || model.shelfState === filter.shelfState)
+    .filter(({ model }) => !filter.routingState || model.routingState === filter.routingState)
+    .filter(({ model }) => !filter.apiFormat || model.apiFormat === filter.apiFormat);
+  if (filter.regionCode) {
+    return matches.map(({ model }) => model);
+  }
+  const deduped = new Map<string, { model: ModelInfo; hasRegionPricing: boolean }>();
+  for (const item of matches) {
+    const existing = deduped.get(item.model.catalogKey);
+    if (!existing || modelIdentityScore(item) > modelIdentityScore(existing)) {
+      deduped.set(item.model.catalogKey, item);
+    }
+  }
+  return [...deduped.values()].map(({ model }) => model);
 }
 
 export function listAvailableModels(catalog: ModelCatalog, filter: ModelFilter = {}): ModelInfo[] {
   return listModels(catalog, { ...filter, routingState: "enabled", shelfState: "listed" })
-    .filter((model) => getModelPrices(catalog, model.catalogKey).length > 0);
+    .filter((model) => getModelRegionPrices(catalog, model.catalogKey, model.regionCode).length > 0);
 }
 
 export function findModel(catalog: ModelCatalog, catalogKeyValue: string): ModelInfo | undefined {
-  const [vendorCode, regionCode, modelId] = splitCatalogKey(catalogKeyValue);
-  if (!vendorCode || !regionCode || !modelId) {
+  const [vendorCode, modelId] = splitCatalogKey(catalogKeyValue);
+  if (!vendorCode || !modelId) {
     return undefined;
   }
-  return findModelByVendorRegion(catalog, vendorCode, regionCode, modelId);
+  return listModels(catalog)
+    .find((model) => model.vendorCode === vendorCode && model.modelId === modelId);
 }
 
 export function findModelByVendorRegion(
@@ -98,14 +114,26 @@ export function findModelByVendorRegion(
 }
 
 export function getModelPrices(catalog: ModelCatalog, catalogKeyValue: string): ModelPrice[] {
-  const [vendorCode, regionCode, modelId] = splitCatalogKey(catalogKeyValue);
-  if (!vendorCode || !regionCode || !modelId) {
+  const [vendorCode, modelId] = splitCatalogKey(catalogKeyValue);
+  if (!vendorCode || !modelId) {
+    return [];
+  }
+  return catalog.vendors
+    .filter((vendor) => vendor.vendorCode === vendorCode)
+    .flatMap((vendor) => vendor.pricing)
+    .find((pricing) => pricing.modelId === modelId)
+    ?.prices ?? [];
+}
+
+export function getModelRegionPrices(catalog: ModelCatalog, catalogKeyValue: string, regionCode: string): ModelPrice[] {
+  const [vendorCode, modelId] = splitCatalogKey(catalogKeyValue);
+  if (!vendorCode || !modelId) {
     return [];
   }
   return catalog.vendors
     .filter((vendor) => vendor.vendorCode === vendorCode && vendor.regionCode === regionCode)
     .flatMap((vendor) => vendor.pricing)
-    .find((pricing) => pricing.modelId === modelId && pricing.regionCode === regionCode)
+    .find((pricing) => pricing.modelId === modelId)
     ?.prices ?? [];
 }
 
@@ -152,10 +180,21 @@ export function listModelsByProtocol(catalog: ModelCatalog, protocolCode: string
   return listModels(catalog, { apiFormat: protocolCode });
 }
 
-function splitCatalogKey(value: string): [string | undefined, string | undefined, string | undefined] {
+function splitCatalogKey(value: string): [string | undefined, string | undefined] {
   const parts = value.split("/");
-  if (parts.length !== 3 || parts.some((part) => part.length === 0)) {
-    return [undefined, undefined, undefined];
+  if (parts.length !== 2 || parts.some((part) => part.length === 0)) {
+    return [undefined, undefined];
   }
-  return [parts[0], parts[1], parts[2]];
+  return [parts[0], parts[1]];
+}
+
+function modelIdentityScore(item: { model: ModelInfo; hasRegionPricing: boolean }): number {
+  let score = 0;
+  if (item.hasRegionPricing) score += 100;
+  if (item.model.routingState === "enabled") score += 40;
+  if (item.model.shelfState === "listed") score += 20;
+  if (item.model.releaseStage === "active") score += 10;
+  if (item.model.lifecycle === "current" || item.model.lifecycle === "preview") score += 5;
+  if (item.model.regionCode === "global") score += 1;
+  return score;
 }

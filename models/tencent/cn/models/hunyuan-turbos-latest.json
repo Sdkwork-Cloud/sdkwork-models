@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "tencent/cn/hunyuan-turbos-latest",
+  "catalogKey": "tencent/hunyuan-turbos-latest",
   "colorToken": "#0f766e",
   "contextTokens": 32768,
   "description": "Tencent Hunyuan model for Chinese assistant workloads.",

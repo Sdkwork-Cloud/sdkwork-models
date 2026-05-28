@@ -3,7 +3,7 @@
   "capabilities": [
     "audio"
   ],
-  "catalogKey": "elevenlabs/global/eleven_text_to_sound_v2",
+  "catalogKey": "elevenlabs/eleven_text_to_sound_v2",
   "colorToken": "#7c2d12",
   "description": "Sound effect generation model.",
   "displayName": "Eleven Text to Sound v2",

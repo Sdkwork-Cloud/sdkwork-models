@@ -3,7 +3,7 @@
   "capabilities": [
     "video"
   ],
-  "catalogKey": "kuaishou/cn/kling-v3-0-preview",
+  "catalogKey": "kuaishou/kling-v3-0-preview",
   "colorToken": "#6d28d9",
   "description": "Kling preview video generation model.",
   "displayName": "Kling v3.0 Preview",

@@ -5,7 +5,7 @@
     {
       "items": [
         {
-          "catalogKey": "suno/global/suno-v5",
+          "catalogKey": "suno/suno-v5",
           "modelId": "suno-v5",
           "pricingText": "$0.02 / music output second",
           "rankNo": 30

@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "google/global/gemini-3.1-pro-preview",
+  "catalogKey": "google/gemini-3.1-pro-preview",
   "colorToken": "#2563eb",
   "contextTokens": 1048576,
   "description": "Preview multimodal Gemini model for long-context reasoning.",

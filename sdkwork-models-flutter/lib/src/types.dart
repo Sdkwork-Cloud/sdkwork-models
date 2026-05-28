@@ -25,6 +25,7 @@ class ModelCatalog {
     required this.meters,
     required this.protocols,
     required this.vendors,
+    required this.vendorCatalogs,
     required this.models,
     required this.pricing,
   });
@@ -34,6 +35,7 @@ class ModelCatalog {
   final List<JsonObject> meters;
   final List<JsonObject> protocols;
   final List<JsonObject> vendors;
+  final List<JsonObject> vendorCatalogs;
   final List<JsonObject> models;
   final List<JsonObject> pricing;
 }

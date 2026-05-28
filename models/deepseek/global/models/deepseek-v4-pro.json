@@ -3,7 +3,7 @@
   "capabilities": [
     "chat"
   ],
-  "catalogKey": "deepseek/global/deepseek-v4-pro",
+  "catalogKey": "deepseek/deepseek-v4-pro",
   "colorToken": "#0f766e",
   "contextTokens": 1048576,
   "description": "DeepSeek reasoning and coding model.",

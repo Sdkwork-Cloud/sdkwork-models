@@ -1,11 +1,12 @@
 use sdkwork_models::validation::is_decimal_string;
 use sdkwork_models::{
     find_meter, find_model, find_model_by_vendor_region, find_protocol, get_best_reference_price,
-    list_available_models, list_meters, list_models, list_models_by_capability,
-    list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
-    list_vendor_regions, list_vendors, load_bundled_catalog, load_catalog, validate_catalog,
-    ModelFilter,
+    get_model_region_prices, list_available_models, list_meters, list_models,
+    list_models_by_capability, list_models_by_modality, list_models_by_protocol, list_protocols,
+    list_protocols_by_vendor, list_vendor_regions, list_vendors, load_bundled_catalog,
+    load_catalog, validate_catalog, ModelFilter,
 };
+use std::collections::BTreeSet;
 use std::fs;
 
 #[test]
@@ -16,18 +17,18 @@ fn bundled_catalog_loads_and_queries_models() {
     assert!(catalog.vendors.len() >= 3);
     assert_eq!(
         Some("openai"),
-        find_model(&catalog, "openai/global/gpt-5.5").map(|model| model.vendor_code.as_str())
+        find_model(&catalog, "openai/gpt-5.5").map(|model| model.vendor_code.as_str())
     );
     assert_eq!(
         Some("global"),
-        find_model(&catalog, "openai/global/gpt-5.5").map(|model| model.region_code.as_str())
+        find_model(&catalog, "openai/gpt-5.5").map(|model| model.region_code.as_str())
     );
     assert_eq!(
         Some("openai"),
         find_model_by_vendor_region(&catalog, "openai", "global", "gpt-5.5")
             .map(|model| model.vendor_code.as_str())
     );
-    assert!(find_model(&catalog, "openai/gpt-5.5").is_none());
+    assert!(find_model(&catalog, "openai/global/gpt-5.5").is_none());
     assert!(list_vendors(&catalog)
         .iter()
         .all(|vendor| vendor.vendor_code != "minimax" || vendor.legal_name.is_some()));
@@ -93,6 +94,14 @@ fn bundled_catalog_loads_and_queries_models() {
                 .any(|protocol| protocol == "openai_responses")));
     let available_models = list_available_models(&catalog, ModelFilter::default());
     assert!(!available_models.is_empty());
+    let model_keys = list_models(&catalog, ModelFilter::default())
+        .into_iter()
+        .map(|model| model.catalog_key.as_str())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        model_keys.len(),
+        model_keys.iter().collect::<BTreeSet<_>>().len()
+    );
     assert!(available_models
         .iter()
         .all(|model| !sdkwork_models::get_model_prices(&catalog, &model.catalog_key).is_empty()));
@@ -101,11 +110,44 @@ fn bundled_catalog_loads_and_queries_models() {
         .all(|model| model.routing_state == "enabled" && model.shelf_state == "listed"));
     assert!(available_models
         .iter()
-        .all(|model| model.catalog_key != "kuaishou/cn/kling-v3-0-preview"));
+        .any(|model| model.catalog_key == "kuaishou/kling-v3-0-preview"
+            && model.region_code == "global"));
+    assert_eq!(
+        Some("global"),
+        find_model(&catalog, "kuaishou/kling-v3-0-preview").map(|model| model.region_code.as_str())
+    );
+    assert_eq!(
+        Some("cn"),
+        find_model_by_vendor_region(&catalog, "kuaishou", "cn", "kling-v3-0-preview")
+            .map(|model| model.region_code.as_str())
+    );
+    assert!(list_available_models(
+        &catalog,
+        ModelFilter {
+            region_code: Some("cn"),
+            ..ModelFilter::default()
+        }
+    )
+    .iter()
+    .all(|model| model.catalog_key != "kuaishou/kling-v3-0-preview"));
+    assert!(list_available_models(
+        &catalog,
+        ModelFilter {
+            region_code: Some("global"),
+            ..ModelFilter::default()
+        }
+    )
+    .iter()
+    .any(|model| model.catalog_key == "kuaishou/kling-v3-0-preview"));
+    assert!(!get_model_region_prices(&catalog, "openai/gpt-5.5", "global").is_empty());
+    assert!(get_model_region_prices(&catalog, "openai/gpt-5.5", "cn").is_empty());
     assert_eq!(
         Some("5.000000"),
-        get_best_reference_price(&catalog, "openai/global/gpt-5.5", "llm_input_token")
+        get_best_reference_price(&catalog, "openai/gpt-5.5", "llm_input_token")
             .map(|price| price.unit_price.as_str())
+    );
+    assert!(
+        get_best_reference_price(&catalog, "openai/global/gpt-5.5", "llm_input_token").is_none()
     );
     assert!(validate_catalog(&catalog).is_empty());
 }
@@ -169,12 +211,12 @@ fn local_loader_uses_index_as_source_of_truth() {
     .expect("rankings");
     fs::write(
         root.join("models/openai/global/models/gpt-5.5.json"),
-        r#"{"catalogKey":"openai/global/gpt-5.5","modelId":"gpt-5.5","displayName":"GPT-5.5","vendorCode":"openai","regionCode":"global","familyCode":"gpt-5","primaryCapability":"chat","capabilities":["chat"],"inputModalities":["text"],"outputModalities":["text"],"apiFormat":"openai_compatible","lifecycle":"current","releaseStage":"active","shelfState":"listed","routingState":"enabled","source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
+        r#"{"catalogKey":"openai/gpt-5.5","modelId":"gpt-5.5","displayName":"GPT-5.5","vendorCode":"openai","regionCode":"global","familyCode":"gpt-5","primaryCapability":"chat","capabilities":["chat"],"inputModalities":["text"],"outputModalities":["text"],"apiFormat":"openai_compatible","lifecycle":"current","releaseStage":"active","shelfState":"listed","routingState":"enabled","source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}"#,
     )
     .expect("model");
     fs::write(
         root.join("models/openai/global/pricing/gpt-5.5.json"),
-        r#"{"catalogKey":"openai/global/gpt-5.5","vendorCode":"openai","regionCode":"global","modelId":"gpt-5.5","currency":"USD","prices":[{"priceId":"gpt-5.5-input","priceSide":"input","meterCode":"llm_input_token","unitSize":"1000000","unitPrice":"5.000000","minimumQuantity":"0","effectiveFrom":"2026-05-08","source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}]}"#,
+        r#"{"catalogKey":"openai/gpt-5.5","vendorCode":"openai","regionCode":"global","modelId":"gpt-5.5","currency":"USD","prices":[{"priceId":"gpt-5.5-input","priceSide":"input","meterCode":"llm_input_token","unitSize":"1000000","unitPrice":"5.000000","minimumQuantity":"0","effectiveFrom":"2026-05-08","source":{"sourceUrl":"https://example.com","observedAt":"2026-05-08"}}]}"#,
     )
     .expect("pricing");
     fs::write(
@@ -185,7 +227,7 @@ fn local_loader_uses_index_as_source_of_truth() {
 
     let catalog = load_catalog(root).expect("catalog should load from index");
     assert_eq!(1, catalog.vendors.len());
-    assert!(find_model(&catalog, "openai/global/gpt-5.5").is_some());
+    assert!(find_model(&catalog, "openai/gpt-5.5").is_some());
     assert!(list_vendor_regions(&catalog)
         .iter()
         .all(|region| region.vendor_code != "unlisted"));

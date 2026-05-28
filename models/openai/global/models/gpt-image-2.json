@@ -3,7 +3,7 @@
   "capabilities": [
     "image"
   ],
-  "catalogKey": "openai/global/gpt-image-2",
+  "catalogKey": "openai/gpt-image-2",
   "colorToken": "#0f766e",
   "description": "Current OpenAI image generation and editing model.",
   "displayName": "GPT Image 2",
