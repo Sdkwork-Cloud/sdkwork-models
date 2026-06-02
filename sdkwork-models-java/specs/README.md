@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `sdkwork-models` |
 | Type | `java-module` |
-| Root | `data/sdkwork-models/sdkwork-models-java` |
+| Root | `sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `java` |

@@ -6,7 +6,7 @@
     "displayName": "SDKWork Models",
     "version": "0.1.0",
     "type": "java-module",
-    "root": "data/sdkwork-models/sdkwork-models-java",
+    "root": "sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java",
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",

@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `sdkwork-models-python` |
 | Type | `python-package` |
-| Root | `data/sdkwork-models/sdkwork-models-python` |
+| Root | `sdkwork-claw-router/data/sdkwork-models/sdkwork-models-python` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `python` |
