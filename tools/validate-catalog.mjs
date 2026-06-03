@@ -444,7 +444,7 @@ const REQUIRED_CLIENT_APIS = {
   codex: {
     displayName: "Codex",
     defaultApiCode: "openai.codex.responses",
-    defaultResourceCode: "api.openai.codex.responses",
+    defaultResourceCode: "api.openai.codex",
   },
   claude_code: {
     displayName: "Claude Code",

@@ -8,7 +8,7 @@
     "warnings": []
   },
   "generatedAt": "2026-05-08T00:00:00Z",
-  "indexSha256": "891d3a2cfb833361c47728a5a0c75bf3423edc71a58a52746b1fae86887cc78b",
+  "indexSha256": "00f7bbda7c91c39357a41724fb3718a53c0916289af84faf032a2de94e24bece",
   "schemaVersion": "1.1.0",
   "sourceAudit": {
     "errorCount": 0,
@@ -176,7 +176,7 @@
       "modelCount": 13,
       "pricingFileCount": 13,
       "regionCode": "global",
-      "sha256": "bc03653ee9234316c06dc75b74c401de668ac3808b40148a3bce11761b100e28",
+      "sha256": "b1a0f7d9e8b6f4e9e72333b5ef16ff619bc45155c31b321a78127c4df2df2970",
       "vendorCode": "openai"
     },
     {

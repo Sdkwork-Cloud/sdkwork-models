@@ -50,7 +50,7 @@
         "openai_responses"
       ],
       "resourceCodes": [
-        "api.openai.codex.responses"
+        "api.openai.codex"
       ],
       "source": {
         "observedAt": "2026-06-03T00:00:00Z",
