@@ -114,8 +114,9 @@ Examples:
 - `models/kuaishou/global`
 
 The same upstream `modelId` can appear in more than one region under the same
-vendor. Application code and database imports must use the three-part
-`vendorCode/regionCode/modelId` catalog key, and every price row must use the
+vendor. Application code and database imports must use `vendorCode/modelId` as
+the stable model catalog key. `regionCode` stays explicit on vendor-region,
+deployment, ranking, and pricing records, and every price row must use the
 region's `billingCurrency`.
 
 ## Vendor Rule

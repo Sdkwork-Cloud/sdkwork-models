@@ -5,34 +5,40 @@
     {
       "items": [
         {
+          "catalogKey": "minimax/MiniMax-M3",
+          "modelId": "MiniMax-M3",
+          "pricingText": "$0.30 / 1M input; $1.20 / 1M output",
+          "rankNo": 1
+        },
+        {
           "catalogKey": "minimax/MiniMax-M2.7",
           "modelId": "MiniMax-M2.7",
           "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 19
+          "rankNo": 2
         },
         {
           "catalogKey": "minimax/MiniMax-M2.7-highspeed",
           "modelId": "MiniMax-M2.7-highspeed",
           "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
-          "rankNo": 20
+          "rankNo": 3
         },
         {
           "catalogKey": "minimax/MiniMax-M2.5",
           "modelId": "MiniMax-M2.5",
           "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 21
+          "rankNo": 4
         },
         {
           "catalogKey": "minimax/MiniMax-M2.5-highspeed",
           "modelId": "MiniMax-M2.5-highspeed",
           "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
-          "rankNo": 22
+          "rankNo": 5
         },
         {
           "catalogKey": "minimax/M2-her",
           "modelId": "M2-her",
           "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 23
+          "rankNo": 6
         }
       ],
       "rankScope": "commercial-default",

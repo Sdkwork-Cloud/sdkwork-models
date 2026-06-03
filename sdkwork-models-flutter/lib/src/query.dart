@@ -16,6 +16,10 @@ List<JsonObject> listVendors(ModelCatalog catalog) {
           ((vendor['capabilities'] as List?) ?? const []).cast<Object?>(),
       'supportedProtocols':
           ((vendor['supportedProtocols'] as List?) ?? const []).cast<Object?>(),
+      'clientApiCompatibility':
+          vendor['clientApiCompatibility'] is JsonObject
+              ? vendor['clientApiCompatibility']
+              : <String, Object?>{},
       'openSource': vendor['openSource'] ?? false,
     };
   }
@@ -201,7 +205,7 @@ List<JsonObject> listAvailableModels(
   }).toList();
 }
 
-String catalogKey(String vendorCode, String regionCode, String modelId) =>
+String catalogKey(String vendorCode, String modelId) =>
     '$vendorCode/$modelId';
 
 List<JsonObject> listMeters(ModelCatalog catalog) => catalog.meters;
@@ -216,12 +220,13 @@ JsonObject? findMeter(ModelCatalog catalog, String meterCode) {
 }
 
 JsonObject? findModel(ModelCatalog catalog, String catalogKeyValue) {
-  final parts = catalogKeyValue.split('/');
-  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
+  final parts = _splitCatalogKey(catalogKeyValue);
+  if (parts == null) {
     return null;
   }
   for (final model in listModels(catalog)) {
-    if (model['vendorCode'] == parts[0] && model['modelId'] == parts[1]) {
+    if (model['vendorCode'] == parts.vendorCode &&
+        model['modelId'] == parts.modelId) {
       return model;
     }
   }
@@ -242,12 +247,12 @@ JsonObject? findModelByVendorRegion(ModelCatalog catalog, String vendorCode,
 }
 
 List<JsonObject> getModelPrices(ModelCatalog catalog, String catalogKeyValue) {
-  final parts = catalogKeyValue.split('/');
-  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
+  final parts = _splitCatalogKey(catalogKeyValue);
+  if (parts == null) {
     return const [];
   }
-  final vendorCode = parts[0];
-  final modelId = parts[1];
+  final vendorCode = parts.vendorCode;
+  final modelId = parts.modelId;
   for (final item in catalog.pricing) {
     if (item['vendorCode'] == vendorCode && item['modelId'] == modelId) {
       return ((item['prices'] as List?) ?? const []).cast<JsonObject>();
@@ -258,12 +263,12 @@ List<JsonObject> getModelPrices(ModelCatalog catalog, String catalogKeyValue) {
 
 List<JsonObject> getModelRegionPrices(
     ModelCatalog catalog, String catalogKeyValue, String regionCode) {
-  final parts = catalogKeyValue.split('/');
-  if (parts.length != 2 || parts[0].isEmpty || parts[1].isEmpty) {
+  final parts = _splitCatalogKey(catalogKeyValue);
+  if (parts == null) {
     return const [];
   }
-  final vendorCode = parts[0];
-  final modelId = parts[1];
+  final vendorCode = parts.vendorCode;
+  final modelId = parts.modelId;
   for (final vendorCatalog in catalog.vendorCatalogs) {
     if (vendorCatalog['vendorCode'] != vendorCode ||
         vendorCatalog['regionCode'] != regionCode) {
@@ -337,9 +342,36 @@ List<JsonObject> listProtocolsByVendor(
       .toList();
 }
 
+List<JsonObject> listClientApiCompatibilityByVendor(
+    ModelCatalog catalog, String vendorCode) {
+  final vendor = catalog.vendors.cast<JsonObject?>().firstWhere(
+        (v) => v?['vendorCode'] == vendorCode,
+        orElse: () => null,
+      );
+  if (vendor == null || vendor['clientApiCompatibility'] is! JsonObject) {
+    return const [];
+  }
+  return (vendor['clientApiCompatibility'] as JsonObject)
+      .values
+      .whereType<Map>()
+      .map((item) => item.map((key, value) => MapEntry(key.toString(), value)))
+      .toList();
+}
+
 List<JsonObject> listModelsByProtocol(
     ModelCatalog catalog, String protocolCode) {
   return listModelsWhere(catalog, apiFormat: protocolCode);
+}
+
+_CatalogKeyParts? _splitCatalogKey(String catalogKeyValue) {
+  final separatorIndex = catalogKeyValue.indexOf('/');
+  if (separatorIndex <= 0 || separatorIndex == catalogKeyValue.length - 1) {
+    return null;
+  }
+  return _CatalogKeyParts(
+    catalogKeyValue.substring(0, separatorIndex),
+    catalogKeyValue.substring(separatorIndex + 1),
+  );
 }
 
 String? _filterString(JsonObject? filter, String key) {
@@ -397,4 +429,11 @@ List<JsonObject> _objectList(Object? value) {
       .whereType<Map>()
       .map((item) => item.map((key, value) => MapEntry(key.toString(), value)))
       .toList();
+}
+
+class _CatalogKeyParts {
+  const _CatalogKeyParts(this.vendorCode, this.modelId);
+
+  final String vendorCode;
+  final String modelId;
 }

@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -39,6 +41,22 @@ pub struct ProtocolStandard {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct ClientApiCompatibility {
+    pub client_api_code: String,
+    pub display_name: String,
+    pub support_status: String,
+    #[serde(default)]
+    pub protocol_codes: Vec<String>,
+    #[serde(default)]
+    pub api_codes: Vec<String>,
+    #[serde(default)]
+    pub resource_codes: Vec<String>,
+    pub notes: String,
+    pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct ModelVendor {
     pub vendor_code: String,
     pub region_code: String,
@@ -60,6 +78,7 @@ pub struct ModelVendor {
     pub capabilities: Vec<String>,
     #[serde(default)]
     pub supported_protocols: Vec<String>,
+    pub client_api_compatibility: BTreeMap<String, ClientApiCompatibility>,
     pub open_source: Option<bool>,
     pub sort_order: Option<i32>,
     pub source: SourceEvidence,
@@ -238,6 +257,7 @@ pub struct ModelVendorIdentity {
     pub vendor_type: String,
     pub capabilities: Vec<String>,
     pub supported_protocols: Vec<String>,
+    pub client_api_compatibility: BTreeMap<String, ClientApiCompatibility>,
     pub open_source: bool,
 }
 

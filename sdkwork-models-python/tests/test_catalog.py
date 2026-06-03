@@ -38,7 +38,7 @@ def test_load_catalog() -> None:
     assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"
     assert find_model(catalog, "openai/gpt-5.5")["regionCode"] == "global"
     assert find_model_by_vendor_region(catalog, "openai", "global", "gpt-5.5")["vendorCode"] == "openai"
-    assert catalog_key("openai", "global", "gpt-5.5") == "openai/gpt-5.5"
+    assert catalog_key("openai", "gpt-5.5") == "openai/gpt-5.5"
     assert find_model(catalog, "openai/global/gpt-5.5") is None
     assert all("regionCode" not in vendor for vendor in list_vendors(catalog))
     assert ("minimax", "cn") in {
@@ -139,3 +139,64 @@ def test_load_bundled_catalog_from_environment(monkeypatch=None) -> None:
         monkeypatch.setenv("SDKWORK_MODELS_CATALOG_ROOT", str(catalog_root))
         catalog = load_bundled_catalog()
     assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"
+
+
+def test_catalog_key_parser_keeps_slash_delimited_provider_model_ids_intact() -> None:
+    catalog = ModelCatalog(
+        catalog_version="2026.05.08.1",
+        schema_version="1.1.0",
+        meters=[],
+        protocols=[],
+        vendors=[],
+        vendor_catalogs=[
+            {
+                "vendorCode": "openrouter",
+                "regionCode": "global",
+                "models": [
+                    {
+                        "catalogKey": "openrouter/anthropic/claude-3-opus",
+                        "modelId": "anthropic/claude-3-opus",
+                        "displayName": "Claude 3 Opus through OpenRouter",
+                        "vendorCode": "openrouter",
+                        "regionCode": "global",
+                        "familyCode": "anthropic",
+                        "releaseStage": "active",
+                        "shelfState": "listed",
+                        "routingState": "enabled",
+                        "apiFormat": "openai_compatible",
+                        "capabilities": ["chat"],
+                        "inputModalities": ["text"],
+                        "outputModalities": ["text"],
+                    }
+                ],
+                "pricing": [
+                    {
+                        "catalogKey": "openrouter/anthropic/claude-3-opus",
+                        "vendorCode": "openrouter",
+                        "regionCode": "global",
+                        "modelId": "anthropic/claude-3-opus",
+                        "currency": "USD",
+                        "prices": [{"meterCode": "llm_input_token", "unitPrice": "15.000000"}],
+                    }
+                ],
+            }
+        ],
+        models=[],
+        pricing=[
+            {
+                "catalogKey": "openrouter/anthropic/claude-3-opus",
+                "vendorCode": "openrouter",
+                "regionCode": "global",
+                "modelId": "anthropic/claude-3-opus",
+                "currency": "USD",
+                "prices": [{"meterCode": "llm_input_token", "unitPrice": "15.000000"}],
+            }
+        ],
+    )
+
+    assert catalog_key("openrouter", "anthropic/claude-3-opus") == "openrouter/anthropic/claude-3-opus"
+    assert find_model(catalog, "openrouter/anthropic/claude-3-opus")["modelId"] == "anthropic/claude-3-opus"
+    assert len(get_model_prices(catalog, "openrouter/anthropic/claude-3-opus")) == 1
+    assert len(get_model_region_prices(catalog, "openrouter/anthropic/claude-3-opus", "global")) == 1
+    assert find_model(catalog, "openrouter/global/anthropic/claude-3-opus") is None
+    assert get_model_prices(catalog, "openrouter/global/anthropic/claude-3-opus") == []

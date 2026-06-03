@@ -1,0 +1,141 @@
+{
+  "catalogKey": "openai/gpt-realtime-2",
+  "currency": "USD",
+  "modelId": "gpt-realtime-2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-text-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "4.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-text-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "0.400000",
+      "unitSize": "1000000",
+      "mediaType": "text"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-text-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "24.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "audio_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-audio-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "32.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-audio-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "0.400000",
+      "unitSize": "1000000",
+      "mediaType": "audio"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "audio_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-audio-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "64.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "image_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-image-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "5.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2-image-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
+      },
+      "unitPrice": "0.500000",
+      "unitSize": "1000000",
+      "mediaType": "image"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

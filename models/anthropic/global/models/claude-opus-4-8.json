@@ -1,0 +1,49 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/claude-opus-4-8",
+  "colorToken": "#7c2d12",
+  "contextTokens": 1000000,
+  "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",
+  "displayName": "Claude Opus 4.8",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1120,
+  "latencyP95Ms": 4000,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-opus-4-8",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1185.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-03T00:00:00Z",
+    "sourceUrl": "https://www.anthropic.com/news/claude-opus-4-8"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.995000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.990000"
+}

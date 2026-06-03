@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "alibaba/qwen3.7-max",
+          "modelId": "qwen3.7-max",
+          "pricingText": "$2.50 / 1M input; $7.50 / 1M output",
+          "rankNo": 1
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-06-03",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "alibaba"
+}

@@ -9,6 +9,7 @@ import {
   getBestReferencePrice,
   getModelPrices,
   getModelRegionPrices,
+  listClientApiCompatibilityByVendor,
   listAvailableModels,
   listMeters,
   listModels,
@@ -29,7 +30,7 @@ test("loads local catalog", async () => {
   assert.equal(findModel(catalog, "openai/gpt-5.5")?.vendorCode, "openai");
   assert.equal(findModel(catalog, "openai/gpt-5.5")?.regionCode, "global");
   assert.equal(findModelByVendorRegion(catalog, "openai", "global", "gpt-5.5")?.vendorCode, "openai");
-  assert.equal(catalogKey("openai", "global", "gpt-5.5"), "openai/gpt-5.5");
+  assert.equal(catalogKey("openai", "gpt-5.5"), "openai/gpt-5.5");
   assert.equal(findModel(catalog, "openai/global/gpt-5.5"), undefined);
   assert.equal(listVendors(catalog).every((vendor) => !("regionCode" in vendor)), true);
   assert.equal(
@@ -54,6 +55,11 @@ test("loads local catalog", async () => {
     true,
   );
   assert.ok(listVendors(catalog).some((vendor) => vendor.supportedProtocols.includes("openai_responses")));
+  assert.ok(
+    listClientApiCompatibilityByVendor(catalog, "openai").some(
+      (item) => item.clientApiCode === "codex" && item.supportStatus === "supported",
+    ),
+  );
   assert.ok(listAvailableModels(catalog).length > 0);
   const modelKeys = listModels(catalog).map((model) => model.catalogKey);
   assert.equal(new Set(modelKeys).size, modelKeys.length);
@@ -109,4 +115,78 @@ test("loads bundled catalog from SDKWORK_MODELS_CATALOG_ROOT", async () => {
       process.env.SDKWORK_MODELS_CATALOG_ROOT = previousRoot;
     }
   }
+});
+
+test("catalog key parser keeps slash-delimited provider model ids intact", () => {
+  const catalog = {
+    catalogVersion: "2026.05.08.1",
+    schemaVersion: "1.1.0",
+    meters: [],
+    protocols: [],
+    vendors: [
+      {
+        vendorCode: "openrouter",
+        regionCode: "global",
+        vendor: {
+          vendorCode: "openrouter",
+          displayName: "OpenRouter",
+          vendorType: "commercial",
+            capabilities: ["chat"],
+            supportedProtocols: ["openai_compatible"],
+            clientApiCompatibility: {},
+            openSource: false,
+          },
+        models: [
+          {
+            catalogKey: "openrouter/anthropic/claude-3-opus",
+            modelId: "anthropic/claude-3-opus",
+            displayName: "Claude 3 Opus through OpenRouter",
+            vendorCode: "openrouter",
+            regionCode: "global",
+            familyCode: "anthropic",
+            primaryCapability: "chat",
+            capabilities: ["chat"],
+            inputModalities: ["text"],
+            outputModalities: ["text"],
+            apiFormat: "openai_compatible",
+            lifecycle: "current",
+            releaseStage: "active",
+            shelfState: "listed",
+            routingState: "enabled",
+            source: { sourceUrl: "https://openrouter.ai", observedAt: "2026-06-02" },
+          },
+        ],
+        pricing: [
+          {
+            catalogKey: "openrouter/anthropic/claude-3-opus",
+            vendorCode: "openrouter",
+            regionCode: "global",
+            modelId: "anthropic/claude-3-opus",
+            currency: "USD",
+            prices: [
+              {
+                priceId: "openrouter-claude-opus-input",
+                priceSide: "input",
+                pricingScope: "reference",
+                meterCode: "llm_input_token",
+                unitSize: "1000000",
+                unitPrice: "15.000000",
+                minimumQuantity: "0",
+                currency: "USD",
+                effectiveFrom: "2026-06-02",
+                source: { sourceUrl: "https://openrouter.ai", observedAt: "2026-06-02" },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  } as any;
+
+  assert.equal(catalogKey("openrouter", "anthropic/claude-3-opus"), "openrouter/anthropic/claude-3-opus");
+  assert.equal(findModel(catalog, "openrouter/anthropic/claude-3-opus")?.modelId, "anthropic/claude-3-opus");
+  assert.equal(getModelPrices(catalog, "openrouter/anthropic/claude-3-opus").length, 1);
+  assert.equal(getModelRegionPrices(catalog, "openrouter/anthropic/claude-3-opus", "global").length, 1);
+  assert.equal(findModel(catalog, "openrouter/global/anthropic/claude-3-opus"), undefined);
+  assert.equal(getModelPrices(catalog, "openrouter/global/anthropic/claude-3-opus").length, 0);
 });

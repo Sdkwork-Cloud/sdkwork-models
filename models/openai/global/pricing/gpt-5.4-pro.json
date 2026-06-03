@@ -13,10 +13,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-15T00:00:00Z",
-        "sourceUrl": "https://openai.com/api/pricing/"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.4-pro"
       },
-      "unitPrice": "15.000000",
+      "unitPrice": "30.000000",
       "unitSize": "1000000"
     },
     {
@@ -29,10 +29,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-15T00:00:00Z",
-        "sourceUrl": "https://openai.com/api/pricing/"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.4-pro"
       },
-      "unitPrice": "120.000000",
+      "unitPrice": "180.000000",
       "unitSize": "1000000"
     }
   ],

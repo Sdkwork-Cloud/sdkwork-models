@@ -40,6 +40,21 @@ export interface ProtocolStandard {
   maturity: string;
 }
 
+export type ClientApiSupportStatus = "supported" | "unsupported" | "partial";
+
+export interface ClientApiCompatibility {
+  clientApiCode: string;
+  displayName: string;
+  supportStatus: ClientApiSupportStatus;
+  protocolCodes: string[];
+  apiCodes: string[];
+  resourceCodes: string[];
+  notes: string;
+  source: SourceEvidence;
+}
+
+export type ClientApiCompatibilityMap = Record<string, ClientApiCompatibility>;
+
 export interface ModelVendor {
   vendorCode: string;
   regionCode: string;
@@ -52,6 +67,7 @@ export interface ModelVendor {
   operatingRegions: string[];
   capabilities: ModelCapability[];
   supportedProtocols: string[];
+  clientApiCompatibility: ClientApiCompatibilityMap;
   openSource: boolean;
 }
 
@@ -124,5 +140,6 @@ export interface ModelVendorIdentity {
   vendorType: string;
   capabilities: ModelCapability[];
   supportedProtocols: string[];
+  clientApiCompatibility: ClientApiCompatibilityMap;
   openSource: boolean;
 }

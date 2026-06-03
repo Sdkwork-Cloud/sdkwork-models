@@ -1,5 +1,6 @@
 import type {
   BillingMeter,
+  ClientApiCompatibility,
   ModelCatalog,
   ModelInfo,
   ModelPrice,
@@ -35,6 +36,7 @@ export function listVendors(catalog: ModelCatalog): ModelVendorIdentity[] {
       vendorType: vendor.vendorType,
       capabilities: [...vendor.capabilities],
       supportedProtocols: [...(vendor.supportedProtocols ?? [])],
+      clientApiCompatibility: { ...(vendor.clientApiCompatibility ?? {}) },
       openSource: vendor.openSource,
     });
   }
@@ -48,8 +50,7 @@ export function listVendorRegions(catalog: ModelCatalog): VendorRegionRef[] {
   }));
 }
 
-export function catalogKey(vendorCode: string, regionCode: string, modelId: string): string {
-  void regionCode;
+export function catalogKey(vendorCode: string, modelId: string): string {
   return `${vendorCode}/${modelId}`;
 }
 
@@ -176,16 +177,26 @@ export function listProtocolsByVendor(catalog: ModelCatalog, vendorCode: string)
   return catalog.protocols.filter((p) => supported.has(p.protocolCode));
 }
 
+export function listClientApiCompatibilityByVendor(catalog: ModelCatalog, vendorCode: string): ClientApiCompatibility[] {
+  const vendorIdentity = catalog.vendors
+    .map((vc) => vc.vendor)
+    .find((vendor) => vendor.vendorCode === vendorCode);
+  if (!vendorIdentity) {
+    return [];
+  }
+  return Object.values(vendorIdentity.clientApiCompatibility ?? {});
+}
+
 export function listModelsByProtocol(catalog: ModelCatalog, protocolCode: string): ModelInfo[] {
   return listModels(catalog, { apiFormat: protocolCode });
 }
 
 function splitCatalogKey(value: string): [string | undefined, string | undefined] {
-  const parts = value.split("/");
-  if (parts.length !== 2 || parts.some((part) => part.length === 0)) {
+  const separatorIndex = value.indexOf("/");
+  if (separatorIndex <= 0 || separatorIndex === value.length - 1) {
     return [undefined, undefined];
   }
-  return [parts[0], parts[1]];
+  return [value.slice(0, separatorIndex), value.slice(separatorIndex + 1)];
 }
 
 function modelIdentityScore(item: { model: ModelInfo; hasRegionPricing: boolean }): number {

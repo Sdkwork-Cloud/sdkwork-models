@@ -5,34 +5,40 @@
     {
       "items": [
         {
+          "catalogKey": "minimax/MiniMax-M3",
+          "modelId": "MiniMax-M3",
+          "pricingText": "?2.10 / 1M input; ?8.40 / 1M output",
+          "rankNo": 1
+        },
+        {
           "catalogKey": "minimax/MiniMax-M2.7",
           "modelId": "MiniMax-M2.7",
           "pricingText": "CNY 2.100000 / 1M input; CNY 8.400000 / 1M output",
-          "rankNo": 19
+          "rankNo": 2
         },
         {
           "catalogKey": "minimax/MiniMax-M2.7-highspeed",
           "modelId": "MiniMax-M2.7-highspeed",
           "pricingText": "CNY 4.200000 / 1M input; CNY 16.800000 / 1M output",
-          "rankNo": 20
+          "rankNo": 3
         },
         {
           "catalogKey": "minimax/MiniMax-M2.5",
           "modelId": "MiniMax-M2.5",
           "pricingText": "CNY 2.100000 / 1M input; CNY 8.400000 / 1M output",
-          "rankNo": 21
+          "rankNo": 4
         },
         {
           "catalogKey": "minimax/MiniMax-M2.5-highspeed",
           "modelId": "MiniMax-M2.5-highspeed",
           "pricingText": "CNY 4.200000 / 1M input; CNY 16.800000 / 1M output",
-          "rankNo": 22
+          "rankNo": 5
         },
         {
           "catalogKey": "minimax/M2-her",
           "modelId": "M2-her",
           "pricingText": "CNY 2.100000 / 1M input; CNY 8.400000 / 1M output",
-          "rankNo": 23
+          "rankNo": 6
         }
       ],
       "rankScope": "china-mainland-default",

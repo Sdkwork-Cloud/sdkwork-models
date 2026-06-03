@@ -1,6 +1,6 @@
 {
   "catalogVersion": "2026.05.08.1",
-  "observedAt": "2026-05-08T00:00:00Z",
+  "observedAt": "2026-06-03T00:00:00Z",
   "policy": {
     "officialFirst": true,
     "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
@@ -52,14 +52,34 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "notes": "Alibaba Cloud international Qwen operation modeled as the global region with USD billing from QwenCloud/DashScope. The mainland cn region keeps its independent CNY deployment and pricing.",
+      "official": {
+        "additionalUrls": [
+          "https://dashscope-intl.aliyuncs.com/api/v1"
+        ],
+        "modelsUrl": "https://www.qwencloud.com/models/qwen3.7-max",
+        "pricingUrl": "https://www.qwencloud.com/models/qwen3.7-max"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "qwen3.7-max"
+      ],
+      "vendorCode": "alibaba",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
       "notes": "Official current Claude families plus local new-api/sub2api cross-checks. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
           "https://www.anthropic.com/pricing",
           "https://www.anthropic.com/news/claude-opus-4-7",
           "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
-          "https://platform.claude.com/docs/en/docs/about-claude/pricing"
+          "https://platform.claude.com/docs/en/docs/about-claude/pricing",
+          "https://www.anthropic.com/news/claude-opus-4-8",
+          "https://platform.claude.com/docs/en/about-claude/pricing"
         ],
         "modelsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
         "pricingUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
@@ -80,6 +100,7 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "claude-opus-4-8",
         "claude-opus-4-7",
         "claude-sonnet-4-6",
         "claude-haiku-4-5"
@@ -252,14 +273,15 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
       "notes": "Gemini 3.1 and Veo 3.1 model IDs and multimodal/token meters are sourced from official Gemini API model and pricing docs. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
           "https://ai.google.dev/pricing",
           "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
           "https://cloud.google.com/vertex-ai/generative-ai/pricing",
-          "https://ai.google.dev/gemini-api/docs/models/gemini"
+          "https://ai.google.dev/gemini-api/docs/models/gemini",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"
         ],
         "modelsUrl": "https://ai.google.dev/gemini-api/docs/models",
         "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing"
@@ -280,6 +302,7 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "gemini-3.5-flash",
         "gemini-3.1-pro-preview",
         "gemini-3-flash-preview",
         "gemini-3.1-flash-lite",
@@ -336,14 +359,15 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
       "notes": "MiniMax international operation is modeled as the global region of the vendor with USD billing. Current non-legacy text models are sourced from official MiniMax Global models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
       "official": {
         "additionalUrls": [
           "https://platform.minimax.io/docs/guides/text-generation",
           "https://platform.minimax.io/docs/guides/text-chat",
           "https://platform.minimax.io/docs/api-reference/api-overview",
-          "https://www.minimax.io/"
+          "https://www.minimax.io/",
+          "https://www.minimax.io/blog/minimax-m3"
         ],
         "modelsUrl": "https://platform.minimax.io/docs/guides/models-intro",
         "pricingUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
@@ -356,6 +380,7 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "MiniMax-M3",
         "MiniMax-M2.7",
         "MiniMax-M2.7-highspeed",
         "MiniMax-M2.5",
@@ -366,14 +391,15 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
       "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Current non-legacy text models are sourced from official MiniMax China models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
       "official": {
         "additionalUrls": [
           "https://platform.minimaxi.com/docs/guides/text-generation",
           "https://platform.minimaxi.com/docs/guides/text-chat",
           "https://platform.minimaxi.com/docs/api-reference/api-overview",
-          "https://www.minimaxi.com/"
+          "https://www.minimaxi.com/",
+          "https://platform.minimaxi.com/docs/guides/pricing-paygo"
         ],
         "modelsUrl": "https://platform.minimaxi.com/docs/guides/models-intro",
         "pricingUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
@@ -386,6 +412,7 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
+        "MiniMax-M3",
         "MiniMax-M2.7",
         "MiniMax-M2.7-highspeed",
         "MiniMax-M2.5",
@@ -448,15 +475,18 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
-      "notes": "OpenAI official API pricing and model docs; gpt-5.2 and gpt-image-1.5 are kept as deprecated catalog entries. Pending independent official snapshot re-verification before official_verified status.",
+      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "notes": "OpenAI official API model and pricing docs. GPT-5.5 pro and GPT-5.4 pro are real API model IDs; their pro pricing is tracked from the per-model docs. gpt-5.2 and gpt-image-1.5 are kept as non-default historical catalog entries.",
       "official": {
         "additionalUrls": [
           "https://platform.openai.com/docs/pricing",
           "https://platform.openai.com/docs/guides/embeddings",
           "https://platform.openai.com/docs/models/gpt-4o-transcribe",
           "https://platform.openai.com/docs/models/gpt-5.2",
-          "https://developers.openai.com/api/docs/models/"
+          "https://developers.openai.com/api/docs/models/",
+          "https://developers.openai.com/api/docs/models/gpt-5.5-pro",
+          "https://developers.openai.com/api/docs/models/gpt-5.4-pro",
+          "https://developers.openai.com/api/docs/models/gpt-realtime-2"
         ],
         "modelsUrl": "https://platform.openai.com/docs/models",
         "pricingUrl": "https://openai.com/api/pricing/"
@@ -484,12 +514,17 @@
         "gpt-5.4-mini",
         "gpt-5.4-nano",
         "gpt-image-2",
-        "gpt-realtime-1.5",
+        "gpt-realtime-2",
         "text-embedding-3-small",
         "gpt-4o-transcribe"
       ],
       "vendorCode": "openai",
-      "verificationStatus": "official_url_declared"
+      "verificationStatus": "official_url_declared",
+      "supportedModels": [
+        "gpt-realtime-1.5",
+        "gpt-5.2",
+        "gpt-image-1.5"
+      ]
     },
     {
       "lastCheckedAt": "2026-05-07T00:00:00Z",

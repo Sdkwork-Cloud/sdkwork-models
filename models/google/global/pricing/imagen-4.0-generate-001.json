@@ -13,8 +13,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.040000",
       "unitSize": "1"

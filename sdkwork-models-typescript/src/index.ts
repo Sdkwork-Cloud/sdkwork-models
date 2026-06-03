@@ -9,6 +9,7 @@ export {
   getModelPrices,
   getModelRegionPrices,
   listAvailableModels,
+  listClientApiCompatibilityByVendor,
   listMeters,
   listModels,
   listModelsByCapability,

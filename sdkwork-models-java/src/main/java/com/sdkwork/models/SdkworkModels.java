@@ -41,8 +41,8 @@ public final class SdkworkModels {
         return ModelCatalogQuery.findModelByVendorRegion(catalog, vendorCode, regionCode, modelId);
     }
 
-    public static String catalogKey(String vendorCode, String regionCode, String modelId) {
-        return ModelCatalogQuery.catalogKey(vendorCode, regionCode, modelId);
+    public static String catalogKey(String vendorCode, String modelId) {
+        return ModelCatalogQuery.catalogKey(vendorCode, modelId);
     }
 
     public static List<Map<String, Object>> listVendors(ModelCatalog catalog) {
@@ -115,6 +115,10 @@ public final class SdkworkModels {
 
     public static List<Map<String, Object>> listProtocolsByVendor(ModelCatalog catalog, String vendorCode) {
         return ModelCatalogQuery.listProtocolsByVendor(catalog, vendorCode);
+    }
+
+    public static List<Map<String, Object>> listClientApiCompatibilityByVendor(ModelCatalog catalog, String vendorCode) {
+        return ModelCatalogQuery.listClientApiCompatibilityByVendor(catalog, vendorCode);
     }
 
     public static List<Map<String, Object>> listModelsByProtocol(ModelCatalog catalog, String protocolCode) {

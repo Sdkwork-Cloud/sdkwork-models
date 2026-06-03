@@ -16,6 +16,7 @@ def list_vendors(catalog: ModelCatalog) -> list[dict]:
             "vendorType": vendor.get("vendorType"),
             "capabilities": list(vendor.get("capabilities", [])),
             "supportedProtocols": list(vendor.get("supportedProtocols", [])),
+            "clientApiCompatibility": dict(vendor.get("clientApiCompatibility", {})),
             "openSource": vendor.get("openSource", False),
         }
     return list(vendors.values())
@@ -86,8 +87,7 @@ def _filter_value(filters: dict, *keys: str) -> str | None:
     return None
 
 
-def catalog_key(vendor_code: str, region_code: str, model_id: str) -> str:
-    del region_code
+def catalog_key(vendor_code: str, model_id: str) -> str:
     return f"{vendor_code}/{model_id}"
 
 
@@ -100,15 +100,16 @@ def find_meter(catalog: ModelCatalog, meter_code: str) -> dict | None:
 
 
 def find_model(catalog: ModelCatalog, catalog_key_value: str) -> dict | None:
-    parts = catalog_key_value.split("/")
-    if len(parts) != 2 or not parts[0] or not parts[1]:
+    parsed = _split_catalog_key(catalog_key_value)
+    if parsed is None:
         return None
+    vendor_code, model_id = parsed
     return next(
         (
             model
             for model in list_models(catalog)
-            if model.get("vendorCode") == parts[0]
-            and model.get("modelId") == parts[1]
+            if model.get("vendorCode") == vendor_code
+            and model.get("modelId") == model_id
         ),
         None,
     )
@@ -128,10 +129,10 @@ def find_model_by_vendor_region(catalog: ModelCatalog, vendor_code: str, region_
 
 
 def get_model_prices(catalog: ModelCatalog, catalog_key_value: str) -> list[dict]:
-    parts = catalog_key_value.split("/")
-    if len(parts) != 2 or not parts[0] or not parts[1]:
+    parsed = _split_catalog_key(catalog_key_value)
+    if parsed is None:
         return []
-    vendor_code, model_id = parts
+    vendor_code, model_id = parsed
     pricing = next(
         (
             item
@@ -145,10 +146,10 @@ def get_model_prices(catalog: ModelCatalog, catalog_key_value: str) -> list[dict
 
 
 def get_model_region_prices(catalog: ModelCatalog, catalog_key_value: str, region_code: str) -> list[dict]:
-    parts = catalog_key_value.split("/")
-    if len(parts) != 2 or not parts[0] or not parts[1]:
+    parsed = _split_catalog_key(catalog_key_value)
+    if parsed is None:
         return []
-    vendor_code, model_id = parts
+    vendor_code, model_id = parsed
     for vendor_catalog in catalog.vendor_catalogs:
         if vendor_catalog.get("vendorCode") != vendor_code or vendor_catalog.get("regionCode") != region_code:
             continue
@@ -198,8 +199,25 @@ def list_protocols_by_vendor(catalog: ModelCatalog, vendor_code: str) -> list[di
     return [p for p in catalog.protocols if p.get("protocolCode") in supported]
 
 
+def list_client_api_compatibility_by_vendor(catalog: ModelCatalog, vendor_code: str) -> list[dict]:
+    vendor = next((v for v in catalog.vendors if v.get("vendorCode") == vendor_code), None)
+    if vendor is None:
+        return []
+    compatibility = vendor.get("clientApiCompatibility", {})
+    if not isinstance(compatibility, dict):
+        return []
+    return list(compatibility.values())
+
+
 def list_models_by_protocol(catalog: ModelCatalog, protocol_code: str) -> list[dict]:
     return list_models(catalog, api_format=protocol_code)
+
+
+def _split_catalog_key(catalog_key_value: str) -> tuple[str, str] | None:
+    separator_index = catalog_key_value.find("/")
+    if separator_index <= 0 or separator_index == len(catalog_key_value) - 1:
+        return None
+    return catalog_key_value[:separator_index], catalog_key_value[separator_index + 1:]
 
 
 def _regional_models(catalog: ModelCatalog) -> list[dict]:

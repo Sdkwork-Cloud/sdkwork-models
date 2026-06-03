@@ -1,8 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::types::{
-    BillingMeter, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity, ProtocolStandard,
-    VendorRegionRef,
+    BillingMeter, ClientApiCompatibility, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity,
+    ProtocolStandard, VendorRegionRef,
 };
 
 #[derive(Debug, Clone, Default)]
@@ -34,6 +34,7 @@ pub fn list_vendors(catalog: &ModelCatalog) -> Vec<ModelVendorIdentity> {
             vendor_type: vendor.vendor_type.clone(),
             capabilities: vendor.capabilities.clone(),
             supported_protocols: vendor.supported_protocols.clone(),
+            client_api_compatibility: vendor.client_api_compatibility.clone(),
             open_source: vendor.open_source.unwrap_or(false),
         });
     }
@@ -51,7 +52,7 @@ pub fn list_vendor_regions(catalog: &ModelCatalog) -> Vec<VendorRegionRef> {
         .collect()
 }
 
-pub fn catalog_key(vendor_code: &str, _region_code: &str, model_id: &str) -> String {
+pub fn catalog_key(vendor_code: &str, model_id: &str) -> String {
     format!("{vendor_code}/{model_id}")
 }
 
@@ -180,12 +181,7 @@ pub fn list_available_models<'a>(
 }
 
 pub fn find_model<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Option<&'a ModelInfo> {
-    let mut parts = catalog_key.split('/');
-    let vendor_code = parts.next()?;
-    let model_id = parts.next()?;
-    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
-        return None;
-    }
+    let (vendor_code, model_id) = split_catalog_key(catalog_key)?;
     list_models(catalog, ModelFilter::default())
         .into_iter()
         .find(|model| model.vendor_code == vendor_code && model.model_id == model_id)
@@ -206,16 +202,9 @@ pub fn find_model_by_vendor_region<'a>(
 }
 
 pub fn get_model_prices<'a>(catalog: &'a ModelCatalog, catalog_key: &str) -> Vec<&'a ModelPrice> {
-    let mut parts = catalog_key.split('/');
-    let Some(vendor_code) = parts.next() else {
+    let Some((vendor_code, model_id)) = split_catalog_key(catalog_key) else {
         return Vec::new();
     };
-    let Some(model_id) = parts.next() else {
-        return Vec::new();
-    };
-    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
-        return Vec::new();
-    }
     catalog
         .vendors
         .iter()
@@ -231,16 +220,9 @@ pub fn get_model_region_prices<'a>(
     catalog_key: &str,
     region_code: &str,
 ) -> Vec<&'a ModelPrice> {
-    let mut parts = catalog_key.split('/');
-    let Some(vendor_code) = parts.next() else {
+    let Some((vendor_code, model_id)) = split_catalog_key(catalog_key) else {
         return Vec::new();
     };
-    let Some(model_id) = parts.next() else {
-        return Vec::new();
-    };
-    if parts.next().is_some() || vendor_code.is_empty() || model_id.is_empty() {
-        return Vec::new();
-    }
     catalog
         .vendors
         .iter()
@@ -327,6 +309,21 @@ pub fn list_protocols_by_vendor<'a>(
         .collect()
 }
 
+pub fn list_client_api_compatibility_by_vendor<'a>(
+    catalog: &'a ModelCatalog,
+    vendor_code: &str,
+) -> Vec<&'a ClientApiCompatibility> {
+    let Some(vendor) = catalog
+        .vendors
+        .iter()
+        .map(|region_catalog| &region_catalog.vendor)
+        .find(|vendor| vendor.vendor_code == vendor_code)
+    else {
+        return Vec::new();
+    };
+    vendor.client_api_compatibility.values().collect()
+}
+
 pub fn list_models_by_protocol<'a>(
     catalog: &'a ModelCatalog,
     protocol_code: &'a str,
@@ -361,4 +358,12 @@ fn model_identity_score(has_region_pricing: bool, model: &ModelInfo) -> i32 {
         score += 1;
     }
     score
+}
+
+fn split_catalog_key(catalog_key: &str) -> Option<(&str, &str)> {
+    let (vendor_code, model_id) = catalog_key.split_once('/')?;
+    if vendor_code.is_empty() || model_id.is_empty() {
+        return None;
+    }
+    Some((vendor_code, model_id))
 }

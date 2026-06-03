@@ -2,7 +2,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { loadCatalog, officialSnapshotHash, projectRootFromTool, readJsonFile } from "./catalog-lib.mjs";
+import { loadCatalog, modelFileName, officialSnapshotHash, projectRootFromTool, readJsonFile } from "./catalog-lib.mjs";
 
 function validateJsonSchema(value, schema, options = {}) {
   const issues = [];
@@ -435,21 +435,21 @@ export function auditCatalog(root, options = {}) {
 
     for (const modelId of requiredModels) {
       if (!modelIds.has(modelId)) {
-        addError("vendor.required_model.missing", `${pathPrefix}/models/${modelId}.json`, `${modelId} is required by ${sourcesPath}`);
+        addError("vendor.required_model.missing", `${pathPrefix}/models/${modelFileName(modelId)}`, `${modelId} is required by ${sourcesPath}`);
       }
       if (!pricingIds.has(modelId)) {
-        addError("vendor.required_pricing.missing", `${pathPrefix}/pricing/${modelId}.json`, `${modelId} pricing is required by ${sourcesPath}`);
+        addError("vendor.required_pricing.missing", `${pathPrefix}/pricing/${modelFileName(modelId)}`, `${modelId} pricing is required by ${sourcesPath}`);
       }
     }
 
     for (const modelId of supportedModels) {
       if (!modelIds.has(modelId)) {
-        addError("vendor.supported_model.missing", `${pathPrefix}/models/${modelId}.json`, `${modelId} is supported by ${sourcesPath}`);
+        addError("vendor.supported_model.missing", `${pathPrefix}/models/${modelFileName(modelId)}`, `${modelId} is supported by ${sourcesPath}`);
       }
     }
 
     for (const model of vendor.models) {
-      const modelPath = `${pathPrefix}/models/${model.modelId}.json`;
+      const modelPath = `${pathPrefix}/models/${modelFileName(model.modelId)}`;
       if (model.routingState === "enabled" && model.releaseStage !== "retired") {
         if (!sourceAllowed(spec, model.source?.sourceUrl)) {
           addError("model.source.unapproved", modelPath, `${model.modelId} sourceUrl must be declared in ${sourcesPath}`);
@@ -462,7 +462,7 @@ export function auditCatalog(root, options = {}) {
 
     for (const pricing of vendor.pricing) {
       for (const [index, price] of (pricing.prices ?? []).entries()) {
-        const pricePath = `${pathPrefix}/pricing/${pricing.modelId}.json#/prices/${index}`;
+        const pricePath = `${pathPrefix}/pricing/${modelFileName(pricing.modelId)}#/prices/${index}`;
         if (!sourceAllowed(spec, price.source?.sourceUrl)) {
           addError("pricing.source.unapproved", pricePath, `${pricing.modelId} price sourceUrl must be declared in ${sourcesPath}`);
         }

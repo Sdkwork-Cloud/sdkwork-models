@@ -5,6 +5,12 @@
     {
       "items": [
         {
+          "catalogKey": "anthropic/claude-opus-4-8",
+          "modelId": "claude-opus-4-8",
+          "pricingText": "$5.00 / 1M input; $25.00 / 1M output",
+          "rankNo": 1
+        },
+        {
           "catalogKey": "anthropic/claude-opus-4-7",
           "modelId": "claude-opus-4-7",
           "pricingText": "$5.00 / 1M input; $25.00 / 1M output",
@@ -14,13 +20,13 @@
           "catalogKey": "anthropic/claude-sonnet-4-6",
           "modelId": "claude-sonnet-4-6",
           "pricingText": "$3.00 / 1M input; $15.00 / 1M output; $6.00 / $22.50 above 200K",
-          "rankNo": 5
+          "rankNo": 3
         },
         {
           "catalogKey": "anthropic/claude-haiku-4-5",
           "modelId": "claude-haiku-4-5",
           "pricingText": "$1.00 / 1M input; $5.00 / 1M output",
-          "rankNo": 18
+          "rankNo": 4
         }
       ],
       "rankScope": "commercial-default",

@@ -1,6 +1,6 @@
 {
   "catalogVersion": "2026.05.08.1",
-  "observedAt": "2026-05-08T00:00:00Z",
+  "observedAt": "2026-06-03T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -40,6 +40,9 @@
     {
       "models": [
         {
+          "modelId": "MiniMax-M3"
+        },
+        {
           "modelId": "MiniMax-M2.7"
         },
         {
@@ -55,7 +58,7 @@
           "modelId": "M2-her"
         }
       ],
-      "observedAt": "2026-05-08T00:00:00Z",
+      "observedAt": "2026-06-03T00:00:00Z",
       "officialUrls": [
         "https://platform.minimaxi.com/docs/guides/models-intro",
         "https://platform.minimaxi.com/docs/guides/pricing-paygo",
@@ -63,11 +66,14 @@
         "https://platform.minimaxi.com/docs/guides/text-chat"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "8416d9024210e2936ee874c1c532ae0ad9178e3695af48ffc4394c990b4ed7ed",
+      "sourceSnapshotHash": "995517dcca9f7e64c2e105d57450b2b48e85431bd2ff832c230191db5ee7198d",
       "vendorCode": "minimax"
     },
     {
       "models": [
+        {
+          "modelId": "MiniMax-M3"
+        },
         {
           "modelId": "MiniMax-M2.7"
         },
@@ -84,15 +90,16 @@
           "modelId": "M2-her"
         }
       ],
-      "observedAt": "2026-05-08T00:00:00Z",
+      "observedAt": "2026-06-03T00:00:00Z",
       "officialUrls": [
         "https://platform.minimax.io/docs/guides/models-intro",
         "https://platform.minimax.io/docs/guides/pricing-paygo",
         "https://platform.minimax.io/docs/guides/text-generation",
-        "https://platform.minimax.io/docs/guides/text-chat"
+        "https://platform.minimax.io/docs/guides/text-chat",
+        "https://www.minimax.io/blog/minimax-m3"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "eee18d9b6caa89d8fdae81e37189d35a95b37534b0989a21edd2c3e3623ae8ad",
+      "sourceSnapshotHash": "357520d37a8bce46fd8cb5b36aae7e995c29b122031112e969e6b26ee76f7727",
       "vendorCode": "minimax"
     },
     {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
 import {
@@ -12,6 +12,7 @@ import {
   loadManifest,
   loadMeters,
   loadVendorBundle,
+  modelIdPath,
   projectRootFromTool,
   readJsonFile,
   stableJson,
@@ -57,6 +58,7 @@ export function validateCatalog(root) {
     }
     protocolCodes.add(protocol.protocolCode);
   }
+  const routingResourceIndex = loadRoutingResourceIndex(root);
   const seenVendorRegions = new Set();
   const seenModels = new Map();
 
@@ -105,6 +107,13 @@ export function validateCatalog(root) {
       }
       supportedProtocols.add(protocolCode);
     }
+    validateClientApiCompatibility({
+      vendor: bundle.vendor,
+      protocolCodes,
+      routingResourceIndex,
+      pathPrefix,
+      issues,
+    });
     if (/\b(qwen|kling|hunyuan|bigmodel|seedance)\b/i.test(bundle.vendor.vendorCode.replace(/_/g, " "))) {
       issues.push(issue("vendor.code.product_line", `${pathPrefix}/vendor.json#/vendorCode`, "vendorCode must identify the unique vendor identity, not a product line"));
     }
@@ -118,6 +127,20 @@ export function validateCatalog(root) {
     }
 
     const modelsById = new Map(bundle.models.map((model) => [model.modelId, model]));
+    const modelFilesById = new Map();
+    for (const relPath of collectJsonFileRefsForDirectory(modelsRoot, join(regionDir, "models"))) {
+      const model = readJsonFile(join(modelsRoot, relPath));
+      if (typeof model.modelId === "string") {
+        modelFilesById.set(model.modelId, `models/${relPath}`);
+      }
+    }
+    const pricingFilesById = new Map();
+    for (const relPath of collectJsonFileRefsForDirectory(modelsRoot, join(regionDir, "pricing"))) {
+      const pricing = readJsonFile(join(modelsRoot, relPath));
+      if (typeof pricing.modelId === "string") {
+        pricingFilesById.set(pricing.modelId, `models/${relPath}`);
+      }
+    }
     const pricedModelIds = new Set(bundle.pricing.map((pricing) => pricing.modelId));
     for (const [index, family] of (bundle.families.families ?? []).entries()) {
       if (!family.defaultModel) {
@@ -137,14 +160,18 @@ export function validateCatalog(root) {
     }
 
     for (const model of bundle.models) {
-      const modelPath = `${pathPrefix}/models/${model.modelId}.json`;
+      const modelPath = `${pathPrefix}/models/${safeModelIdPath(model.modelId, issues, `${pathPrefix}/models`) }.json`;
+      const actualModelPath = modelFilesById.get(model.modelId);
+      if (actualModelPath && actualModelPath !== modelPath) {
+        issues.push(issue("model.path.mismatch", actualModelPath, `${model.modelId} must be stored at ${modelPath}`));
+      }
       if (model.vendorCode !== bundle.vendorCode) {
         issues.push(issue("model.vendor.mismatch", `${modelPath}#/vendorCode`, "model vendorCode must match directory"));
       }
       if (model.regionCode !== bundle.regionCode) {
         issues.push(issue("model.region.mismatch", `${modelPath}#/regionCode`, "model regionCode must match directory"));
       }
-      const expectedCatalogKey = catalogKey(bundle.vendorCode, bundle.regionCode, model.modelId);
+      const expectedCatalogKey = catalogKey(bundle.vendorCode, model.modelId);
       if (model.catalogKey !== expectedCatalogKey) {
         issues.push(issue("model.catalog_key.mismatch", `${modelPath}#/catalogKey`, `catalogKey must be ${expectedCatalogKey}`));
       }
@@ -186,21 +213,25 @@ export function validateCatalog(root) {
         issues.push(
           issue(
             "model.pricing.required",
-            `${pathPrefix}/models/${model.modelId}.json`,
+            `${pathPrefix}/models/${safeModelIdPath(model.modelId, issues, `${pathPrefix}/models`) }.json`,
             `${model.catalogKey} is enabled, listed, or active and must have a pricing file with billable rows`,
           ),
         );
       }
     }
     for (const pricing of bundle.pricing) {
-      const pricingPath = `${pathPrefix}/pricing/${pricing.modelId}.json`;
+      const pricingPath = `${pathPrefix}/pricing/${safeModelIdPath(pricing.modelId, issues, `${pathPrefix}/pricing`) }.json`;
+      const actualPricingPath = pricingFilesById.get(pricing.modelId);
+      if (actualPricingPath && actualPricingPath !== pricingPath) {
+        issues.push(issue("pricing.path.mismatch", actualPricingPath, `${pricing.modelId} must be stored at ${pricingPath}`));
+      }
       if (pricing.vendorCode !== bundle.vendorCode) {
         issues.push(issue("pricing.vendor.mismatch", `${pricingPath}#/vendorCode`, "pricing vendorCode must match directory"));
       }
       if (pricing.regionCode !== bundle.regionCode) {
         issues.push(issue("pricing.region.mismatch", `${pricingPath}#/regionCode`, "pricing regionCode must match directory"));
       }
-      const expectedCatalogKey = catalogKey(bundle.vendorCode, bundle.regionCode, pricing.modelId);
+      const expectedCatalogKey = catalogKey(bundle.vendorCode, pricing.modelId);
       if (pricing.catalogKey !== expectedCatalogKey) {
         issues.push(issue("pricing.catalog_key.mismatch", `${pricingPath}#/catalogKey`, `catalogKey must be ${expectedCatalogKey}`));
       }
@@ -357,6 +388,35 @@ export function validateCatalog(root) {
   };
 }
 
+function collectJsonFileRefsForDirectory(modelsRoot, root) {
+  return collectNestedJsonFiles(root).map((path) => path.slice(modelsRoot.length + 1).replace(/\\/g, "/"));
+}
+
+function collectNestedJsonFiles(root) {
+  const files = [];
+  const entries = existsSync(root) ? readdirSync(root, { withFileTypes: true }) : [];
+  for (const entry of entries) {
+    const path = join(root, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectNestedJsonFiles(path));
+      continue;
+    }
+    if (entry.isFile() && entry.name.endsWith(".json")) {
+      files.push(path);
+    }
+  }
+  return files.sort((left, right) => left.localeCompare(right));
+}
+
+function safeModelIdPath(modelId, issues, path) {
+  try {
+    return modelIdPath(modelId);
+  } catch {
+    issues.push(issue("model_id.path.invalid", path, `${modelId} must be a safe relative modelId path`));
+    return String(modelId ?? "__invalid__").replace(/\\/g, "/");
+  }
+}
+
 function modelIdentityDifferences(left, right) {
   const fields = [
     "catalogKey",
@@ -378,6 +438,104 @@ function modelIdentityDifferences(left, right) {
     "replacementModel",
   ];
   return fields.filter((field) => stableJson(left[field] ?? null) !== stableJson(right[field] ?? null));
+}
+
+const REQUIRED_CLIENT_APIS = {
+  codex: {
+    displayName: "Codex",
+    defaultApiCode: "openai.codex.responses",
+    defaultResourceCode: "api.openai.codex.responses",
+  },
+  claude_code: {
+    displayName: "Claude Code",
+    defaultApiCode: "anthropic.claude_code",
+    defaultResourceCode: "api.anthropic.claude_code",
+  },
+  gemini_cli: {
+    displayName: "Gemini CLI",
+    defaultApiCode: "gemini.generate_content",
+    defaultResourceCode: "api.gemini.generate_content",
+  },
+};
+
+function loadRoutingResourceIndex(root) {
+  const resourcesRoot = join(root, "..", "ai-routing", "resources");
+  const resourceCodes = new Set();
+  const apiCodes = new Set();
+  let available = false;
+  for (const fileName of ["openai-resources.json", "vendor-native-resources.json"]) {
+    const path = join(resourcesRoot, fileName);
+    if (!existsSync(path)) {
+      continue;
+    }
+    available = true;
+    const payload = readJsonFile(path);
+    for (const item of payload.items ?? []) {
+      if (typeof item.resourceCode === "string") {
+        resourceCodes.add(item.resourceCode);
+      }
+      if (typeof item.apiCode === "string") {
+        apiCodes.add(item.apiCode);
+      }
+    }
+  }
+  return { apiCodes, resourceCodes, available };
+}
+
+function validateClientApiCompatibility({ vendor, protocolCodes, routingResourceIndex, pathPrefix, issues }) {
+  const compatibility = vendor.clientApiCompatibility;
+  if (!compatibility || typeof compatibility !== "object" || Array.isArray(compatibility)) {
+    issues.push(issue("vendor.client_api_compatibility.missing", `${pathPrefix}/vendor.json#/clientApiCompatibility`, "clientApiCompatibility must declare codex, claude_code, and gemini_cli"));
+    return;
+  }
+  for (const [clientApiCode, standard] of Object.entries(REQUIRED_CLIENT_APIS)) {
+    const item = compatibility[clientApiCode];
+    const itemPath = `${pathPrefix}/vendor.json#/clientApiCompatibility/${clientApiCode}`;
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      issues.push(issue("vendor.client_api_compatibility.required", itemPath, `${clientApiCode} compatibility is required`));
+      continue;
+    }
+    if (item.clientApiCode !== clientApiCode) {
+      issues.push(issue("vendor.client_api_compatibility.code_mismatch", `${itemPath}/clientApiCode`, `clientApiCode must be ${clientApiCode}`));
+    }
+    if (item.displayName !== standard.displayName) {
+      issues.push(issue("vendor.client_api_compatibility.display_name", `${itemPath}/displayName`, `${clientApiCode} displayName must be ${standard.displayName}`));
+    }
+    if (!["supported", "unsupported", "partial"].includes(item.supportStatus)) {
+      issues.push(issue("vendor.client_api_compatibility.status", `${itemPath}/supportStatus`, "supportStatus must be supported, unsupported, or partial"));
+    }
+    if (typeof item.notes !== "string" || item.notes.trim().length === 0) {
+      issues.push(issue("vendor.client_api_compatibility.notes", `${itemPath}/notes`, "notes must explain the compatibility decision"));
+    }
+    if (!item.source?.sourceUrl || !item.source?.observedAt) {
+      issues.push(issue("vendor.client_api_compatibility.source", `${itemPath}/source`, "sourceUrl and observedAt are required"));
+    }
+    for (const [field, codeSet, code] of [
+      ["protocolCodes", protocolCodes, "vendor.client_api_compatibility.protocol_unknown"],
+      ["apiCodes", routingResourceIndex.apiCodes, "vendor.client_api_compatibility.api_unknown"],
+      ["resourceCodes", routingResourceIndex.resourceCodes, "vendor.client_api_compatibility.resource_unknown"],
+    ]) {
+      if (!Array.isArray(item[field])) {
+        issues.push(issue("vendor.client_api_compatibility.array", `${itemPath}/${field}`, `${field} must be an array`));
+        continue;
+      }
+      for (const [index, value] of item[field].entries()) {
+        if (typeof value !== "string" || value.length === 0) {
+          issues.push(issue("vendor.client_api_compatibility.value", `${itemPath}/${field}/${index}`, `${field} entries must be non-empty strings`));
+        } else if ((field === "protocolCodes" || routingResourceIndex.available) && !codeSet.has(value)) {
+          issues.push(issue(code, `${itemPath}/${field}/${index}`, `${value} is not defined`));
+        }
+      }
+    }
+    if (item.supportStatus === "supported" || item.supportStatus === "partial") {
+      if (!item.apiCodes?.includes(standard.defaultApiCode)) {
+        issues.push(issue("vendor.client_api_compatibility.default_api_missing", `${itemPath}/apiCodes`, `${clientApiCode} support must include ${standard.defaultApiCode}`));
+      }
+      if (!item.resourceCodes?.includes(standard.defaultResourceCode)) {
+        issues.push(issue("vendor.client_api_compatibility.default_resource_missing", `${itemPath}/resourceCodes`, `${clientApiCode} support must include ${standard.defaultResourceCode}`));
+      }
+    }
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

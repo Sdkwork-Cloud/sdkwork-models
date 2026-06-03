@@ -17,7 +17,7 @@
       "sortOrder": 20
     },
     {
-      "defaultModel": "gpt-realtime-1.5",
+      "defaultModel": "gpt-realtime-2",
       "displayName": "GPT Realtime",
       "familyCode": "gpt-realtime",
       "familyType": "audio",

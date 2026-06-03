@@ -15,6 +15,7 @@
     "operatingRegions",
     "capabilities",
     "supportedProtocols",
+    "clientApiCompatibility",
     "source"
   ],
   "properties": {
@@ -93,6 +94,29 @@
         "pattern": "^[a-z][a-z0-9_]*$"
       }
     },
+    "clientApiCompatibility": {
+      "description": "Vendor-level compatibility declarations for client APIs with non-generic behavior. Region-specific base URLs, deployment properties, and prices stay outside model identity and are modeled by regional endpoint and pricing resources.",
+      "type": "object",
+      "required": [
+        "codex",
+        "claude_code",
+        "gemini_cli"
+      ],
+      "properties": {
+        "codex": {
+          "$ref": "#/$defs/clientApiCompatibilityEntry"
+        },
+        "claude_code": {
+          "$ref": "#/$defs/clientApiCompatibilityEntry"
+        },
+        "gemini_cli": {
+          "$ref": "#/$defs/clientApiCompatibilityEntry"
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/clientApiCompatibilityEntry"
+      }
+    },
     "openSource": {
       "type": "boolean"
     },
@@ -130,6 +154,63 @@
           "type": "string"
         }
       }
+    },
+    "clientApiCompatibilityEntry": {
+      "type": "object",
+      "required": [
+        "clientApiCode",
+        "displayName",
+        "supportStatus",
+        "protocolCodes",
+        "apiCodes",
+        "resourceCodes",
+        "notes",
+        "source"
+      ],
+      "properties": {
+        "clientApiCode": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "supportStatus": {
+          "enum": [
+            "supported",
+            "unsupported",
+            "partial"
+          ]
+        },
+        "protocolCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "apiCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]*$"
+          }
+        },
+        "resourceCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]*$"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceEvidence"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

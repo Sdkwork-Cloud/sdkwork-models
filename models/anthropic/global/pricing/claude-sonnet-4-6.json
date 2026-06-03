@@ -13,8 +13,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.000000",
       "unitSize": "1000000"
@@ -29,8 +29,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "15.000000",
       "unitSize": "1000000"
@@ -45,8 +45,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
       "tierCode": "above_200k_tokens",
@@ -63,8 +63,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
       "tierCode": "above_200k_tokens",
@@ -81,8 +81,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.750000",
       "unitSize": "1000000"
@@ -97,8 +97,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
       "tierCode": "above_200k_tokens",
@@ -115,8 +115,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.300000",
       "unitSize": "1000000"
@@ -131,8 +131,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
-        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
       "tierCode": "above_200k_tokens",

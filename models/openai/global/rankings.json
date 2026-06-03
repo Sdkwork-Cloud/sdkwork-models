@@ -7,7 +7,7 @@
         {
           "catalogKey": "openai/gpt-5.5-pro",
           "modelId": "gpt-5.5-pro",
-          "pricingText": "$15.00 / 1M input; $120.00 / 1M output",
+          "pricingText": "$30.00 / 1M input; $180.00 / 1M output",
           "rankNo": 1
         },
         {
@@ -19,7 +19,7 @@
         {
           "catalogKey": "openai/gpt-5.4-pro",
           "modelId": "gpt-5.4-pro",
-          "pricingText": "$15.00 / 1M input; $120.00 / 1M output",
+          "pricingText": "$30.00 / 1M input; $180.00 / 1M output",
           "rankNo": 3
         },
         {
@@ -47,10 +47,16 @@
           "rankNo": 20
         },
         {
+          "catalogKey": "openai/gpt-realtime-2",
+          "modelId": "gpt-realtime-2",
+          "pricingText": "$4.00 / 1M text input; $24.00 / 1M text output; $32.00 / 1M audio input; $64.00 / 1M audio output",
+          "rankNo": 29
+        },
+        {
           "catalogKey": "openai/gpt-realtime-1.5",
           "modelId": "gpt-realtime-1.5",
           "pricingText": "$4.00 / 1M text input; $16.00 / 1M text output; $32.00 / 1M audio input; $64.00 / 1M audio output",
-          "rankNo": 30
+          "rankNo": 31
         },
         {
           "catalogKey": "openai/gpt-5.2",

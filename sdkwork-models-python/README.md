@@ -16,9 +16,10 @@ sdkwork-models
 - CLI tools
 - offline data validation jobs
 
-Model and price lookups use the stable `vendorCode/regionCode/modelId`
-catalog key, for example `openai/gpt-5.5`. The `regionCode` separates
-operating market, billing currency, and legal jurisdiction.
+Model and price lookups use the stable `vendorCode/modelId` catalog key, for
+example `openai/gpt-5.5`. `regionCode` remains a loader, filter, deployment,
+ranking, and pricing dimension for operating market, billing currency, and
+legal jurisdiction.
 `load_catalog(path_or_url)` reads `models/index.json` and then loads the
 declared `modelFiles` and `pricingFiles`, which makes local paths and HTTP(S)
 catalog roots behave the same. `load_bundled_catalog()` resolves

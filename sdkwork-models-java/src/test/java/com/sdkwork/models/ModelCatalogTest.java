@@ -31,7 +31,10 @@ class ModelCatalogTest {
                         Map.of(
                                 "vendorCode", "openai",
                                 "displayName", "OpenAI",
-                                "supportedProtocols", List.of("openai_compatible", "openai_responses")
+                                "supportedProtocols", List.of("openai_compatible", "openai_responses"),
+                                "clientApiCompatibility", Map.of(
+                                        "codex", Map.of("clientApiCode", "codex", "supportStatus", "supported")
+                                )
                         ),
                         Map.of(
                                 "vendorCode", "minimax",
@@ -132,7 +135,7 @@ class ModelCatalogTest {
 
         assertEquals("openai", SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("vendorCode"));
         assertEquals("global", SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("regionCode"));
-        assertEquals("openai/gpt-5.5", SdkworkModels.catalogKey("openai", "global", "gpt-5.5"));
+        assertEquals("openai/gpt-5.5", SdkworkModels.catalogKey("openai", "gpt-5.5"));
         assertEquals(null, SdkworkModels.findModel(catalog, "openai/global/gpt-5.5"));
         assertEquals(true, ModelCatalogQuery.listVendors(catalog).stream()
                 .noneMatch(vendor -> vendor.containsKey("regionCode")));
@@ -178,6 +181,12 @@ class ModelCatalogTest {
         assertEquals("OpenAI Responses API", ModelCatalogQuery.findProtocol(catalog, "openai_responses").get("displayName"));
         assertEquals(null, ModelCatalogQuery.findProtocol(catalog, "missing_protocol"));
         assertEquals(2, SdkworkModels.listProtocolsByVendor(catalog, "openai").size());
+        assertEquals(
+                true,
+                SdkworkModels.listClientApiCompatibilityByVendor(catalog, "openai").stream()
+                        .anyMatch(item -> "codex".equals(item.get("clientApiCode"))
+                                && "supported".equals(item.get("supportStatus")))
+        );
         assertEquals(3, SdkworkModels.listModelsByProtocol(catalog, "openai_compatible").size());
         assertEquals(2, ModelCatalogQuery.listAvailableModels(catalog).size());
         assertEquals("openai/gpt-5.5", ModelCatalogQuery.listAvailableModels(catalog).getFirst().get("catalogKey"));
@@ -193,5 +202,62 @@ class ModelCatalogTest {
                 ModelCatalogQuery.getBestReferencePrice(catalog, "openai/gpt-5.5", "llm_input_token")
                         .get("unitPrice")
         );
+    }
+
+    @Test
+    void catalogKeyParserKeepsSlashDelimitedProviderModelIdsIntact() {
+        ModelCatalog catalog = new ModelCatalog(
+                "2026.05.08.1",
+                "1.1.0",
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(Map.of(
+                        "vendorCode", "openrouter",
+                        "regionCode", "global",
+                        "models", List.of(Map.ofEntries(
+                                entry("catalogKey", "openrouter/anthropic/claude-3-opus"),
+                                entry("modelId", "anthropic/claude-3-opus"),
+                                entry("displayName", "Claude 3 Opus through OpenRouter"),
+                                entry("vendorCode", "openrouter"),
+                                entry("regionCode", "global"),
+                                entry("familyCode", "anthropic"),
+                                entry("releaseStage", "active"),
+                                entry("shelfState", "listed"),
+                                entry("routingState", "enabled"),
+                                entry("apiFormat", "openai_compatible"),
+                                entry("capabilities", List.of("chat")),
+                                entry("inputModalities", List.of("text")),
+                                entry("outputModalities", List.of("text"))
+                        )),
+                        "pricing", List.of(Map.of(
+                                "catalogKey", "openrouter/anthropic/claude-3-opus",
+                                "vendorCode", "openrouter",
+                                "regionCode", "global",
+                                "modelId", "anthropic/claude-3-opus",
+                                "currency", "USD",
+                                "prices", List.of(Map.of("meterCode", "llm_input_token", "unitPrice", "15.000000"))
+                        ))
+                )),
+                List.of(),
+                List.of(Map.of(
+                        "catalogKey", "openrouter/anthropic/claude-3-opus",
+                        "vendorCode", "openrouter",
+                        "regionCode", "global",
+                        "modelId", "anthropic/claude-3-opus",
+                        "currency", "USD",
+                        "prices", List.of(Map.of("meterCode", "llm_input_token", "unitPrice", "15.000000"))
+                ))
+        );
+
+        assertEquals("openrouter/anthropic/claude-3-opus", SdkworkModels.catalogKey("openrouter", "anthropic/claude-3-opus"));
+        assertEquals(
+                "anthropic/claude-3-opus",
+                SdkworkModels.findModel(catalog, "openrouter/anthropic/claude-3-opus").get("modelId")
+        );
+        assertEquals(1, ModelCatalogQuery.getModelPrices(catalog, "openrouter/anthropic/claude-3-opus").size());
+        assertEquals(1, ModelCatalogQuery.getModelRegionPrices(catalog, "openrouter/anthropic/claude-3-opus", "global").size());
+        assertEquals(null, SdkworkModels.findModel(catalog, "openrouter/global/anthropic/claude-3-opus"));
+        assertEquals(0, ModelCatalogQuery.getModelPrices(catalog, "openrouter/global/anthropic/claude-3-opus").size());
     }
 }

@@ -23,8 +23,9 @@ catalog roots use the same file manifest. `loadBundledCatalog()` resolves
 `SDKWORK_MODELS_CATALOG_ROOT` first and then falls back to `data/sdkwork-models`
 for monorepo development.
 
-Model and price lookups use the stable `vendorCode/regionCode/modelId`
-catalog key, for example `openai/gpt-5.5`.
+Model and price lookups use the stable `vendorCode/modelId` catalog key, for
+example `openai/gpt-5.5`. `regionCode` remains a loader, filter, deployment,
+ranking, and pricing dimension.
 
 ## Required Public API
 

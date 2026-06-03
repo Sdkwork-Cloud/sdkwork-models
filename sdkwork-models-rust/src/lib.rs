@@ -13,9 +13,9 @@ pub use loader::{load_bundled_catalog, load_catalog, load_vendor_catalog};
 pub use query::{
     catalog_key, find_meter, find_model, find_model_by_vendor_region, find_protocol,
     get_best_reference_price, get_model_prices, get_model_region_prices, list_available_models,
-    list_meters, list_models, list_models_by_capability, list_models_by_modality,
-    list_models_by_protocol, list_protocols, list_protocols_by_vendor, list_vendor_regions,
-    list_vendors, ModelFilter,
+    list_client_api_compatibility_by_vendor, list_meters, list_models, list_models_by_capability,
+    list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
+    list_vendor_regions, list_vendors, ModelFilter,
 };
 pub use types::*;
 pub use validation::{validate_catalog, CatalogIssue};

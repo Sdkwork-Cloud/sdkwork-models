@@ -45,7 +45,10 @@ Future<void> main() async {
       {
         'vendorCode': 'openai',
         'displayName': 'OpenAI',
-        'supportedProtocols': ['openai_responses', 'openai_compatible']
+        'supportedProtocols': ['openai_responses', 'openai_compatible'],
+        'clientApiCompatibility': {
+          'codex': {'clientApiCode': 'codex', 'supportStatus': 'supported'}
+        }
       },
       {
         'vendorCode': 'minimax',
@@ -53,6 +56,14 @@ Future<void> main() async {
         'supportedProtocols': ['openai_compatible'],
         'regions': [
           {'regionCode': 'cn'},
+          {'regionCode': 'global'}
+        ]
+      },
+      {
+        'vendorCode': 'openrouter',
+        'displayName': 'OpenRouter',
+        'supportedProtocols': ['openai_compatible'],
+        'regions': [
           {'regionCode': 'global'}
         ]
       }
@@ -86,6 +97,21 @@ Future<void> main() async {
         'capabilities': ['chat'],
         'inputModalities': ['text'],
         'outputModalities': ['text']
+      },
+      {
+        'catalogKey': 'openrouter/anthropic/claude-3-opus',
+        'modelId': 'anthropic/claude-3-opus',
+        'displayName': 'Claude 3 Opus through OpenRouter',
+        'vendorCode': 'openrouter',
+        'regionCode': 'global',
+        'familyCode': 'anthropic',
+        'releaseStage': 'active',
+        'shelfState': 'listed',
+        'routingState': 'enabled',
+        'apiFormat': 'openai_compatible',
+        'capabilities': ['chat'],
+        'inputModalities': ['text'],
+        'outputModalities': ['text']
       }
     ],
     pricing: const [
@@ -97,6 +123,15 @@ Future<void> main() async {
         'prices': [
           {'meterCode': 'llm_input_token', 'unitPrice': '5.000000'}
         ]
+      },
+      {
+        'catalogKey': 'openrouter/anthropic/claude-3-opus',
+        'vendorCode': 'openrouter',
+        'regionCode': 'global',
+        'modelId': 'anthropic/claude-3-opus',
+        'prices': [
+          {'meterCode': 'llm_input_token', 'unitPrice': '15.000000'}
+        ]
       }
     ],
   );
@@ -106,7 +141,7 @@ Future<void> main() async {
   assert(findModelByVendorRegion(
           catalog, 'openai', 'global', 'gpt-5.5')?['vendorCode'] ==
       'openai');
-  assert(catalogKey('openai', 'global', 'gpt-5.5') == 'openai/gpt-5.5');
+  assert(catalogKey('openai', 'gpt-5.5') == 'openai/gpt-5.5');
   assert(listVendors(catalog)
       .every((vendor) => !vendor.containsKey('regionCode')));
   assert(listVendorRegions(catalog).any(
@@ -142,6 +177,19 @@ Future<void> main() async {
   assert(getBestReferencePrice(
           catalog, 'openai/gpt-5.5', 'llm_input_token')?['unitPrice'] ==
       '5.000000');
+  assert(catalogKey('openrouter', 'anthropic/claude-3-opus') ==
+      'openrouter/anthropic/claude-3-opus');
+  assert(findModel(catalog, 'openrouter/anthropic/claude-3-opus')?['modelId'] ==
+      'anthropic/claude-3-opus');
+  assert(getModelPrices(catalog, 'openrouter/anthropic/claude-3-opus')
+      .isNotEmpty);
+  assert(getModelRegionPrices(
+          catalog, 'openrouter/anthropic/claude-3-opus', 'global')
+      .isNotEmpty);
+  assert(findModel(catalog, 'openrouter/global/anthropic/claude-3-opus') ==
+      null);
+  assert(getModelPrices(catalog, 'openrouter/global/anthropic/claude-3-opus')
+      .isEmpty);
 
   final protocols = listProtocols(catalog);
   assert(protocols.length >= 4);
@@ -155,6 +203,9 @@ Future<void> main() async {
   final vendor =
       listVendors(catalog).firstWhere((v) => v['vendorCode'] == 'openai');
   assert((vendor['supportedProtocols'] as List).contains('openai_responses'));
+  assert(listClientApiCompatibilityByVendor(catalog, 'openai').any((item) =>
+      item['clientApiCode'] == 'codex' &&
+      item['supportStatus'] == 'supported'));
 
   final localCatalog = await loadCatalog('..');
   assert(findModel(localCatalog, 'openai/gpt-5.5')?['vendorCode'] == 'openai');

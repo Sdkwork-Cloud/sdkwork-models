@@ -1,0 +1,51 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "google/gemini-3.5-flash",
+  "colorToken": "#1d4ed8",
+  "contextTokens": 1048576,
+  "description": "Current Gemini 3.5 Flash model for agentic coding, multimodal generation, search, and grounding.",
+  "displayName": "Gemini 3.5 Flash",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 420,
+  "latencyP95Ms": 1500,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 65535,
+  "modelId": "gemini-3.5-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1040.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-03T00:00:00Z",
+    "sourceUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"
+  },
+  "strengths": [
+    "Agents",
+    "Coding",
+    "Multimodal",
+    "Grounding"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.990000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.950000"
+}

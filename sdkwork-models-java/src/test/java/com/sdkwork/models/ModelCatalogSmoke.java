@@ -34,7 +34,10 @@ public final class ModelCatalogSmoke {
                         Map.of(
                                 "vendorCode", "openai",
                                 "displayName", "OpenAI",
-                                "supportedProtocols", List.of("openai_compatible", "openai_responses")
+                                "supportedProtocols", List.of("openai_compatible", "openai_responses"),
+                                "clientApiCompatibility", Map.of(
+                                        "codex", Map.of("clientApiCode", "codex", "supportStatus", "supported")
+                                )
                         ),
                         Map.of(
                                 "vendorCode", "minimax",
@@ -88,7 +91,7 @@ public final class ModelCatalogSmoke {
         require("openai".equals(SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("vendorCode")));
         require("global".equals(SdkworkModels.findModel(catalog, "openai/gpt-5.5").get("regionCode")));
         require(SdkworkModels.findModel(catalog, "openai/global/gpt-5.5") == null);
-        require("openai/gpt-5.5".equals(SdkworkModels.catalogKey("openai", "global", "gpt-5.5")));
+        require("openai/gpt-5.5".equals(SdkworkModels.catalogKey("openai", "gpt-5.5")));
         require(SdkworkModels.listVendors(catalog).stream().noneMatch(vendor -> vendor.containsKey("regionCode")));
         require(SdkworkModels.listVendorRegions(catalog).size() == 2);
         require(SdkworkModels.listMeters(catalog).stream()
@@ -112,6 +115,9 @@ public final class ModelCatalogSmoke {
         require("OpenAI Responses API".equals(SdkworkModels.findProtocol(catalog, "openai_responses").get("displayName")));
         require(SdkworkModels.findProtocol(catalog, "missing_protocol") == null);
         require(SdkworkModels.listProtocolsByVendor(catalog, "openai").size() == 2);
+        require(SdkworkModels.listClientApiCompatibilityByVendor(catalog, "openai").stream()
+                .anyMatch(item -> "codex".equals(item.get("clientApiCode"))
+                        && "supported".equals(item.get("supportStatus"))));
         require(SdkworkModels.listModelsByProtocol(catalog, "openai_compatible").size() == 2);
         require(SdkworkModels.listAvailableModels(catalog).size() == 1);
         require("openai/gpt-5.5".equals(SdkworkModels.listAvailableModels(catalog).getFirst().get("catalogKey")));

@@ -114,11 +114,22 @@ fn read_json<T: DeserializeOwned>(path: impl AsRef<Path>) -> Result<T, CatalogEr
 }
 
 fn read_json_dir<T: DeserializeOwned>(path: impl AsRef<Path>) -> Result<Vec<T>, CatalogError> {
-    let mut files = fs::read_dir(path.as_ref())?
-        .filter_map(Result::ok)
-        .filter(|entry| entry.path().extension().and_then(|value| value.to_str()) == Some("json"))
-        .map(|entry| entry.path())
-        .collect::<Vec<_>>();
+    let mut files = Vec::new();
+    collect_json_files(path.as_ref(), &mut files)?;
     files.sort();
     files.into_iter().map(read_json).collect()
+}
+
+fn collect_json_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), CatalogError> {
+    let mut entries = fs::read_dir(path)?.collect::<Result<Vec<_>, _>>()?;
+    entries.sort_by_key(|entry| entry.path());
+    for entry in entries {
+        let path = entry.path();
+        if path.is_dir() {
+            collect_json_files(&path, files)?;
+        } else if path.extension().and_then(|value| value.to_str()) == Some("json") {
+            files.push(path);
+        }
+    }
+    Ok(())
 }

@@ -82,10 +82,21 @@ export function collectRegionalCatalogDirectories(modelsRoot) {
 export const collectVendorDirectories = collectRegionalCatalogDirectories;
 
 export function collectJsonFiles(root) {
-  return readdirSync(root, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
-    .map((entry) => join(root, entry.name))
-    .sort();
+  const files = [];
+  function visit(directory) {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        visit(path);
+        continue;
+      }
+      if (entry.isFile() && entry.name.endsWith(".json")) {
+        files.push(path);
+      }
+    }
+  }
+  visit(root);
+  return files.sort((left, right) => left.localeCompare(right));
 }
 
 function collectJsonFileRefs(modelsRoot, root) {
@@ -100,7 +111,7 @@ export function regionCodeFromDirectory(regionDir) {
   return basename(regionDir);
 }
 
-export function catalogKey(vendorCode, _regionCode, modelId) {
+export function catalogKey(vendorCode, modelId) {
   return `${vendorCode}/${modelId}`;
 }
 
@@ -211,6 +222,8 @@ export function buildVendorList(root) {
       legalName: vendor.legalName ?? vendor.displayName,
       vendorType: vendor.vendorType,
       capabilities: [],
+      supportedProtocols: [],
+      clientApiCompatibility: {},
       openSource: Boolean(vendor.openSource),
       sortOrder: vendor.sortOrder ?? 1000000,
       regions: [],
@@ -218,6 +231,13 @@ export function buildVendorList(root) {
     existing.capabilities = [
       ...new Set([...(existing.capabilities ?? []), ...(vendor.capabilities ?? [])]),
     ].sort();
+    existing.supportedProtocols = [
+      ...new Set([...(existing.supportedProtocols ?? []), ...(vendor.supportedProtocols ?? [])]),
+    ].sort();
+    existing.clientApiCompatibility = mergeClientApiCompatibility(
+      existing.clientApiCompatibility,
+      vendor.clientApiCompatibility ?? {},
+    );
     existing.sortOrder = Math.min(existing.sortOrder, vendor.sortOrder ?? 1000000);
     existing.regions.push({
       regionCode,
@@ -228,6 +248,8 @@ export function buildVendorList(root) {
       billingJurisdiction: vendor.billingJurisdiction,
       operatingRegions: vendor.operatingRegions ?? [],
       capabilities: vendor.capabilities ?? [],
+      supportedProtocols: vendor.supportedProtocols ?? [],
+      clientApiCompatibility: vendor.clientApiCompatibility ?? {},
       openSource: Boolean(vendor.openSource),
       sortOrder: vendor.sortOrder ?? 1000000,
       path: `${vendorCode}/${regionCode}/vendor.json`,
@@ -256,5 +278,40 @@ export function loadCatalog(root) {
 }
 
 export function modelFileName(modelId) {
-  return `${modelId}.json`;
+  return `${modelIdPath(modelId)}.json`;
+}
+
+export function modelIdPath(modelId) {
+  if (typeof modelId !== "string" || modelId.length === 0 || modelId.includes("\\")) {
+    throw new Error(`invalid modelId path: ${modelId}`);
+  }
+  const segments = modelId.split("/");
+  if (segments.some((segment) => segment.length === 0 || segment === "." || segment === "..")) {
+    throw new Error(`invalid modelId path: ${modelId}`);
+  }
+  return segments.join("/");
+}
+
+function mergeClientApiCompatibility(left, right) {
+  const merged = { ...(left ?? {}) };
+  for (const [clientApiCode, item] of Object.entries(right ?? {})) {
+    const previous = merged[clientApiCode];
+    if (!previous || clientApiSupportRank(item.supportStatus) > clientApiSupportRank(previous.supportStatus)) {
+      merged[clientApiCode] = item;
+    }
+  }
+  return merged;
+}
+
+function clientApiSupportRank(status) {
+  switch (status) {
+    case "supported":
+      return 3;
+    case "partial":
+      return 2;
+    case "unsupported":
+      return 1;
+    default:
+      return 0;
+  }
 }

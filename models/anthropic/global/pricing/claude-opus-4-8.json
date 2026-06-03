@@ -1,0 +1,126 @@
+{
+  "catalogKey": "anthropic/claude-opus-4-8",
+  "currency": "USD",
+  "modelId": "claude-opus-4-8",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "5.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "25.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-cache-write",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "6.250000",
+      "unitSize": "1000000",
+      "tierCode": "cache_write_5m"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-cache-write-1h",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "10.000000",
+      "unitSize": "1000000",
+      "tierCode": "cache_write_1h"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "0.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-fast-input",
+      "priceSide": "official",
+      "pricingScope": "plan",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "10.000000",
+      "unitSize": "1000000",
+      "tierCode": "fast_mode"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-opus-4-8-fast-output",
+      "priceSide": "official",
+      "pricingScope": "plan",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-03T00:00:00Z",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
+      },
+      "unitPrice": "50.000000",
+      "unitSize": "1000000",
+      "tierCode": "fast_mode"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "anthropic"
+}
