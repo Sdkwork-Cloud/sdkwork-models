@@ -1,0 +1,38 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "xiaomi/mimo-v2.5-pro",
+          "modelId": "mimo-v2.5-pro",
+          "pricingText": "¥14.00 / 1M input; ¥42.00 / 1M output",
+          "rankNo": 8
+        },
+        {
+          "catalogKey": "xiaomi/mimo-v2.5-pro-fp4-dflash",
+          "modelId": "mimo-v2.5-pro-fp4-dflash",
+          "pricingText": "¥10.50 / 1M input; ¥31.50 / 1M output",
+          "rankNo": 10
+        },
+        {
+          "catalogKey": "xiaomi/mimo-v2.5",
+          "modelId": "mimo-v2.5",
+          "pricingText": "¥5.60 / 1M input; ¥16.80 / 1M output",
+          "rankNo": 15
+        },
+        {
+          "catalogKey": "xiaomi/mimo-v2-flash",
+          "modelId": "mimo-v2-flash",
+          "pricingText": "¥0.70 / 1M input; ¥2.10 / 1M output",
+          "rankNo": 25
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-06-13",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "xiaomi"
+}

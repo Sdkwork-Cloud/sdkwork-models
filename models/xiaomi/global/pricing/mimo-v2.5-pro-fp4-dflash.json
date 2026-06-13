@@ -1,0 +1,42 @@
+{
+  "catalogKey": "xiaomi/mimo-v2.5-pro-fp4-dflash",
+  "currency": "USD",
+  "modelId": "mimo-v2.5-pro-fp4-dflash",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-13T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-mimo-v2.5-pro-fp4-dflash-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "1.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-13T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-mimo-v2.5-pro-fp4-dflash-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "4.500000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xiaomi"
+}

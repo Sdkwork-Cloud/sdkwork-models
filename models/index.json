@@ -1,11 +1,11 @@
 {
   "catalogVersion": "2026.05.08.1",
   "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 63,
-  "pricingFileCount": 62,
-  "regionCount": 23,
+  "modelCount": 72,
+  "pricingFileCount": 71,
+  "regionCount": 25,
   "schemaVersion": "1.1.0",
-  "vendorCount": 17,
+  "vendorCount": 18,
   "vendors": [
     {
       "billingCurrency": "CNY",
@@ -65,8 +65,9 @@
       "familiesPath": "anthropic/global/families.json",
       "familyCount": 1,
       "marketScope": "global",
-      "modelCount": 4,
+      "modelCount": 5,
       "modelFiles": [
+        "anthropic/global/models/claude-fable-5.json",
         "anthropic/global/models/claude-haiku-4-5.json",
         "anthropic/global/models/claude-opus-4-7.json",
         "anthropic/global/models/claude-opus-4-8.json",
@@ -74,8 +75,9 @@
       ],
       "modelsPath": "anthropic/global/models",
       "path": "anthropic/global/vendor.json",
-      "pricingFileCount": 4,
+      "pricingFileCount": 5,
       "pricingFiles": [
+        "anthropic/global/pricing/claude-fable-5.json",
         "anthropic/global/pricing/claude-haiku-4-5.json",
         "anthropic/global/pricing/claude-opus-4-7.json",
         "anthropic/global/pricing/claude-opus-4-8.json",
@@ -85,7 +87,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "anthropic/global/rankings.json",
       "regionCode": "global",
-      "sha256": "ad588e44b4682398966da5f22b9ab7324f775475831714e5e4bd21ce31b56285",
+      "sha256": "251626ef7a9176c4c1acc412b7929aa15c93bcaad58d2c9fcaac92fd5ab394d0",
       "vendorCode": "anthropic"
     },
     {
@@ -634,6 +636,68 @@
       "regionCode": "global",
       "sha256": "f6c0151cd75ca01d4818c56363aec19037904b86e1c0aeb48a3d085612765bdf",
       "vendorCode": "xai"
+    },
+    {
+      "billingCurrency": "CNY",
+      "billingJurisdiction": "CN",
+      "catalogKeyPrefix": "xiaomi/",
+      "displayName": "Xiaomi MiMo",
+      "familiesPath": "xiaomi/cn/families.json",
+      "familyCount": 2,
+      "marketScope": "china_mainland",
+      "modelCount": 4,
+      "modelFiles": [
+        "xiaomi/cn/models/mimo-v2-flash.json",
+        "xiaomi/cn/models/mimo-v2.5-pro-fp4-dflash.json",
+        "xiaomi/cn/models/mimo-v2.5-pro.json",
+        "xiaomi/cn/models/mimo-v2.5.json"
+      ],
+      "modelsPath": "xiaomi/cn/models",
+      "path": "xiaomi/cn/vendor.json",
+      "pricingFileCount": 4,
+      "pricingFiles": [
+        "xiaomi/cn/pricing/mimo-v2-flash.json",
+        "xiaomi/cn/pricing/mimo-v2.5-pro-fp4-dflash.json",
+        "xiaomi/cn/pricing/mimo-v2.5-pro.json",
+        "xiaomi/cn/pricing/mimo-v2.5.json"
+      ],
+      "pricingPath": "xiaomi/cn/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "xiaomi/cn/rankings.json",
+      "regionCode": "cn",
+      "sha256": "e7acad95d474945cd1f9e8ca13b7ccd7336aa4c878257ba0ef489cba0d3bc4d8",
+      "vendorCode": "xiaomi"
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "GLOBAL",
+      "catalogKeyPrefix": "xiaomi/",
+      "displayName": "Xiaomi MiMo",
+      "familiesPath": "xiaomi/global/families.json",
+      "familyCount": 2,
+      "marketScope": "international",
+      "modelCount": 4,
+      "modelFiles": [
+        "xiaomi/global/models/mimo-v2-flash.json",
+        "xiaomi/global/models/mimo-v2.5-pro-fp4-dflash.json",
+        "xiaomi/global/models/mimo-v2.5-pro.json",
+        "xiaomi/global/models/mimo-v2.5.json"
+      ],
+      "modelsPath": "xiaomi/global/models",
+      "path": "xiaomi/global/vendor.json",
+      "pricingFileCount": 4,
+      "pricingFiles": [
+        "xiaomi/global/pricing/mimo-v2-flash.json",
+        "xiaomi/global/pricing/mimo-v2.5-pro-fp4-dflash.json",
+        "xiaomi/global/pricing/mimo-v2.5-pro.json",
+        "xiaomi/global/pricing/mimo-v2.5.json"
+      ],
+      "pricingPath": "xiaomi/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "xiaomi/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "4c7efa7c7a38f2e6b7cfc46ff5d8382721e213da271349922df9c719c9a9ffe0",
+      "vendorCode": "xiaomi"
     },
     {
       "billingCurrency": "CNY",

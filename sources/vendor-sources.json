@@ -79,7 +79,9 @@
           "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
           "https://platform.claude.com/docs/en/docs/about-claude/pricing",
           "https://www.anthropic.com/news/claude-opus-4-8",
-          "https://platform.claude.com/docs/en/about-claude/pricing"
+          "https://platform.claude.com/docs/en/about-claude/pricing",
+          "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
+          "https://docs.anthropic.com/en/docs/about-claude/models"
         ],
         "modelsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
         "pricingUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
@@ -100,6 +102,7 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "claude-fable-5",
         "claude-opus-4-8",
         "claude-opus-4-7",
         "claude-sonnet-4-6",
@@ -606,6 +609,52 @@
         "grok-4.3"
       ],
       "vendorCode": "xai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-13T00:00:00Z",
+      "notes": "Xiaomi MiMo is an open-source AI model platform offering frontier multimodal and agentic models. Models include MiMo-V2.5-Pro (1T params), MiMo-V2.5 (310B params, multimodal), MiMo-V2-Flash (309B params, fast inference), and MiMo-V2.5-Pro-FP4-DFlash (554B params, FP4 quantized).",
+      "official": {
+        "additionalUrls": [
+          "https://mimo.xiaomi.com",
+          "https://platform.xiaomimimo.com",
+          "https://huggingface.co/XiaomiMiMo"
+        ],
+        "modelsUrl": "https://mimo.xiaomi.com",
+        "pricingUrl": "https://platform.xiaomimimo.com"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "mimo-v2.5-pro",
+        "mimo-v2.5",
+        "mimo-v2-flash",
+        "mimo-v2.5-pro-fp4-dflash"
+      ],
+      "vendorCode": "xiaomi",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-13T00:00:00Z",
+      "notes": "Xiaomi MiMo mainland China operation is modeled as the cn region of the vendor with CNY billing. Same models as global region but with CNY pricing.",
+      "official": {
+        "additionalUrls": [
+          "https://mimo.xiaomi.com",
+          "https://platform.xiaomimimo.com",
+          "https://huggingface.co/XiaomiMiMo"
+        ],
+        "modelsUrl": "https://platform.xiaomimimo.com",
+        "pricingUrl": "https://platform.xiaomimimo.com"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [
+        "mimo-v2.5-pro",
+        "mimo-v2.5",
+        "mimo-v2-flash",
+        "mimo-v2.5-pro-fp4-dflash"
+      ],
+      "vendorCode": "xiaomi",
       "verificationStatus": "official_url_declared"
     },
     {
