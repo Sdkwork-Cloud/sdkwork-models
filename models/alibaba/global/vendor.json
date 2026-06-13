@@ -44,7 +44,53 @@
         "observedAt": "2026-06-03T00:00:00Z",
         "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
       },
-      "supportStatus": "unsupported"
+      "supportStatus": "convert",
+      "modelMapping": {
+        "enabled": true,
+        "mappingType": "custom",
+        "rules": [
+          {
+            "sourceModel": "deepseek-v4-pro",
+            "targetModel": "gpt-5.5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "deepseek-v4-flash",
+            "targetModel": "gpt-5.4",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro",
+            "targetModel": "gpt-5.5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5",
+            "targetModel": "gpt-5.5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+            "targetModel": "gpt-5.4",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2-flash",
+            "targetModel": "gpt-5.4",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.7-max",
+            "targetModel": "gpt-5.5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.6-max-preview",
+            "targetModel": "gpt-5.5",
+            "transform": "custom"
+          }
+        ]
+      }
     },
     "claude_code": {
       "apiCodes": [
@@ -63,7 +109,53 @@
         "observedAt": "2026-06-03T00:00:00Z",
         "sourceUrl": "https://www.qwencloud.com/models/qwen3.7-max"
       },
-      "supportStatus": "partial"
+      "supportStatus": "partial",
+      "modelMapping": {
+        "enabled": true,
+        "mappingType": "custom",
+        "rules": [
+          {
+            "sourceModel": "deepseek-v4-pro",
+            "targetModel": "claude-sonnet-4-6",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "deepseek-v4-flash",
+            "targetModel": "claude-haiku-4-5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro",
+            "targetModel": "claude-sonnet-4-6",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5",
+            "targetModel": "claude-sonnet-4-6",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+            "targetModel": "claude-haiku-4-5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2-flash",
+            "targetModel": "claude-haiku-4-5",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.7-max",
+            "targetModel": "claude-sonnet-4-6",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.6-max-preview",
+            "targetModel": "claude-sonnet-4-6",
+            "transform": "custom"
+          }
+        ]
+      }
     },
     "gemini_cli": {
       "apiCodes": [],
@@ -76,7 +168,53 @@
         "observedAt": "2026-06-03T00:00:00Z",
         "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
       },
-      "supportStatus": "unsupported"
+      "supportStatus": "convert",
+      "modelMapping": {
+        "enabled": true,
+        "mappingType": "custom",
+        "rules": [
+          {
+            "sourceModel": "deepseek-v4-pro",
+            "targetModel": "gemini-3.1-pro-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "deepseek-v4-flash",
+            "targetModel": "gemini-3-flash-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro",
+            "targetModel": "gemini-3.1-pro-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5",
+            "targetModel": "gemini-3.1-pro-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+            "targetModel": "gemini-3-flash-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "mimo-v2-flash",
+            "targetModel": "gemini-3-flash-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.7-max",
+            "targetModel": "gemini-3.1-pro-preview",
+            "transform": "custom"
+          },
+          {
+            "sourceModel": "qwen3.6-max-preview",
+            "targetModel": "gemini-3.1-pro-preview",
+            "transform": "custom"
+          }
+        ]
+      }
     }
   }
 }

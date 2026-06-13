@@ -54,7 +54,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/global/rankings.json",
       "regionCode": "global",
-      "sha256": "7a4d4f9fdf85add4ac2b007de1db8166f5706b1c458236403c759e9209ff6116",
+      "sha256": "8c0b1959ebc1fc5b1bfa6676a0ca4e3b555d08541a691d52e44d221791284226",
       "vendorCode": "alibaba"
     },
     {
@@ -241,7 +241,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "deepseek/global/rankings.json",
       "regionCode": "global",
-      "sha256": "2ce2dc9bd92d989cd2e8b94487d50da2dec896297201bbe3e15fab9cfbf5ceb1",
+      "sha256": "9ff79b5afe3be5485011e2a62a0701ba892a93f32ceaafa0785c246426dd1ba3",
       "vendorCode": "deepseek"
     },
     {
@@ -696,7 +696,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xiaomi/global/rankings.json",
       "regionCode": "global",
-      "sha256": "4c7efa7c7a38f2e6b7cfc46ff5d8382721e213da271349922df9c719c9a9ffe0",
+      "sha256": "41c008b410b7c4cae22eecd0aa67205713210fff23df48984ea93a9110b3082e",
       "vendorCode": "xiaomi"
     },
     {

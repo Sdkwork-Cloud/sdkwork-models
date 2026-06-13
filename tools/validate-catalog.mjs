@@ -501,8 +501,8 @@ function validateClientApiCompatibility({ vendor, protocolCodes, routingResource
     if (item.displayName !== standard.displayName) {
       issues.push(issue("vendor.client_api_compatibility.display_name", `${itemPath}/displayName`, `${clientApiCode} displayName must be ${standard.displayName}`));
     }
-    if (!["supported", "unsupported", "partial"].includes(item.supportStatus)) {
-      issues.push(issue("vendor.client_api_compatibility.status", `${itemPath}/supportStatus`, "supportStatus must be supported, unsupported, or partial"));
+    if (!["supported", "unsupported", "partial", "convert"].includes(item.supportStatus)) {
+      issues.push(issue("vendor.client_api_compatibility.status", `${itemPath}/supportStatus`, "supportStatus must be supported, unsupported, partial, or convert"));
     }
     if (typeof item.notes !== "string" || item.notes.trim().length === 0) {
       issues.push(issue("vendor.client_api_compatibility.notes", `${itemPath}/notes`, "notes must explain the compatibility decision"));

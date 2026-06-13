@@ -306,6 +306,8 @@ function mergeClientApiCompatibility(left, right) {
 function clientApiSupportRank(status) {
   switch (status) {
     case "supported":
+      return 4;
+    case "convert":
       return 3;
     case "partial":
       return 2;

@@ -556,6 +556,52 @@
           ],
           "clientApiCode": "claude_code",
           "displayName": "Claude Code",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Qwen3.7-Max exposes an Anthropic-compatible endpoint suitable for Claude Code style clients when routed through DashScope-compatible configuration.",
           "protocolCodes": [
             "anthropic_messages"
@@ -573,6 +619,52 @@
           "apiCodes": [],
           "clientApiCode": "codex",
           "displayName": "Codex",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Alibaba Cloud does not expose the Codex client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -580,12 +672,58 @@
             "observedAt": "2026-06-03T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         },
         "gemini_cli": {
           "apiCodes": [],
           "clientApiCode": "gemini_cli",
           "displayName": "Gemini CLI",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Alibaba Cloud does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -593,7 +731,7 @@
             "observedAt": "2026-06-03T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         }
       },
       "displayName": "Alibaba Cloud",
@@ -680,6 +818,52 @@
               ],
               "clientApiCode": "claude_code",
               "displayName": "Claude Code",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Qwen3.7-Max exposes an Anthropic-compatible endpoint suitable for Claude Code style clients when routed through DashScope-compatible configuration.",
               "protocolCodes": [
                 "anthropic_messages"
@@ -697,6 +881,52 @@
               "apiCodes": [],
               "clientApiCode": "codex",
               "displayName": "Codex",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Alibaba Cloud does not expose the Codex client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -704,12 +934,58 @@
                 "observedAt": "2026-06-03T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             },
             "gemini_cli": {
               "apiCodes": [],
               "clientApiCode": "gemini_cli",
               "displayName": "Gemini CLI",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Alibaba Cloud does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -717,7 +993,7 @@
                 "observedAt": "2026-06-03T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             }
           },
           "displayName": "Alibaba Cloud",
@@ -756,6 +1032,52 @@
           "apiCodes": [],
           "clientApiCode": "claude_code",
           "displayName": "Claude Code",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "DeepSeek does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -763,12 +1085,58 @@
             "observedAt": "2026-06-03T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         },
         "codex": {
           "apiCodes": [],
           "clientApiCode": "codex",
           "displayName": "Codex",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "DeepSeek does not expose the Codex client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -776,12 +1144,58 @@
             "observedAt": "2026-06-03T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         },
         "gemini_cli": {
           "apiCodes": [],
           "clientApiCode": "gemini_cli",
           "displayName": "Gemini CLI",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "DeepSeek does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -789,7 +1203,7 @@
             "observedAt": "2026-06-03T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         }
       },
       "displayName": "DeepSeek",
@@ -872,6 +1286,52 @@
               "apiCodes": [],
               "clientApiCode": "claude_code",
               "displayName": "Claude Code",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "DeepSeek does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -879,12 +1339,58 @@
                 "observedAt": "2026-06-03T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             },
             "codex": {
               "apiCodes": [],
               "clientApiCode": "codex",
               "displayName": "Codex",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "DeepSeek does not expose the Codex client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -892,12 +1398,58 @@
                 "observedAt": "2026-06-03T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             },
             "gemini_cli": {
               "apiCodes": [],
               "clientApiCode": "gemini_cli",
               "displayName": "Gemini CLI",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "DeepSeek does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -905,7 +1457,7 @@
                 "observedAt": "2026-06-03T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             }
           },
           "displayName": "DeepSeek",
@@ -2563,6 +3115,52 @@
           "apiCodes": [],
           "clientApiCode": "claude_code",
           "displayName": "Claude Code",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "claude-haiku-4-5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "claude-sonnet-4-6",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Xiaomi MiMo does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -2570,12 +3168,58 @@
             "observedAt": "2026-06-13T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         },
         "codex": {
           "apiCodes": [],
           "clientApiCode": "codex",
           "displayName": "Codex",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gpt-5.4",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gpt-5.5",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Xiaomi MiMo does not expose the Codex client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -2583,12 +3227,58 @@
             "observedAt": "2026-06-13T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         },
         "gemini_cli": {
           "apiCodes": [],
           "clientApiCode": "gemini_cli",
           "displayName": "Gemini CLI",
+          "modelMapping": {
+            "enabled": true,
+            "mappingType": "custom",
+            "rules": [
+              {
+                "sourceModel": "deepseek-v4-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "deepseek-v4-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "mimo-v2-flash",
+                "targetModel": "gemini-3-flash-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.7-max",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              },
+              {
+                "sourceModel": "qwen3.6-max-preview",
+                "targetModel": "gemini-3.1-pro-preview",
+                "transform": "custom"
+              }
+            ]
+          },
           "notes": "Xiaomi MiMo does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
           "protocolCodes": [],
           "resourceCodes": [],
@@ -2596,7 +3286,7 @@
             "observedAt": "2026-06-13T00:00:00Z",
             "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
           },
-          "supportStatus": "unsupported"
+          "supportStatus": "convert"
         }
       },
       "displayName": "Xiaomi MiMo",
@@ -2684,6 +3374,52 @@
               "apiCodes": [],
               "clientApiCode": "claude_code",
               "displayName": "Claude Code",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "claude-haiku-4-5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "claude-sonnet-4-6",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Xiaomi MiMo does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -2691,12 +3427,58 @@
                 "observedAt": "2026-06-13T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             },
             "codex": {
               "apiCodes": [],
               "clientApiCode": "codex",
               "displayName": "Codex",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gpt-5.4",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gpt-5.5",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Xiaomi MiMo does not expose the Codex client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -2704,12 +3486,58 @@
                 "observedAt": "2026-06-13T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             },
             "gemini_cli": {
               "apiCodes": [],
               "clientApiCode": "gemini_cli",
               "displayName": "Gemini CLI",
+              "modelMapping": {
+                "enabled": true,
+                "mappingType": "custom",
+                "rules": [
+                  {
+                    "sourceModel": "deepseek-v4-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "deepseek-v4-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2.5-pro-fp4-dflash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "mimo-v2-flash",
+                    "targetModel": "gemini-3-flash-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.7-max",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  },
+                  {
+                    "sourceModel": "qwen3.6-max-preview",
+                    "targetModel": "gemini-3.1-pro-preview",
+                    "transform": "custom"
+                  }
+                ]
+              },
               "notes": "Xiaomi MiMo does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
               "protocolCodes": [],
               "resourceCodes": [],
@@ -2717,7 +3545,7 @@
                 "observedAt": "2026-06-13T00:00:00Z",
                 "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
               },
-              "supportStatus": "unsupported"
+              "supportStatus": "convert"
             }
           },
           "displayName": "Xiaomi MiMo",
