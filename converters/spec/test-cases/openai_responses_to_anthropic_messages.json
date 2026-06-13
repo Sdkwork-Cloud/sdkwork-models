@@ -1,0 +1,221 @@
+{
+  "converter": "OPENAI_RESPONSES_TO_ANTHROPIC_MESSAGES",
+  "version": "0.1.0",
+  "description": "OpenAI Responses API → Anthropic Messages API 转换器测试用例",
+  "test_cases": [
+    {
+      "name": "basic_request",
+      "description": "基本请求转换",
+      "input": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello"
+          }
+        ],
+        "max_tokens": 1024,
+        "temperature": 0.7,
+        "stream": false
+      },
+      "expected": {
+        "protocol": "anthropic_messages",
+        "model": "gpt-5.5",
+        "messages_count": 1,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello"
+          }
+        ],
+        "max_tokens": 1024,
+        "temperature": 0.7,
+        "stream": false
+      }
+    },
+    {
+      "name": "with_system_message",
+      "description": "包含系统消息的请求",
+      "input": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello"
+          }
+        ],
+        "system": "You are a helpful assistant.",
+        "max_tokens": 1024
+      },
+      "expected": {
+        "protocol": "anthropic_messages",
+        "model": "gpt-5.5",
+        "messages_count": 1,
+        "system": "You are a helpful assistant."
+      }
+    },
+    {
+      "name": "with_model_mapping",
+      "description": "模型映射转换",
+      "input": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello"
+          }
+        ]
+      },
+      "mapping": {
+        "gpt-5.5": "claude-sonnet-4",
+        "gpt-5.4-mini": "claude-haiku-4"
+      },
+      "expected": {
+        "protocol": "anthropic_messages",
+        "model": "claude-sonnet-4"
+      }
+    },
+    {
+      "name": "with_tools",
+      "description": "包含工具调用的请求",
+      "input": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the weather?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather information",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "string"
+                  }
+                },
+                "required": ["location"]
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "protocol": "anthropic_messages",
+        "tools_count": 1,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather information"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "multimodal_content",
+      "description": "多模态内容转换",
+      "input": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "What is in this image?"
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "https://example.com/image.jpg",
+                  "detail": "auto"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "protocol": "anthropic_messages",
+        "messages": [
+          {
+            "role": "user",
+            "content_type": "parts",
+            "parts_count": 2
+          }
+        ]
+      }
+    }
+  ],
+  "response_test_cases": [
+    {
+      "name": "basic_response",
+      "description": "基本响应转换",
+      "input": {
+        "protocol": "anthropic_messages",
+        "id": "msg_123",
+        "model": "claude-sonnet-4",
+        "content": [
+          {
+            "type": "text",
+            "text": "Hello! How can I help you?"
+          }
+        ],
+        "stop_reason": "end_turn",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 8,
+          "total_tokens": 18
+        }
+      },
+      "expected": {
+        "protocol": "openai_responses",
+        "id": "msg_123",
+        "model": "claude-sonnet-4",
+        "content_count": 1,
+        "stop_reason": "end_turn"
+      }
+    },
+    {
+      "name": "response_with_model_reverse_mapping",
+      "description": "响应模型反向映射",
+      "input": {
+        "protocol": "anthropic_messages",
+        "id": "msg_123",
+        "model": "claude-sonnet-4",
+        "content": [
+          {
+            "type": "text",
+            "text": "Hello!"
+          }
+        ],
+        "stop_reason": "end_turn",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 5,
+          "total_tokens": 15
+        }
+      },
+      "mapping": {
+        "gpt-5.5": "claude-sonnet-4"
+      },
+      "expected": {
+        "protocol": "openai_responses",
+        "model": "gpt-5.5"
+      }
+    }
+  ]
+}
