@@ -1,0 +1,23 @@
+{
+  "families": [
+    {
+      "defaultModel": "mimo-v2.5-pro",
+      "displayName": "MiMo V2.5",
+      "familyCode": "mimo-v2.5",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    },
+    {
+      "defaultModel": "mimo-v2-flash",
+      "displayName": "MiMo V2",
+      "familyCode": "mimo-v2",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 20
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xiaomi"
+}

@@ -1,0 +1,55 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "image",
+    "audio",
+    "video"
+  ],
+  "catalogKey": "xiaomi/mimo-v2.5",
+  "colorToken": "#FF6900",
+  "contextTokens": 1048576,
+  "description": "Xiaomi MiMo V2.5 - Native omnimodal model supporting text, image, video, and audio understanding with 310B total / 15B active parameters.",
+  "displayName": "MiMo V2.5",
+  "familyCode": "mimo-v2.5",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 650,
+  "latencyP95Ms": 2200,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 262144,
+  "modelId": "mimo-v2.5",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1050.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-13T00:00:00Z",
+    "sourceUrl": "https://mimo.xiaomi.com"
+  },
+  "strengths": [
+    "Multimodal",
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long Context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
+  "vendorCode": "xiaomi",
+  "vendorName": "Xiaomi MiMo",
+  "winRate": "0.920000"
+}

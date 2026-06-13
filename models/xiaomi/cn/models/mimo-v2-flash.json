@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "xiaomi/mimo-v2-flash",
+  "colorToken": "#FF6900",
+  "contextTokens": 262144,
+  "description": "Xiaomi MiMo V2 Flash - High-performance MoE model with 309B total / 15B active parameters, optimized for speed and cost efficiency.",
+  "displayName": "MiMo V2 Flash",
+  "familyCode": "mimo-v2",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 350,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "maxInputTokens": 262144,
+  "maxOutputTokens": 65536,
+  "modelId": "mimo-v2-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "980.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-13T00:00:00Z",
+    "sourceUrl": "https://mimo.xiaomi.com"
+  },
+  "strengths": [
+    "Speed",
+    "Cost Efficiency",
+    "Reasoning",
+    "Coding"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.920000",
+  "vendorCode": "xiaomi",
+  "vendorName": "Xiaomi MiMo",
+  "winRate": "0.910000"
+}

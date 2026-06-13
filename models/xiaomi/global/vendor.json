@@ -1,0 +1,78 @@
+{
+  "billingCurrency": "USD",
+  "billingJurisdiction": "GLOBAL",
+  "capabilities": [
+    "chat",
+    "image",
+    "audio",
+    "video"
+  ],
+  "countryRegion": "CN",
+  "description": "Xiaomi MiMo AI model platform offering frontier multimodal and agentic models.",
+  "displayName": "Xiaomi MiMo",
+  "docsUrl": "https://platform.xiaomimimo.com",
+  "legalName": "Xiaomi Corporation",
+  "marketScope": "international",
+  "modelFamilies": [
+    "mimo-v2.5",
+    "mimo-v2"
+  ],
+  "openSource": true,
+  "operatingRegions": [
+    "GLOBAL"
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 180,
+  "source": {
+    "observedAt": "2026-06-13T00:00:00Z",
+    "sourceUrl": "https://mimo.xiaomi.com"
+  },
+  "vendorCode": "xiaomi",
+  "vendorType": "commercial",
+  "websiteUrl": "https://mimo.xiaomi.com",
+  "supportedProtocols": [
+    "openai_compatible"
+  ],
+  "clientApiCompatibility": {
+    "codex": {
+      "apiCodes": [],
+      "clientApiCode": "codex",
+      "displayName": "Codex",
+      "notes": "Xiaomi MiMo does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    },
+    "claude_code": {
+      "apiCodes": [],
+      "clientApiCode": "claude_code",
+      "displayName": "Claude Code",
+      "notes": "Xiaomi MiMo does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    },
+    "gemini_cli": {
+      "apiCodes": [],
+      "clientApiCode": "gemini_cli",
+      "displayName": "Gemini CLI",
+      "notes": "Xiaomi MiMo does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    }
+  }
+}

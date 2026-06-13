@@ -1,0 +1,42 @@
+{
+  "catalogKey": "xiaomi/mimo-v2-flash",
+  "currency": "CNY",
+  "modelId": "mimo-v2-flash",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-13T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-cn-mimo-v2-flash-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "0.700000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-13T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-cn-mimo-v2-flash-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-13T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "2.100000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xiaomi"
+}
