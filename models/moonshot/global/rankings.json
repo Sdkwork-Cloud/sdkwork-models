@@ -5,20 +5,26 @@
     {
       "items": [
         {
+          "catalogKey": "moonshot/kimi-k2.7-code",
+          "modelId": "kimi-k2.7-code",
+          "pricingText": "USD 0.95 / 1M input; USD 0.19 / 1M cache read; USD 4.00 / 1M output",
+          "rankNo": 13
+        },
+        {
           "catalogKey": "moonshot/kimi-k2.6",
           "modelId": "kimi-k2.6",
-          "pricingText": "USD 0.950000 / 1M input; USD 0.160000 / 1M cache read; USD 4.000000 / 1M output",
+          "pricingText": "USD 0.95 / 1M input; USD 0.16 / 1M cache read; USD 4.00 / 1M output",
           "rankNo": 14
         },
         {
           "catalogKey": "moonshot/kimi-k2.5",
           "modelId": "kimi-k2.5",
-          "pricingText": "USD 0.600000 / 1M input; USD 0.100000 / 1M cache read; USD 3.000000 / 1M output",
+          "pricingText": "USD 0.60 / 1M input; USD 0.10 / 1M cache read; USD 3.00 / 1M output",
           "rankNo": 15
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-08",
+      "snapshotDate": "2026-06-14",
       "snapshotPeriod": "daily"
     }
   ],

@@ -1586,13 +1586,13 @@
           "displayName": "Moonshot Kimi",
           "legalName": "Moonshot AI",
           "marketScope": "china_mainland",
-          "modelCount": 2,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "moonshot/cn/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 70,
@@ -1650,13 +1650,13 @@
           "displayName": "Moonshot Kimi",
           "legalName": "Moonshot AI",
           "marketScope": "international",
-          "modelCount": 2,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "moonshot/global/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 70,

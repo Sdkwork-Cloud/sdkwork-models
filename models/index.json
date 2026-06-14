@@ -1,8 +1,8 @@
 {
   "catalogVersion": "2026.05.08.1",
   "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 72,
-  "pricingFileCount": 71,
+  "modelCount": 74,
+  "pricingFileCount": 73,
   "regionCount": 25,
   "schemaVersion": "1.1.0",
   "vendorCount": 18,
@@ -442,23 +442,25 @@
       "familiesPath": "moonshot/cn/families.json",
       "familyCount": 1,
       "marketScope": "china_mainland",
-      "modelCount": 2,
+      "modelCount": 3,
       "modelFiles": [
         "moonshot/cn/models/kimi-k2.5.json",
-        "moonshot/cn/models/kimi-k2.6.json"
+        "moonshot/cn/models/kimi-k2.6.json",
+        "moonshot/cn/models/kimi-k2.7-code.json"
       ],
       "modelsPath": "moonshot/cn/models",
       "path": "moonshot/cn/vendor.json",
-      "pricingFileCount": 2,
+      "pricingFileCount": 3,
       "pricingFiles": [
         "moonshot/cn/pricing/kimi-k2.5.json",
-        "moonshot/cn/pricing/kimi-k2.6.json"
+        "moonshot/cn/pricing/kimi-k2.6.json",
+        "moonshot/cn/pricing/kimi-k2.7-code.json"
       ],
       "pricingPath": "moonshot/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "d67ac0fd3be2f365f4a67ecd96830d5daed5e4aa4cb483cfb7218575e8986ea6",
+      "sha256": "28768d96552a913916f08478804fc2a00c3c28bb8846df4c633a524603f23677",
       "vendorCode": "moonshot"
     },
     {
@@ -469,23 +471,25 @@
       "familiesPath": "moonshot/global/families.json",
       "familyCount": 1,
       "marketScope": "international",
-      "modelCount": 2,
+      "modelCount": 3,
       "modelFiles": [
         "moonshot/global/models/kimi-k2.5.json",
-        "moonshot/global/models/kimi-k2.6.json"
+        "moonshot/global/models/kimi-k2.6.json",
+        "moonshot/global/models/kimi-k2.7-code.json"
       ],
       "modelsPath": "moonshot/global/models",
       "path": "moonshot/global/vendor.json",
-      "pricingFileCount": 2,
+      "pricingFileCount": 3,
       "pricingFiles": [
         "moonshot/global/pricing/kimi-k2.5.json",
-        "moonshot/global/pricing/kimi-k2.6.json"
+        "moonshot/global/pricing/kimi-k2.6.json",
+        "moonshot/global/pricing/kimi-k2.7-code.json"
       ],
       "pricingPath": "moonshot/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/global/rankings.json",
       "regionCode": "global",
-      "sha256": "9bc133e7045f1d4d1f0a5995ecf471ec8633261a35d682d7bb552366aef4972b",
+      "sha256": "1366549a97452167c449da4db48d69a6088e7a2122ba58bd64e6bfbf3f145d05",
       "vendorCode": "moonshot"
     },
     {

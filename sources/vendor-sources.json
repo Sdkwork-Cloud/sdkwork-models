@@ -432,6 +432,7 @@
         "additionalUrls": [
           "https://platform.kimi.ai/docs/pricing/chat-k26",
           "https://platform.kimi.ai/docs/pricing/chat-k25",
+          "https://platform.kimi.ai/docs/pricing/chat-k27-code",
           "https://platform.kimi.ai/docs/llms.txt"
         ],
         "modelsUrl": "https://platform.kimi.ai/",
@@ -445,6 +446,7 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "kimi-k2.7-code",
         "kimi-k2.6",
         "kimi-k2.5"
       ],
@@ -458,6 +460,7 @@
         "additionalUrls": [
           "https://platform.kimi.com/docs/pricing/chat-k26",
           "https://platform.kimi.com/docs/pricing/chat-k25",
+          "https://platform.kimi.com/docs/pricing/chat-k27-code",
           "https://platform.kimi.com/docs/llms.txt"
         ],
         "modelsUrl": "https://platform.kimi.com/",
@@ -471,6 +474,7 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
+        "kimi-k2.7-code",
         "kimi-k2.6",
         "kimi-k2.5"
       ],
