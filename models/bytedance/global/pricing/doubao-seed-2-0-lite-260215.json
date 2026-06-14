@@ -1,0 +1,42 @@
+{
+  "catalogKey": "bytedance/doubao-seed-2-0-lite-260215",
+  "currency": "USD",
+  "modelId": "doubao-seed-2-0-lite-260215",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-global-seed-2-0-lite-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://seed.bytedance.com/en/seed2"
+      },
+      "unitPrice": "0.230000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-global-seed-2-0-lite-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://seed.bytedance.com/en/seed2"
+      },
+      "unitPrice": "1.150000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}

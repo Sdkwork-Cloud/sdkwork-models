@@ -1,6 +1,14 @@
 {
   "families": [
     {
+      "defaultModel": "doubao-seed-2-0-lite-260215",
+      "displayName": "Doubao Seed",
+      "familyCode": "doubao-seed",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    },
+    {
       "defaultModel": "doubao-seedance-2-0-260128",
       "displayName": "Seedance",
       "familyCode": "seedance",

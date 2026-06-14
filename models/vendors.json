@@ -2141,13 +2141,13 @@
           "displayName": "ByteDance",
           "legalName": "ByteDance",
           "marketScope": "china_mainland",
-          "modelCount": 1,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "bytedance/cn/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 110,
@@ -2206,17 +2206,18 @@
           "displayName": "ByteDance",
           "legalName": "ByteDance",
           "marketScope": "international",
-          "modelCount": 1,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "bytedance/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 111,
           "supportedProtocols": [
+            "openai_compatible",
             "vendor_native"
           ]
         }

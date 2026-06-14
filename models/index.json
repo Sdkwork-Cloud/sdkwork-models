@@ -1,8 +1,8 @@
 {
   "catalogVersion": "2026.05.08.1",
   "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 92,
-  "pricingFileCount": 91,
+  "modelCount": 96,
+  "pricingFileCount": 95,
   "regionCount": 25,
   "schemaVersion": "1.1.0",
   "vendorCount": 18,
@@ -152,21 +152,25 @@
       "familiesPath": "bytedance/cn/families.json",
       "familyCount": 3,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 3,
       "modelFiles": [
+        "bytedance/cn/models/doubao-seed-2-0-lite-260215.json",
+        "bytedance/cn/models/doubao-seed-2-0-mini-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-pro-260215.json"
       ],
       "modelsPath": "bytedance/cn/models",
       "path": "bytedance/cn/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 3,
       "pricingFiles": [
+        "bytedance/cn/pricing/doubao-seed-2-0-lite-260215.json",
+        "bytedance/cn/pricing/doubao-seed-2-0-mini-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-pro-260215.json"
       ],
       "pricingPath": "bytedance/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "0187e0ce0572e2b863981808bc118c3d976030b15d903bfbfd6ad5931c7bcc43",
+      "sha256": "2a61923ce345db2b1661567a70546780b870a05464e3029ba172bb7e73206d44",
       "vendorCode": "bytedance"
     },
     {
@@ -175,23 +179,27 @@
       "catalogKeyPrefix": "bytedance/",
       "displayName": "ByteDance",
       "familiesPath": "bytedance/global/families.json",
-      "familyCount": 1,
+      "familyCount": 2,
       "marketScope": "international",
-      "modelCount": 1,
+      "modelCount": 3,
       "modelFiles": [
+        "bytedance/global/models/doubao-seed-2-0-lite-260215.json",
+        "bytedance/global/models/doubao-seed-2-0-mini-260215.json",
         "bytedance/global/models/doubao-seedance-2-0-260128.json"
       ],
       "modelsPath": "bytedance/global/models",
       "path": "bytedance/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 3,
       "pricingFiles": [
+        "bytedance/global/pricing/doubao-seed-2-0-lite-260215.json",
+        "bytedance/global/pricing/doubao-seed-2-0-mini-260215.json",
         "bytedance/global/pricing/doubao-seedance-2-0-260128.json"
       ],
       "pricingPath": "bytedance/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/global/rankings.json",
       "regionCode": "global",
-      "sha256": "6e2d5c1fdfffc52866702aaf13bbf7f1038aae312988ac95e847a2bf468207ae",
+      "sha256": "8f0b8d0cc5512d90804836559207cd41f5a6ed7e39db375cbb9b78db5466ee4f",
       "vendorCode": "bytedance"
     },
     {

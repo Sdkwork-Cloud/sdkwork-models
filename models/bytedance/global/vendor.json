@@ -28,6 +28,7 @@
   "vendorType": "commercial",
   "websiteUrl": "https://seed.bytedance.com",
   "supportedProtocols": [
+    "openai_compatible",
     "vendor_native"
   ],
   "clientApiCompatibility": {

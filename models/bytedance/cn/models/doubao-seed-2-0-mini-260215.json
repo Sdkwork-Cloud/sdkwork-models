@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "bytedance/doubao-seed-2-0-mini-260215",
+  "colorToken": "#3b82f6",
+  "contextTokens": 128000,
+  "description": "Seed 2.0 Mini is optimized for inference throughput and deployment density. Designed for high concurrency and batch generation scenarios.",
+  "displayName": "Doubao Seed 2.0 Mini",
+  "familyCode": "doubao-seed",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "maxOutputTokens": 16384,
+  "modelId": "doubao-seed-2-0-mini-260215",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "830.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://seed.bytedance.com/en/seed2"
+  },
+  "strengths": [
+    "Speed",
+    "Cost efficiency",
+    "High concurrency"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.780000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance"
+}

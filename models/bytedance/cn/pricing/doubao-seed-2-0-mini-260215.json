@@ -1,0 +1,42 @@
+{
+  "catalogKey": "bytedance/doubao-seed-2-0-mini-260215",
+  "currency": "CNY",
+  "modelId": "doubao-seed-2-0-mini-260215",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-cn-seed-2-0-mini-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379/1544106"
+      },
+      "unitPrice": "0.800000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-cn-seed-2-0-mini-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379/1544106"
+      },
+      "unitPrice": "4.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}
