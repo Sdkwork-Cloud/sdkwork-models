@@ -23,6 +23,22 @@
       "familyType": "video",
       "primaryModality": "video",
       "sortOrder": 30
+    },
+    {
+      "defaultModel": "lyria-3",
+      "displayName": "Lyria",
+      "familyCode": "lyria",
+      "familyType": "music",
+      "primaryModality": "audio",
+      "sortOrder": 40
+    },
+    {
+      "defaultModel": "gemini-embedding-2",
+      "displayName": "Gemini Embedding",
+      "familyCode": "gemini-embedding",
+      "familyType": "embedding",
+      "primaryModality": "embedding",
+      "sortOrder": 50
     }
   ],
   "regionCode": "global",

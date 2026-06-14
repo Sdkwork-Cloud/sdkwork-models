@@ -1,0 +1,49 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "google/gemini-3.1-pro",
+  "colorToken": "#4285f4",
+  "contextTokens": 1048576,
+  "description": "Gemini 3.1 Pro is Google's latest production-ready pro-tier model for complex reasoning, coding, and multimodal tasks.",
+  "displayName": "Gemini 3.1 Pro",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "modelId": "gemini-3.1-pro",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "935.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Multimodal",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.920000"
+}

@@ -1,0 +1,26 @@
+{
+  "catalogKey": "google/gemini-embedding-2",
+  "currency": "USD",
+  "modelId": "gemini-embedding-2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-embedding-2-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "0.100000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

@@ -393,13 +393,13 @@
           "displayName": "Google",
           "legalName": "Google LLC",
           "marketScope": "global",
-          "modelCount": 12,
+          "modelCount": 18,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "google/global/vendor.json",
-          "pricingFileCount": 12,
+          "pricingFileCount": 18,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 30,

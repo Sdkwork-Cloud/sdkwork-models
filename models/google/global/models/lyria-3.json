@@ -1,0 +1,37 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "google/lyria-3",
+  "colorToken": "#4285f4",
+  "contextTokens": 4096,
+  "description": "Lyria 3 is Google's latest music generation model, creating high-quality music from text prompts.",
+  "displayName": "Lyria 3",
+  "familyCode": "lyria",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 4096,
+  "modelId": "lyria-3",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "music",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "strengths": [
+    "Music generation",
+    "High quality audio"
+  ],
+  "vendorCode": "google",
+  "vendorName": "Google"
+}
