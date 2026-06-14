@@ -8,7 +8,7 @@
     "warnings": []
   },
   "generatedAt": "2026-05-08T00:00:00Z",
-  "indexSha256": "9218d186c36200ded4679be97fb4417e5d3b904d6a63cf41ea9cca1722e81e02",
+  "indexSha256": "247ae380d87702c80b21d866043b1188538e4230c1bc57654fc954f544b5b75f",
   "schemaVersion": "1.1.0",
   "sourceAudit": {
     "errorCount": 0,
@@ -22,7 +22,7 @@
       "moonshot/global"
     ],
     "ok": true,
-    "regionCount": 23,
+    "regionCount": 25,
     "requiredVerifiedRegionCount": 6,
     "requiredVerifiedRegions": [
       "deepseek/cn",
@@ -32,21 +32,21 @@
       "moonshot/cn",
       "moonshot/global"
     ],
-    "vendorCount": 17,
+    "vendorCount": 18,
     "warningCount": 0
   },
   "sourceEvidenceSha256": {
-    "officialModelSnapshots": "fb034de28389acaa1a5a9c0aa13c7f54341ee84687c4d1b58f68fea3c750822a",
+    "officialModelSnapshots": "5e596328fbdffdd75a1cb78c4b4538afffa89bc2c29267ebfc33d6468765d507",
     "officialSnapshotHashes": {
       "deepseek/cn": "8df40886dd1e6087b5ad479474396d1c56799bbad673bc95fc1104455fd170dd",
       "deepseek/global": "39649affcd4bc398a9c2476369cd32228e85febe5fd81f8fcb8103218ac40588",
       "minimax/cn": "995517dcca9f7e64c2e105d57450b2b48e85431bd2ff832c230191db5ee7198d",
       "minimax/global": "357520d37a8bce46fd8cb5b36aae7e995c29b122031112e969e6b26ee76f7727",
-      "moonshot/cn": "7cac1b72d1b8415593d9564fe75eacff2142645104337bc91c87f37ea029d173",
-      "moonshot/global": "9d4adb4f3331bd905e35e9faddd493882a7b3fe539a1f29ee748c8d6bed4a759"
+      "moonshot/cn": "8a3cfe5337712665925c812667c75e4296f1a9597efe848b3fe543ab711edf98",
+      "moonshot/global": "bd5c8280dfd892d99e9ed48274ba49526d1bbac8a7589279a587d0704ef32240"
     },
     "officialVerificationPolicy": "1dbd653a63742cba7b1d4be0ec1684244946d3855bb4aa0e7047fc6e8bd53fd0",
-    "vendorSources": "11da248ebb5fd0183af8a6d42c870bcc5fdfe56840e4330c044de8c77d74abad"
+    "vendorSources": "94f7ecf56e35d56b22ddfeddc4ac40e7af9b230e0d00bb62cea76fad50153e06"
   },
   "validation": {
     "issueCount": 0,
@@ -64,21 +64,21 @@
       "modelCount": 1,
       "pricingFileCount": 1,
       "regionCode": "global",
-      "sha256": "7a4d4f9fdf85add4ac2b007de1db8166f5706b1c458236403c759e9209ff6116",
+      "sha256": "8c0b1959ebc1fc5b1bfa6676a0ca4e3b555d08541a691d52e44d221791284226",
       "vendorCode": "alibaba"
     },
     {
-      "modelCount": 4,
-      "pricingFileCount": 4,
+      "modelCount": 5,
+      "pricingFileCount": 5,
       "regionCode": "global",
-      "sha256": "ad588e44b4682398966da5f22b9ab7324f775475831714e5e4bd21ce31b56285",
+      "sha256": "251626ef7a9176c4c1acc412b7929aa15c93bcaad58d2c9fcaac92fd5ab394d0",
       "vendorCode": "anthropic"
     },
     {
-      "modelCount": 1,
-      "pricingFileCount": 1,
+      "modelCount": 3,
+      "pricingFileCount": 3,
       "regionCode": "cn",
-      "sha256": "58b0a14b53e046c146dfc58eea6c16f163f3f9cc8b53d702c558ed838a0447df",
+      "sha256": "00ccf607392d4af049579ac206e26b8a446dfec7ae3aa7719ce5f57bf70180f2",
       "vendorCode": "baidu"
     },
     {
@@ -89,17 +89,17 @@
       "vendorCode": "black_forest_labs"
     },
     {
-      "modelCount": 1,
-      "pricingFileCount": 1,
+      "modelCount": 3,
+      "pricingFileCount": 3,
       "regionCode": "cn",
-      "sha256": "0187e0ce0572e2b863981808bc118c3d976030b15d903bfbfd6ad5931c7bcc43",
+      "sha256": "2a61923ce345db2b1661567a70546780b870a05464e3029ba172bb7e73206d44",
       "vendorCode": "bytedance"
     },
     {
-      "modelCount": 1,
-      "pricingFileCount": 1,
+      "modelCount": 3,
+      "pricingFileCount": 3,
       "regionCode": "global",
-      "sha256": "6e2d5c1fdfffc52866702aaf13bbf7f1038aae312988ac95e847a2bf468207ae",
+      "sha256": "8f0b8d0cc5512d90804836559207cd41f5a6ed7e39db375cbb9b78db5466ee4f",
       "vendorCode": "bytedance"
     },
     {
@@ -113,7 +113,7 @@
       "modelCount": 2,
       "pricingFileCount": 2,
       "regionCode": "global",
-      "sha256": "2ce2dc9bd92d989cd2e8b94487d50da2dec896297201bbe3e15fab9cfbf5ceb1",
+      "sha256": "9ff79b5afe3be5485011e2a62a0701ba892a93f32ceaafa0785c246426dd1ba3",
       "vendorCode": "deepseek"
     },
     {
@@ -124,10 +124,10 @@
       "vendorCode": "elevenlabs"
     },
     {
-      "modelCount": 12,
-      "pricingFileCount": 12,
+      "modelCount": 18,
+      "pricingFileCount": 18,
       "regionCode": "global",
-      "sha256": "85b8941fecbf22d5317e2fcf461df5f4be195e185df1711c5c739cdc812c8b33",
+      "sha256": "4eba63844e6d14282dad2f3ed820808ded2cf31f976466c4d15f3cde4ea8348d",
       "vendorCode": "google"
     },
     {
@@ -148,35 +148,35 @@
       "modelCount": 6,
       "pricingFileCount": 6,
       "regionCode": "cn",
-      "sha256": "3db058f6811c205f3ea71b547259e12eb2a6538a99ea51e498991e108eed3177",
+      "sha256": "f761217d1c5fc2508ee367315907138ebad393c5d0932c3bbcf64ab99fea8353",
       "vendorCode": "minimax"
     },
     {
       "modelCount": 6,
       "pricingFileCount": 6,
       "regionCode": "global",
-      "sha256": "ae6d70fe80d209443da36466ec41b463596123635b08bb5263fdc272959e31f7",
+      "sha256": "b778efd7539465ca08c12ef258e1ede9d77cd5175f43e2d7350b1242e8af5f36",
       "vendorCode": "minimax"
     },
     {
-      "modelCount": 2,
-      "pricingFileCount": 2,
+      "modelCount": 4,
+      "pricingFileCount": 4,
       "regionCode": "cn",
-      "sha256": "d67ac0fd3be2f365f4a67ecd96830d5daed5e4aa4cb483cfb7218575e8986ea6",
+      "sha256": "6ca8fb6a575ab22fd8c453f3e4218c23025eefa566e9968bca6493c414cd7992",
       "vendorCode": "moonshot"
     },
     {
-      "modelCount": 2,
-      "pricingFileCount": 2,
+      "modelCount": 4,
+      "pricingFileCount": 4,
       "regionCode": "global",
-      "sha256": "9bc133e7045f1d4d1f0a5995ecf471ec8633261a35d682d7bb552366aef4972b",
+      "sha256": "81374d36dcd043728d2a7937697226cc0faa3e314c74cbe9ec54e7fa2c18486f",
       "vendorCode": "moonshot"
     },
     {
-      "modelCount": 13,
-      "pricingFileCount": 13,
+      "modelCount": 17,
+      "pricingFileCount": 17,
       "regionCode": "global",
-      "sha256": "9a10759e7d2d8a40b23bffdafc9f17e706e826cc7771ae353e4e1fb6060587ba",
+      "sha256": "e8ebae8805213c752536b4a11d0b4842c23f54ddac4d6f8fedc3721ee6a9504a",
       "vendorCode": "openai"
     },
     {
@@ -194,18 +194,32 @@
       "vendorCode": "suno"
     },
     {
-      "modelCount": 1,
-      "pricingFileCount": 1,
+      "modelCount": 3,
+      "pricingFileCount": 3,
       "regionCode": "cn",
-      "sha256": "812974824bc9dcae0855dcf47d9d311511e7fe22254e65ec4d07cedd184b7e1f",
+      "sha256": "cb4ea1086ac4b807b93c24df3c0659e4eb3c997aa510e3a9e9d13b145a801d84",
       "vendorCode": "tencent"
     },
     {
-      "modelCount": 1,
-      "pricingFileCount": 1,
+      "modelCount": 5,
+      "pricingFileCount": 5,
       "regionCode": "global",
-      "sha256": "f6c0151cd75ca01d4818c56363aec19037904b86e1c0aeb48a3d085612765bdf",
+      "sha256": "e6a370bac5dde52f59bda10086e419c68004c6f7fbec9331678beb3ab702293f",
       "vendorCode": "xai"
+    },
+    {
+      "modelCount": 4,
+      "pricingFileCount": 4,
+      "regionCode": "cn",
+      "sha256": "e7acad95d474945cd1f9e8ca13b7ccd7336aa4c878257ba0ef489cba0d3bc4d8",
+      "vendorCode": "xiaomi"
+    },
+    {
+      "modelCount": 4,
+      "pricingFileCount": 4,
+      "regionCode": "global",
+      "sha256": "41c008b410b7c4cae22eecd0aa67205713210fff23df48984ea93a9110b3082e",
+      "vendorCode": "xiaomi"
     },
     {
       "modelCount": 1,
