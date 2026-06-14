@@ -1,0 +1,43 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "tencent/hunyuan-2.0-instruct-20251111",
+  "colorToken": "#0052d9",
+  "contextTokens": 128000,
+  "description": "Tencent HY 2.0 Instruct model with enhanced instruction following, multi-turn dialogue, literary creation, and code capabilities.",
+  "displayName": "Hunyuan 2.0 Instruct",
+  "familyCode": "hunyuan",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "maxOutputTokens": 16384,
+  "modelId": "hunyuan-2.0-instruct-20251111",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "845.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
+  },
+  "strengths": [
+    "Instruction following",
+    "Long context",
+    "Code",
+    "Writing"
+  ],
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "vendorCode": "tencent",
+  "vendorName": "Tencent Cloud"
+}

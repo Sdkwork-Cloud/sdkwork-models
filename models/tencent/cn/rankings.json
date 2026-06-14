@@ -5,14 +5,26 @@
     {
       "items": [
         {
+          "catalogKey": "tencent/hunyuan-2.0-thinking",
+          "modelId": "hunyuan-2.0-thinking-20251109",
+          "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output",
+          "rankNo": 13
+        },
+        {
+          "catalogKey": "tencent/hunyuan-2.0-instruct",
+          "modelId": "hunyuan-2.0-instruct-20251111",
+          "pricingText": "CNY 2.00 / 1M input; CNY 8.00 / 1M output",
+          "rankNo": 14
+        },
+        {
           "catalogKey": "tencent/hunyuan-turbos-latest",
           "modelId": "hunyuan-turbos-latest",
           "pricingText": "CNY 0.80 / 1M input; CNY 2.00 / 1M output",
-          "rankNo": 17
+          "rankNo": 15
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-07",
+      "snapshotDate": "2026-06-14",
       "snapshotPeriod": "daily"
     }
   ],

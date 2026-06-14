@@ -1,22 +1,22 @@
 {
-  "catalogKey": "minimax/MiniMax-M3",
+  "catalogKey": "baidu/ernie-4.5-turbo-128k",
   "currency": "CNY",
-  "modelId": "MiniMax-M3",
+  "modelId": "ernie-4.5-turbo-128k",
   "prices": [
     {
       "currency": "CNY",
       "effectiveFrom": "2026-06-14T00:00:00Z",
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
-      "priceId": "minimax-cn-MiniMax-M3-input",
+      "priceId": "baidu-cn-ernie-4-5-turbo-input",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
         "observedAt": "2026-06-14T00:00:00Z",
-        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
-      "unitPrice": "2.100000",
+      "unitPrice": "4.000000",
       "unitSize": "1000000"
     },
     {
@@ -24,19 +24,19 @@
       "effectiveFrom": "2026-06-14T00:00:00Z",
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
-      "priceId": "minimax-cn-MiniMax-M3-output",
+      "priceId": "baidu-cn-ernie-4-5-turbo-output",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
         "observedAt": "2026-06-14T00:00:00Z",
-        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+        "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
-      "unitPrice": "8.400000",
+      "unitPrice": "16.000000",
       "unitSize": "1000000"
     }
   ],
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
-  "vendorCode": "minimax"
+  "vendorCode": "baidu"
 }

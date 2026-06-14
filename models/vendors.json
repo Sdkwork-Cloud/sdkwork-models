@@ -1894,13 +1894,13 @@
           "displayName": "Baidu AI Cloud",
           "legalName": "Baidu AI Cloud",
           "marketScope": "china_mainland",
-          "modelCount": 1,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "baidu/cn/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 90,
@@ -2015,13 +2015,13 @@
           "displayName": "Tencent Cloud",
           "legalName": "Tencent Cloud",
           "marketScope": "china_mainland",
-          "modelCount": 1,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "tencent/cn/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 100,

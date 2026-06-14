@@ -1,0 +1,42 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "baidu/ernie-x1.1",
+  "colorToken": "#2932e1",
+  "contextTokens": 64000,
+  "description": "ERNIE X1.1 reasoning model with extended chain-of-thought for complex reasoning and math tasks.",
+  "displayName": "ERNIE X1.1",
+  "familyCode": "ernie",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 55000,
+  "maxOutputTokens": 65536,
+  "modelId": "ernie-x1.1",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "reasoning",
+  "rankScore": "870.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
+  },
+  "strengths": [
+    "Reasoning",
+    "Math",
+    "Code"
+  ],
+  "supportsStreaming": true,
+  "vendorCode": "baidu",
+  "vendorName": "Baidu AI Cloud"
+}

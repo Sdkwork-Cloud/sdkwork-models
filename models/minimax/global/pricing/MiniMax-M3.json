@@ -5,15 +5,15 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
-      "priceId": "minimax-global-minimax-m3-input",
+      "priceId": "minimax-global-MiniMax-M3-input",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-14T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.300000",
@@ -21,89 +21,19 @@
     },
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
-      "meterCode": "llm_cache_read_token",
-      "minimumQuantity": "0",
-      "priceId": "minimax-global-minimax-m3-cache-read",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
-      },
-      "unitPrice": "0.060000",
-      "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
-      "priceId": "minimax-global-minimax-m3-output",
+      "priceId": "minimax-global-MiniMax-M3-output",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-14T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "1.200000",
       "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
-      "meterCode": "llm_input_token",
-      "minimumQuantity": "512000",
-      "priceId": "minimax-global-minimax-m3-input-above-512k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
-      },
-      "unitPrice": "1.200000",
-      "unitSize": "1000000",
-      "thresholdTokens": 512000,
-      "tierCode": "above_512k_tokens"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
-      "meterCode": "llm_cache_read_token",
-      "minimumQuantity": "512000",
-      "priceId": "minimax-global-minimax-m3-cache-read-above-512k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
-      },
-      "unitPrice": "0.240000",
-      "unitSize": "1000000",
-      "thresholdTokens": 512000,
-      "tierCode": "above_512k_tokens"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-06-03T00:00:00Z",
-      "meterCode": "llm_output_token",
-      "minimumQuantity": "512000",
-      "priceId": "minimax-global-minimax-m3-output-above-512k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
-      },
-      "unitPrice": "4.800000",
-      "unitSize": "1000000",
-      "thresholdTokens": 512000,
-      "tierCode": "above_512k_tokens"
     }
   ],
   "regionCode": "global",

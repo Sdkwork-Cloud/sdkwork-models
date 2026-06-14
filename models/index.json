@@ -1,8 +1,8 @@
 {
   "catalogVersion": "2026.05.08.1",
   "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 82,
-  "pricingFileCount": 81,
+  "modelCount": 86,
+  "pricingFileCount": 85,
   "regionCount": 25,
   "schemaVersion": "1.1.0",
   "vendorCount": 18,
@@ -98,21 +98,25 @@
       "familiesPath": "baidu/cn/families.json",
       "familyCount": 1,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 3,
       "modelFiles": [
-        "baidu/cn/models/ernie-5.0-thinking-preview.json"
+        "baidu/cn/models/ernie-4.5-turbo-128k.json",
+        "baidu/cn/models/ernie-5.0-thinking-preview.json",
+        "baidu/cn/models/ernie-x1.1.json"
       ],
       "modelsPath": "baidu/cn/models",
       "path": "baidu/cn/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 3,
       "pricingFiles": [
-        "baidu/cn/pricing/ernie-5.0-thinking-preview.json"
+        "baidu/cn/pricing/ernie-4.5-turbo-128k.json",
+        "baidu/cn/pricing/ernie-5.0-thinking-preview.json",
+        "baidu/cn/pricing/ernie-x1.1.json"
       ],
       "pricingPath": "baidu/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "baidu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "58b0a14b53e046c146dfc58eea6c16f163f3f9cc8b53d702c558ed838a0447df",
+      "sha256": "00ccf607392d4af049579ac206e26b8a446dfec7ae3aa7719ce5f57bf70180f2",
       "vendorCode": "baidu"
     },
     {
@@ -396,7 +400,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "3db058f6811c205f3ea71b547259e12eb2a6538a99ea51e498991e108eed3177",
+      "sha256": "f761217d1c5fc2508ee367315907138ebad393c5d0932c3bbcf64ab99fea8353",
       "vendorCode": "minimax"
     },
     {
@@ -431,7 +435,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/global/rankings.json",
       "regionCode": "global",
-      "sha256": "ae6d70fe80d209443da36466ec41b463596123635b08bb5263fdc272959e31f7",
+      "sha256": "b778efd7539465ca08c12ef258e1ede9d77cd5175f43e2d7350b1242e8af5f36",
       "vendorCode": "minimax"
     },
     {
@@ -607,21 +611,25 @@
       "familiesPath": "tencent/cn/families.json",
       "familyCount": 1,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 3,
       "modelFiles": [
+        "tencent/cn/models/hunyuan-2.0-instruct-20251111.json",
+        "tencent/cn/models/hunyuan-2.0-thinking-20251109.json",
         "tencent/cn/models/hunyuan-turbos-latest.json"
       ],
       "modelsPath": "tencent/cn/models",
       "path": "tencent/cn/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 3,
       "pricingFiles": [
+        "tencent/cn/pricing/hunyuan-2.0-instruct-20251111.json",
+        "tencent/cn/pricing/hunyuan-2.0-thinking-20251109.json",
         "tencent/cn/pricing/hunyuan-turbos-latest.json"
       ],
       "pricingPath": "tencent/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "tencent/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "812974824bc9dcae0855dcf47d9d311511e7fe22254e65ec4d07cedd184b7e1f",
+      "sha256": "cb4ea1086ac4b807b93c24df3c0659e4eb3c997aa510e3a9e9d13b145a801d84",
       "vendorCode": "tencent"
     },
     {

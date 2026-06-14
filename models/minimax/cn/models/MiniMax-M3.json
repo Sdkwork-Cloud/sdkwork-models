@@ -1,50 +1,44 @@
 {
   "apiFormat": "openai_compatible",
   "capabilities": [
-    "chat"
+    "chat",
+    "code"
   ],
   "catalogKey": "minimax/MiniMax-M3",
-  "colorToken": "#4f46e5",
+  "colorToken": "#6366f1",
   "contextTokens": 1000000,
-  "description": "Current MiniMax M3 frontier coding and multimodal agent model with 1M context.",
-  "displayName": "MiniMax M3",
+  "description": "MiniMax M3 frontier multimodal coding model with 1M context window, frontier coding capabilities, and multimodal support.",
+  "displayName": "MiniMax-M3",
   "familyCode": "minimax",
   "inputModalities": [
-    "text",
-    "image",
-    "video"
+    "text"
   ],
-  "latencyP50Ms": 680,
-  "latencyP95Ms": 2300,
   "lifecycle": "active",
   "maxInputTokens": 1000000,
-  "maxOutputTokens": 32768,
   "modelId": "MiniMax-M3",
   "outputModalities": [
     "text"
   ],
-  "primaryCapability": "chat",
-  "rankScore": "920.000000",
+  "primaryCapability": "code",
+  "rankScore": "895.000000",
   "regionCode": "cn",
   "releaseStage": "active",
   "routingState": "enabled",
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-06-03T00:00:00Z",
-    "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/models-intro"
   },
   "strengths": [
     "Coding",
-    "Agents",
-    "Long context",
-    "Multimodal input"
+    "Multimodal",
+    "Long context"
   ],
   "supportsJsonSchema": true,
   "supportsStreaming": true,
   "supportsTools": true,
-  "trendScore": "0.990000",
+  "trendScore": "0.910000",
   "vendorCode": "minimax",
-  "vendorName": "MiniMax",
-  "winRate": "0.910000"
+  "vendorName": "MiniMax"
 }
