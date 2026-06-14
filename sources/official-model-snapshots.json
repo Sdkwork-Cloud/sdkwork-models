@@ -108,6 +108,9 @@
           "modelId": "kimi-k2.7-code"
         },
         {
+          "modelId": "kimi-k2.7-code-01hw"
+        },
+        {
           "modelId": "kimi-k2.6"
         },
         {
@@ -122,13 +125,16 @@
         "https://platform.kimi.com/docs/pricing/chat-k25"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "29b18486e2a999843d6acdbee505e46f82bdeda0be239b289e6daee53be52292",
-      "vendorCode": "moonshot"
+      "vendorCode": "moonshot",
+      "sourceSnapshotHash": "8a3cfe5337712665925c812667c75e4296f1a9597efe848b3fe543ab711edf98"
     },
     {
       "models": [
         {
           "modelId": "kimi-k2.7-code"
+        },
+        {
+          "modelId": "kimi-k2.7-code-01hw"
         },
         {
           "modelId": "kimi-k2.6"
@@ -145,8 +151,8 @@
         "https://platform.kimi.ai/docs/pricing/chat-k25"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "2ecf2a29f02b14b9a2eabe72be2b29175394402b614d76857a1a6c774cec12bb",
-      "vendorCode": "moonshot"
+      "vendorCode": "moonshot",
+      "sourceSnapshotHash": "bd5c8280dfd892d99e9ed48274ba49526d1bbac8a7589279a587d0704ef32240"
     }
   ]
 }

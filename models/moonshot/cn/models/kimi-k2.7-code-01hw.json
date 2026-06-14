@@ -1,0 +1,50 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "code",
+    "reasoning"
+  ],
+  "catalogKey": "moonshot/kimi-k2.7-code-01hw",
+  "colorToken": "#1e293b",
+  "contextTokens": 262144,
+  "description": "Kimi K2.7 Code 01hw deployment. Same model as official kimi-k2.7-code but deployed on 01hw infrastructure.",
+  "displayName": "Kimi K2.7 Code (01hw)",
+  "familyCode": "kimi",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 740,
+  "latencyP95Ms": 2400,
+  "lifecycle": "active",
+  "maxInputTokens": 262144,
+  "maxOutputTokens": 32768,
+  "modelId": "kimi-k2.7-code-01hw",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "code",
+  "rankScore": "890.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.kimi.com/"
+  },
+  "strengths": [
+    "Coding",
+    "Long context",
+    "Reasoning",
+    "Agent"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.920000",
+  "vendorCode": "moonshot",
+  "vendorName": "Moonshot Kimi",
+  "winRate": "0.890000"
+}

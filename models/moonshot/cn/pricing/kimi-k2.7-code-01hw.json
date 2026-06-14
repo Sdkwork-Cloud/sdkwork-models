@@ -1,0 +1,58 @@
+{
+  "catalogKey": "moonshot/kimi-k2.7-code-01hw",
+  "currency": "CNY",
+  "modelId": "kimi-k2.7-code-01hw",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k2-7-code-01hw-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://platform.kimi.com/"
+      },
+      "unitPrice": "1.300000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k2-7-code-01hw-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://platform.kimi.com/"
+      },
+      "unitPrice": "6.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k2-7-code-01hw-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://platform.kimi.com/"
+      },
+      "unitPrice": "27.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "moonshot"
+}
