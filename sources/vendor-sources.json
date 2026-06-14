@@ -179,11 +179,12 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-14T00:00:00Z",
       "notes": "ByteDance international operation is modeled as the global region of the vendor with USD billing; Seedance is a model family, not the vendor identity.",
       "official": {
         "additionalUrls": [
-          "https://www.volcengine.com/docs/82379"
+          "https://www.volcengine.com/docs/82379",
+          "https://seed.bytedance.com/en/seed2"
         ],
         "modelsUrl": "https://seed.bytedance.com/en/seed2",
         "pricingUrl": "https://www.volcengine.com/docs/82379"
@@ -196,6 +197,8 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "doubao-seed-2-0-lite-260215",
+        "doubao-seed-2-0-mini-260215",
         "doubao-seedance-2-0-260128"
       ],
       "vendorCode": "bytedance",
@@ -493,7 +496,9 @@
           "https://developers.openai.com/api/docs/models/",
           "https://developers.openai.com/api/docs/models/gpt-5.5-pro",
           "https://developers.openai.com/api/docs/models/gpt-5.4-pro",
-          "https://developers.openai.com/api/docs/models/gpt-realtime-2"
+          "https://developers.openai.com/api/docs/models/gpt-realtime-2",
+          "https://platform.openai.com/docs/models",
+          "https://platform.openai.com/docs/api-reference"
         ],
         "modelsUrl": "https://platform.openai.com/docs/models",
         "pricingUrl": "https://openai.com/api/pricing/"
