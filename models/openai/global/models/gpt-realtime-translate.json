@@ -1,0 +1,38 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-realtime-translate",
+  "colorToken": "#10a37f",
+  "contextTokens": 128000,
+  "description": "Streaming speech-to-speech translation model for realtime multilingual translation.",
+  "displayName": "GPT-Realtime-Translate",
+  "familyCode": "gpt-realtime",
+  "inputModalities": [
+    "audio"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "modelId": "gpt-realtime-translate",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Realtime translation",
+    "Multilingual"
+  ],
+  "supportsStreaming": true,
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
+}

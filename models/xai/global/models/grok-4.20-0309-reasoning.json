@@ -1,0 +1,49 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "xai/grok-4.20-0309-reasoning",
+  "colorToken": "#111827",
+  "contextTokens": 1000000,
+  "description": "Grok 4.20 reasoning model for complex multi-step reasoning and problem-solving tasks.",
+  "displayName": "Grok 4.20 Reasoning",
+  "familyCode": "grok",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 900,
+  "latencyP95Ms": 3200,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "modelId": "grok-4.20-0309-reasoning",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "reasoning",
+  "rankScore": "940.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/docs/models"
+  },
+  "strengths": [
+    "Reasoning",
+    "Math",
+    "Code",
+    "Vision"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.920000"
+}

@@ -121,13 +121,13 @@
           "displayName": "OpenAI",
           "legalName": "OpenAI, Inc.",
           "marketScope": "global",
-          "modelCount": 13,
+          "modelCount": 17,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "openai/global/vendor.json",
-          "pricingFileCount": 13,
+          "pricingFileCount": 17,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 10,
@@ -520,13 +520,13 @@
           "displayName": "xAI",
           "legalName": "xAI",
           "marketScope": "global",
-          "modelCount": 1,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "xai/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 40,

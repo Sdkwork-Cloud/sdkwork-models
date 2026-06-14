@@ -593,11 +593,14 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
-      "notes": "xAI official docs list Grok 4.3 pricing and old 4.x model shutdown dates. Pending independent official snapshot re-verification before official_verified status.",
+      "lastCheckedAt": "2026-06-14T00:00:00Z",
+      "notes": "xAI official docs list Grok 4.3, 4.20 series (reasoning, non-reasoning, multi-agent), and Build 0.1 models.",
       "official": {
         "additionalUrls": [
-          "https://docs.x.ai/"
+          "https://docs.x.ai/",
+          "https://docs.x.ai/developers/models/grok-4.3",
+          "https://docs.x.ai/developers/models/grok-imagine-image-quality",
+          "https://docs.x.ai/developers/models/grok-imagine-video"
         ],
         "modelsUrl": "https://docs.x.ai/docs/models",
         "pricingUrl": "https://docs.x.ai/docs/models"
@@ -610,7 +613,11 @@
       ],
       "regionCode": "global",
       "requiredModels": [
-        "grok-4.3"
+        "grok-4.20-0309-reasoning",
+        "grok-4.20-0309-non-reasoning",
+        "grok-4.20-multi-agent-0309",
+        "grok-4.3",
+        "grok-build-0.1"
       ],
       "vendorCode": "xai",
       "verificationStatus": "official_url_declared"

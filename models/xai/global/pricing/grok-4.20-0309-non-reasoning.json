@@ -1,0 +1,42 @@
+{
+  "catalogKey": "xai/grok-4.20-0309-non-reasoning",
+  "currency": "USD",
+  "modelId": "grok-4.20-0309-non-reasoning",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4-20-non-reasoning-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "unitPrice": "1.250000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4-20-non-reasoning-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-14T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "unitPrice": "2.500000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xai"
+}

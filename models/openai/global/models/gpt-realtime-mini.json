@@ -1,0 +1,41 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-realtime-mini",
+  "colorToken": "#10a37f",
+  "contextTokens": 128000,
+  "description": "Cost-efficient version of GPT-Realtime for voice interactions.",
+  "displayName": "GPT-Realtime mini",
+  "familyCode": "gpt-realtime",
+  "inputModalities": [
+    "audio",
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "modelId": "gpt-realtime-mini",
+  "outputModalities": [
+    "audio",
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Cost efficiency",
+    "Voice",
+    "Realtime"
+  ],
+  "supportsStreaming": true,
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
+}

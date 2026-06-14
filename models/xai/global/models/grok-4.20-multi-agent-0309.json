@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "xai/grok-4.20-multi-agent-0309",
+  "colorToken": "#111827",
+  "contextTokens": 1000000,
+  "description": "Grok 4.20 multi-agent model designed for orchestrated multi-agent workflows and tool-heavy tasks.",
+  "displayName": "Grok 4.20 Multi-Agent",
+  "familyCode": "grok",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 950,
+  "latencyP95Ms": 3500,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "modelId": "grok-4.20-multi-agent-0309",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "reasoning",
+  "rankScore": "938.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/docs/models"
+  },
+  "strengths": [
+    "Multi-agent",
+    "Tool use",
+    "Reasoning"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.920000",
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.915000"
+}

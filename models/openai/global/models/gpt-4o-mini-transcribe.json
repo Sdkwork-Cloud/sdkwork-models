@@ -1,0 +1,38 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-4o-mini-transcribe",
+  "colorToken": "#10a37f",
+  "contextTokens": 128000,
+  "description": "Speech-to-text model powered by GPT-4o mini for audio transcription.",
+  "displayName": "GPT-4o mini Transcribe",
+  "familyCode": "audio",
+  "inputModalities": [
+    "audio"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "modelId": "gpt-4o-mini-transcribe",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Transcription",
+    "Cost efficiency"
+  ],
+  "supportsStreaming": true,
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
+}

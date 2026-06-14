@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "xai/grok-build-0.1",
+  "colorToken": "#374151",
+  "contextTokens": 256000,
+  "description": "Grok Build lightweight model for fast, cost-efficient inference on simpler tasks.",
+  "displayName": "Grok Build 0.1",
+  "familyCode": "grok",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 400,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "maxInputTokens": 256000,
+  "modelId": "grok-build-0.1",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "800.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/docs/models"
+  },
+  "strengths": [
+    "Speed",
+    "Cost efficiency"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.700000",
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.780000"
+}

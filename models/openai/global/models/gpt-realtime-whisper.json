@@ -1,0 +1,38 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-realtime-whisper",
+  "colorToken": "#10a37f",
+  "contextTokens": 128000,
+  "description": "Streaming speech-to-text model for realtime transcription using Whisper.",
+  "displayName": "GPT-Realtime-Whisper",
+  "familyCode": "audio",
+  "inputModalities": [
+    "audio"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "modelId": "gpt-realtime-whisper",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-14T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models"
+  },
+  "strengths": [
+    "Realtime transcription",
+    "Multilingual"
+  ],
+  "supportsStreaming": true,
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
+}

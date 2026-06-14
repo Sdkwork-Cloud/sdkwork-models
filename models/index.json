@@ -1,8 +1,8 @@
 {
   "catalogVersion": "2026.05.08.1",
   "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 74,
-  "pricingFileCount": 73,
+  "modelCount": 82,
+  "pricingFileCount": 81,
   "regionCount": 25,
   "schemaVersion": "1.1.0",
   "vendorCount": 18,
@@ -500,8 +500,9 @@
       "familiesPath": "openai/global/families.json",
       "familyCount": 5,
       "marketScope": "global",
-      "modelCount": 13,
+      "modelCount": 17,
       "modelFiles": [
+        "openai/global/models/gpt-4o-mini-transcribe.json",
         "openai/global/models/gpt-4o-transcribe.json",
         "openai/global/models/gpt-5.2.json",
         "openai/global/models/gpt-5.4-mini.json",
@@ -514,12 +515,16 @@
         "openai/global/models/gpt-image-2.json",
         "openai/global/models/gpt-realtime-1.5.json",
         "openai/global/models/gpt-realtime-2.json",
+        "openai/global/models/gpt-realtime-mini.json",
+        "openai/global/models/gpt-realtime-translate.json",
+        "openai/global/models/gpt-realtime-whisper.json",
         "openai/global/models/text-embedding-3-small.json"
       ],
       "modelsPath": "openai/global/models",
       "path": "openai/global/vendor.json",
-      "pricingFileCount": 13,
+      "pricingFileCount": 17,
       "pricingFiles": [
+        "openai/global/pricing/gpt-4o-mini-transcribe.json",
         "openai/global/pricing/gpt-4o-transcribe.json",
         "openai/global/pricing/gpt-5.2.json",
         "openai/global/pricing/gpt-5.4-mini.json",
@@ -532,13 +537,16 @@
         "openai/global/pricing/gpt-image-2.json",
         "openai/global/pricing/gpt-realtime-1.5.json",
         "openai/global/pricing/gpt-realtime-2.json",
+        "openai/global/pricing/gpt-realtime-mini.json",
+        "openai/global/pricing/gpt-realtime-translate.json",
+        "openai/global/pricing/gpt-realtime-whisper.json",
         "openai/global/pricing/text-embedding-3-small.json"
       ],
       "pricingPath": "openai/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "openai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "9a10759e7d2d8a40b23bffdafc9f17e706e826cc7771ae353e4e1fb6060587ba",
+      "sha256": "e8ebae8805213c752536b4a11d0b4842c23f54ddac4d6f8fedc3721ee6a9504a",
       "vendorCode": "openai"
     },
     {
@@ -624,21 +632,29 @@
       "familiesPath": "xai/global/families.json",
       "familyCount": 1,
       "marketScope": "global",
-      "modelCount": 1,
+      "modelCount": 5,
       "modelFiles": [
-        "xai/global/models/grok-4.3.json"
+        "xai/global/models/grok-4.20-0309-non-reasoning.json",
+        "xai/global/models/grok-4.20-0309-reasoning.json",
+        "xai/global/models/grok-4.20-multi-agent-0309.json",
+        "xai/global/models/grok-4.3.json",
+        "xai/global/models/grok-build-0.1.json"
       ],
       "modelsPath": "xai/global/models",
       "path": "xai/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 5,
       "pricingFiles": [
-        "xai/global/pricing/grok-4.3.json"
+        "xai/global/pricing/grok-4.20-0309-non-reasoning.json",
+        "xai/global/pricing/grok-4.20-0309-reasoning.json",
+        "xai/global/pricing/grok-4.20-multi-agent-0309.json",
+        "xai/global/pricing/grok-4.3.json",
+        "xai/global/pricing/grok-build-0.1.json"
       ],
       "pricingPath": "xai/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "xai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "f6c0151cd75ca01d4818c56363aec19037904b86e1c0aeb48a3d085612765bdf",
+      "sha256": "e6a370bac5dde52f59bda10086e419c68004c6f7fbec9331678beb3ab702293f",
       "vendorCode": "xai"
     },
     {
