@@ -27,7 +27,6 @@
     "grantMode": "current",
     "platform": "WEB",
     "appId": null,
-    "tenantId": "20001",
     "organizationId": null
   },
   "runtime": {
@@ -42,7 +41,12 @@
       "DIRECT_DOWNLOAD"
     ],
     "defaultPlatform": "WEB",
-    "defaultArchitecture": "x64"
+    "defaultArchitecture": "x64",
+    "supportedDeploymentProfiles": [
+      "cloud",
+      "standalone"
+    ],
+    "defaultDeploymentProfile": "cloud"
   },
   "media": {
     "icons": {
@@ -131,7 +135,7 @@
     "installPlatforms": [
       "WEB"
     ],
-    "defaultPackageId": "web-production",
+    "defaultPackageId": "web-universal-cloud-browser-zip",
     "storeUrl": "https://sdkwork.com/apps/sdkwork-models",
     "stores": [],
     "config": {
@@ -159,13 +163,13 @@
   },
   "artifacts": {
     "installConfig": {
-      "defaultPackageId": "web-production",
+      "defaultPackageId": "web-universal-cloud-browser-zip",
       "installCommand": "sdkwork install sdkwork-models",
       "launchCommand": "sdkwork open sdkwork-models",
       "uninstallCommand": "sdkwork uninstall sdkwork-models",
       "packages": [
         {
-          "id": "web-production",
+          "id": "web-universal-cloud-browser-zip",
           "name": "SDKWork Models Web Bundle",
           "sourceType": "WEB_URL",
           "packageFormat": "ZIP",
@@ -174,10 +178,13 @@
           "enabled": true,
           "metadata": {},
           "checksumAlgorithm": "SHA-256",
-          "checksum": "aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0"
+          "checksum": "aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0aa1d45e0",
+          "architecture": "universal",
+          "deploymentProfile": "cloud",
+          "runtimeTarget": "browser"
         },
         {
-          "id": "desktop-windows",
+          "id": "windows-x64-standalone-desktop-zip",
           "name": "SDKWork Models Windows Bundle",
           "sourceType": "BINARY_URL",
           "packageFormat": "ZIP",
@@ -187,10 +194,12 @@
           "metadata": {},
           "architecture": "x64",
           "checksumAlgorithm": "SHA-256",
-          "checksum": "cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84"
+          "checksum": "cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84cf490a84",
+          "deploymentProfile": "standalone",
+          "runtimeTarget": "desktop"
         },
         {
-          "id": "desktop-macos",
+          "id": "macos-universal-standalone-desktop-dmg",
           "name": "SDKWork Models macOS Bundle",
           "sourceType": "BINARY_URL",
           "packageFormat": "DMG",
@@ -200,10 +209,12 @@
           "metadata": {},
           "architecture": "universal",
           "checksumAlgorithm": "SHA-256",
-          "checksum": "88930fb488930fb488930fb488930fb488930fb488930fb488930fb488930fb4"
+          "checksum": "88930fb488930fb488930fb488930fb488930fb488930fb488930fb488930fb4",
+          "deploymentProfile": "standalone",
+          "runtimeTarget": "desktop"
         },
         {
-          "id": "desktop-linux",
+          "id": "linux-x64-standalone-desktop-appimage",
           "name": "SDKWork Models Linux Bundle",
           "sourceType": "BINARY_URL",
           "packageFormat": "APPIMAGE",
@@ -217,7 +228,9 @@
           },
           "architecture": "x64",
           "checksumAlgorithm": "SHA-256",
-          "checksum": "8888c5358888c5358888c5358888c5358888c5358888c5358888c5358888c535"
+          "checksum": "8888c5358888c5358888c5358888c5358888c5358888c5358888c5358888c535",
+          "deploymentProfile": "standalone",
+          "runtimeTarget": "desktop"
         }
       ],
       "metadata": {
@@ -247,10 +260,10 @@
           "Download package matrix normalized"
         ],
         "packageIds": [
-          "web-production",
-          "desktop-windows",
-          "desktop-macos",
-          "desktop-linux"
+          "web-universal-cloud-browser-zip",
+          "windows-x64-standalone-desktop-zip",
+          "macos-universal-standalone-desktop-dmg",
+          "linux-x64-standalone-desktop-appimage"
         ],
         "publishedAt": "2026-05-07T00:00:00Z",
         "current": true,
