@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "sdkwork-models-sdk",
+    "displayName": "SDKWork Models Catalog SDK",
+    "version": "0.1.0",
+    "type": "sdk-family",
+    "root": "sdks/sdkwork-models-sdk",
+    "domain": "intelligence",
+    "declaredDomain": "intelligence",
+    "capability": "model",
+    "status": "standardizing",
+    "languages": ["dart", "java", "javascript", "python", "rust", "typescript"],
+    "generated": false,
+    "private": false,
+    "manifests": [".sdkwork-assembly.json", "README.md"]
+  },
+  "contracts": {
+    "publicExports": ["@sdkwork/models", "sdkwork-models", "sdkwork_models"],
+    "runtimeEntrypoints": [],
+    "sdkClients": [],
+    "events": [],
+    "configKeys": ["SDKWORK_MODELS_CATALOG_ROOT"],
+    "routeManifest": null
+  },
+  "verification": {
+    "commands": ["pnpm --filter @sdkwork/models run test"]
+  },
+  "metadata": {
+    "managedBy": "sdkwork-models maintainers",
+    "standardVersion": "2026-06-21"
+  }
+}

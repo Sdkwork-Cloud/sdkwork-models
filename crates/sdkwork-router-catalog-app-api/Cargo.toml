@@ -1,0 +1,17 @@
+[package]
+name = "sdkwork-router-catalog-app-api"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SDKWork intelligence catalog app API route crate with http route manifest."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+axum.workspace = true
+sdkwork_models_catalog_service.workspace = true
+sdkwork-web-core.workspace = true
+
+[dev-dependencies]
+sdkwork-web-core.workspace = true

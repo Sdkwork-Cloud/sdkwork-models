@@ -1,0 +1,44 @@
+{
+  "name": "@sdkwork/models-pc-admin-resource",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "SDKWork models AI resource and resource-group admin workspace for composed PC hosts.",
+  "exports": {
+    ".": {
+      "types": "./src/index.tsx",
+      "import": "./src/index.tsx",
+      "default": "./src/index.tsx"
+    },
+    "./resourceGroupService": "./src/resourceGroupService.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sdkwork/clawrouter-pc-commons": "workspace:*",
+    "@sdkwork/models-backend-sdk": "workspace:*"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=0.468.0 <2.0.0",
+    "react": ">=18.2.0 <20.0.0",
+    "react-dom": ">=18.2.0 <20.0.0",
+    "react-i18next": ">=13.0.0 <18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "lucide-react": "^0.546.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^17.0.2",
+    "typescript": "^5.9.0"
+  },
+  "sdkwork": {
+    "workspace": "sdkwork-models",
+    "architecture": "pc-react",
+    "domain": "intelligence",
+    "capability": "resource-admin",
+    "status": "standardizing"
+  }
+}

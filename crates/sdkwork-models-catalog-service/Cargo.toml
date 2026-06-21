@@ -1,0 +1,21 @@
+[package]
+name = "sdkwork-models-catalog-service"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SDKWork intelligence model catalog application services and HTTP handlers."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+axum.workspace = true
+bytes.workspace = true
+getrandom.workspace = true
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio.workspace = true
+sdkwork-claw-http.workspace = true
+sdkwork_models_contract_service.workspace = true
+sdkwork_models_catalog_repository_sqlx.workspace = true
+sdkwork-utils-rust.workspace = true

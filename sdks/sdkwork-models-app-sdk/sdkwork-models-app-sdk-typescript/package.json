@@ -1,0 +1,31 @@
+{
+  "name": "@sdkwork/models-app-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Composed TypeScript consumer SDK for sdkwork-models app catalog API.",
+  "type": "module",
+  "main": "./generated/server-openapi/dist/index.cjs",
+  "module": "./generated/server-openapi/dist/index.js",
+  "types": "./generated/server-openapi/dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./generated/server-openapi/dist/index.d.ts",
+      "import": "./generated/server-openapi/dist/index.js",
+      "require": "./generated/server-openapi/dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "pnpm --dir generated/server-openapi run build",
+    "typecheck": "tsc --noEmit -p generated/server-openapi/tsconfig.json"
+  },
+  "dependencies": {
+    "@sdkwork/sdk-common": "^1.0.2"
+  },
+  "sdkwork": {
+    "workspace": "sdkwork-models-app-sdk",
+    "sdkFamily": "sdkwork-models-app-sdk",
+    "domain": "intelligence",
+    "capability": "catalog-app-sdk",
+    "status": "ready"
+  }
+}

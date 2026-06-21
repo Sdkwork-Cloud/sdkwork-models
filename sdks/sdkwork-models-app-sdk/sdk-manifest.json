@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "sdkName": "sdkwork-models-app-sdk",
+  "sdkOwner": "sdkwork-models",
+  "apiAuthority": "sdkwork-models-app-api",
+  "sdkFamily": "sdkwork-models-app-sdk",
+  "sdkType": "app",
+  "apiPrefix": "/app/v3/api",
+  "generationInputSpec": "openapi/sdkwork-models-app-api.openapi.json",
+  "generatedPackages": {
+    "typescript": {
+      "language": "typescript",
+      "packageName": "sdkwork-models-app-sdk-generated-typescript",
+      "generatedOutput": "sdkwork-models-app-sdk-typescript/generated/server-openapi"
+    },
+    "rust": {
+      "language": "rust",
+      "packageName": "sdkwork-models-app-sdk-generated-rust",
+      "generatedOutput": "sdkwork-models-app-sdk-rust/generated/server-openapi"
+    },
+    "java": {
+      "language": "java",
+      "packageName": "sdkwork-models-app-sdk-generated-java",
+      "generatedOutput": "sdkwork-models-app-sdk-java/generated/server-openapi"
+    },
+    "python": {
+      "language": "python",
+      "packageName": "sdkwork-models-app-sdk-generated-python",
+      "generatedOutput": "sdkwork-models-app-sdk-python/generated/server-openapi"
+    },
+    "go": {
+      "language": "go",
+      "packageName": "sdkwork-models-app-sdk-generated-go",
+      "generatedOutput": "sdkwork-models-app-sdk-go/generated/server-openapi"
+    }
+  },
+  "sdkDependencies": [
+    {
+      "workspace": "sdkwork-appbase-app-sdk",
+      "role": "appbase-app-capability",
+      "required": true,
+      "dependencyMode": "consumer-sdk",
+      "apiPrefix": "/app/v3/api",
+      "apiAuthority": "sdkwork-appbase-app-api",
+      "generatedTransportImportPolicy": "forbidden",
+      "packageByLanguage": {
+        "typescript": "@sdkwork/appbase-app-sdk",
+        "rust": "sdkwork-appbase-app-sdk",
+        "java": "com.sdkwork:sdkwork-appbase-app-sdk",
+        "python": "sdkwork-appbase-app-sdk",
+        "go": "github.com/sdkwork/sdkwork-appbase-app-sdk"
+      }
+    }
+  ],
+  "dependencyApiExports": [],
+  "generatorName": "sdkwork-sdk-generator",
+  "baseUrl": "http://127.0.0.1:18080",
+  "standardProfile": "sdkwork-v3",
+  "fixedSdkVersion": "0.1.0",
+  "ownerOnlyOperationCount": 3,
+  "managedBy": "tools/models_sdk_generator_runner.mjs"
+}

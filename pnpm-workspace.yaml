@@ -1,0 +1,8 @@
+packages:
+  - "."
+  - "apps/sdkwork-models-pc"
+  - "apps/sdkwork-models-pc/packages/*"
+  - "sdks/sdkwork-models-sdk/sdkwork-models-sdk-typescript"
+  - "sdks/sdkwork-models-backend-sdk/sdkwork-models-backend-sdk-typescript"
+  - "sdks/sdkwork-models-app-sdk/sdkwork-models-app-sdk-typescript"
+  - "../sdkwork-utils/packages/sdkwork-utils-typescript"

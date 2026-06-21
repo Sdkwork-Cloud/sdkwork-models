@@ -1,0 +1,9 @@
+[package]
+name = "sdkwork-models-database-bootstrap"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SDKWork Models catalog database bootstrap contracts for composed runtime installation."
+
+[lib]
+path = "src/lib.rs"

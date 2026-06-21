@@ -1,0 +1,1 @@
+{"version":3,"file":"model-vendors-create-result.d.ts","sourceRoot":"","sources":["../../src/types/model-vendors-create-result.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,gCAAgC,EAAE,MAAM,wCAAwC,CAAC;AAE/F,iEAAiE;AACjE,MAAM,WAAW,wBAAwB;IACvC,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;IACb,iDAAiD;IACjD,IAAI,CAAC,EAAE,gCAAgC,CAAC;IACxC,uCAAuC;IACvC,GAAG,CAAC,EAAE,MAAM,CAAC;CACd"}

@@ -2,13 +2,34 @@
   "name": "@sdkwork/models-catalog",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.30.2",
   "scripts": {
+    "dev": "pnpm --filter @sdkwork/models-pc run dev",
+    "build": "node tools/build-index.mjs && pnpm --filter @sdkwork/models run build && pnpm --filter @sdkwork/models-pc run build",
+    "test": "pnpm --filter @sdkwork/models run test && pnpm --filter @sdkwork/models-pc run test && pnpm run test:rust",
+    "check": "node tools/build-index.mjs --check && node tools/validate-catalog.mjs && node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json --as-of-catalog-generated-at && node tools/catalog-audit.mjs && node tools/release-catalog.mjs --check",
+    "verify": "pnpm run check && pnpm run test",
+    "clean": "node scripts/clean.mjs",
     "validate": "node tools/validate-catalog.mjs",
     "build:index": "node tools/build-index.mjs",
     "audit": "node tools/catalog-audit.mjs",
     "freshness": "node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json",
     "diff": "node tools/catalog-diff.mjs",
     "release:check": "node tools/release-catalog.mjs --check",
-    "check": "node tools/build-index.mjs --check && node tools/validate-catalog.mjs && node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json --as-of-catalog-generated-at && node tools/catalog-audit.mjs && node tools/release-catalog.mjs --check"
+    "release:validate": "node tools/release-catalog.mjs --check",
+    "sdk:check": "pnpm --filter @sdkwork/models run build && pnpm --filter @sdkwork/models run test",
+    "openapi:materialize": "node tools/materialize-models-openapi.mjs",
+    "openapi:export": "node tools/models_openapi_export.mjs",
+    "sdk:generate": "node tools/models-sdk-generate.mjs",
+    "sdk:build": "pnpm --filter @sdkwork/models-backend-sdk run build && pnpm --filter @sdkwork/models-app-sdk run build",
+    "db:validate": "node ../sdkwork-specs/tools/check-database-framework-standard.mjs --root .",
+    "db:sqlite-baseline": "node tools/materialize-models-sqlite-baseline.mjs",
+    "db:plan": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . plan",
+    "db:status": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . status",
+    "route-manifest:check": "cargo test -p sdkwork-router-catalog-backend-api --test route_manifest && cargo test -p sdkwork-router-catalog-app-api --test route_manifest",
+    "test:rust": "cargo test --workspace --offline"
+  },
+  "dependencies": {
+    "@sdkwork/utils": "workspace:*"
   }
 }

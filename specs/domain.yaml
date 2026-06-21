@@ -1,0 +1,17 @@
+schemaVersion: 1
+domain: intelligence
+capabilities:
+  - id: catalog
+    description: AI model catalog dictionary (vendors, models, pricing evidence, rankings)
+    serviceCode: SDKWORK_MODELS
+    databaseModuleId: sdkwork-models
+    routeCrates:
+      app: sdkwork-router-catalog-app-api
+      backend: sdkwork-router-catalog-backend-api
+    apiAuthorities:
+      app: sdkwork-models-app-api
+      backend: sdkwork-models-backend-api
+    sdkFamilies:
+      app: sdkwork-models-app-sdk
+      backend: sdkwork-models-backend-sdk
+      fileCatalog: sdkwork-models-sdk

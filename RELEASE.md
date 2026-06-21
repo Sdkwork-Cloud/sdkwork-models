@@ -49,12 +49,8 @@ Use the actual release tag for the target catalog version.
 Run these commands before tagging or publishing:
 
 ```powershell
-node tools\build-index.mjs --check
-node tools\validate-catalog.mjs
-node tools\freshness-report.mjs --max-age-policy catalog-freshness-policy.json --as-of 2026-05-08
-node tools\catalog-audit.mjs --as-of 2026-05-08
-node tools\release-catalog.mjs --check --as-of 2026-05-08
-cargo test --manifest-path sdkwork-models-rust\Cargo.toml --offline
+pnpm run verify
+cargo test --manifest-path sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust/Cargo.toml --offline
 ```
 
 The source evidence release gate is mandatory. `sources/vendor-sources.json`,

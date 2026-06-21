@@ -1,0 +1,1 @@
+{"version":3,"file":"model-mappings-list-result.d.ts","sourceRoot":"","sources":["../../src/types/model-mappings-list-result.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,0BAA0B,EAAE,MAAM,iCAAiC,CAAC;AAElF,gEAAgE;AAChE,MAAM,WAAW,uBAAuB;IACtC,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;IACb,gDAAgD;IAChD,IAAI,CAAC,EAAE,0BAA0B,CAAC;IAClC,uCAAuC;IACvC,GAAG,CAAC,EAAE,MAAM,CAAC;CACd"}

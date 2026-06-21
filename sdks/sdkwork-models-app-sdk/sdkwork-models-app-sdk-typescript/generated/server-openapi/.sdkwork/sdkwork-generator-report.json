@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "generator": "@sdkwork/sdk-generator",
+  "artifacts": {
+    "stateDir": ".sdkwork",
+    "manifestPath": ".sdkwork/sdkwork-generator-manifest.json",
+    "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
+    "executionReportPath": ".sdkwork/sdkwork-generator-report.json",
+    "manualBackupDir": ".sdkwork/manual-backups"
+  },
+  "status": "ok",
+  "mode": "apply",
+  "hasChanges": false,
+  "hasDestructiveChanges": false,
+  "changeFingerprint": "db17ff6f8a7d8292c96f84f315454db02e2b274045c528b66cd4ae9ebf5deb4d",
+  "changeImpact": {
+    "schemaVersion": 1,
+    "areas": [],
+    "details": [],
+    "requiresVerification": false,
+    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+  },
+  "executionDecision": {
+    "schemaVersion": 1,
+    "riskLevel": "low",
+    "nextAction": "skip",
+    "requiresManualReview": false,
+    "applyRequiresExpectedFingerprint": false,
+    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "reasons": [
+      "no-actionable-changes"
+    ]
+  },
+  "executionHandoff": {
+    "schemaVersion": 1,
+    "summary": "No further commands are required.",
+    "steps": []
+  },
+  "verificationPlan": {
+    "shouldRun": false,
+    "runPhase": "skip",
+    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
+    "steps": []
+  },
+  "sdk": {
+    "name": "sdkwork-models-app-sdk",
+    "version": "0.1.0",
+    "language": "typescript",
+    "sdkType": "app",
+    "protocol": "http",
+    "outputPath": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
+    "packageName": "sdkwork-models-app-sdk-generated-typescript"
+  },
+  "versioning": {
+    "resolvedVersion": "0.1.0",
+    "localVersions": []
+  },
+  "stats": {
+    "totalFiles": 44,
+    "models": 20,
+    "apis": 1,
+    "types": 22
+  },
+  "warnings": [],
+  "syncSummary": {
+    "dryRun": false,
+    "controlPlaneEnabled": true,
+    "writtenFiles": 0,
+    "skippedScaffoldFiles": 2,
+    "skippedUnchangedGeneratedFiles": 42,
+    "deletedGeneratedFiles": 0,
+    "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
+    "changeFingerprint": "db17ff6f8a7d8292c96f84f315454db02e2b274045c528b66cd4ae9ebf5deb4d",
+    "changes": {
+      "createdGeneratedFiles": [],
+      "updatedGeneratedFiles": [],
+      "unchangedGeneratedFiles": [
+        "bin/publish-core.mjs",
+        "bin/publish.ps1",
+        "bin/publish.sh",
+        "bin/sdk-gen.bat",
+        "bin/sdk-gen.sh",
+        "CHANGELOG.md",
+        "LICENSE",
+        "package.json",
+        "README.md",
+        "sdkwork-sdk.json",
+        "src/api/ai.ts",
+        "src/api/base.ts",
+        "src/api/index.ts",
+        "src/api/paths.ts",
+        "src/auth/index.ts",
+        "src/http/client.ts",
+        "src/http/index.ts",
+        "src/index.ts",
+        "src/sdk.ts",
+        "src/types/app-model-catalog-group-option.ts",
+        "src/types/app-model-catalog-item.ts",
+        "src/types/app-model-catalog-price-availability.ts",
+        "src/types/app-model-catalog-reference-price.ts",
+        "src/types/app-model-catalog-response.ts",
+        "src/types/common.ts",
+        "src/types/field-error.ts",
+        "src/types/index.ts",
+        "src/types/json-null.ts",
+        "src/types/json-object.ts",
+        "src/types/json-value.ts",
+        "src/types/model-ranking-history-entry.ts",
+        "src/types/model-ranking-history-point.ts",
+        "src/types/model-ranking-item.ts",
+        "src/types/model-rankings-list-result.ts",
+        "src/types/model-rankings-snapshot.ts",
+        "src/types/model-rankings-source.ts",
+        "src/types/model-vendors-list-result.ts",
+        "src/types/models-list-result.ts",
+        "src/types/problem-detail.ts",
+        "src/types/ranking-vendor-option.ts",
+        "src/types/ranking-vendor-options-response.ts",
+        "tsconfig.json"
+      ],
+      "deletedGeneratedFiles": [],
+      "scaffoldedFiles": [],
+      "preservedScaffoldFiles": [
+        "custom/build-runtime.mjs",
+        "custom/README.md"
+      ],
+      "backedUpFiles": []
+    },
+    "impact": {
+      "schemaVersion": 1,
+      "areas": [],
+      "details": [],
+      "requiresVerification": false,
+      "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    },
+    "verificationPlan": {
+      "shouldRun": false,
+      "runPhase": "skip",
+      "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
+      "steps": []
+    },
+    "executionDecision": {
+      "schemaVersion": 1,
+      "riskLevel": "low",
+      "nextAction": "skip",
+      "requiresManualReview": false,
+      "applyRequiresExpectedFingerprint": false,
+      "summary": "No actionable changes were detected. No apply or verification step is required.",
+      "reasons": [
+        "no-actionable-changes"
+      ]
+    },
+    "backedUpFiles": [],
+    "preservedLegacyFiles": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "../sdkwork-github-workflow/schemas/sdkwork-workflow.schema.json",
+  "schemaVersion": "2026-06-06.sdkwork.workflow.v1",
+  "app": {
+    "id": "sdkwork-models",
+    "name": "SDKWork Models",
+    "repository": "Sdkwork-Cloud/sdkwork-models",
+    "sourcePath": ".",
+    "configPath": "sdkwork.app.config.json"
+  },
+  "release": {
+    "artifactPrefix": "sdkwork-models",
+    "defaultVersion": "0.1.0",
+    "changelog": {
+      "source": "app-manifest",
+      "maxCommitSubjects": 50
+    }
+  },
+  "dependencies": [
+    {
+      "id": "sdkwork-utils",
+      "repository": "Sdkwork-Cloud/sdkwork-utils",
+      "refInput": "SDKWORK_UTILS_REF",
+      "tokenSecret": "SDKWORK_RELEASE_TOKEN"
+    }
+  ],
+  "toolchains": {
+    "node": "22",
+    "pnpm": "10.30.2",
+    "rust": "stable"
+  },
+  "lifecycle": {
+    "install": [
+      {
+        "name": "Install workspace dependencies",
+        "shell": "pwsh",
+        "run": "pnpm install --frozen-lockfile || pnpm install"
+      }
+    ],
+    "build": [
+      {
+        "name": "Build catalog indexes and PC app",
+        "shell": "pwsh",
+        "run": "pnpm run build"
+      }
+    ],
+    "validate": [
+      {
+        "name": "Run SDKWork verify",
+        "shell": "pwsh",
+        "run": "pnpm run verify"
+      }
+    ],
+    "package": [
+      {
+        "name": "Package catalog release evidence",
+        "shell": "pwsh",
+        "run": "node tools/release-catalog.mjs --check"
+      }
+    ],
+    "sign": [
+      {
+        "name": "Sign artifacts placeholder",
+        "shell": "pwsh",
+        "run": "Write-Host \"Signing policy is configured by release environment for $env:SDKWORK_PACKAGE_ID\""
+      }
+    ],
+    "sbom": [
+      {
+        "name": "SBOM placeholder",
+        "shell": "pwsh",
+        "run": "Write-Host \"SBOM generation deferred until release gate enables supply-chain evidence\""
+      }
+    ]
+  },
+  "security": {
+    "artifactAttestations": false,
+    "sbomRequired": false,
+    "signingRequired": false
+  },
+  "publish": {
+    "workflowArtifact": true,
+    "githubRelease": false,
+    "retentionDays": 30
+  }
+}

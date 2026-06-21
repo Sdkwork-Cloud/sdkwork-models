@@ -29,22 +29,16 @@ https://github.com/Sdkwork-Cloud/sdkwork-models.git
 
 ## Standard
 
-The authoritative standard is documented in:
+The authoritative SDKWork standards are:
 
 ```text
-../../docs/32-sdkwork-models-standard.md
+../sdkwork-specs/README.md
+specs/component.spec.json
+docs/standards-alignment.md
+docs/root-layout.md
 ```
 
-That document defines:
-
-- directory layout
-- JSON file contracts
-- vendor and region directory rules
-- billing meter and price decimal rules
-- ranking and overlay boundaries
-- multi-language SDK API standards
-- ClawRouter import behavior
-- versioning and release rules
+Repository-specific catalog contracts remain documented in this README and under `schemas/`.
 
 ## Directory Layout
 
@@ -87,11 +81,15 @@ sdkwork-models/
     official-model-snapshots.json
     official-verification-policy.json
   tools/
-  sdkwork-models-typescript/
-  sdkwork-models-python/
-  sdkwork-models-java/
-  sdkwork-models-rust/
-  sdkwork-models-flutter/
+  apps/
+    sdkwork-models-pc/
+  sdks/
+    sdkwork-models-sdk/
+      sdkwork-models-sdk-typescript/
+      sdkwork-models-sdk-python/
+      sdkwork-models-sdk-java/
+      sdkwork-models-sdk-rust/
+      sdkwork-models-sdk-flutter/
 ```
 
 
@@ -387,12 +385,7 @@ Each data update must regenerate indexes, validate JSON contracts, check source
 freshness, and create or verify release metadata:
 
 ```powershell
-pnpm.cmd models:check
-node tools\build-index.mjs --check
-node tools\validate-catalog.mjs
-node tools\freshness-report.mjs --max-age-policy catalog-freshness-policy.json --as-of 2026-05-08
-node tools\catalog-audit.mjs --as-of 2026-05-08
-node tools\release-catalog.mjs --check --as-of 2026-05-08
+pnpm run check
 ```
 
 ClawRouter deployments should pin a catalog tag, release artifact, or submodule
@@ -458,7 +451,8 @@ Extension points are limited to declared public exports, runtime entrypoints, SD
 
 ### Verification
 
-- `node apps/scripts/validate-component-specs.mjs --apps-root apps --json`
+- `pnpm run check`
+- `pnpm run verify`
 
 ### Owner And Status
 

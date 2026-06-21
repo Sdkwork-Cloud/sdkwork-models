@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.database.prefix-registry",
+  "prefixes": [
+    {
+      "prefix": "ai_model_",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_billing_meter",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_modality",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_api_endpoint",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_resource",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_vendor_",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    },
+    {
+      "prefix": "ai_model_rank_snapshot",
+      "owner": "sdkwork-models-platform",
+      "domain": "intelligence",
+      "capability": "catalog"
+    }
+  ]
+}

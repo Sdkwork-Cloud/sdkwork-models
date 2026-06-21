@@ -5,11 +5,12 @@ coverage/
 .turbo/
 .cache/
 
-sdkwork-models-typescript/dist/
-sdkwork-models-rust/target/
-sdkwork-models-java/target/
-sdkwork-models-flutter/.dart_tool/
-sdkwork-models-flutter/build/
+sdks/sdkwork-models-sdk/sdkwork-models-sdk-typescript/dist/
+sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust/target/
+sdks/sdkwork-models-sdk/sdkwork-models-sdk-java/target/
+sdks/sdkwork-models-sdk/sdkwork-models-sdk-flutter/.dart_tool/
+sdks/sdkwork-models-sdk/sdkwork-models-sdk-flutter/build/
+apps/sdkwork-models-pc/dist/
 
 *.log
 __pycache__/

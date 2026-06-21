@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "sdkName": "sdkwork-models-backend-sdk",
+  "sdkOwner": "sdkwork-models",
+  "apiAuthority": "sdkwork-models-backend-api",
+  "sdkFamily": "sdkwork-models-backend-sdk",
+  "sdkType": "backend",
+  "apiPrefix": "/backend/v3/api",
+  "generationInputSpec": "openapi/sdkwork-models-backend-api.openapi.json",
+  "generatedPackages": {
+    "typescript": {
+      "language": "typescript",
+      "packageName": "sdkwork-models-backend-sdk-generated-typescript",
+      "generatedOutput": "sdkwork-models-backend-sdk-typescript/generated/server-openapi"
+    },
+    "rust": {
+      "language": "rust",
+      "packageName": "sdkwork-models-backend-sdk-generated-rust",
+      "generatedOutput": "sdkwork-models-backend-sdk-rust/generated/server-openapi"
+    },
+    "java": {
+      "language": "java",
+      "packageName": "sdkwork-models-backend-sdk-generated-java",
+      "generatedOutput": "sdkwork-models-backend-sdk-java/generated/server-openapi"
+    },
+    "python": {
+      "language": "python",
+      "packageName": "sdkwork-models-backend-sdk-generated-python",
+      "generatedOutput": "sdkwork-models-backend-sdk-python/generated/server-openapi"
+    },
+    "go": {
+      "language": "go",
+      "packageName": "sdkwork-models-backend-sdk-generated-go",
+      "generatedOutput": "sdkwork-models-backend-sdk-go/generated/server-openapi"
+    }
+  },
+  "sdkDependencies": [
+    {
+      "workspace": "sdkwork-appbase-backend-sdk",
+      "role": "appbase-backend-management-capability",
+      "required": true,
+      "dependencyMode": "consumer-sdk",
+      "apiPrefix": "/backend/v3/api",
+      "apiAuthority": "sdkwork-appbase-backend-api",
+      "generatedTransportImportPolicy": "forbidden",
+      "packageByLanguage": {
+        "typescript": "@sdkwork/appbase-backend-sdk",
+        "rust": "sdkwork-appbase-backend-sdk",
+        "java": "com.sdkwork:sdkwork-appbase-backend-sdk",
+        "python": "sdkwork-appbase-backend-sdk",
+        "go": "github.com/sdkwork/sdkwork-appbase-backend-sdk"
+      }
+    }
+  ],
+  "dependencyApiExports": [],
+  "generatorName": "sdkwork-sdk-generator",
+  "baseUrl": "http://127.0.0.1:18080",
+  "standardProfile": "sdkwork-v3",
+  "fixedSdkVersion": "0.1.0",
+  "ownerOnlyOperationCount": 24,
+  "managedBy": "tools/models_sdk_generator_runner.mjs"
+}

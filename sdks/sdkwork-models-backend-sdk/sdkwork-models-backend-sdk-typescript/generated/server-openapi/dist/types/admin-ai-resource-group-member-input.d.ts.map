@@ -1,0 +1,1 @@
+{"version":3,"file":"admin-ai-resource-group-member-input.d.ts","sourceRoot":"","sources":["../../src/types/admin-ai-resource-group-member-input.ts"],"names":[],"mappings":"AAAA,0EAA0E;AAC1E,MAAM,WAAW,+BAA+B;IAC9C,+DAA+D;IAC/D,QAAQ,CAAC,EAAE,UAAU,GAAG,UAAU,GAAG,UAAU,CAAC;IAChD,mEAAmE;IACnE,YAAY,EAAE,MAAM,CAAC;IACrB,gEAAgE;IAChE,SAAS,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CAC3B"}

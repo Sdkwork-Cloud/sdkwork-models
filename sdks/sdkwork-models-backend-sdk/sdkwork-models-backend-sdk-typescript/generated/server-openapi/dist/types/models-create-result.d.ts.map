@@ -1,0 +1,1 @@
+{"version":3,"file":"models-create-result.d.ts","sourceRoot":"","sources":["../../src/types/models-create-result.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,4BAA4B,EAAE,MAAM,oCAAoC,CAAC;AAEvF,0DAA0D;AAC1D,MAAM,WAAW,kBAAkB;IACjC,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;IACb,0CAA0C;IAC1C,IAAI,CAAC,EAAE,4BAA4B,CAAC;IACpC,uCAAuC;IACvC,GAAG,CAAC,EAAE,MAAM,CAAC;CACd"}

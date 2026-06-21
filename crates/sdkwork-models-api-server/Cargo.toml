@@ -1,0 +1,28 @@
+[package]
+name = "sdkwork-models-api-server"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SDKWork canonical intelligence catalog HTTP route composition for local/private deployments."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+axum.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+sdkwork-id-core.workspace = true
+sdkwork_models_catalog_service.workspace = true
+sdkwork_models_catalog_repository_sqlx.workspace = true
+sdkwork_models_contract_service.workspace = true
+sdkwork_router_catalog_app_api.workspace = true
+sdkwork_router_catalog_backend_api.workspace = true
+sdkwork-iam-web-adapter.workspace = true
+sdkwork-web-axum.workspace = true
+sdkwork-web-core.workspace = true
+
+[dev-dependencies]
+http-body-util = "0.1"
+tokio = { version = "1.51", features = ["macros", "rt-multi-thread"] }
+tower = { version = "0.5", features = ["util"] }

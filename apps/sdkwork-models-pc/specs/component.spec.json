@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/models-pc",
+    "displayName": "SDKWork Models PC",
+    "version": "0.1.0",
+    "type": "node-package",
+    "root": "apps/sdkwork-models-pc",
+    "domain": "intelligence",
+    "declaredDomain": null,
+    "capability": "model",
+    "status": "standardizing",
+    "languages": [
+      "typescript"
+    ],
+    "generated": false,
+    "private": true,
+    "manifests": [
+      "package.json"
+    ]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "APP_PC_ARCHITECTURE_SPEC.md",
+      "path": "../../../../sdkwork-specs/APP_PC_ARCHITECTURE_SPEC.md",
+      "purpose": "PC browser application package layout and shell boundaries."
+    },
+    {
+      "file": "FRONTEND_CODE_SPEC.md",
+      "path": "../../../../sdkwork-specs/FRONTEND_CODE_SPEC.md",
+      "purpose": "React/Vite UI implementation rules."
+    },
+    {
+      "file": "FRONTEND_SPEC.md",
+      "path": "../../../../sdkwork-specs/FRONTEND_SPEC.md",
+      "purpose": "UI, service, SDK, accessibility, and frontend runtime rules."
+    },
+    {
+      "file": "README.md",
+      "path": "../../../../sdkwork-specs/README.md",
+      "purpose": "SDKWork root standards entrypoint."
+    },
+    {
+      "file": "TEST_SPEC.md",
+      "path": "../../../../sdkwork-specs/TEST_SPEC.md",
+      "purpose": "Contract, frontend, SDK, security, parity, and documentation verification rules."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "TypeScript and Node package rules."
+    }
+  ],
+  "contracts": {
+    "publicExports": [
+      "@sdkwork/models-pc",
+      "@sdkwork/models-pc-core",
+      "@sdkwork/models-pc-catalog"
+    ],
+    "runtimeEntrypoints": [
+      "package.json#scripts.dev",
+      "package.json#scripts.build"
+    ],
+    "sdkClients": [],
+    "events": [],
+    "configKeys": [
+      "SDKWORK_MODELS_CATALOG_ROOT"
+    ],
+    "routeManifest": null
+  },
+  "integration": {
+    "authority": "Root SDKWork specs remain authoritative. Local specs may extend but must not contradict them.",
+    "dependencyPolicy": "PC UI consumes catalog through @sdkwork/models and @sdkwork/models-pc-core only.",
+    "sdkPolicy": "No raw HTTP catalog fetches outside the Vite catalog middleware boundary.",
+    "languagePolicy": "Browser bundles must not import Node filesystem APIs."
+  },
+  "verification": {
+    "commands": [
+      "pnpm --filter @sdkwork/models-pc run test",
+      "pnpm --filter @sdkwork/models-pc run build"
+    ]
+  },
+  "metadata": {
+    "managedBy": "sdkwork-models maintainers",
+    "standardVersion": "2026-06-21"
+  }
+}

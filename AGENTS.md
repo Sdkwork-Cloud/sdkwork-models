@@ -20,7 +20,9 @@ Do not copy root standard text into this repository. If these relative paths do 
 
 ## Application Identity
 
-No `sdkwork.app.config.json` is present at this root. If the task changes application behavior, runtime config, SDK wiring, release metadata, or app-owned capabilities, first locate the nearest application root that has this manifest or add one according to the root specs.
+`sdkwork.app.config.json` at this repository root registers the `sdkwork-models` product. The PC
+browser application root is `apps/sdkwork-models-pc/`. Catalog SDK families live under
+`sdks/sdkwork-models-sdk/`.
 
 ## Local Dictionary Structure
 
@@ -28,12 +30,16 @@ No `sdkwork.app.config.json` is present at this root. If the task changes applic
 - `CLAUDE.md`: Claude Code compatibility shim that points to `AGENTS.md` and must not duplicate rules.
 - `GEMINI.md`: Gemini CLI compatibility shim that points to `AGENTS.md` and must not duplicate rules.
 - `CODEX.md`: Codex compatibility shim that points to `AGENTS.md` and must not duplicate rules.
-- `sdkwork.app.config.json`: not present here; required for application roots.
+- `sdkwork.app.config.json`: product identity, owned capabilities, and release metadata.
 - `.sdkwork/`: reserved local dictionary folder; create only for local skills, plugins, manifests, or AI workspace metadata.
 - `specs/`: local application/component contracts and narrowing rules.
-- `sdks/`: not present here; use only for SDK authority or generation surfaces.
-- `package.json`: language/build manifests.
-- Local directories to inspect first when relevant: `models/`, `overlays/`, `releases/`, `schemas/`, `sdkwork-models-flutter/`, `sdkwork-models-java/`, `sdkwork-models-python/`, `sdkwork-models-rust/`, `sdkwork-models-typescript/`, `sources/`, `specs/`, `tools/`.
+- `apis/`: authored OpenAPI contracts for intelligence catalog app/backend surfaces.
+- `crates/`: Rust service, repository, route, and database bootstrap crates.
+- `database/`: L2 database module contract, baselines, migrations, and seeds.
+- `sdks/`: generated and assembly metadata for `@sdkwork/models-{app,backend}-sdk` families.
+- `apps/`: PC browser application root (`apps/sdkwork-models-pc/`).
+- `package.json`, `Cargo.toml`: Node and Rust workspace manifests.
+- Local directories to inspect first when relevant: `apps/`, `apis/`, `crates/`, `database/`, `models/`, `overlays/`, `releases/`, `schemas/`, `sdks/`, `sources/`, `specs/`, `tools/`, `docs/`, `tests/`.
 
 ## Spec Resolution Order
 
@@ -68,9 +74,10 @@ For TypeScript or frontend code, prefer strict types, explicit package exports, 
 
 Run commands from this directory unless a command explicitly targets another path.
 
-- `npm install`: install dependencies for this workspace or package.
-- `npm run check`: run repository verification or architecture checks.
-- `npm run build:index`: build production artifacts or package outputs.
+- `npm install` or `pnpm install`: install dependencies for this workspace or package.
+- `pnpm run check`: run repository verification or architecture checks.
+- `pnpm run verify`: run merge-ready verification (`check` plus language SDK tests).
+- `pnpm run build:index`: build production artifacts or package outputs.
 
 Run the narrowest relevant check first, then broader verification when API contracts, SDK generation, persistence, security, or cross-package boundaries change.
 

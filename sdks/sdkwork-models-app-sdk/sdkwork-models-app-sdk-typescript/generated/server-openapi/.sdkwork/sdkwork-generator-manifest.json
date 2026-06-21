@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "generator": "@sdkwork/sdk-generator",
+  "sdk": {
+    "name": "sdkwork-models-app-sdk",
+    "version": "0.1.0",
+    "language": "typescript",
+    "sdkType": "app",
+    "protocol": "http",
+    "packageName": "sdkwork-models-app-sdk-generated-typescript"
+  },
+  "generatedFiles": [
+    {
+      "path": "bin/publish-core.mjs",
+      "sha256": "98ad0918a78bfbe22bf8f12fec709b0bed545b9e01edd40f5e4abf31a23378a5"
+    },
+    {
+      "path": "bin/publish.ps1",
+      "sha256": "78c6419400b988409d9393c2ecd85aa02dd6760f73edb3cc84cb28fefc51b41e"
+    },
+    {
+      "path": "bin/publish.sh",
+      "sha256": "899087c23e670b6951a12a13490fd557f761c96d78fabfb7e58a37e367db889f"
+    },
+    {
+      "path": "bin/sdk-gen.bat",
+      "sha256": "2d56891dc8276339ebbffc78ada3cc1bf73e2831453da89d95fcd2277bb4a05b"
+    },
+    {
+      "path": "bin/sdk-gen.sh",
+      "sha256": "c9bab3f87d5327833ca9a392f6b8e6b6d3386a46836cc3c48ef48313b603bd90"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "fb941a0806986a54fc192f98a98f6d9c282b8d350b2b19a3e71dda404e92d545"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7840cc7d2b36ff364ac16c2fc5ec15b861bfe96854eecf81fb59b00edb8b1447"
+    },
+    {
+      "path": "package.json",
+      "sha256": "bbedf8beec4dcb60587f95753f6e65a605a41b6a56c5f94e1c5a1e81b8619278"
+    },
+    {
+      "path": "README.md",
+      "sha256": "5e97bbeacaf3631f72e42c0e1998b4a653bf58817f62ffe7e1bcbccc2eaf9c1a"
+    },
+    {
+      "path": "sdkwork-sdk.json",
+      "sha256": "9e442ca59cfc9b55770b5d9de535d495966406855f654bd562ecf67f92848dd0"
+    },
+    {
+      "path": "src/api/ai.ts",
+      "sha256": "733efb867bd89ef36492b3ae93306cbaab4a393517fe37674bd8fd15cd8f54b4"
+    },
+    {
+      "path": "src/api/base.ts",
+      "sha256": "02ad25e6bf331ff241ba387c2947ddf1900dd849038e08c2757416a3aa788a04"
+    },
+    {
+      "path": "src/api/index.ts",
+      "sha256": "c7bde2c8b91405d9767318c1f9570eeaa23ee6161afb571a44aca6d166809886"
+    },
+    {
+      "path": "src/api/paths.ts",
+      "sha256": "4ffed7b7d576dc11081bf6b43511465d3a5db410bd25c425ef47b69b154981ad"
+    },
+    {
+      "path": "src/auth/index.ts",
+      "sha256": "657fc63738bdcd61d83133120732a477dd127448cf2c51229b05d21f5e1f5c04"
+    },
+    {
+      "path": "src/http/client.ts",
+      "sha256": "7c5521163579261418c56e8126b0389dd78be9e0931e5e6064749c7cc9df0edc"
+    },
+    {
+      "path": "src/http/index.ts",
+      "sha256": "fc204fbe89750b9d25ecaffe41003e6ac243a1a895b65e65856202ab825d2dbe"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "1b72e156546dff1aa4a094a8fb926ab543ccd7e320d3aacef790509f4df5f48b"
+    },
+    {
+      "path": "src/sdk.ts",
+      "sha256": "b6ab2e9fe170114dbef41c55f0d62fe8eb24b69555e9c96793c0a0c5edd77520"
+    },
+    {
+      "path": "src/types/app-model-catalog-group-option.ts",
+      "sha256": "2c1f87efaf2f38c1f9aebdd7f371394c058cb32b83848d6b564e2d748268c7ae"
+    },
+    {
+      "path": "src/types/app-model-catalog-item.ts",
+      "sha256": "3ef36a032e13ffb62db4e44b0ffacf3950d8d750f609b56c68c2d5711b02d7c7"
+    },
+    {
+      "path": "src/types/app-model-catalog-price-availability.ts",
+      "sha256": "3c1e86c0815dd15c67a77ff883890241206b175d2357ff92dc41ab24cb62e1a5"
+    },
+    {
+      "path": "src/types/app-model-catalog-reference-price.ts",
+      "sha256": "ebb395b05dc23c1c9da3dd5553ea6c6878e9c333348f83a9821cd3a00a34713e"
+    },
+    {
+      "path": "src/types/app-model-catalog-response.ts",
+      "sha256": "5a8544b985eb4f6f767015fdb11b5ca22290812d3c1dccd1ff842257d66cf12d"
+    },
+    {
+      "path": "src/types/common.ts",
+      "sha256": "d2506be8c4bdbe8e7059393467e6e71d75ef1d8c018dbf997bb0ab2a77b6c7b6"
+    },
+    {
+      "path": "src/types/field-error.ts",
+      "sha256": "1916a19bd7804dc6e64879392974ff9616f03707b8ec86825ce969c0750d58b2"
+    },
+    {
+      "path": "src/types/index.ts",
+      "sha256": "8e0af042445cf4d2d0b9e138519a99e7c26a19e3bb0ec27175f99a0f7f98f7e3"
+    },
+    {
+      "path": "src/types/json-null.ts",
+      "sha256": "2ef891ef2a54f476c457aeca7ec7d3d5d2cbdca19343fdefd8dfcbcd2767d856"
+    },
+    {
+      "path": "src/types/json-object.ts",
+      "sha256": "04704abb01de7d5513b15123d50250ec48306f6ef07a2e239d83de3357642529"
+    },
+    {
+      "path": "src/types/json-value.ts",
+      "sha256": "22654cfefd5c2d5b7d4055c69738f83a6ec78e22cf28435ee38e04224788116d"
+    },
+    {
+      "path": "src/types/model-ranking-history-entry.ts",
+      "sha256": "161d391c452bfc505b99a025970a2d2ae6191e292982600b9b3aafb9cd862ad4"
+    },
+    {
+      "path": "src/types/model-ranking-history-point.ts",
+      "sha256": "458178208aa8333c319f1d147e512a4c2350d69a36f8d8ecbdce30020fe97101"
+    },
+    {
+      "path": "src/types/model-ranking-item.ts",
+      "sha256": "e940e045ce4dcc073cb6e9e50aa8356863b7eff1f61061608a912feb655edcf5"
+    },
+    {
+      "path": "src/types/model-rankings-list-result.ts",
+      "sha256": "b317014a8b75da805c2b6cf006c55bb8907e9a16293295d077926a733090ad12"
+    },
+    {
+      "path": "src/types/model-rankings-snapshot.ts",
+      "sha256": "9ca1a470f0a3f5422753ca2444c47fd186001211b1f7ed3facdc396cbe84c2de"
+    },
+    {
+      "path": "src/types/model-rankings-source.ts",
+      "sha256": "8bdf6b3bc71e4440782b562600b72c6333e77db5a3549b919dd9895c99de6239"
+    },
+    {
+      "path": "src/types/model-vendors-list-result.ts",
+      "sha256": "e4ec3bf5335c62ea8016f617a12f80c4bffce2fb904367ea4edb7b5d543e329d"
+    },
+    {
+      "path": "src/types/models-list-result.ts",
+      "sha256": "1657afe605327461d6a5a10547be510d8bf3e5cc10041b4b3a4a2240458add66"
+    },
+    {
+      "path": "src/types/problem-detail.ts",
+      "sha256": "58cfb3d5cb4c7c2977c38da191a620994fe1f317834d5440f2b0fd762af841eb"
+    },
+    {
+      "path": "src/types/ranking-vendor-option.ts",
+      "sha256": "a4bf0efe1e49722a41d72a351a3d6a59a3db32dcbbbf81a44f687d236e7be1c2"
+    },
+    {
+      "path": "src/types/ranking-vendor-options-response.ts",
+      "sha256": "e96909e343f7747d2555efea40c1414c5b52c16dd1cfafaca50157e3c538c858"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "7c8a6c2b00fb208ec28e1e6045194487d1b3e563d6c44cef4783fd4fe0e8ffad"
+    }
+  ],
+  "scaffoldFiles": [
+    "custom/build-runtime.mjs",
+    "custom/README.md"
+  ],
+  "customRoots": [
+    "custom/"
+  ]
+}

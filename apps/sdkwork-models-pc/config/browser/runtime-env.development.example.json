@@ -1,0 +1,7 @@
+{
+  "catalogRoot": "../../..",
+  "publicRuntime": {
+    "appName": "SDKWork Models",
+    "catalogExplorerEnabled": true
+  }
+}

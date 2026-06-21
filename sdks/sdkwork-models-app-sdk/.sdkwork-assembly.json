@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "assemblyKind": "sdkwork.sdk.assembly",
+  "sdkFamily": "sdkwork-models-app-sdk",
+  "sdkOwner": "sdkwork-models",
+  "domain": "intelligence",
+  "apiAuthority": "sdkwork-models-app-api",
+  "apiPrefix": "/app/v3/api",
+  "generationInputSpec": "openapi/sdkwork-models-app-api.openapi.json",
+  "standardProfile": "sdkwork-v3",
+  "sdkDependencies": [
+    {
+      "workspace": "sdkwork-appbase-app-sdk",
+      "role": "appbase-app-capability",
+      "required": true,
+      "dependencyMode": "consumer-sdk",
+      "apiPrefix": "/app/v3/api",
+      "apiAuthority": "sdkwork-appbase-app-api",
+      "generatedTransportImportPolicy": "forbidden",
+      "packageByLanguage": {
+        "typescript": "@sdkwork/appbase-app-sdk",
+        "rust": "sdkwork-appbase-app-sdk",
+        "java": "com.sdkwork:sdkwork-appbase-app-sdk",
+        "python": "sdkwork-appbase-app-sdk",
+        "go": "github.com/sdkwork/sdkwork-appbase-app-sdk"
+      }
+    }
+  ],
+  "workspace": "sdkwork-models-app-sdk",
+  "authoritySpec": "openapi/sdkwork-models-app-api.openapi.json",
+  "derivedSpecs": {
+    "default": "openapi/sdkwork-models-app-api.openapi.json"
+  },
+  "discoverySurface": {
+    "sdkTarget": "app",
+    "apiPrefix": "/app/v3/api",
+    "generatedProtocols": [
+      "http-openapi"
+    ],
+    "manualTransports": []
+  },
+  "dependencyApiExports": []
+}

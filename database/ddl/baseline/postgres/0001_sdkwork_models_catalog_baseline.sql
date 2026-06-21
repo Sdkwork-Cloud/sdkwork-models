@@ -1,0 +1,716 @@
+﻿-- SDKWork Models catalog module baseline (postgres)
+-- Owned by data/sdkwork-models
+
+
+CREATE TABLE IF NOT EXISTS ai_model_vendor (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    vendor_code VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128) NOT NULL,
+    legal_name VARCHAR(256),
+    description VARCHAR(512),
+    website_url VARCHAR(512),
+    docs_url VARCHAR(512),
+    logo_media_resource_id VARCHAR(128),
+    logo_object_blob_id BIGINT,
+    logo_resource_snapshot JSONB,
+    icon_media_resource_id VARCHAR(128),
+    icon_object_blob_id BIGINT,
+    icon_resource_snapshot JSONB,
+    color_token VARCHAR(64),
+    country_region VARCHAR(64),
+    vendor_type INTEGER,
+    model_families JSONB,
+    capabilities JSONB,
+    supported_protocols JSONB,
+    client_api_compatibility JSONB,
+    open_source BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_vendor_uuid ON ai_model_vendor (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_vendor_tenant_code ON ai_model_vendor (tenant_id, organization_id, vendor_code);
+CREATE INDEX IF NOT EXISTS idx_ai_model_vendor_tenant_status_sort ON ai_model_vendor (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_modality (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    modality_code VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128) NOT NULL,
+    modality_group VARCHAR(64),
+    description VARCHAR(512),
+    input_supported BOOLEAN,
+    output_supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_modality_uuid ON ai_modality (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_modality_tenant_code ON ai_modality (tenant_id, organization_id, modality_code);
+CREATE INDEX IF NOT EXISTS idx_ai_modality_status_sort ON ai_modality (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_api_endpoint (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    endpoint_code VARCHAR(128) NOT NULL,
+    protocol_code VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128),
+    method VARCHAR(16),
+    path_template VARCHAR(256) NOT NULL,
+    request_schema JSONB,
+    response_schema JSONB,
+    streaming_supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_api_endpoint_uuid ON ai_api_endpoint (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_api_endpoint_tenant_code ON ai_api_endpoint (tenant_id, organization_id, endpoint_code);
+CREATE INDEX IF NOT EXISTS idx_ai_api_endpoint_status_sort ON ai_api_endpoint (tenant_id, organization_id, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_api_endpoint_protocol_status ON ai_api_endpoint (tenant_id, organization_id, protocol_code, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_vendor_modality (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    vendor_id BIGINT,
+    vendor_code VARCHAR(64) NOT NULL,
+    modality_id BIGINT,
+    modality_code VARCHAR(64) NOT NULL,
+    supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_vendor_modality_uuid ON ai_vendor_modality (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_vendor_modality ON ai_vendor_modality (tenant_id, organization_id, vendor_code, modality_code);
+CREATE INDEX IF NOT EXISTS idx_ai_vendor_modality_status_sort ON ai_vendor_modality (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_vendor_api_endpoint (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    vendor_id BIGINT,
+    vendor_code VARCHAR(64) NOT NULL,
+    api_endpoint_id BIGINT,
+    endpoint_code VARCHAR(128) NOT NULL,
+    supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_vendor_api_endpoint_uuid ON ai_vendor_api_endpoint (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_vendor_api_endpoint ON ai_vendor_api_endpoint (tenant_id, organization_id, vendor_code, endpoint_code);
+CREATE INDEX IF NOT EXISTS idx_ai_vendor_api_endpoint_status_sort ON ai_vendor_api_endpoint (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_modality_api_endpoint (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    modality_id BIGINT,
+    modality_code VARCHAR(64) NOT NULL,
+    api_endpoint_id BIGINT,
+    endpoint_code VARCHAR(128) NOT NULL,
+    supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_modality_api_endpoint_uuid ON ai_modality_api_endpoint (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_modality_api_endpoint ON ai_modality_api_endpoint (tenant_id, organization_id, modality_code, endpoint_code);
+CREATE INDEX IF NOT EXISTS idx_ai_modality_api_endpoint_status_sort ON ai_modality_api_endpoint (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_modality (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    model_id BIGINT,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    vendor_code VARCHAR(64),
+    modality_id BIGINT,
+    modality_code VARCHAR(64) NOT NULL,
+    direction VARCHAR(32),
+    supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_modality_uuid ON ai_model_modality (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_modality ON ai_model_modality (tenant_id, organization_id, catalog_key, modality_code, direction);
+CREATE INDEX IF NOT EXISTS idx_ai_model_modality_status_sort ON ai_model_modality (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_api_endpoint (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    model_id BIGINT,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    vendor_code VARCHAR(64),
+    api_endpoint_id BIGINT,
+    endpoint_code VARCHAR(128) NOT NULL,
+    provider_native_model VARCHAR(256),
+    default_parameters JSONB,
+    supports_streaming BOOLEAN,
+    supported BOOLEAN,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_api_endpoint_uuid ON ai_model_api_endpoint (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_api_endpoint ON ai_model_api_endpoint (tenant_id, organization_id, catalog_key, endpoint_code);
+CREATE INDEX IF NOT EXISTS idx_ai_model_api_endpoint_status_sort ON ai_model_api_endpoint (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_resource (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    resource_code VARCHAR(192) NOT NULL,
+    resource_type VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128),
+    vendor_id BIGINT,
+    vendor_code VARCHAR(64),
+    modality_id BIGINT,
+    modality_code VARCHAR(64),
+    api_endpoint_id BIGINT,
+    api_code VARCHAR(128),
+    model_id BIGINT,
+    model_code VARCHAR(256),
+    catalog_key VARCHAR(256),
+    model VARCHAR(256),
+    provider_native_model VARCHAR(256),
+    resource_schema JSONB,
+    metadata_schema JSONB,
+    description VARCHAR(512),
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_uuid ON ai_resource (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_tenant_code ON ai_resource (tenant_id, organization_id, resource_code);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_status_sort ON ai_resource (tenant_id, organization_id, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_type_status ON ai_resource (tenant_id, organization_id, resource_type, status, id);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_vendor_model ON ai_resource (tenant_id, organization_id, vendor_code, catalog_key, status, id);
+
+CREATE TABLE IF NOT EXISTS ai_resource_group (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    group_code VARCHAR(128) NOT NULL,
+    group_name VARCHAR(128) NOT NULL,
+    group_type VARCHAR(64),
+    selection_mode VARCHAR(32),
+    description VARCHAR(512),
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_group_uuid ON ai_resource_group (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_group_tenant_code ON ai_resource_group (tenant_id, organization_id, group_code);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_group_status_sort ON ai_resource_group (tenant_id, organization_id, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_resource_group_item (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    resource_group_id BIGINT NOT NULL,
+    resource_group_code VARCHAR(128),
+    item_type VARCHAR(32) NOT NULL,
+    resource_id BIGINT,
+    resource_code VARCHAR(192) NOT NULL DEFAULT '',
+    child_resource_group_id BIGINT,
+    child_resource_group_code VARCHAR(128) NOT NULL DEFAULT '',
+    item_role VARCHAR(32),
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_group_item_uuid ON ai_resource_group_item (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_group_item ON ai_resource_group_item (tenant_id, organization_id, resource_group_id, item_type, resource_code, child_resource_group_code);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_group_item_status_sort ON ai_resource_group_item (tenant_id, organization_id, status, resource_group_id, sort_order, id);
+
+
+CREATE TABLE IF NOT EXISTS ai_model_family (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    vendor_id BIGINT,
+    vendor_code VARCHAR(64) NOT NULL,
+    family_code VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128),
+    description VARCHAR(512),
+    docs_url VARCHAR(512),
+    icon_media_resource_id VARCHAR(128),
+    icon_object_blob_id BIGINT,
+    icon_resource_snapshot JSONB,
+    color_token VARCHAR(64),
+    family_type INTEGER,
+    primary_modality INTEGER,
+    model_count BIGINT,
+    default_model_id BIGINT,
+    default_model VARCHAR(256),
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_family_uuid ON ai_model_family (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_family_tenant_vendor_code ON ai_model_family (tenant_id, organization_id, vendor_code, family_code);
+CREATE INDEX IF NOT EXISTS idx_ai_model_family_tenant_status_sort ON ai_model_family (tenant_id, organization_id, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_family_vendor_status_sort ON ai_model_family (tenant_id, organization_id, vendor_code, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_model (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    display_name VARCHAR(128),
+    vendor_id BIGINT,
+    vendor_code VARCHAR(64) NOT NULL,
+    vendor_name_snapshot VARCHAR(128),
+    family_id BIGINT,
+    family_code VARCHAR(64),
+    provider_hint VARCHAR(64),
+    model_family VARCHAR(128),
+    model_version VARCHAR(64),
+    model_aliases JSONB,
+    capability INTEGER,
+    capabilities JSONB,
+    modalities JSONB,
+    input_modalities JSONB,
+    output_modalities JSONB,
+    icon_media_resource_id VARCHAR(128),
+    icon_object_blob_id BIGINT,
+    icon_resource_snapshot JSONB,
+    color_token VARCHAR(64),
+    docs_url VARCHAR(1024),
+    license_type INTEGER,
+    api_format VARCHAR(128),
+    capability_intro TEXT,
+    limitations JSONB,
+    supported_languages JSONB,
+    use_cases JSONB,
+    training_data_cutoff VARCHAR(128),
+    context_tokens BIGINT,
+    max_input_tokens BIGINT,
+    max_output_tokens BIGINT,
+    max_duration_seconds INTEGER,
+    supports_streaming BOOLEAN,
+    supports_tools BOOLEAN,
+    supports_json_schema BOOLEAN,
+    performance_profile JSONB,
+    default_pricing_id BIGINT,
+    rank_score NUMERIC(38, 12),
+    release_stage INTEGER,
+    shelf_state INTEGER,
+    routing_state INTEGER,
+    deprecated_at TIMESTAMPTZ,
+    retired_at TIMESTAMPTZ,
+    replacement_model VARCHAR(256),
+    description TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_uuid ON ai_model (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_tenant_catalog_key ON ai_model (tenant_id, organization_id, catalog_key);
+CREATE INDEX IF NOT EXISTS idx_ai_model_tenant_status_updated ON ai_model (tenant_id, organization_id, status, updated_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_vendor_status ON ai_model (tenant_id, organization_id, vendor_code, status, updated_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_model_status ON ai_model (tenant_id, organization_id, model, status, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_family_status ON ai_model (tenant_id, organization_id, vendor_code, family_code, status, updated_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_capability_status ON ai_model (tenant_id, organization_id, capability, status, updated_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_public_listing ON ai_model (tenant_id, organization_id, shelf_state, routing_state, release_stage, status, rank_score, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_public_rank_desc ON ai_model (tenant_id, organization_id, status, routing_state, shelf_state, rank_score, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_search ON ai_model (tenant_id, organization_id, status, vendor_code, capability, routing_state, shelf_state, display_name, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_capability (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    model_id BIGINT,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    vendor_code VARCHAR(64),
+    capability INTEGER,
+    capability_code VARCHAR(64),
+    modality INTEGER,
+    input_modalities JSONB,
+    output_modalities JSONB,
+    endpoint_formats JSONB,
+    parameter_name VARCHAR(128),
+    parameter_schema JSONB,
+    supported BOOLEAN,
+    limit_unit VARCHAR(64),
+    limit_value VARCHAR(128),
+    schema_version VARCHAR(32),
+    sort_order INTEGER,
+    description VARCHAR(512)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_capability_uuid ON ai_model_capability (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_capability_model_code ON ai_model_capability (tenant_id, organization_id, model_id, capability_code, modality, parameter_name);
+CREATE INDEX IF NOT EXISTS idx_ai_model_capability_tenant_status ON ai_model_capability (tenant_id, organization_id, status, model_id, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_capability_vendor_capability ON ai_model_capability (tenant_id, organization_id, vendor_code, capability, supported, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_catalog_source (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    source_code VARCHAR(96) NOT NULL,
+    vendor_code VARCHAR(64),
+    region_code VARCHAR(64),
+    provider_code VARCHAR(64),
+    source_name VARCHAR(128) NOT NULL,
+    source_url VARCHAR(1024),
+    source_kind INTEGER NOT NULL,
+    trust_level INTEGER NOT NULL,
+    parser_kind VARCHAR(64) NOT NULL,
+    refresh_interval_seconds BIGINT,
+    last_observed_at TIMESTAMPTZ,
+    last_success_at TIMESTAMPTZ,
+    catalog_version VARCHAR(128),
+    source_hash VARCHAR(128),
+    raw_payload_ref VARCHAR(512),
+    normalized_payload_hash VARCHAR(128),
+    schema_version VARCHAR(32),
+    error_message_masked VARCHAR(1024)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_catalog_source_uuid ON ai_model_catalog_source (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_catalog_source_tenant_code ON ai_model_catalog_source (tenant_id, organization_id, source_code);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_source_tenant_status ON ai_model_catalog_source (tenant_id, organization_id, status, source_kind, last_success_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_source_vendor_region_status ON ai_model_catalog_source (tenant_id, organization_id, vendor_code, region_code, status, last_observed_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_source_refresh ON ai_model_catalog_source (tenant_id, organization_id, status, refresh_interval_seconds, last_success_at, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_catalog_sync_run (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    user_id BIGINT,
+    request_id VARCHAR(128),
+    trace_id VARCHAR(128),
+    payload_hash VARCHAR(128),
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    retention_until TIMESTAMPTZ,
+    legal_hold BOOLEAN NOT NULL DEFAULT FALSE,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    source_type VARCHAR(128),
+    source_id BIGINT,
+    source_version BIGINT,
+    source_code VARCHAR(96) NOT NULL,
+    vendor_code VARCHAR(64),
+    region_code VARCHAR(64),
+    provider_code VARCHAR(64),
+    run_status INTEGER NOT NULL,
+    started_at TIMESTAMPTZ NOT NULL,
+    finished_at TIMESTAMPTZ,
+    observed_at TIMESTAMPTZ,
+    catalog_version VARCHAR(128),
+    source_hash VARCHAR(128),
+    observed_vendor_count BIGINT,
+    observed_model_count BIGINT,
+    observed_meter_count BIGINT,
+    observed_price_count BIGINT,
+    accepted_count BIGINT,
+    rejected_count BIGINT,
+    skipped_count BIGINT,
+    change_summary JSONB,
+    error_message_masked VARCHAR(1024)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_catalog_sync_run_uuid ON ai_model_catalog_sync_run (uuid);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_sync_run_tenant_status ON ai_model_catalog_sync_run (tenant_id, organization_id, status, started_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_sync_run_source_latest ON ai_model_catalog_sync_run (tenant_id, organization_id, source_code, run_status, started_at, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_catalog_sync_run_vendor_region_latest ON ai_model_catalog_sync_run (tenant_id, organization_id, vendor_code, region_code, run_status, started_at, id);
+
+CREATE TABLE IF NOT EXISTS ai_billing_meter (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    meter_code VARCHAR(64) NOT NULL,
+    display_name VARCHAR(128) NOT NULL,
+    description VARCHAR(512),
+    modality INTEGER,
+    usage_type INTEGER,
+    billing_mode INTEGER NOT NULL,
+    default_unit INTEGER NOT NULL,
+    default_unit_size NUMERIC(38, 12) NOT NULL,
+    quantity_precision INTEGER,
+    quantity_source INTEGER,
+    aggregation_mode INTEGER,
+    result_selector VARCHAR(256),
+    supports_tier BOOLEAN,
+    supports_expression BOOLEAN,
+    allow_negative_quantity BOOLEAN,
+    canonical_price_item_type INTEGER,
+    sort_order INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_billing_meter_uuid ON ai_billing_meter (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_billing_meter_tenant_code ON ai_billing_meter (tenant_id, organization_id, meter_code);
+CREATE INDEX IF NOT EXISTS idx_ai_billing_meter_tenant_status_sort ON ai_billing_meter (tenant_id, organization_id, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_billing_meter_modality_mode ON ai_billing_meter (tenant_id, organization_id, modality, billing_mode, status, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_pricing (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    deleted_by BIGINT,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    model_id BIGINT,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    vendor_code VARCHAR(64),
+    region_code VARCHAR(64) NOT NULL,
+    provider_code VARCHAR(64),
+    channel_id BIGINT,
+    provider_model VARCHAR(256),
+    platform_code VARCHAR(64),
+    service_tier VARCHAR(64),
+    price_side INTEGER,
+    pricing_scope INTEGER,
+    pricing_scope_id BIGINT,
+    pricing_plan_id BIGINT,
+    pricing_plan_code VARCHAR(64),
+    billing_type INTEGER,
+    billing_mode INTEGER,
+    billing_meter_id BIGINT,
+    billing_meter_code VARCHAR(64),
+    price_item_type INTEGER,
+    unit INTEGER,
+    unit_size NUMERIC(38, 12),
+    metering_mode INTEGER,
+    quantity_source INTEGER,
+    quantity_formula TEXT,
+    result_selector VARCHAR(256),
+    minimum_quantity NUMERIC(38, 12),
+    quantity_step NUMERIC(38, 12),
+    included_quantity NUMERIC(38, 12),
+    unit_price NUMERIC(38, 12),
+    currency VARCHAR(10),
+    rounding_mode INTEGER,
+    min_charge_amount NUMERIC(38, 12),
+    reference_price_id BIGINT,
+    reference_price_side INTEGER,
+    reference_multiplier NUMERIC(38, 12),
+    markup_amount NUMERIC(38, 12),
+    pricing_formula_mode INTEGER,
+    price_origin INTEGER,
+    import_snapshot_id BIGINT,
+    priority INTEGER,
+    price_version VARCHAR(64),
+    source_url VARCHAR(512),
+    source_hash VARCHAR(128),
+    published_at TIMESTAMPTZ,
+    observed_at TIMESTAMPTZ,
+    effective_from TIMESTAMPTZ,
+    effective_to TIMESTAMPTZ,
+    source_price_id BIGINT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_pricing_uuid ON ai_model_pricing (uuid);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_tenant_status_effective ON ai_model_pricing (tenant_id, organization_id, status, effective_from, effective_to, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_lookup ON ai_model_pricing (tenant_id, organization_id, catalog_key, price_side, pricing_scope, pricing_scope_id, billing_mode, billing_meter_code, status, effective_from, effective_to);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_vendor_region_model ON ai_model_pricing (tenant_id, organization_id, vendor_code, region_code, catalog_key, price_side, status, effective_from, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_provider_channel ON ai_model_pricing (tenant_id, organization_id, provider_code, channel_id, catalog_key, price_side, status, effective_from, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_plan_effective ON ai_model_pricing (tenant_id, organization_id, pricing_plan_id, catalog_key, price_side, status, effective_from, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_meter_effective ON ai_model_pricing (tenant_id, organization_id, billing_meter_code, price_side, status, effective_from, id);
+
+
+CREATE TABLE IF NOT EXISTS ai_model_rank_snapshot (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    source_type VARCHAR(128),
+    source_id BIGINT,
+    source_version BIGINT,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rebuild_version BIGINT NOT NULL DEFAULT 0,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    snapshot_date DATE,
+    snapshot_period INTEGER,
+    rank_scope VARCHAR(64),
+    model_id BIGINT,
+    catalog_key VARCHAR(256) NOT NULL,
+    model VARCHAR(256),
+    vendor_code VARCHAR(64),
+    region_code VARCHAR(64) NOT NULL,
+    vendor_name_snapshot VARCHAR(128),
+    provider_code VARCHAR(64),
+    modality INTEGER,
+    rank_no INTEGER,
+    previous_rank_no INTEGER,
+    base_volume BIGINT,
+    cost_indicator INTEGER,
+    context_size_text VARCHAR(64),
+    is_new BOOLEAN,
+    color_token VARCHAR(64),
+    pricing_text VARCHAR(128),
+    license_type INTEGER,
+    strengths JSONB,
+    request_count BIGINT,
+    token_count BIGINT,
+    cost_amount NUMERIC(38, 12),
+    currency VARCHAR(10),
+    latency_p50_ms INTEGER,
+    latency_p95_ms INTEGER,
+    success_rate NUMERIC(38, 12),
+    win_rate NUMERIC(38, 12),
+    trend_score NUMERIC(38, 12),
+    rank_payload JSONB
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_rank_snapshot_uuid ON ai_model_rank_snapshot (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_rank_snapshot_scope_catalog_key ON ai_model_rank_snapshot (tenant_id, organization_id, snapshot_date, snapshot_period, rank_scope, vendor_code, region_code, catalog_key);
+CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_tenant_rank ON ai_model_rank_snapshot (tenant_id, organization_id, status, snapshot_date, snapshot_period, rank_scope, rank_no);
+CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_vendor_region_rank ON ai_model_rank_snapshot (tenant_id, organization_id, snapshot_date, snapshot_period, vendor_code, region_code, rank_no);
+CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_latest_scope ON ai_model_rank_snapshot (tenant_id, organization_id, status, rank_scope, snapshot_date, snapshot_period, rank_no);
+CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_filter_rank ON ai_model_rank_snapshot (tenant_id, organization_id, status, snapshot_date, snapshot_period, rank_scope, vendor_code, region_code, modality, rank_no);
+

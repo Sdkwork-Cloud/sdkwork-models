@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { sha256Hash } from "@sdkwork/utils/crypto";
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 
@@ -31,7 +31,7 @@ export function sortJson(value) {
 }
 
 export function sha256Text(text) {
-  return createHash("sha256").update(text).digest("hex");
+  return sha256Hash(text);
 }
 
 export function officialSnapshotHash(snapshot) {

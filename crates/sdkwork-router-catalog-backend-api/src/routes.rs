@@ -1,0 +1,185 @@
+//! Route registration descriptors for sdkwork-router-catalog-backend-api.
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RouteDefinition {
+    pub method: &'static str,
+    pub path: &'static str,
+    pub operation_id: &'static str,
+    pub handler: &'static str,
+    pub service_method: &'static str,
+}
+
+pub const ROUTES: &[RouteDefinition] = &[
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/model_vendors",
+        operation_id: "modelVendors.list",
+        handler: "list_model_vendors",
+        service_method: "list_vendors",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/model_vendors",
+        operation_id: "modelVendors.create",
+        handler: "create_model_vendor",
+        service_method: "create_vendor",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/models",
+        operation_id: "models.list",
+        handler: "list_models",
+        service_method: "list_models",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/models",
+        operation_id: "models.create",
+        handler: "create_model",
+        service_method: "create_model",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/models/refresh",
+        operation_id: "models.refresh",
+        handler: "sync_catalog",
+        service_method: "sync_catalog",
+    },
+    RouteDefinition {
+        method: "PATCH",
+        path: "/backend/v3/api/ai/models/{modelId}",
+        operation_id: "models.update",
+        handler: "update_model",
+        service_method: "update_model",
+    },
+    RouteDefinition {
+        method: "DELETE",
+        path: "/backend/v3/api/ai/models/{modelId}",
+        operation_id: "models.delete",
+        handler: "delete_model",
+        service_method: "delete_model",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/model_mappings",
+        operation_id: "modelMappings.list",
+        handler: "list_model_mappings",
+        service_method: "list_model_mappings",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/model_mappings",
+        operation_id: "modelMappings.create",
+        handler: "create_model_mapping",
+        service_method: "create_model_mapping",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/model_mappings/resolve",
+        operation_id: "modelMappings.resolve.create",
+        handler: "resolve_model_mapping",
+        service_method: "resolve_model_mapping",
+    },
+    RouteDefinition {
+        method: "PATCH",
+        path: "/backend/v3/api/ai/model_mappings/{mappingId}",
+        operation_id: "modelMappings.update",
+        handler: "update_model_mapping",
+        service_method: "update_model_mapping",
+    },
+    RouteDefinition {
+        method: "DELETE",
+        path: "/backend/v3/api/ai/model_mappings/{mappingId}",
+        operation_id: "modelMappings.delete",
+        handler: "delete_model_mapping",
+        service_method: "delete_model_mapping",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/model_rankings",
+        operation_id: "modelRankings.list",
+        handler: "list_model_rankings",
+        service_method: "list_model_rankings",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/model_rankings/status",
+        operation_id: "modelRankings.status.retrieve",
+        handler: "model_rankings_status",
+        service_method: "model_rankings_status",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/model_rankings/jobs",
+        operation_id: "modelRankings.jobs.list",
+        handler: "model_rankings_jobs",
+        service_method: "model_rankings_jobs",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/model_rankings/refresh",
+        operation_id: "modelRankings.refresh",
+        handler: "refresh_model_rankings",
+        service_method: "refresh_model_rankings",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/resources",
+        operation_id: "aiResources.list",
+        handler: "list_ai_resources",
+        service_method: "list_ai_resources",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/resources",
+        operation_id: "aiResources.create",
+        handler: "create_ai_resource",
+        service_method: "create_ai_resource",
+    },
+    RouteDefinition {
+        method: "PUT",
+        path: "/backend/v3/api/ai/resources/{resourceId}",
+        operation_id: "aiResources.update",
+        handler: "update_ai_resource",
+        service_method: "update_ai_resource",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/resource_groups",
+        operation_id: "aiResourceGroups.list",
+        handler: "list_ai_resource_groups",
+        service_method: "list_ai_resource_groups",
+    },
+    RouteDefinition {
+        method: "POST",
+        path: "/backend/v3/api/ai/resource_groups",
+        operation_id: "aiResourceGroups.create",
+        handler: "create_ai_resource_group",
+        service_method: "create_ai_resource_group",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
+        operation_id: "aiResourceGroups.resources.list",
+        handler: "list_ai_resource_group_resources",
+        service_method: "list_ai_resource_group_resources",
+    },
+    RouteDefinition {
+        method: "PATCH",
+        path: "/backend/v3/api/ai/resource_groups/{groupId}",
+        operation_id: "aiResourceGroups.update",
+        handler: "update_ai_resource_group",
+        service_method: "update_ai_resource_group",
+    },
+    RouteDefinition {
+        method: "DELETE",
+        path: "/backend/v3/api/ai/resource_groups/{groupId}",
+        operation_id: "aiResourceGroups.delete",
+        handler: "delete_ai_resource_group",
+        service_method: "delete_ai_resource_group",
+    },
+];
+
+pub fn route_definitions() -> &'static [RouteDefinition] {
+    ROUTES
+}

@@ -5,20 +5,28 @@
     "name": "@sdkwork/models-catalog",
     "displayName": "SDKWork Models Catalog",
     "version": "0.1.0",
-    "type": "node-package",
-    "root": "sdkwork-clawrouter/data/sdkwork-models",
+    "type": "composed-product-module",
+    "root": ".",
     "domain": "intelligence",
-    "declaredDomain": null,
-    "capability": "model",
+    "declaredDomain": "intelligence",
+    "capability": "catalog",
     "status": "standardizing",
     "languages": [
       "javascript",
-      "typescript"
+      "typescript",
+      "python",
+      "java",
+      "rust",
+      "dart"
     ],
     "generated": false,
     "private": true,
     "manifests": [
-      "package.json"
+      "package.json",
+      "pnpm-workspace.yaml",
+      "Cargo.toml",
+      "sdkwork.app.config.json",
+      "database/database.manifest.json"
     ]
   },
   "canonicalSpecs": [
@@ -28,9 +36,14 @@
       "purpose": "Local component specs directory and manifest rules."
     },
     {
-      "file": "CONFIG_SPEC.md",
-      "path": "../sdkwork-specs/CONFIG_SPEC.md",
-      "purpose": "Runtime configuration, environment, SDK bootstrap, and feature flag rules."
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Authored source structure and generated code boundaries."
+    },
+    {
+      "file": "DEPENDENCY_MANAGEMENT_SPEC.md",
+      "path": "../sdkwork-specs/DEPENDENCY_MANAGEMENT_SPEC.md",
+      "purpose": "Native build-tool dependency management and cross-repository source paths."
     },
     {
       "file": "DOCUMENTATION_SPEC.md",
@@ -43,19 +56,9 @@
       "purpose": "Canonical domain ownership and naming."
     },
     {
-      "file": "FRONTEND_SPEC.md",
-      "path": "../sdkwork-specs/FRONTEND_SPEC.md",
-      "purpose": "UI, service, SDK, accessibility, and frontend runtime rules."
-    },
-    {
       "file": "GOVERNANCE_SPEC.md",
       "path": "../sdkwork-specs/GOVERNANCE_SPEC.md",
       "purpose": "Standard ownership, exception, compatibility, and migration rules."
-    },
-    {
-      "file": "I18N_SPEC.md",
-      "path": "../sdkwork-specs/I18N_SPEC.md",
-      "purpose": "User-facing language, locale, message catalog, and fallback rules."
     },
     {
       "file": "MODULE_SPEC.md",
@@ -63,9 +66,24 @@
       "purpose": "Reusable package contract and dependency direction."
     },
     {
+      "file": "NAMING_SPEC.md",
+      "path": "../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical SDKWork naming rules."
+    },
+    {
+      "file": "PNPM_SCRIPT_SPEC.md",
+      "path": "../sdkwork-specs/PNPM_SCRIPT_SPEC.md",
+      "purpose": "Uniform public package.json script names."
+    },
+    {
       "file": "README.md",
       "path": "../sdkwork-specs/README.md",
       "purpose": "SDKWork root standards entrypoint."
+    },
+    {
+      "file": "RELEASE_SPEC.md",
+      "path": "../sdkwork-specs/RELEASE_SPEC.md",
+      "purpose": "Catalog release versioning and release evidence."
     },
     {
       "file": "SDK_SPEC.md",
@@ -73,19 +91,14 @@
       "purpose": "SDK generation and SDK integration rules."
     },
     {
+      "file": "SDKWORK_WORKSPACE_SPEC.md",
+      "path": "../sdkwork-specs/SDKWORK_WORKSPACE_SPEC.md",
+      "purpose": "Repository root directory dictionary and .sdkwork workspace metadata."
+    },
+    {
       "file": "TEST_SPEC.md",
       "path": "../sdkwork-specs/TEST_SPEC.md",
-      "purpose": "Contract, frontend, SDK, security, parity, and documentation verification rules."
-    },
-    {
-      "file": "CODE_STYLE_SPEC.md",
-      "path": "../sdkwork-specs/CODE_STYLE_SPEC.md",
-      "purpose": "Authored source structure and generated code boundaries."
-    },
-    {
-      "file": "NAMING_SPEC.md",
-      "path": "../sdkwork-specs/NAMING_SPEC.md",
-      "purpose": "Canonical SDKWork naming rules."
+      "purpose": "Contract, SDK, and catalog verification rules."
     },
     {
       "file": "TYPESCRIPT_CODE_SPEC.md",
@@ -94,26 +107,47 @@
     }
   ],
   "contracts": {
-    "publicExports": [],
-    "runtimeEntrypoints": [],
-    "sdkClients": [],
+    "publicExports": [
+      "@sdkwork/models",
+      "@sdkwork/models-pc",
+      "@sdkwork/models-pc-core",
+      "@sdkwork/models-pc-catalog"
+    ],
+    "runtimeEntrypoints": [
+      "tools/build-index.mjs",
+      "tools/validate-catalog.mjs",
+      "tools/catalog-audit.mjs",
+      "tools/release-catalog.mjs"
+    ],
+    "sdkClients": [
+      "sdkwork-models-app-sdk",
+      "sdkwork-models-backend-sdk",
+      "@sdkwork/models-app-sdk",
+      "@sdkwork/models-backend-sdk"
+    ],
     "events": [],
-    "configKeys": [],
-    "routeManifest": null
+    "configKeys": [
+      "SDKWORK_MODELS_CATALOG_ROOT"
+    ],
+    "routeManifest": "crates/sdkwork-router-catalog-backend-api/src/routes.rs"
   },
   "integration": {
     "authority": "Root SDKWork specs remain authoritative. Local specs may extend but must not contradict them.",
-    "dependencyPolicy": "Consumers integrate through public package exports, declared runtime entrypoints, generated SDK clients, or documented adapters only.",
+    "dependencyPolicy": "Consumers integrate through generated @sdkwork/models-{app,backend}-sdk families, catalog JSON artifacts, or documented catalog tools. Composed hosts mount route crates locally and must declare sdkwork-models SDK surfaces in specs/dependency-api-surfaces.json.",
     "sdkPolicy": "Generated SDK clients are injected through service/runtime boundaries; reusable UI must not create raw HTTP clients or manual auth headers.",
     "languagePolicy": "Language-specific packages follow their native manifest and build tools while preserving the same component contract."
   },
   "verification": {
     "commands": [
-      "node apps/scripts/validate-component-specs.mjs --apps-root apps --json"
+      "pnpm run check",
+      "pnpm run verify",
+      "pnpm run route-manifest:check",
+      "pnpm run db:validate",
+      "cargo test --workspace --offline"
     ]
   },
   "metadata": {
-    "managedBy": "apps/scripts/initialize-component-specs.mjs",
-    "standardVersion": "2026-05-13"
+    "managedBy": "sdkwork-models maintainers",
+    "standardVersion": "2026-06-21"
   }
 }

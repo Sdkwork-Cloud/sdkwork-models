@@ -1,0 +1,13 @@
+schemaVersion: 1
+kind: sdkwork.database.contract
+moduleId: sdkwork-models
+serviceCode: SDKWORK_MODELS
+owner: sdkwork-models-platform
+domain: intelligence
+capability: catalog
+description: >
+  Portable AI model catalog dictionary tables. Composed hosts apply baseline DDL
+  through sdkwork-models-database-bootstrap and must not regenerate these tables
+  as local schema authority.
+tablesRegistry: contract/table-registry.json
+prefixRegistry: contract/prefix-registry.json
