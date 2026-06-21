@@ -134,7 +134,7 @@ Extension points are limited to declared public exports, runtime entrypoints, SD
 
 ### Verification
 
-- `mvn test -f apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java/pom.xml`
+- `mvn test -f apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-java/pom.xml`
 
 ### Owner And Status
 

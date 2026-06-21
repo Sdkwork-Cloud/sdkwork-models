@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `sdkwork_models` |
 | Type | `dart-package` |
-| Root | `sdkwork-claw-router/data/sdkwork-models/sdkwork-models-flutter` |
+| Root | `sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-flutter` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `dart` |
@@ -52,4 +52,4 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 
 ## Verification
 
-- `cd apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-flutter && flutter test`
+- `cd apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-flutter && flutter test`

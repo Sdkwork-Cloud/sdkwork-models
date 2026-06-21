@@ -129,7 +129,7 @@ Extension points are limited to declared public exports, runtime entrypoints, SD
 
 ### Verification
 
-- `cd apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-python && python -m pytest`
+- `cd apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-python && python -m pytest`
 
 ### Owner And Status
 

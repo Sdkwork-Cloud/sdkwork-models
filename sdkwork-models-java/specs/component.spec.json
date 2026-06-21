@@ -6,7 +6,7 @@
     "displayName": "SDKWork Models",
     "version": "0.1.0",
     "type": "java-module",
-    "root": "sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java",
+    "root": "sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-java",
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",
@@ -110,7 +110,7 @@
   },
   "verification": {
     "commands": [
-      "mvn test -f apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java/pom.xml"
+      "mvn test -f apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-java/pom.xml"
     ]
   },
   "metadata": {

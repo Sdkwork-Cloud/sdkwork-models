@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `@sdkwork/models-catalog` |
 | Type | `node-package` |
-| Root | `sdkwork-claw-router/data/sdkwork-models` |
+| Root | `sdkwork-clawrouter/data/sdkwork-models` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `javascript` |

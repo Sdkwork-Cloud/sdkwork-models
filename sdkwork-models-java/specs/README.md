@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `sdkwork-models` |
 | Type | `java-module` |
-| Root | `sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java` |
+| Root | `sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-java` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `java` |
@@ -52,4 +52,4 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 
 ## Verification
 
-- `mvn test -f apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-java/pom.xml`
+- `mvn test -f apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-java/pom.xml`

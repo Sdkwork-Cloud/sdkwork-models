@@ -10,7 +10,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | --- | --- |
 | Name | `sdkwork-models` |
 | Type | `rust-crate` |
-| Root | `sdkwork-claw-router/data/sdkwork-models/sdkwork-models-rust` |
+| Root | `sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-rust` |
 | Domain | `intelligence` |
 | Capability | `model` |
 | Languages | `rust` |
@@ -52,4 +52,4 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 
 ## Verification
 
-- `cargo test --manifest-path apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-rust/Cargo.toml`
+- `cargo test --manifest-path apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-rust/Cargo.toml`

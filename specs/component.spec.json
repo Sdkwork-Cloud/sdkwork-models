@@ -6,7 +6,7 @@
     "displayName": "SDKWork Models Catalog",
     "version": "0.1.0",
     "type": "node-package",
-    "root": "sdkwork-claw-router/data/sdkwork-models",
+    "root": "sdkwork-clawrouter/data/sdkwork-models",
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",

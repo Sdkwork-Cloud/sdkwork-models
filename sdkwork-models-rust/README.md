@@ -124,7 +124,7 @@ Extension points are limited to declared public exports, runtime entrypoints, SD
 
 ### Verification
 
-- `cargo test --manifest-path apps/sdkwork-claw-router/data/sdkwork-models/sdkwork-models-rust/Cargo.toml`
+- `cargo test --manifest-path apps/sdkwork-clawrouter/data/sdkwork-models/sdkwork-models-rust/Cargo.toml`
 
 ### Owner And Status
 
