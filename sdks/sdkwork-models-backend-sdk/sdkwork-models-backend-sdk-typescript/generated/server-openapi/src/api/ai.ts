@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { AdminAiModelCreateRequest, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AiResourceGroupsCreateResult, AiResourceGroupsDeleteResult, AiResourceGroupsListResult, AiResourceGroupsResourcesListResult, AiResourceGroupsUpdateResult, AiResourcesCreateResult, AiResourcesListResult, AiResourcesUpdateResult, ModelMappingsCreateResult, ModelMappingsDeleteResult, ModelMappingsListResult, ModelMappingsResolveCreateResult, ModelMappingsUpdateResult, ModelRankingRefreshTriggerRequest, ModelRankingsJobsListResult, ModelRankingsListResult, ModelRankingsRefreshResult, ModelRankingsStatusRetrieveResult, ModelsCreateResult, ModelsDeleteResult, ModelsListResult, ModelsRefreshResult, ModelsUpdateResult, ModelVendorsCreateResult, ModelVendorsListResult } from '../types';
+import type { AdminAccountModelMappingsReplaceRequest, AdminAiModelCreateRequest, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AiResourceGroupsCreateResult, AiResourceGroupsDeleteResult, AiResourceGroupsListResult, AiResourceGroupsResourcesListResult, AiResourceGroupsUpdateResult, AiResourcesCreateResult, AiResourcesListResult, AiResourcesUpdateResult, ModelMappingsCreateResult, ModelMappingsDeleteResult, ModelMappingsListResult, ModelMappingsReplaceResult, ModelMappingsResolveCreateResult, ModelMappingsUpdateResult, ModelRankingRefreshTriggerRequest, ModelRankingsJobsListResult, ModelRankingsListResult, ModelRankingsRefreshResult, ModelRankingsStatusRetrieveResult, ModelsCreateResult, ModelsDeleteResult, ModelsListResult, ModelsRefreshResult, ModelsUpdateResult, ModelVendorsCreateResult, ModelVendorsListResult } from '../types';
 
 
 export class AiAiResourcesApi {
@@ -12,7 +12,7 @@ export class AiAiResourcesApi {
   }
 
 
-/** List ai resources */
+/** List assignable resources */
   async list(): Promise<AiResourcesListResult> {
     return this.client.get<AiResourcesListResult>(backendApiPath(`/ai/resources`));
   }
@@ -73,6 +73,14 @@ export class AiAiResourceGroupsApi {
   }
 }
 
+export interface AiModelsListParams {
+  vendorId?: string;
+  vendorCode?: string;
+  q?: string;
+  limit?: string;
+  offset?: string;
+}
+
 export class AiModelsApi {
   private client: HttpClient;
 
@@ -82,8 +90,15 @@ export class AiModelsApi {
 
 
 /** List models */
-  async list(): Promise<ModelsListResult> {
-    return this.client.get<ModelsListResult>(backendApiPath(`/ai/models`));
+  async list(params?: AiModelsListParams): Promise<ModelsListResult> {
+    const query = buildQueryString([
+      { name: 'vendor_id', value: params?.vendorId, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'limit', value: params?.limit, style: 'form', explode: true, allowReserved: false },
+      { name: 'offset', value: params?.offset, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<ModelsListResult>(appendQueryString(backendApiPath(`/ai/models`), query));
   }
 
 /** Create model */
@@ -255,6 +270,11 @@ export class AiModelMappingsApi {
 /** Create model mapping */
   async create(body: AdminModelMappingCreateRequest): Promise<ModelMappingsCreateResult> {
     return this.client.post<ModelMappingsCreateResult>(backendApiPath(`/ai/model_mappings`), body, undefined, undefined, 'application/json');
+  }
+
+/** Replace account mappings */
+  async replace(body: AdminAccountModelMappingsReplaceRequest): Promise<ModelMappingsReplaceResult> {
+    return this.client.put<ModelMappingsReplaceResult>(backendApiPath(`/ai/model_mappings`), body, undefined, undefined, 'application/json');
   }
 
 /** Delete model mapping */

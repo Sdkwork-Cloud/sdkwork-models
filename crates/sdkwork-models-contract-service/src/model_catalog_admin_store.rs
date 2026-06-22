@@ -199,9 +199,35 @@ pub struct ListAdminModelVendorsQuery {
     pub subject: AdminModelSubject,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ListAdminAiModelsQuery {
     pub subject: AdminModelSubject,
+    pub vendor_id: Option<String>,
+    pub vendor_code: Option<String>,
+    pub q: Option<String>,
+    pub limit: Option<i64>,
+    pub offset: Option<i64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AdminAiModelListPage {
+    pub items: Vec<AdminAiModelItem>,
+    pub total_count: i64,
+}
+
+impl ListAdminAiModelsQuery {
+    pub const DEFAULT_LIMIT: i64 = 50;
+    pub const MAX_LIMIT: i64 = 200;
+
+    pub fn normalized_limit(&self) -> i64 {
+        self.limit
+            .unwrap_or(Self::DEFAULT_LIMIT)
+            .clamp(1, Self::MAX_LIMIT)
+    }
+
+    pub fn normalized_offset(&self) -> i64 {
+        self.offset.unwrap_or(0).max(0)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -397,7 +423,7 @@ pub trait ModelCatalogAdminStore {
     fn list_models<'a>(
         &'a self,
         query: ListAdminAiModelsQuery,
-    ) -> AdminModelCommandFuture<'a, Vec<AdminAiModelItem>>;
+    ) -> AdminModelCommandFuture<'a, AdminAiModelListPage>;
 
     fn list_model_mappings<'a>(
         &'a self,

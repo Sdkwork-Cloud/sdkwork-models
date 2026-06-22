@@ -12,6 +12,10 @@ sdks/sdkwork-models-sdk/sdkwork-models-sdk-flutter/.dart_tool/
 sdks/sdkwork-models-sdk/sdkwork-models-sdk-flutter/build/
 apps/sdkwork-models-pc/dist/
 
+# Generated SDK build artifacts (do not commit)
+sdks/**/generated/**/dist/
+sdks/**/generated/**/package-lock.json
+
 *.log
 __pycache__/
 *.py[cod]

@@ -8,145 +8,169 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         "/backend/v3/api/ai/model_vendors",
         SDK_DOMAIN,
         "modelVendors.list",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/model_vendors",
         SDK_DOMAIN,
         "modelVendors.create",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/models",
         SDK_DOMAIN,
         "models.list",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/models",
         SDK_DOMAIN,
         "models.create",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/models/refresh",
         SDK_DOMAIN,
         "models.refresh",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Patch,
         "/backend/v3/api/ai/models/{modelId}",
         SDK_DOMAIN,
         "models.update",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Delete,
         "/backend/v3/api/ai/models/{modelId}",
         SDK_DOMAIN,
         "models.delete",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/model_mappings",
         SDK_DOMAIN,
         "modelMappings.list",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/model_mappings",
         SDK_DOMAIN,
         "modelMappings.create",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/model_mappings/resolve",
         SDK_DOMAIN,
         "modelMappings.resolve.create",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Patch,
         "/backend/v3/api/ai/model_mappings/{mappingId}",
         SDK_DOMAIN,
         "modelMappings.update",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Delete,
         "/backend/v3/api/ai/model_mappings/{mappingId}",
         SDK_DOMAIN,
         "modelMappings.delete",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/model_rankings",
         SDK_DOMAIN,
         "modelRankings.list",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/model_rankings/status",
         SDK_DOMAIN,
         "modelRankings.status.retrieve",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/model_rankings/jobs",
         SDK_DOMAIN,
         "modelRankings.jobs.list",
-    ),
+    )
+    .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/model_rankings/refresh",
         SDK_DOMAIN,
         "modelRankings.refresh",
-    ),
+    )
+    .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/resources",
         SDK_DOMAIN,
         "aiResources.list",
-    ),
+    )
+    .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/resources",
         SDK_DOMAIN,
         "aiResources.create",
-    ),
+    )
+    .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Put,
         "/backend/v3/api/ai/resources/{resourceId}",
         SDK_DOMAIN,
         "aiResources.update",
-    ),
+    )
+    .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/resource_groups",
         SDK_DOMAIN,
         "aiResourceGroups.list",
-    ),
+    )
+    .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/resource_groups",
         SDK_DOMAIN,
         "aiResourceGroups.create",
-    ),
+    )
+    .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
         SDK_DOMAIN,
         "aiResourceGroups.resources.list",
-    ),
+    )
+    .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Patch,
         "/backend/v3/api/ai/resource_groups/{groupId}",
         SDK_DOMAIN,
         "aiResourceGroups.update",
-    ),
+    )
+    .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Delete,
         "/backend/v3/api/ai/resource_groups/{groupId}",
         SDK_DOMAIN,
         "aiResourceGroups.delete",
-    ),
+    )
+    .with_required_permission("intelligence.resources.manage"),
 ];
 
 pub fn backend_route_manifest() -> HttpRouteManifest {

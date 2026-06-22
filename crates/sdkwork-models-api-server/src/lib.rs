@@ -14,7 +14,7 @@ pub use catalog_backend_router::{
     catalog_backend_router_with_stores, catalog_backend_router_without_stores,
 };
 pub use entity_uuid_generator::CatalogEntityUuidGenerator;
-pub use health_router::models_health_router;
+pub use health_router::{models_health_router, models_health_router_with_readiness, ModelsReadinessProbe};
 pub use sdkwork_models_catalog_service::PricingCatalog;
 pub use sdkwork_router_catalog_backend_api::{
     backend_route_manifest, intelligence_catalog_backend_api_prefixes,
@@ -28,9 +28,11 @@ pub const APP_API_PREFIX: &str = "/app/v3/api";
 pub const BACKEND_API_PREFIX: &str = "/backend/v3/api";
 
 pub fn compose_models_health_and_backend_router_with_sqlite_pool(pool: sqlx::SqlitePool) -> axum::Router {
-    models_health_router().merge(catalog_backend_router_with_sqlite_pool(pool))
+    models_health_router_with_readiness(ModelsReadinessProbe::Sqlite(pool.clone()))
+        .merge(catalog_backend_router_with_sqlite_pool(pool))
 }
 
 pub fn compose_models_health_and_backend_router_with_postgres_pool(pool: sqlx::PgPool) -> axum::Router {
-    models_health_router().merge(catalog_backend_router_with_postgres_pool(pool))
+    models_health_router_with_readiness(ModelsReadinessProbe::Postgres(pool.clone()))
+        .merge(catalog_backend_router_with_postgres_pool(pool))
 }

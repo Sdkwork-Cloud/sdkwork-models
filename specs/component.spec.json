@@ -10,7 +10,7 @@
     "domain": "intelligence",
     "declaredDomain": "intelligence",
     "capability": "catalog",
-    "status": "standardizing",
+    "status": "ready",
     "languages": [
       "javascript",
       "typescript",

@@ -85,7 +85,7 @@ pnpm run verify
 From composed host (`sdkwork-clawrouter`):
 
 ```powershell
-cargo check -p sdkwork-router-backend-api -p sdkwork-claw-product
+cargo check -p sdkwork-router-backend-api -p sdkwork-clawrouter-router-service
 pnpm exec tsx admin-model-runtime.test.ts
 ```
 

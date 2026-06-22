@@ -66,7 +66,7 @@ is bidirectional: every source declaration with `verificationStatus:
 From ClawRouter, also run:
 
 ```powershell
-cargo test -p sdkwork-claw-product --test database_installer --offline
+cargo test -p sdkwork-clawrouter-router-service --test database_installer --offline
 ```
 
 ## Versioning

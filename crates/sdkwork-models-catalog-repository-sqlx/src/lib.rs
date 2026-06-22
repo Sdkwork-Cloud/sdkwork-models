@@ -1,5 +1,6 @@
 pub const ENV_MODELS_CATALOG_ROOT: &str = "SDKWORK_MODELS_CATALOG_ROOT";
 
+mod admin_models_list;
 pub mod model_catalog_import;
 pub mod model_modality;
 pub mod routing_config_change;

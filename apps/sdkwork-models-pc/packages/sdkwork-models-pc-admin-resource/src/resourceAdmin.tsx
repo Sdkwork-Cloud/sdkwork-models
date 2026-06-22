@@ -12,6 +12,7 @@ import {
   type ResourceGroupCreateInput,
   type ResourceGroupItem,
   type ResourceGroupResourceItem,
+  type ResourceGroupUpdateInput,
 } from './resourceGroupService';
 
 type GroupFormState = {
@@ -199,7 +200,7 @@ export function ResourceAdmin() {
         groupCode: form.groupCode,
         groupName: form.groupName,
         groupType: 'api_group' as const,
-        selectionMode: form.groupCode === 'api.all' ? 'all' : 'manual',
+        selectionMode: (form.groupCode === 'api.all' ? 'all' : 'manual') as ResourceGroupUpdateInput['selectionMode'],
         description: form.description || null,
         sortOrder: form.sortOrder,
         status: form.status,

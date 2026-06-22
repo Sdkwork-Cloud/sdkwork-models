@@ -1,4 +1,7 @@
 export * from './common';
+export type { AdminAccountModelMappingInput } from './admin-account-model-mapping-input';
+export type { AdminAccountModelMappingsReplaceRequest } from './admin-account-model-mappings-replace-request';
+export type { AdminAccountModelMappingsReplaceResponse } from './admin-account-model-mappings-replace-response';
 export type { AdminAiModelCreateRequest } from './admin-ai-model-create-request';
 export type { AdminAiModelItem } from './admin-ai-model-item';
 export type { AdminAiModelMutationResponse } from './admin-ai-model-mutation-response';
@@ -55,6 +58,7 @@ export type { JsonValue } from './json-value';
 export type { ModelMappingsCreateResult } from './model-mappings-create-result';
 export type { ModelMappingsDeleteResult } from './model-mappings-delete-result';
 export type { ModelMappingsListResult } from './model-mappings-list-result';
+export type { ModelMappingsReplaceResult } from './model-mappings-replace-result';
 export type { ModelMappingsResolveCreateResult } from './model-mappings-resolve-create-result';
 export type { ModelMappingsUpdateResult } from './model-mappings-update-result';
 export type { ModelRankingHistoryEntry } from './model-ranking-history-entry';

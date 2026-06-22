@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "f187b8f228ca2837ae9290365be6ef265808306abbbd816a6ff8d86c9791c7fa"
+      "sha256": "5bf0ad10fd3dde3846b1820bdb398b84906fc1904ddc82fb364d818dc9e995da"
     },
     {
       "path": "src/api/base.ts",
@@ -87,6 +87,18 @@
       "sha256": "6f4465d7b0da43a55557ac55b688991553ef2970b040da14559ac076a288ef35"
     },
     {
+      "path": "src/types/admin-account-model-mapping-input.ts",
+      "sha256": "6473b59af5607f7d9dc79378d0c520393bdff2be75e275ed5fff7f1af814e001"
+    },
+    {
+      "path": "src/types/admin-account-model-mappings-replace-request.ts",
+      "sha256": "2dabd796e18e4a35563133b16e4035d60610fac47e5d5c86a02db6e119b28dd1"
+    },
+    {
+      "path": "src/types/admin-account-model-mappings-replace-response.ts",
+      "sha256": "4b992425f9cc122164aabf7502c085de5980b6c754403bcb0e6672b9c8d15534"
+    },
+    {
       "path": "src/types/admin-ai-model-create-request.ts",
       "sha256": "115d5a93c97e0b3a97d3f63ce79e97d4d6c5504b5eeada3078ee3adf543a8ac8"
     },
@@ -108,7 +120,7 @@
     },
     {
       "path": "src/types/admin-ai-models-response.ts",
-      "sha256": "6dd9d1a7630704ab521bbff861dca30afa6d8dd178e0812a4341d986f6199a71"
+      "sha256": "28a1f2a24a452c56e08caa4f645f9226d4e2a8af1f3c1a8311134b1bdabdedf0"
     },
     {
       "path": "src/types/admin-ai-resource-create-request.ts",
@@ -292,7 +304,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "4e8d6ad664bcbe67b67d03396ea592565e8ab9128deb41515b25f4bd9b64677f"
+      "sha256": "fc257289497d08102c7040a713abc5c2c29901789d8722cb8f76eee5fa5565d3"
     },
     {
       "path": "src/types/json-null.ts",
@@ -317,6 +329,10 @@
     {
       "path": "src/types/model-mappings-list-result.ts",
       "sha256": "5f3b9728a5b215167b08f946b69256f185acc51bf8cd872a41a0801e65cbdad3"
+    },
+    {
+      "path": "src/types/model-mappings-replace-result.ts",
+      "sha256": "12863c64b7f8c1584ec862d6ff4987ed1b5e3ee96ac763e3183bd9fd7dc3204a"
     },
     {
       "path": "src/types/model-mappings-resolve-create-result.ts",

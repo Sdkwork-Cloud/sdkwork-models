@@ -3,7 +3,7 @@
   "info": {
     "title": "SDKWork Models App API",
     "version": "0.1.0",
-    "description": "Intelligence catalog API owned by sdkwork-models. Extracted from composed host OpenAPI authority."
+    "description": "Intelligence catalog API owned by sdkwork-models. Materialized from composed host catalog mount OpenAPI authority."
   },
   "servers": [
     {
@@ -135,15 +135,13 @@
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
+        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
-        "x-write-tables": [],
-        "x-sdkwork-owner": "sdkwork-clawrouter",
-        "x-sdkwork-api-authority": "sdkwork-clawrouter-app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "app",
-        "x-sdkwork-source-route-crate": "sdkwork-router-app-api"
+        "x-write-tables": []
       }
     },
     "/app/v3/api/ai/model_vendors": {
@@ -221,15 +219,13 @@
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
+        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
-        "x-write-tables": [],
-        "x-sdkwork-owner": "sdkwork-clawrouter",
-        "x-sdkwork-api-authority": "sdkwork-clawrouter-app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "app",
-        "x-sdkwork-source-route-crate": "sdkwork-router-app-api"
+        "x-write-tables": []
       }
     },
     "/app/v3/api/ai/models": {
@@ -437,15 +433,13 @@
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
+        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
-        "x-write-tables": [],
-        "x-sdkwork-owner": "sdkwork-clawrouter",
-        "x-sdkwork-api-authority": "sdkwork-clawrouter-app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-api-surface": "app",
-        "x-sdkwork-source-route-crate": "sdkwork-router-app-api"
+        "x-write-tables": []
       }
     }
   },

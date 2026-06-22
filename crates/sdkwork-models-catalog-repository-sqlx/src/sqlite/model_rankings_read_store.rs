@@ -1,6 +1,5 @@
 use sqlx::{Row, SqlitePool};
 
-use sdkwork_models_contract_service::DomainError;
 use crate::sql_model_rankings::{
     build_history, license_label, metadata_from_json, metadata_from_latest_refresh_job,
     modality_code, modality_label, parse_period_cell, parse_strengths,
@@ -8,6 +7,7 @@ use crate::sql_model_rankings::{
     refresh_status_from_metadata_and_latest_job, source_from_items, source_rows_from_rank_payload,
     DEFAULT_SNAPSHOT_PERIOD,
 };
+use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
     normalize_model_ranking_filter_value, normalize_model_ranking_search_pattern,
     normalize_rank_scope, normalize_scope_ids, ModelRankingHistoryEntry, ModelRankingItem,
@@ -743,10 +743,7 @@ async fn load_source_metadata(
     pool: &SqlitePool,
     subject: ModelRankingsSubject,
     rank_scope: &str,
-) -> Result<
-    Option<crate::sql_model_rankings::RankingSnapshotMetadata>,
-    DomainError,
-> {
+) -> Result<Option<crate::sql_model_rankings::RankingSnapshotMetadata>, DomainError> {
     let row = sqlx::query(LOAD_MODEL_RANKING_SOURCE)
         .bind(subject.tenant_id)
         .bind(subject.organization_id)

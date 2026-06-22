@@ -5,6 +5,16 @@
 use crate::error::ConverterError;
 use crate::types::*;
 
+/// Rejects tool definitions that are not yet mapped to the target protocol.
+pub fn reject_unconverted_tools(tools: &Option<Vec<Tool>>) -> Result<(), ConverterError> {
+    if tools.as_ref().is_some_and(|definitions| !definitions.is_empty()) {
+        return Err(ConverterError::unsupported_operation(
+            "tool definitions are not supported for this conversion target yet",
+        ));
+    }
+    Ok(())
+}
+
 /// 从 SystemPrompt 中提取文本内容
 pub fn extract_system_text(system: &SystemPrompt) -> String {
     match system {

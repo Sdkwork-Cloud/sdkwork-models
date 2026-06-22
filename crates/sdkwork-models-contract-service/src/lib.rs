@@ -13,9 +13,7 @@ pub use error::{DomainError, DomainResult};
 pub use model_catalog_admin_store::*;
 pub use model_ranking_refresh_store::*;
 pub use model_rankings_read_store::*;
-pub use ops_audit_log_recorder::{
-    NoopOpsAuditLogRecorder, OpsAuditLogEntry, OpsAuditLogRecorder,
-};
+pub use ops_audit_log_recorder::{NoopOpsAuditLogRecorder, OpsAuditLogEntry, OpsAuditLogRecorder};
 pub use routing_config_change_recorder::{
     AiRoutingConfigChange, AiRoutingConfigChangeRecorder, NoopAiRoutingConfigChangeRecorder,
 };

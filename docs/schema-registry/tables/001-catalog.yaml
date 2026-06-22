@@ -1,0 +1,1536 @@
+tables:
+- table: ai_api_endpoint
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /admin/channel/resources
+  - /admin/channel
+  api_surfaces:
+  - backend
+  - worker
+  required_columns:
+  - endpoint_code
+  - protocol_code
+  - path_template
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - endpoint_code
+  - protocol_code
+  - path_template
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_api_endpoint_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - endpoint_code
+  columns:
+    endpoint_code: string(128)
+    protocol_code: string(64)
+    display_name: string(128)
+    method: string(16)
+    path_template: string(256)
+    request_schema: json
+    response_schema: json
+    streaming_supported: bool
+    sort_order: int32
+  indexes:
+  - name: idx_ai_api_endpoint_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  - name: idx_ai_api_endpoint_protocol_status
+    columns:
+    - tenant_id
+    - organization_id
+    - protocol_code
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_billing_meter
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /console/usage
+  - /admin/group
+  - /admin/model
+  - /admin/record
+  api_surfaces:
+  - app
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - meter_code
+  - display_name
+  - billing_mode
+  - default_unit
+  - default_unit_size
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_billing_meter_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - meter_code
+  columns:
+    meter_code: string(64)
+    display_name: string(128)
+    description: string(512)
+    modality: enum_int32
+    usage_type: enum_int32
+    billing_mode: enum_int32
+    default_unit: enum_int32
+    default_unit_size: decimal
+    quantity_precision: int32
+    quantity_source: enum_int32
+    aggregation_mode: enum_int32
+    result_selector: string(256)
+    supports_tier: bool
+    supports_expression: bool
+    allow_negative_quantity: bool
+    canonical_price_item_type: enum_int32
+    sort_order: int32
+  indexes:
+  - name: idx_ai_billing_meter_tenant_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  - name: idx_ai_billing_meter_modality_mode
+    columns:
+    - tenant_id
+    - organization_id
+    - modality
+    - billing_mode
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_modality
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /admin/channel/resources
+  - /admin/channel
+  api_surfaces:
+  - backend
+  - worker
+  required_columns:
+  - modality_code
+  - display_name
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - modality_code
+  - display_name
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_modality_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - modality_code
+  columns:
+    modality_code: string(64)
+    display_name: string(128)
+    modality_group: string(64)
+    description: string(512)
+    input_supported: bool
+    output_supported: bool
+    sort_order: int32
+  indexes:
+  - name: idx_ai_modality_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_modality_api_endpoint
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_modality
+  - ai_api_endpoint
+  frontend_routes:
+  - /admin/channel/resources
+  api_surfaces:
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - modality_code
+  - endpoint_code
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    modality_id: int64
+    modality_code: string(64)
+    api_endpoint_id: int64
+    endpoint_code: string(128)
+    supported: bool
+    sort_order: int32
+  indexes:
+  - name: uk_ai_modality_api_endpoint
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - modality_code
+    - endpoint_code
+  - name: idx_ai_modality_api_endpoint_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_model
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /models/:id
+  - /models/:provider/:model
+  - /rankings
+  - /playground
+  - /c/:conversationId
+  - /admin/model
+  - /admin/channel
+  - /admin/model/mappings
+  api_surfaces:
+  - app
+  - backend
+  - openai_v1
+  required_columns:
+  - catalog_key
+  - vendor_code
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - catalog_key
+  - model
+  - display_name
+  - vendor_code
+  - release_stage
+  - shelf_state
+  - routing_state
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_tenant_catalog_key
+    columns:
+    - tenant_id
+    - organization_id
+    - catalog_key
+  columns:
+    catalog_key: string(256)
+    model: string(256)
+    display_name: string(128)
+    vendor_id: int64
+    vendor_code: string(64)
+    vendor_name_snapshot: string(128)
+    family_id: int64
+    family_code: string(64)
+    provider_hint: string(64)
+    model_family: string(128)
+    model_version: string(64)
+    model_aliases: json
+    capability: enum_int32
+    capabilities: json
+    modalities: json
+    input_modalities: json
+    output_modalities: json
+    icon_media_resource_id: string(128)
+    icon_object_blob_id: int64
+    icon_resource_snapshot: json
+    color_token: string(64)
+    docs_url: string(1024)
+    license_type: enum_int32
+    api_format: string(128)
+    capability_intro: text
+    limitations: json
+    supported_languages: json
+    use_cases: json
+    training_data_cutoff: string(128)
+    context_tokens: int64
+    max_input_tokens: int64
+    max_output_tokens: int64
+    max_duration_seconds: int32
+    supports_streaming: bool
+    supports_tools: bool
+    supports_json_schema: bool
+    performance_profile: json
+    default_pricing_id: int64
+    rank_score: decimal
+    release_stage: enum_int32
+    shelf_state: enum_int32
+    routing_state: enum_int32
+    deprecated_at: instant
+    retired_at: instant
+    replacement_model: string(256)
+    description: text
+  indexes:
+  - name: idx_ai_model_tenant_status_updated
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - updated_at
+    - id
+  - name: idx_ai_model_vendor_status
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - status
+    - updated_at
+    - id
+  - name: idx_ai_model_model_status
+    columns:
+    - tenant_id
+    - organization_id
+    - model
+    - status
+    - id
+  - name: idx_ai_model_family_status
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - family_code
+    - status
+    - updated_at
+    - id
+  - name: idx_ai_model_capability_status
+    columns:
+    - tenant_id
+    - organization_id
+    - capability
+    - status
+    - updated_at
+    - id
+  - name: idx_ai_model_public_listing
+    columns:
+    - tenant_id
+    - organization_id
+    - shelf_state
+    - routing_state
+    - release_stage
+    - status
+    - rank_score
+    - id
+  - name: idx_ai_model_public_rank_desc
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - routing_state
+    - shelf_state
+    - rank_score
+    - id
+  - name: idx_ai_model_catalog_search
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - vendor_code
+    - capability
+    - routing_state
+    - shelf_state
+    - display_name
+    - id
+  generated_by_this_project: true
+- table: ai_model_api_endpoint
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_model
+  - ai_api_endpoint
+  frontend_routes:
+  - /admin/channel/resources
+  - /models
+  - /playground
+  api_surfaces:
+  - app
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - catalog_key
+  - endpoint_code
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    model_id: int64
+    catalog_key: string(256)
+    model: string(256)
+    vendor_code: string(64)
+    api_endpoint_id: int64
+    endpoint_code: string(128)
+    provider_native_model: string(256)
+    default_parameters: json
+    supports_streaming: bool
+    supported: bool
+    sort_order: int32
+  indexes:
+  - name: uk_ai_model_api_endpoint
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - catalog_key
+    - endpoint_code
+  - name: idx_ai_model_api_endpoint_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_model_capability
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /models/:id
+  - /models/:provider/:model
+  - /playground
+  - /admin/model
+  api_surfaces:
+  - app
+  - backend
+  required_columns:
+  - catalog_key
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - model_id
+  - catalog_key
+  - model
+  - vendor_code
+  - capability_code
+  - supported
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_capability_model_code
+    columns:
+    - tenant_id
+    - organization_id
+    - model_id
+    - capability_code
+    - modality
+    - parameter_name
+  columns:
+    model_id: int64
+    catalog_key: string(256)
+    model: string(256)
+    vendor_code: string(64)
+    capability: enum_int32
+    capability_code: string(64)
+    modality: enum_int32
+    input_modalities: json
+    output_modalities: json
+    endpoint_formats: json
+    parameter_name: string(128)
+    parameter_schema: json
+    supported: bool
+    limit_unit: string(64)
+    limit_value: string(128)
+    schema_version: string(32)
+    sort_order: int32
+    description: string(512)
+  indexes:
+  - name: idx_ai_model_capability_tenant_status
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - model_id
+    - sort_order
+    - id
+  - name: idx_ai_model_capability_vendor_capability
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - capability
+    - supported
+    - id
+  generated_by_this_project: true
+- table: ai_model_catalog_source
+  domain: ai
+  profile: catalog_source
+  compliance_level: L3
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /admin/model
+  api_surfaces:
+  - backend
+  - worker
+  required_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - source_code
+  - source_name
+  - source_kind
+  - trust_level
+  - parser_kind
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - source_code
+  - source_name
+  - source_kind
+  - trust_level
+  - parser_kind
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_catalog_source_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - source_code
+  columns:
+    source_code: string(96)
+    vendor_code: string(64)
+    region_code: string(64)
+    provider_code: string(64)
+    source_name: string(128)
+    source_url: string(1024)
+    source_kind: enum_int32
+    trust_level: enum_int32
+    parser_kind: string(64)
+    refresh_interval_seconds: int64
+    last_observed_at: instant
+    last_success_at: instant
+    catalog_version: string(128)
+    source_hash: string(128)
+    raw_payload_ref: string(512)
+    normalized_payload_hash: string(128)
+    schema_version: string(32)
+    error_message_masked: string(1024)
+  indexes:
+  - name: idx_ai_model_catalog_source_tenant_status
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - source_kind
+    - last_success_at
+    - id
+  - name: idx_ai_model_catalog_source_vendor_region_status
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - region_code
+    - status
+    - last_observed_at
+    - id
+  - name: idx_ai_model_catalog_source_refresh
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - refresh_interval_seconds
+    - last_success_at
+    - id
+  security:
+    audit_required: true
+  generated_by_this_project: true
+- table: ai_model_catalog_sync_run
+  domain: ai
+  profile: event_log
+  compliance_level: L3
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: event_log
+  source_tables:
+  - ai_model_catalog_source
+  - ai_model_vendor
+  - ai_model
+  - ai_model_capability
+  - ai_billing_meter
+  - ai_model_pricing
+  - ai_model_rank_snapshot
+  frontend_routes:
+  - /admin/model
+  api_surfaces:
+  - backend
+  - worker
+  required_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - source_code
+  - run_status
+  - started_at
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - source_code
+  - run_status
+  - started_at
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    source_type: string(128)
+    source_id: int64
+    source_version: int64
+    source_code: string(96)
+    vendor_code: string(64)
+    region_code: string(64)
+    provider_code: string(64)
+    run_status: enum_int32
+    started_at: instant
+    finished_at: instant
+    observed_at: instant
+    catalog_version: string(128)
+    source_hash: string(128)
+    observed_vendor_count: int64
+    observed_model_count: int64
+    observed_meter_count: int64
+    observed_price_count: int64
+    accepted_count: int64
+    rejected_count: int64
+    skipped_count: int64
+    change_summary: json
+    error_message_masked: string(1024)
+  indexes:
+  - name: idx_ai_model_catalog_sync_run_tenant_status
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - started_at
+    - id
+  - name: idx_ai_model_catalog_sync_run_source_latest
+    columns:
+    - tenant_id
+    - organization_id
+    - source_code
+    - run_status
+    - started_at
+    - id
+  - name: idx_ai_model_catalog_sync_run_vendor_region_latest
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - region_code
+    - run_status
+    - started_at
+    - id
+  foreign_keys:
+  - name: fk_ai_model_catalog_sync_run_source
+    columns:
+    - source_id
+    references_table: ai_model_catalog_source
+    references_columns:
+    - id
+  security:
+    audit_required: true
+  generated_by_this_project: true
+- table: ai_model_family
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /models/:id
+  - /models/:provider/:model
+  - /playground
+  - /admin/model
+  api_surfaces:
+  - app
+  - backend
+  - openai_v1
+  required_columns:
+  - vendor_code
+  - family_code
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - vendor_code
+  - family_code
+  - display_name
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_family_tenant_vendor_code
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - family_code
+  columns:
+    vendor_id: int64
+    vendor_code: string(64)
+    family_code: string(64)
+    display_name: string(128)
+    description: string(512)
+    docs_url: string(512)
+    icon_media_resource_id: string(128)
+    icon_object_blob_id: int64
+    icon_resource_snapshot: json
+    color_token: string(64)
+    family_type: enum_int32
+    primary_modality: enum_int32
+    model_count: int64
+    default_model_id: int64
+    default_model: string(256)
+    sort_order: int32
+  indexes:
+  - name: idx_ai_model_family_tenant_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  - name: idx_ai_model_family_vendor_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_model_modality
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_model
+  - ai_modality
+  frontend_routes:
+  - /admin/channel/resources
+  - /models
+  - /playground
+  api_surfaces:
+  - app
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - catalog_key
+  - modality_code
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    model_id: int64
+    catalog_key: string(256)
+    model: string(256)
+    vendor_code: string(64)
+    modality_id: int64
+    modality_code: string(64)
+    direction: string(32)
+    supported: bool
+    sort_order: int32
+  indexes:
+  - name: uk_ai_model_modality
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - catalog_key
+    - modality_code
+    - direction
+  - name: idx_ai_model_modality_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_model_pricing
+  domain: ai
+  profile: pricing
+  compliance_level: L3
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /models/:id
+  - /models/:provider/:model
+  - /playground
+  - /console/api-keys
+  - /admin/model
+  - /admin/service-providers/pricing
+  api_surfaces:
+  - app
+  - backend
+  - worker
+  required_columns:
+  - catalog_key
+  - region_code
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - catalog_key
+  - model
+  - vendor_code
+  - region_code
+  - price_side
+  - billing_mode
+  - billing_meter_code
+  - unit_size
+  - unit_price
+  - currency
+  - effective_from
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    model_id: int64
+    catalog_key: string(256)
+    model: string(256)
+    vendor_code: string(64)
+    region_code: string(64)
+    provider_code: string(64)
+    channel_id: int64
+    provider_model: string(256)
+    platform_code: string(64)
+    service_tier: string(64)
+    price_side: enum_int32
+    pricing_scope: enum_int32
+    pricing_scope_id: int64
+    pricing_plan_id: int64
+    pricing_plan_code: string(64)
+    billing_type: enum_int32
+    billing_mode: enum_int32
+    billing_meter_id: int64
+    billing_meter_code: string(64)
+    price_item_type: enum_int32
+    unit: enum_int32
+    unit_size: decimal
+    metering_mode: enum_int32
+    quantity_source: enum_int32
+    quantity_formula: text
+    result_selector: string(256)
+    minimum_quantity: decimal
+    quantity_step: decimal
+    included_quantity: decimal
+    unit_price: decimal
+    currency: string(10)
+    rounding_mode: enum_int32
+    min_charge_amount: decimal
+    reference_price_id: int64
+    reference_price_side: enum_int32
+    reference_multiplier: decimal
+    markup_amount: decimal
+    pricing_formula_mode: enum_int32
+    price_origin: enum_int32
+    import_snapshot_id: int64
+    priority: int32
+    price_version: string(64)
+    source_url: string(512)
+    source_hash: string(128)
+    published_at: instant
+    observed_at: instant
+    effective_from: instant
+    effective_to: instant
+    source_price_id: int64
+  indexes:
+  - name: idx_ai_model_pricing_tenant_status_effective
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - effective_from
+    - effective_to
+    - id
+  - name: idx_ai_model_pricing_lookup
+    columns:
+    - tenant_id
+    - organization_id
+    - catalog_key
+    - price_side
+    - pricing_scope
+    - pricing_scope_id
+    - billing_mode
+    - billing_meter_code
+    - status
+    - effective_from
+    - effective_to
+  - name: idx_ai_model_pricing_vendor_region_model
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - region_code
+    - catalog_key
+    - price_side
+    - status
+    - effective_from
+    - id
+  - name: idx_ai_model_pricing_provider_channel
+    columns:
+    - tenant_id
+    - organization_id
+    - provider_code
+    - channel_id
+    - catalog_key
+    - price_side
+    - status
+    - effective_from
+    - id
+  - name: idx_ai_model_pricing_plan_effective
+    columns:
+    - tenant_id
+    - organization_id
+    - pricing_plan_id
+    - catalog_key
+    - price_side
+    - status
+    - effective_from
+    - id
+  - name: idx_ai_model_pricing_meter_effective
+    columns:
+    - tenant_id
+    - organization_id
+    - billing_meter_code
+    - price_side
+    - status
+    - effective_from
+    - id
+  security:
+    financial: true
+    decimal_only: true
+  generated_by_this_project: true
+- table: ai_model_rank_snapshot
+  domain: ai
+  profile: projection
+  compliance_level: L2
+  system_of_record: false
+  write_owner: sdkwork-models-platform
+  common_columns: projection
+  source_tables:
+  - ai_model
+  - ai_usage_fact
+  - ai_request_trace
+  - ai_model_pricing
+  frontend_routes:
+  - /rankings
+  - /console/dashboard
+  - /admin/model
+  api_surfaces:
+  - app
+  - backend
+  - worker
+  required_columns:
+  - catalog_key
+  - region_code
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - snapshot_date
+  - snapshot_period
+  - rank_scope
+  - catalog_key
+  - model
+  - vendor_code
+  - region_code
+  - rank_no
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_rank_snapshot_scope_catalog_key
+    columns:
+    - tenant_id
+    - organization_id
+    - snapshot_date
+    - snapshot_period
+    - rank_scope
+    - vendor_code
+    - region_code
+    - catalog_key
+  columns:
+    snapshot_date: date
+    snapshot_period: enum_int32
+    rank_scope: string(64)
+    model_id: int64
+    catalog_key: string(256)
+    model: string(256)
+    vendor_code: string(64)
+    region_code: string(64)
+    vendor_name_snapshot: string(128)
+    provider_code: string(64)
+    modality: enum_int32
+    rank_no: int32
+    previous_rank_no: int32
+    base_volume: int64
+    cost_indicator: int32
+    context_size_text: string(64)
+    is_new: bool
+    color_token: string(64)
+    pricing_text: string(128)
+    license_type: enum_int32
+    strengths: json
+    request_count: int64
+    token_count: int64
+    cost_amount: decimal
+    currency: string(10)
+    latency_p50_ms: int32
+    latency_p95_ms: int32
+    success_rate: decimal
+    win_rate: decimal
+    trend_score: decimal
+    rank_payload: json
+  semantic_contracts:
+    ranking_snapshot:
+      time_fields:
+        snapshot_date: calendar_date_utc
+        snapshot_period: stable_enum_int32
+      scope_fields:
+      - tenant_id
+      - organization_id
+      - rank_scope
+      - vendor_code
+      - region_code
+      - catalog_key
+      metadata_contract:
+        required_fields:
+        - snapshotDate
+        - snapshotPeriod
+        - windowStart
+        - windowEnd
+        - generatedAt
+        - refreshIntervalSeconds
+        - nextRefreshAt
+        - cacheMaxAgeSeconds
+        - sourceTables
+        source_tables:
+        - ai_usage_fact
+        - ai_model
+        - ai_model_rank_snapshot
+      rank_payload_contract:
+        required_fields:
+        - catalogKey
+        - rank
+        - previousRank
+        - sourceRows
+        - requests
+        - tokens
+        - cost
+        - currency
+        source_tables:
+        - ai_usage_fact
+        - ai_model
+        - ai_model_rank_snapshot
+  indexes:
+  - name: idx_ai_model_rank_snapshot_tenant_rank
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - snapshot_date
+    - snapshot_period
+    - rank_scope
+    - rank_no
+  - name: idx_ai_model_rank_snapshot_vendor_region_rank
+    columns:
+    - tenant_id
+    - organization_id
+    - snapshot_date
+    - snapshot_period
+    - vendor_code
+    - region_code
+    - rank_no
+  - name: idx_ai_model_rank_snapshot_latest_scope
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - rank_scope
+    - snapshot_date
+    - snapshot_period
+    - rank_no
+  - name: idx_ai_model_rank_snapshot_filter_rank
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - snapshot_date
+    - snapshot_period
+    - rank_scope
+    - vendor_code
+    - region_code
+    - modality
+    - rank_no
+  generated_by_this_project: true
+- table: ai_model_vendor
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  frontend_routes:
+  - /
+  - /models
+  - /models/:id
+  - /models/:provider/:model
+  - /rankings
+  - /playground
+  - /c/:conversationId
+  - /admin/model
+  - /admin/channel
+  - /admin/model/mappings
+  api_surfaces:
+  - app
+  - backend
+  - openai_v1
+  required_columns:
+  - vendor_code
+  - display_name
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - vendor_code
+  - display_name
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_model_vendor_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+  columns:
+    vendor_code: string(64)
+    display_name: string(128)
+    legal_name: string(256)
+    description: string(512)
+    website_url: string(512)
+    docs_url: string(512)
+    logo_media_resource_id: string(128)
+    logo_object_blob_id: int64
+    logo_resource_snapshot: json
+    icon_media_resource_id: string(128)
+    icon_object_blob_id: int64
+    icon_resource_snapshot: json
+    color_token: string(64)
+    country_region: string(64)
+    vendor_type: enum_int32
+    model_families: json
+    capabilities: json
+    supported_protocols: json
+    client_api_compatibility: json
+    open_source: bool
+    sort_order: int32
+  indexes:
+  - name: idx_ai_model_vendor_tenant_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_resource
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_model_vendor
+  - ai_modality
+  - ai_api_endpoint
+  - ai_model
+  frontend_routes:
+  - /admin/channel/resources
+  - /admin/model/resources
+  - /admin/group
+  - /admin/channel
+  api_surfaces:
+  - backend
+  - worker
+  required_columns:
+  - resource_code
+  - resource_type
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - resource_code
+  - resource_type
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_resource_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - resource_code
+  columns:
+    resource_code: string(192)
+    resource_type: string(64)
+    display_name: string(128)
+    vendor_id: int64
+    vendor_code: string(64)
+    modality_id: int64
+    modality_code: string(64)
+    api_endpoint_id: int64
+    api_code: string(128)
+    model_id: int64
+    model_code: string(256)
+    catalog_key: string(256)
+    model: string(256)
+    provider_native_model: string(256)
+    resource_schema: json
+    metadata_schema: json
+    description: string(512)
+    sort_order: int32
+  indexes:
+  - name: idx_ai_resource_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  - name: idx_ai_resource_type_status
+    columns:
+    - tenant_id
+    - organization_id
+    - resource_type
+    - status
+    - id
+  - name: idx_ai_resource_vendor_model
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - catalog_key
+    - status
+    - id
+  generated_by_this_project: true
+- table: ai_resource_group
+  domain: ai
+  profile: dictionary_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_resource
+  frontend_routes:
+  - /admin/channel/resources
+  - /admin/model/resources
+  - /admin/group
+  - /admin/channel
+  api_surfaces:
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - group_code
+  - group_name
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  - name: uk_ai_resource_group_tenant_code
+    columns:
+    - tenant_id
+    - organization_id
+    - group_code
+  columns:
+    group_code: string(128)
+    group_name: string(128)
+    group_type: string(64)
+    selection_mode: string(32)
+    description: string(512)
+    sort_order: int32
+  indexes:
+  - name: idx_ai_resource_group_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_resource_group_item
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_resource_group
+  - ai_resource
+  frontend_routes:
+  - /admin/channel/resources
+  - /admin/model/resources
+  - /admin/group
+  - /admin/channel
+  api_surfaces:
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - resource_group_id
+  - item_type
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    resource_group_id: int64
+    resource_group_code: string(128)
+    item_type: string(32)
+    resource_id: int64
+    resource_code:
+      type: string(192)
+      constraints: NOT NULL DEFAULT ''
+    child_resource_group_id: int64
+    child_resource_group_code:
+      type: string(128)
+      constraints: NOT NULL DEFAULT ''
+    item_role: string(32)
+    sort_order: int32
+  indexes:
+  - name: uk_ai_resource_group_item
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - resource_group_id
+    - item_type
+    - resource_code
+    - child_resource_group_code
+  - name: idx_ai_resource_group_item_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - resource_group_id
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_vendor_api_endpoint
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_model_vendor
+  - ai_api_endpoint
+  frontend_routes:
+  - /admin/channel/resources
+  api_surfaces:
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - vendor_code
+  - endpoint_code
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    vendor_id: int64
+    vendor_code: string(64)
+    api_endpoint_id: int64
+    endpoint_code: string(128)
+    supported: bool
+    sort_order: int32
+  indexes:
+  - name: uk_ai_vendor_api_endpoint
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - endpoint_code
+  - name: idx_ai_vendor_api_endpoint_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true
+- table: ai_vendor_modality
+  domain: ai
+  profile: relation_entity
+  compliance_level: L2
+  system_of_record: true
+  write_owner: sdkwork-models-platform
+  common_columns: tenant_entity
+  source_tables:
+  - ai_model_vendor
+  - ai_modality
+  frontend_routes:
+  - /admin/channel/resources
+  api_surfaces:
+  - backend
+  - worker
+  not_null_columns:
+  - uuid
+  - tenant_id
+  - organization_id
+  - status
+  - vendor_code
+  - modality_code
+  unique_constraints:
+  - columns:
+    - uuid
+    source: column_unique
+  columns:
+    vendor_id: int64
+    vendor_code: string(64)
+    modality_id: int64
+    modality_code: string(64)
+    supported: bool
+    sort_order: int32
+  indexes:
+  - name: uk_ai_vendor_modality
+    unique: true
+    columns:
+    - tenant_id
+    - organization_id
+    - vendor_code
+    - modality_code
+  - name: idx_ai_vendor_modality_status_sort
+    columns:
+    - tenant_id
+    - organization_id
+    - status
+    - sort_order
+    - id
+  generated_by_this_project: true

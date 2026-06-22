@@ -11,16 +11,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: sdkwork-models
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-appbase
+          path: sdkwork-appbase
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-claw-router
+          path: sdkwork-claw-router
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-database
+          path: sdkwork-database
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-id
+          path: sdkwork-id
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-utils
+          path: sdkwork-utils
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-web-framework
+          path: sdkwork-web-framework
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: pnpm/action-setup@v4
         with:
           version: 10.30.2
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          cache-dependency-path: sdkwork-models/pnpm-lock.yaml
       - uses: dtolnay/rust-toolchain@stable
       - name: Install workspace dependencies
+        working-directory: sdkwork-models
         run: pnpm install --frozen-lockfile || pnpm install
       - name: Run SDKWork verify
+        working-directory: sdkwork-models
         shell: pwsh
         run: pnpm run verify

@@ -21,6 +21,7 @@ pub use catalog::{
     DEFAULT_PROVIDER_CIRCUIT_BREAKER_RECOVERY_WINDOW_SECONDS, DEFAULT_PROVIDER_RETRY_ATTEMPTS,
     DEFAULT_RETRYABLE_PROVIDER_STATUS_CODES,
 };
+pub use catalog_enums::{BillingMeter, IntegrationProviderType, ModelVendor};
 pub use error::{DomainError, DomainResult};
 pub use money::{DecimalValue, Money};
 pub use pricing::{ModelPrice, PriceSide, PricingPlan};
@@ -28,4 +29,3 @@ pub use routing::{
     AiRouteFailureStrategy, AiRouteModelRequirement, AiRouteStrategy, RouteCandidate,
     RoutingCapability, RoutingFallbackMode, RoutingPolicy, RoutingPolicyScope, RoutingRule,
 };
-pub use catalog_enums::{BillingMeter, IntegrationProviderType, ModelVendor};

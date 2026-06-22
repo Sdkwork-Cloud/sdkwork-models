@@ -2,26 +2,31 @@ use std::collections::BTreeMap;
 
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
-use sdkwork_models_contract_service::{DomainError, DomainResult};
-use crate::ENV_MODELS_CATALOG_ROOT;
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
     catalog_scope_vendor_codes, catalog_with_selected_vendors, is_dry_run_mode,
     load_catalog_root_with_pin, model_catalog_key as build_model_base_catalog_key,
     pricing_catalog_key as build_model_pricing_catalog_key, stable_uuid, CatalogScopeCounts,
 };
+use crate::admin_models_list::{
+    optional_non_empty, normalized_search_pattern, LIST_MODELS_BASE_WHERE_POSTGRES,
+    LIST_MODELS_COUNT_WHERE_POSTGRES,
+};
 use crate::model_modality;
 use crate::runtime_id::next_claw_runtime_id;
+use crate::ENV_MODELS_CATALOG_ROOT;
 use sdkwork_models_contract_service::{
     AdminAiModelItem, AdminAiModelRegionPriceCommand, AdminModelCatalogSyncItem,
     AdminModelCommandFuture, AdminModelMappingRuleBindingDraft, AdminModelMappingRuleBindingItem,
     AdminModelMappingRuleItem, AdminModelMappingRuleItemDraft, AdminModelMappingRuleMappingItem,
-    ModelCatalogAdminStore, AdminModelSubject, AdminModelVendorItem, CreateAdminAiModelCommand,
+    AdminModelSubject, AdminModelVendorItem, CreateAdminAiModelCommand,
     CreateAdminModelMappingCommand, CreateAdminModelVendorCommand, DeleteAdminAiModelCommand,
-    DeleteAdminModelMappingCommand, ListAdminAiModelsQuery, ListAdminModelMappingsQuery,
-    ListAdminModelVendorsQuery, ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult,
-    SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
+    DeleteAdminModelMappingCommand, AdminAiModelListPage, ListAdminAiModelsQuery, ListAdminModelMappingsQuery,
+    ListAdminModelVendorsQuery, ModelCatalogAdminStore, ResolveAdminModelMappingQuery,
+    ResolveAdminModelMappingResult, SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand,
+    UpdateAdminModelMappingCommand,
 };
+use sdkwork_models_contract_service::{DomainError, DomainResult};
 
 const MODEL_VENDOR_TARGET_TYPE: i32 = 41;
 const AI_MODEL_TARGET_TYPE: i32 = 42;
@@ -107,7 +112,7 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
     fn list_models<'a>(
         &'a self,
         query: ListAdminAiModelsQuery,
-    ) -> AdminModelCommandFuture<'a, Vec<AdminAiModelItem>> {
+    ) -> AdminModelCommandFuture<'a, AdminAiModelListPage> {
         Box::pin(async move { list_models(&self.pool, query).await })
     }
 
@@ -655,11 +660,9 @@ async fn apply_sdkwork_models_catalog_refresh(
     tx: &mut Transaction<'_, Postgres>,
     catalog: &sdkwork_models::ModelCatalog,
 ) -> DomainResult<()> {
-    crate::postgres::model_catalog_import::import_postgres_model_catalog_tx(
-        tx, catalog,
-    )
-    .await
-    .map_err(|error| store_error("failed to refresh sdkwork models catalog", error))?;
+    crate::postgres::model_catalog_import::import_postgres_model_catalog_tx(tx, catalog)
+        .await
+        .map_err(|error| store_error("failed to refresh sdkwork models catalog", error))?;
     Ok(())
 }
 
@@ -718,28 +721,32 @@ async fn list_vendors(
 async fn list_models(
     pool: &PgPool,
     query: ListAdminAiModelsQuery,
-) -> DomainResult<Vec<AdminAiModelItem>> {
+) -> DomainResult<AdminAiModelListPage> {
+    let vendor_id = optional_non_empty(&query.vendor_id).map(str::to_owned);
+    let vendor_code = optional_non_empty(&query.vendor_code).map(str::to_owned);
+    let search_pattern = normalized_search_pattern(&query);
+    let limit = query.normalized_limit();
+    let offset = query.normalized_offset();
+
+    let count_row = sqlx::query(&format!(
+        "SELECT COUNT(*)::bigint AS total_count FROM ai_model m {}",
+        LIST_MODELS_COUNT_WHERE_POSTGRES
+    ))
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(vendor_id.as_deref())
+    .bind(vendor_code.as_deref())
+    .bind(search_pattern.as_deref())
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count ai models", error))?;
+    let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
+
     let rows = sqlx::query(
         model_select_sql(
-            r#"
-        WHERE (m.tenant_id IS NULL OR m.tenant_id = 0 OR m.tenant_id = $1)
-          AND (m.organization_id IS NULL OR m.organization_id = 0 OR m.organization_id = $2)
-          AND m.deleted_at IS NULL
-          AND NOT EXISTS (
-              SELECT 1
-              FROM ai_model tenant_model
-              WHERE tenant_model.tenant_id = $3
-                AND tenant_model.organization_id = $4
-                AND tenant_model.model = m.model
-                AND tenant_model.id <> m.id
-                AND tenant_model.deleted_at IS NULL
-          )
-        ORDER BY
-          COALESCE(m.rank_score, 0) DESC,
-          CASE WHEN m.tenant_id = $5 AND m.organization_id = $6 THEN 0 ELSE 1 END,
-          m.display_name ASC NULLS LAST,
-          m.id ASC
-        "#,
+            LIST_MODELS_BASE_WHERE_POSTGRES,
             query.subject.tenant_id,
             query.subject.organization_id,
         )
@@ -751,6 +758,11 @@ async fn list_models(
     .bind(query.subject.organization_id)
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
+    .bind(vendor_id)
+    .bind(vendor_code)
+    .bind(search_pattern)
+    .bind(limit)
+    .bind(offset)
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list ai models", error))?;
@@ -759,7 +771,10 @@ async fn list_models(
         .map(model_from_row)
         .collect::<DomainResult<Vec<_>>>()?;
     attach_model_region_prices(pool, &mut models).await?;
-    Ok(models)
+    Ok(AdminAiModelListPage {
+        items: models,
+        total_count,
+    })
 }
 
 async fn list_model_mappings(

@@ -16,7 +16,6 @@ use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use crate::api::response::PlusApiResult;
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
-use sdkwork_models_catalog_repository_sqlx::DEFAULT_CATALOG_REFRESH_SOURCE;
 use crate::ports::{
     AdminAiModelItem, AdminAiModelRegionPriceCommand, AdminModelCatalogSyncItem,
     AdminModelMappingRuleBindingDraft, AdminModelMappingRuleBindingItem,
@@ -28,6 +27,7 @@ use crate::ports::{
     ListAdminModelVendorsQuery, ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult,
     SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
 };
+use sdkwork_models_catalog_repository_sqlx::DEFAULT_CATALOG_REFRESH_SOURCE;
 
 const MAX_VENDOR_CODE_LEN: usize = 64;
 const MAX_NAME_LEN: usize = 128;
@@ -194,6 +194,16 @@ struct AdminModelMappingsQuery {
     q: Option<String>,
 }
 
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct AdminModelsListQuery {
+    vendor_id: Option<String>,
+    vendor_code: Option<String>,
+    q: Option<String>,
+    limit: Option<i64>,
+    offset: Option<i64>,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct AdminModelMappingCreateRequest {
@@ -327,6 +337,8 @@ struct NormalizedModelUpdateRequest {
 #[serde(rename_all = "camelCase")]
 struct AdminModelListResponse<T> {
     items: Vec<T>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    total_count: Option<i64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -536,6 +548,7 @@ async fn fetch_vendors(
     {
         Ok(items) => Json(PlusApiResult::success(AdminModelListResponse {
             items: items.into_iter().map(to_vendor_response).collect(),
+            total_count: None,
         }))
         .into_response(),
         Err(error) => admin_model_system_response("model vendor read model is unavailable", error),
@@ -544,17 +557,16 @@ async fn fetch_vendors(
 
 async fn fetch_models(
     State(state): State<AdminModelCommandState>,
+    Query(query): Query<AdminModelsListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
-    match state
-        .store
-        .list_models(ListAdminAiModelsQuery { subject })
-        .await
-    {
-        Ok(items) => Json(PlusApiResult::success(AdminModelListResponse {
-            items: items.into_iter().map(to_model_response).collect(),
+    let list_query = build_list_models_query(subject, query);
+    match state.store.list_models(list_query).await {
+        Ok(page) => Json(PlusApiResult::success(AdminModelListResponse {
+            items: page.items.into_iter().map(to_model_response).collect(),
+            total_count: Some(page.total_count),
         }))
         .into_response(),
         Err(error) => admin_model_system_response("ai model read model is unavailable", error),
@@ -565,7 +577,7 @@ async fn fetch_model_mappings(
     State(state): State<AdminModelCommandState>,
     Query(query): Query<AdminModelMappingsQuery>,
     trusted: TrustedRequestSubject,
-    _headers: HeaderMap
+    _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
     let query = match build_list_model_mappings_query(subject, query) {
@@ -575,6 +587,7 @@ async fn fetch_model_mappings(
     match state.store.list_model_mappings(query).await {
         Ok(items) => Json(PlusApiResult::success(AdminModelListResponse {
             items: items.into_iter().map(to_mapping_response).collect(),
+            total_count: None,
         }))
         .into_response(),
         Err(error) => admin_model_system_response("model mapping read model is unavailable", error),
@@ -585,7 +598,7 @@ async fn create_vendor(
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminModelVendorCreateRequest>(&body, "model vendor") {
@@ -612,7 +625,7 @@ async fn create_model(
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminAiModelCreateRequest>(&body, "ai model") {
@@ -638,7 +651,7 @@ async fn create_model_mapping(
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminModelMappingCreateRequest>(&body, "model mapping") {
@@ -667,7 +680,7 @@ async fn update_model(
     Path(model_id): Path<String>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminAiModelUpdateRequest>(&body, "ai model update") {
@@ -695,7 +708,7 @@ async fn update_model_mapping(
     Path(mapping_id): Path<String>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request =
@@ -730,7 +743,7 @@ async fn delete_model(
     State(state): State<AdminModelCommandState>,
     Path(model_id): Path<String>,
     trusted: TrustedRequestSubject,
-    headers: HeaderMap
+    headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
     let command = match build_delete_model_command(state.clone(), &headers, subject, model_id) {
@@ -751,7 +764,7 @@ async fn delete_model_mapping(
     State(state): State<AdminModelCommandState>,
     Path(mapping_id): Path<String>,
     trusted: TrustedRequestSubject,
-    headers: HeaderMap
+    headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
     let command =
@@ -775,7 +788,7 @@ async fn resolve_model_mapping(
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request =
@@ -801,7 +814,7 @@ async fn sync_catalog(
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request =
@@ -822,11 +835,11 @@ async fn sync_catalog(
 
 fn map_subject(trusted: TrustedRequestSubject) -> AdminModelSubject {
     AdminModelSubject {
-            tenant_id: trusted.tenant_id,
-            organization_id: trusted.organization_id,
-            operator_id: trusted.operator_id,
-            operator_type: trusted.operator_type,
-        }
+        tenant_id: trusted.tenant_id,
+        organization_id: trusted.organization_id,
+        operator_id: trusted.operator_id,
+        operator_type: trusted.operator_type,
+    }
 }
 
 fn parse_json_body<T>(body: &[u8], entity_name: &str) -> Result<T, String>
@@ -989,6 +1002,20 @@ fn build_sync_catalog_command(
         request_id: generate_server_request_id().map_err(request_id_error)?,
         requested_at: current_timestamp_string(),
     })
+}
+
+fn build_list_models_query(
+    subject: AdminModelSubject,
+    query: AdminModelsListQuery,
+) -> ListAdminAiModelsQuery {
+    ListAdminAiModelsQuery {
+        subject,
+        vendor_id: query.vendor_id,
+        vendor_code: query.vendor_code,
+        q: query.q,
+        limit: query.limit,
+        offset: query.offset,
+    }
 }
 
 fn build_list_model_mappings_query(

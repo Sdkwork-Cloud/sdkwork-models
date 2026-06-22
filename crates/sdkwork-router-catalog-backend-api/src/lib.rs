@@ -15,6 +15,7 @@ pub use sdkwork_models_catalog_service::{
     admin_model_rankings_router_with_read_store_and_refresh_store,
 };
 pub use web_bootstrap::{
-    intelligence_catalog_backend_api_prefixes, intelligence_catalog_backend_api_public_path_prefixes,
-    wrap_router_with_web_framework, wrap_router_with_web_framework_from_env,
+    intelligence_catalog_backend_api_prefixes,
+    intelligence_catalog_backend_api_public_path_prefixes, wrap_router_with_web_framework,
+    wrap_router_with_web_framework_from_env,
 };

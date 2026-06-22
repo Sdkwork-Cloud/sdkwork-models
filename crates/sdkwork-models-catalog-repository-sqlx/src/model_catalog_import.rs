@@ -1363,21 +1363,6 @@ fn normalized_vendor_set(vendor_codes: &[String]) -> BTreeSet<String> {
         .collect()
 }
 
-pub(crate) fn catalog_payload(catalog: &ModelCatalog) -> String {
-    let catalog_hash = catalog_scope_source_hash("sdkwork_models", catalog);
-    serde_json::json!({
-        "catalogVersion": catalog.manifest.catalog_version,
-        "schemaVersion": catalog.manifest.schema_version,
-        "generatedAt": catalog.manifest.generated_at,
-        "catalogHash": catalog_hash,
-        "vendorCount": catalog_scope_vendor_codes(catalog).len(),
-        "regionCount": catalog.vendors.len(),
-        "modelCount": catalog_scope_model_count(catalog),
-        "meterCount": catalog.meters.len(),
-    })
-    .to_string()
-}
-
 pub(crate) fn catalog_scope_source_hash(source_code: &str, catalog: &ModelCatalog) -> String {
     let payload = serde_json::json!({
         "hashKind": "sdkwork-models.catalog-scope.v1",

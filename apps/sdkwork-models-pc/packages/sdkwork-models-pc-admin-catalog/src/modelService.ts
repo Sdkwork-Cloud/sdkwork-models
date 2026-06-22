@@ -316,7 +316,127 @@ export function selectPreferredModelVendorId(
   return vendors.find((vendor) => vendor.name.toLowerCase() === 'openai')?.id ?? vendors[0]?.id ?? '';
 }
 
+export type ModelListQuery = {
+  vendorId?: string;
+  vendorCode?: string;
+  q?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export type ModelListPage = {
+  items: Model[];
+  totalCount: number;
+};
+
+async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
+  const params: {
+    vendorId?: string;
+    vendorCode?: string;
+    q?: string;
+    limit?: string;
+    offset?: string;
+  } = {};
+  if (query.vendorId) {
+    params.vendorId = query.vendorId;
+  }
+  if (query.vendorCode) {
+    params.vendorCode = query.vendorCode;
+  }
+  if (query.q) {
+    params.q = query.q;
+  }
+  if (query.limit !== undefined) {
+    params.limit = String(query.limit);
+  }
+  if (query.offset !== undefined) {
+    params.offset = String(query.offset);
+  }
+  return Object.keys(params).length === 0
+    ? getModelsBackendSdkClient().ai.models.list()
+    : getModelsBackendSdkClient().ai.models.list(params);
+}
+
+function filterModelListPage(page: ModelListPage, query: ModelListQuery = {}): ModelListPage {
+  if (!query.vendorId && !query.vendorCode && !query.q && query.limit === undefined && query.offset === undefined) {
+    return page;
+  }
+  let items = page.items;
+  if (query.vendorId) {
+    items = items.filter((item) => item.vendorId === query.vendorId || item.vendorCode === query.vendorId);
+  }
+  if (query.vendorCode) {
+    items = items.filter((item) => item.vendorCode === query.vendorCode);
+  }
+  if (query.q) {
+    const normalizedQuery = query.q.trim().toLowerCase();
+    if (normalizedQuery) {
+      items = items.filter((item) =>
+        item.model.toLowerCase().includes(normalizedQuery)
+        || item.displayName.toLowerCase().includes(normalizedQuery)
+        || item.name.toLowerCase().includes(normalizedQuery));
+    }
+  }
+  const offset = Math.max(query.offset ?? 0, 0);
+  const limit = query.limit ?? items.length;
+  return {
+    items: items.slice(offset, offset + limit),
+    totalCount: items.length,
+  };
+}
+
+function readModelListPage(result: unknown, errorMessage: string): ModelListPage {
+  ensureSdkworkApiSuccess(result, errorMessage);
+  const record = readApiRecord(result);
+  const items = readRequiredApiItems(record, errorMessage).map(normalizeModel);
+  const totalCount = readNumber(record, 'totalCount') ?? items.length;
+  return { items, totalCount };
+}
+
+async function enrichModelsWithRankingCalls(models: Model[]): Promise<Model[]> {
+  const rankingCalls = modelCallsByName(await fetchModelRankingCallStats());
+  if (rankingCalls.size === 0) {
+    return models;
+  }
+  return models.map((model) => ({
+    ...model,
+    calls: rankingCalls.get(model.displayName) ?? rankingCalls.get(model.model) ?? model.calls,
+  }));
+}
+
 export class ModelService {
+  static async fetchModelsPage(query: ModelListQuery = {}): Promise<ModelListPage> {
+    const result = await listModelsRaw(query);
+    const page = readModelListPage(result, 'Failed to fetch models');
+    const filtered = filterModelListPage(page, query);
+    const totalCount = readNumber(readApiRecord(result), 'totalCount') ?? filtered.totalCount;
+    return {
+      items: await enrichModelsWithRankingCalls(filtered.items),
+      totalCount,
+    };
+  }
+
+  static async fetchAllModels(): Promise<Model[]> {
+    const pageSize = 200;
+    let offset = 0;
+    let totalCount = Number.POSITIVE_INFINITY;
+    const models: Model[] = [];
+    while (offset < totalCount) {
+      const page = await ModelService.fetchModelsPage({ limit: pageSize, offset });
+      models.push(...page.items);
+      totalCount = page.totalCount;
+      offset += page.items.length;
+      if (page.items.length === 0) {
+        break;
+      }
+    }
+    return models;
+  }
+
+  static async fetchModels(): Promise<Model[]> {
+    return ModelService.fetchAllModels();
+  }
+
   static async fetchVendors(): Promise<Vendor[]> {
     const result = await getModelsBackendSdkClient().ai.modelVendors.list();
     ensureSdkworkApiSuccess(result, 'Failed to fetch vendors');
@@ -324,31 +444,16 @@ export class ModelService {
       .map(normalizeVendor);
   }
 
-  static async fetchModels(): Promise<Model[]> {
-    const modelsResult = await getModelsBackendSdkClient().ai.models.list();
-    ensureSdkworkApiSuccess(modelsResult, 'Failed to fetch models');
-    const models = readRequiredApiItems(modelsResult, 'Failed to fetch models')
-      .map(normalizeModel);
-    const rankingCalls = modelCallsByName(await fetchModelRankingCallStats());
-    if (rankingCalls.size === 0) {
-      return models;
-    }
-    return models.map((model) => ({
-      ...model,
-      calls: rankingCalls.get(model.displayName) ?? rankingCalls.get(model.model) ?? model.calls,
-    }));
-  }
-
   static async fetchInitializedCatalog(): Promise<InitializedModelCatalog> {
-    const [vendors, models] = await Promise.all([
+    const [vendors, probe] = await Promise.all([
       ModelService.fetchVendors(),
-      ModelService.fetchModels(),
+      ModelService.fetchModelsPage({ limit: 1, offset: 0 }),
     ]);
-    if (vendors.length > 0 && models.length > 0) {
+    if (vendors.length > 0 && probe.totalCount > 0) {
       return {
-        initialized: false,
+        initialized: true,
         vendors,
-        models,
+        models: probe.items,
       };
     }
     const synced = await ModelService.syncVendorsAndModels();
@@ -464,14 +569,15 @@ export class ModelMappingService {
   static async fetchModelOptionsCatalog(): Promise<ModelMappingModelOptionsCatalog> {
     const [vendorsResult, modelsResult] = await Promise.all([
       getModelsBackendSdkClient().ai.modelVendors.list(),
-      getModelsBackendSdkClient().ai.models.list(),
+      listModelsRaw({ limit: 200, offset: 0 }),
     ]);
     ensureSdkworkApiSuccess(vendorsResult, 'Failed to fetch model mapping vendors');
     ensureSdkworkApiSuccess(modelsResult, 'Failed to fetch model mapping models');
+    const modelsRecord = readApiRecord(modelsResult);
     return {
       vendors: readRequiredApiItems(vendorsResult, 'Failed to fetch model mapping vendors')
         .map(normalizeVendor),
-      models: readRequiredApiItems(modelsResult, 'Failed to fetch model mapping models')
+      models: readRequiredApiItems(modelsRecord, 'Failed to fetch model mapping models')
         .map(normalizeModelMappingModelOption),
     };
   }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { AdminTableShell, BottomPagination, BusinessStateTableRow, ConfirmDialog, readMediaResourceUrl } from '@sdkwork/clawrouter-pc-commons';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { ModelMappingService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
+import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
 import { MODEL_PRICING_REGIONS, createModelInputFromForm, createVendorInputFromForm, updateModelInputFromForm } from './modelForm';
 import { VendorPickerModal } from './vendorPickerModal';
 
@@ -12,6 +12,8 @@ export function ModelAdmin() {
   const { t } = useTranslation();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [models, setModels] = useState<Model[]>([]);
+  const [vendorModelCounts, setVendorModelCounts] = useState<Record<string, number>>({});
+  const [vendorModelTotal, setVendorModelTotal] = useState(0);
   const [selectedVendorId, setSelectedVendorId] = useState<string>('v_openai');
   const [search, setSearch] = useState('');
   const [modalityFilters, setModalityFilters] = useState<ModelModalityFilter[]>([]);
@@ -45,14 +47,47 @@ export function ModelAdmin() {
     { value: 'Embedding', label: t('admin.model.filters.embedding') },
   ];
 
-  const loadModels = async () => {
+  const loadVendorModels = async () => {
+    const vendor = vendors.find((entry) => entry.id === selectedVendorId);
+    if (!vendor) {
+      setModels([]);
+      setVendorModelTotal(0);
+      return;
+    }
     setLoading(true);
     setLoadError(null);
     try {
-      const { vendors: vList, models: mList } = await ModelService.fetchInitializedCatalog();
-      setVendors(vList);
-      setModels(mList);
-      const nextSelectedVendorId = selectPreferredModelVendorId(vList, selectedVendorId);
+      const page = await ModelService.fetchModelsPage({
+        vendorId: vendor.id,
+        vendorCode: vendor.vendorCode,
+        q: search.trim() || undefined,
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+      const filtered = page.items.filter((model) =>
+        modalityFilters.length === 0 || modalityFilters.includes(model.type),
+      );
+      setModels(filtered);
+      setVendorModelTotal(page.totalCount);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : 'Failed to load model catalog');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadInitialCatalog = async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const initialized = await ModelService.fetchInitializedCatalog();
+      setVendors(initialized.vendors);
+      const counts = await Promise.all(initialized.vendors.map(async (vendor) => {
+        const probe = await ModelService.fetchModelsPage({ vendorId: vendor.id, limit: 1, offset: 0 });
+        return [vendor.id, probe.totalCount] as const;
+      }));
+      setVendorModelCounts(Object.fromEntries(counts));
+      const nextSelectedVendorId = selectPreferredModelVendorId(initialized.vendors, selectedVendorId);
       if (nextSelectedVendorId && nextSelectedVendorId !== selectedVendorId) {
         setSelectedVendorId(nextSelectedVendorId);
       }
@@ -64,29 +99,29 @@ export function ModelAdmin() {
   };
 
   useEffect(() => {
-    void loadModels();
+    void loadInitialCatalog();
   }, []);
 
+  useEffect(() => {
+    if (vendors.length === 0) {
+      return;
+    }
+    void loadVendorModels();
+  }, [vendors, selectedVendorId, page, pageSize, search, modalityFilters]);
+
   const selectedVendor = vendors.find(v => v.id === selectedVendorId);
-  const normalizedSearch = search.toLowerCase();
-  const vendorModels = selectedVendor
-    ? modelsForVendor(models, selectedVendor).filter(m =>
-      (m.displayName.toLowerCase().includes(normalizedSearch) || m.model.toLowerCase().includes(normalizedSearch))
-      && (modalityFilters.length === 0 || modalityFilters.includes(m.type))
-    )
-    : [];
-  const paginatedVendorModels = vendorModels.slice((page - 1) * pageSize, page * pageSize);
+  const paginatedVendorModels = models;
 
   useEffect(() => {
     setPage(1);
   }, [selectedVendorId, search, modalityFilters]);
 
   useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(vendorModels.length / pageSize));
+    const maxPage = Math.max(1, Math.ceil(vendorModelTotal / pageSize));
     if (page > maxPage) {
       setPage(maxPage);
     }
-  }, [page, pageSize, vendorModels.length]);
+  }, [page, pageSize, vendorModelTotal]);
 
   useEffect(() => {
     if (!isModalityFilterOpen) {
@@ -139,10 +174,9 @@ export function ModelAdmin() {
     setIsSyncing(true);
     setLoadError(null);
     try {
-      const { vendors: newVendors, models: newModels } = await ModelService.syncVendorsAndModels();
-      setVendors(newVendors);
-      setModels(newModels);
-      setSelectedVendorId(selectPreferredModelVendorId(newVendors, selectedVendorId));
+      await ModelService.syncVendorsAndModels();
+      await loadInitialCatalog();
+      await loadVendorModels();
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to sync model catalog');
     } finally {
@@ -444,7 +478,7 @@ export function ModelAdmin() {
           <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
             {vendors.map(v => {
               const isActive = selectedVendorId === v.id;
-              const count = modelsForVendor(models, v).length;
+              const count = vendorModelCounts[v.id] ?? 0;
               return (
                 <button
                   key={v.id}
@@ -564,7 +598,7 @@ export function ModelAdmin() {
                     page={page}
                     pageSize={pageSize}
                     itemCount={paginatedVendorModels.length}
-                    hasNextPage={page * pageSize < vendorModels.length}
+                    hasNextPage={page * pageSize < vendorModelTotal}
                     disabled={loading}
                     showingLabel={t('admin.model.pagination.showing')}
                     pageLabel={t('admin.model.pagination.page', { page })}
@@ -602,10 +636,10 @@ export function ModelAdmin() {
                               kind="error"
                               title={t('admin.model.state.modelsLoadError')}
                               description={loadError}
-                              onRetry={() => { void loadModels(); }}
+                              onRetry={() => { void loadVendorModels(); }}
                               retryLabel={t('common.actions.retry')}
                             />
-                          ) : vendorModels.length === 0 ? (
+                          ) : paginatedVendorModels.length === 0 ? (
                             <BusinessStateTableRow
                               colSpan={7}
                               kind="empty"

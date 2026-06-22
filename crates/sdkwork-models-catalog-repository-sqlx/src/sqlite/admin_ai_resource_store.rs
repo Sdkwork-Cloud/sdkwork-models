@@ -10,9 +10,7 @@ use sdkwork_models_contract_service::{
 };
 use sqlx::{Row, Sqlite, SqlitePool, Transaction};
 
-use crate::routing_config_change::{
-    record_sqlite_ai_routing_config_change, AiRoutingConfigChange,
-};
+use crate::routing_config_change::{record_sqlite_ai_routing_config_change, AiRoutingConfigChange};
 
 const AI_RESOURCE_TARGET_TYPE: i32 = 91;
 

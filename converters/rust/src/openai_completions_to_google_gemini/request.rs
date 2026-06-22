@@ -29,6 +29,8 @@ pub fn convert_request(
         });
     }
 
+    common::reject_unconverted_tools(&request.tools)?;
+
     Ok(ConversionRequest {
         protocol: Protocol::GoogleGemini,
         model,
@@ -37,7 +39,7 @@ pub fn convert_request(
         temperature: request.temperature,
         top_p: request.top_p,
         stream: request.stream,
-        tools: None, // TODO: Gemini工具格式需要专门适配
+        tools: None,
         system: None,
         metadata: request.metadata,
     })

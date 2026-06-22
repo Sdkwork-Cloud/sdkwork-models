@@ -93,7 +93,7 @@ function extractSurface(sourcePath, pathPrefixes, title, serverUrl) {
       title,
       version: "0.1.0",
       description:
-        "Intelligence catalog API owned by sdkwork-models. Extracted from composed host OpenAPI authority.",
+        "Intelligence catalog API owned by sdkwork-models. Materialized from composed host catalog mount OpenAPI authority.",
     },
     servers: [{ url: serverUrl }],
     paths,
@@ -106,19 +106,35 @@ function extractSurface(sourcePath, pathPrefixes, title, serverUrl) {
   };
 }
 
+function serializeJson(document) {
+  return `${JSON.stringify(document, null, 2)}\n`;
+}
+
 function writeJson(targetPath, document) {
   mkdirSync(dirname(targetPath), { recursive: true });
-  writeFileSync(targetPath, `${JSON.stringify(document, null, 2)}\n`, "utf8");
+  writeFileSync(targetPath, serializeJson(document), "utf8");
   console.log(`exported ${targetPath} (${Object.keys(document.paths).length} paths)`);
 }
 
+function assertCurrent(targetPath, document) {
+  const expected = serializeJson(document);
+  const actual = readFileSync(targetPath, "utf8");
+  if (actual !== expected) {
+    console.error(`openapi drift detected: ${targetPath}`);
+    process.exit(1);
+  }
+  console.log(`openapi current: ${targetPath}`);
+}
+
+const checkOnly = process.argv.includes("--check");
+
 const backendSource = join(
   clawRouterRoot,
-  "apis/backend-api/clawrouter/clawrouter-backend-api.openapi.json",
+  "generated/openapi/clawrouter-models-catalog-backend-openapi.json",
 );
 const appSource = join(
   clawRouterRoot,
-  "apis/app-api/clawrouter/clawrouter-app-api.openapi.json",
+  "generated/openapi/clawrouter-models-catalog-app-openapi.json",
 );
 
 const backendDocument = extractSurface(
@@ -134,5 +150,13 @@ const appDocument = extractSurface(
   "/app/v3/api",
 );
 
-writeJson(join(root, "apis/backend-api/intelligence/openapi.json"), backendDocument);
-writeJson(join(root, "apis/app-api/intelligence/openapi.json"), appDocument);
+const backendTarget = join(root, "apis/backend-api/intelligence/openapi.json");
+const appTarget = join(root, "apis/app-api/intelligence/openapi.json");
+
+if (checkOnly) {
+  assertCurrent(backendTarget, backendDocument);
+  assertCurrent(appTarget, appDocument);
+} else {
+  writeJson(backendTarget, backendDocument);
+  writeJson(appTarget, appDocument);
+}

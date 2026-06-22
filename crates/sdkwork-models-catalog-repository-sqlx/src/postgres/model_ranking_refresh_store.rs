@@ -1,11 +1,9 @@
 use sha2::{Digest, Sha256};
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
-use sdkwork_models_contract_service::DomainError;
 use crate::runtime_id::next_claw_runtime_id;
-use crate::sql_model_rankings::{
-    add_seconds_to_timestamp, normalize_iso_timestamp, period_code,
-};
+use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
+use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
     normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
     ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture, ModelRankingRefreshCommand,

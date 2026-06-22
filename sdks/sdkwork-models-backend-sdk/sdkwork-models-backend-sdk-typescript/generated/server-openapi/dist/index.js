@@ -280,7 +280,7 @@ class AiAiResourcesApi {
     constructor(client) {
         this.client = client;
     }
-    /** List ai resources */
+    /** List assignable resources */
     async list() {
         return this.client.get(backendApiPath(`/ai/resources`));
     }
@@ -437,6 +437,10 @@ class AiModelMappingsApi {
     /** Create model mapping */
     async create(body) {
         return this.client.post(backendApiPath(`/ai/model_mappings`), body, undefined, undefined, 'application/json');
+    }
+    /** Replace account mappings */
+    async replace(body) {
+        return this.client.put(backendApiPath(`/ai/model_mappings`), body, undefined, undefined, 'application/json');
     }
     /** Delete model mapping */
     async delete(mappingId) {

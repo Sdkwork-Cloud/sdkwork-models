@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.iam.module",
+  "moduleId": "intelligence-catalog",
+  "catalogVersion": "1.0.0",
+  "domain": "intelligence",
+  "owner": "sdkwork-models",
+  "displayName": "Intelligence Model Catalog",
+  "permissions": {
+    "catalog": [
+      {
+        "code": "intelligence.models.read",
+        "name": "Read intelligence model catalog",
+        "resource": "models",
+        "action": "read",
+        "status": "active",
+        "since": "1.0.0",
+        "replacementCode": null
+      },
+      {
+        "code": "intelligence.models.manage",
+        "name": "Manage intelligence model catalog",
+        "resource": "models",
+        "action": "manage",
+        "status": "active",
+        "since": "1.0.0",
+        "replacementCode": null
+      },
+      {
+        "code": "intelligence.resources.read",
+        "name": "Read intelligence AI resources",
+        "resource": "resources",
+        "action": "read",
+        "status": "active",
+        "since": "1.0.0",
+        "replacementCode": null
+      },
+      {
+        "code": "intelligence.resources.manage",
+        "name": "Manage intelligence AI resources",
+        "resource": "resources",
+        "action": "manage",
+        "status": "active",
+        "since": "1.0.0",
+        "replacementCode": null
+      }
+    ],
+    "openapiAuthorities": [
+      {
+        "apiAuthority": "sdkwork-models-backend-api",
+        "operationPermissions": [
+          { "operationId": "modelVendors.list", "permission": "intelligence.models.read" },
+          { "operationId": "models.list", "permission": "intelligence.models.read" },
+          { "operationId": "modelMappings.list", "permission": "intelligence.models.read" },
+          { "operationId": "modelMappings.resolve.create", "permission": "intelligence.models.read" },
+          { "operationId": "modelRankings.list", "permission": "intelligence.models.read" },
+          { "operationId": "modelRankings.status.retrieve", "permission": "intelligence.models.read" },
+          { "operationId": "modelRankings.jobs.list", "permission": "intelligence.models.read" },
+          { "operationId": "aiResources.list", "permission": "intelligence.resources.read" },
+          { "operationId": "aiResourceGroups.list", "permission": "intelligence.resources.read" },
+          { "operationId": "aiResourceGroups.resources.list", "permission": "intelligence.resources.read" },
+          { "operationId": "modelVendors.create", "permission": "intelligence.models.manage" },
+          { "operationId": "models.create", "permission": "intelligence.models.manage" },
+          { "operationId": "models.refresh", "permission": "intelligence.models.manage" },
+          { "operationId": "models.update", "permission": "intelligence.models.manage" },
+          { "operationId": "models.delete", "permission": "intelligence.models.manage" },
+          { "operationId": "modelMappings.create", "permission": "intelligence.models.manage" },
+          { "operationId": "modelMappings.update", "permission": "intelligence.models.manage" },
+          { "operationId": "modelMappings.delete", "permission": "intelligence.models.manage" },
+          { "operationId": "modelRankings.refresh", "permission": "intelligence.models.manage" },
+          { "operationId": "aiResources.create", "permission": "intelligence.resources.manage" },
+          { "operationId": "aiResources.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "aiResourceGroups.create", "permission": "intelligence.resources.manage" },
+          { "operationId": "aiResourceGroups.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "aiResourceGroups.delete", "permission": "intelligence.resources.manage" }
+        ]
+      },
+      {
+        "apiAuthority": "sdkwork-models-app-api",
+        "operationPermissions": [
+          { "operationId": "modelVendors.list", "permission": "intelligence.models.read" },
+          { "operationId": "models.list", "permission": "intelligence.models.read" },
+          { "operationId": "modelRankings.list", "permission": "intelligence.models.read" }
+        ]
+      }
+    ]
+  },
+  "roles": {
+    "domainStandardRoles": [],
+    "roleGrantExtensions": [
+      {
+        "roleCode": "org_admin",
+        "patterns": [
+          "intelligence.*"
+        ]
+      },
+      {
+        "roleCode": "org_operations",
+        "patterns": [
+          "intelligence.models.read",
+          "intelligence.models.manage",
+          "intelligence.resources.read",
+          "intelligence.resources.manage"
+        ]
+      }
+    ],
+    "roleExclusions": []
+  },
+  "directory": {
+    "organizationTemplates": [],
+    "departmentTemplates": [],
+    "positionTemplates": [],
+    "membershipTemplates": []
+  },
+  "policyConditions": {
+    "supportedAttributes": []
+  },
+  "oauthScopeMappings": [],
+  "dependencies": {
+    "requiresModules": [
+      "iam-kernel"
+    ]
+  }
+}

@@ -329,7 +329,7 @@ async fn fetch_ai_resource_group_resources(
     State(state): State<AdminAiResourceState>,
     Path(group_id_or_code): Path<String>,
     trusted: TrustedRequestSubject,
-    _headers: HeaderMap
+    _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
     let group_id_or_code = group_id_or_code.trim().to_owned();
@@ -363,7 +363,7 @@ async fn create_ai_resource(
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AiResourceCreateRequest>(&body, "AI resource") {
@@ -392,7 +392,7 @@ async fn create_ai_resource_group(
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AiResourceGroupCreateRequest>(&body, "AI resource group")
@@ -423,7 +423,7 @@ async fn update_ai_resource_group(
     Path(group_id): Path<String>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let group_id = match parse_positive_id(&group_id, "AI resource group id") {
@@ -458,7 +458,7 @@ async fn delete_ai_resource_group(
     State(state): State<AdminAiResourceState>,
     Path(group_id): Path<String>,
     trusted: TrustedRequestSubject,
-    _headers: HeaderMap
+    _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
     let group_id = match parse_positive_id(&group_id, "AI resource group id") {
@@ -488,7 +488,7 @@ async fn update_ai_resource(
     Path(resource_id): Path<String>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
-    body: Bytes
+    body: Bytes,
 ) -> Response {
     let subject = map_subject(trusted);
     let resource_id = match parse_positive_id(&resource_id, "AI resource id") {
@@ -520,11 +520,11 @@ async fn update_ai_resource(
 
 fn map_subject(trusted: TrustedRequestSubject) -> AdminAiResourceSubject {
     AdminAiResourceSubject {
-            tenant_id: trusted.tenant_id,
-            organization_id: trusted.organization_id,
-            operator_id: trusted.operator_id,
-            operator_type: trusted.operator_type,
-        }
+        tenant_id: trusted.tenant_id,
+        organization_id: trusted.organization_id,
+        operator_id: trusted.operator_id,
+        operator_type: trusted.operator_type,
+    }
 }
 
 fn to_item_response(item: AdminAiResourceItem) -> AdminAiResourceItemResponse {

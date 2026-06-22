@@ -73,7 +73,6 @@ impl ModelVendor {
             _ => Self::Unknown,
         }
     }
-
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -112,7 +111,6 @@ impl IntegrationProviderType {
             _ => Self::Unknown,
         }
     }
-
 
     pub fn int_code(&self) -> i32 {
         match self {
@@ -285,5 +283,4 @@ impl BillingMeter {
             _ => Self::Unknown,
         }
     }
-
 }

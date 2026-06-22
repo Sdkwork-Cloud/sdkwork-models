@@ -20,6 +20,5 @@ pub use model_rankings::{
 };
 
 pub use admin_model_catalog::admin_model_catalog_router as admin_model_catalog_router_with_store;
-pub use admin_model_command::admin_model_management_router_with_store
-    as admin_model_catalog_management_router_with_store;
+pub use admin_model_command::admin_model_management_router_with_store as admin_model_catalog_management_router_with_store;
 pub use app_model_catalog_router as app_models_router;
