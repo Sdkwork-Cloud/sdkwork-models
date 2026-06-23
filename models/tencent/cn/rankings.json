@@ -5,13 +5,13 @@
     {
       "items": [
         {
-          "catalogKey": "tencent/hunyuan-2.0-thinking",
+          "catalogKey": "tencent/hunyuan-2.0-thinking-20251109",
           "modelId": "hunyuan-2.0-thinking-20251109",
           "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output",
           "rankNo": 13
         },
         {
-          "catalogKey": "tencent/hunyuan-2.0-instruct",
+          "catalogKey": "tencent/hunyuan-2.0-instruct-20251111",
           "modelId": "hunyuan-2.0-instruct-20251111",
           "pricingText": "CNY 2.00 / 1M input; CNY 8.00 / 1M output",
           "rankNo": 14

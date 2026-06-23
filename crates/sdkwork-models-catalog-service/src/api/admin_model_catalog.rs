@@ -158,6 +158,7 @@ where
         groups: Vec::new(),
         search_query: None,
         limit: None,
+        offset: None,
     }) {
         Ok(page) => Json(PlusApiResult::success(to_response(page, &billing_meter))).into_response(),
         Err(error) => (

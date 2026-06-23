@@ -9,10 +9,16 @@
     "protocol": "http",
     "packageName": "sdkwork-models-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "db17ff6f8a7d8292c96f84f315454db02e2b274045c528b66cd4ae9ebf5deb4d",
+  "changeFingerprint": "3ca3592e277cdaf0dc989c25caed55289a9d2b6efbbb1c4269543d7159188ab4",
   "changes": {
-    "createdGeneratedFiles": [],
-    "updatedGeneratedFiles": [],
+    "createdGeneratedFiles": [
+      "src/types/no-data.ts"
+    ],
+    "updatedGeneratedFiles": [
+      "src/api/ai.ts",
+      "src/types/index.ts",
+      "src/types/models-list-result.ts"
+    ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
       "bin/publish.ps1",
@@ -24,7 +30,6 @@
       "package.json",
       "README.md",
       "sdkwork-sdk.json",
-      "src/api/ai.ts",
       "src/api/base.ts",
       "src/api/index.ts",
       "src/api/paths.ts",
@@ -33,14 +38,8 @@
       "src/http/index.ts",
       "src/index.ts",
       "src/sdk.ts",
-      "src/types/app-model-catalog-group-option.ts",
-      "src/types/app-model-catalog-item.ts",
-      "src/types/app-model-catalog-price-availability.ts",
-      "src/types/app-model-catalog-reference-price.ts",
-      "src/types/app-model-catalog-response.ts",
       "src/types/common.ts",
       "src/types/field-error.ts",
-      "src/types/index.ts",
       "src/types/json-null.ts",
       "src/types/json-object.ts",
       "src/types/json-value.ts",
@@ -51,13 +50,18 @@
       "src/types/model-rankings-snapshot.ts",
       "src/types/model-rankings-source.ts",
       "src/types/model-vendors-list-result.ts",
-      "src/types/models-list-result.ts",
       "src/types/problem-detail.ts",
       "src/types/ranking-vendor-option.ts",
       "src/types/ranking-vendor-options-response.ts",
       "tsconfig.json"
     ],
-    "deletedGeneratedFiles": [],
+    "deletedGeneratedFiles": [
+      "src/types/app-model-catalog-group-option.ts",
+      "src/types/app-model-catalog-item.ts",
+      "src/types/app-model-catalog-price-availability.ts",
+      "src/types/app-model-catalog-reference-price.ts",
+      "src/types/app-model-catalog-response.ts"
+    ],
     "scaffoldedFiles": [],
     "preservedScaffoldFiles": [
       "custom/build-runtime.mjs",
@@ -67,26 +71,88 @@
   },
   "impact": {
     "schemaVersion": 1,
-    "areas": [],
-    "details": [],
-    "requiresVerification": false,
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    "areas": [
+      "api-surface",
+      "models"
+    ],
+    "details": [
+      {
+        "area": "api-surface",
+        "paths": [
+          "src/api/ai.ts"
+        ]
+      },
+      {
+        "area": "models",
+        "paths": [
+          "src/types/app-model-catalog-group-option.ts",
+          "src/types/app-model-catalog-item.ts",
+          "src/types/app-model-catalog-price-availability.ts",
+          "src/types/app-model-catalog-reference-price.ts",
+          "src/types/app-model-catalog-response.ts",
+          "src/types/index.ts",
+          "src/types/models-list-result.ts",
+          "src/types/no-data.ts"
+        ]
+      }
+    ],
+    "requiresVerification": true,
+    "summary": "Detected impact areas: api-surface, models. Verification is required."
   },
   "verificationPlan": {
-    "shouldRun": false,
-    "runPhase": "skip",
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
-    "steps": []
+    "shouldRun": true,
+    "runPhase": "now",
+    "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "steps": [
+      {
+        "id": "check",
+        "title": "Unified package check",
+        "required": true,
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "check"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action check"
+      },
+      {
+        "id": "build",
+        "title": "Unified package build",
+        "required": true,
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "build"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action build"
+      }
+    ]
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "low",
-    "nextAction": "skip",
+    "riskLevel": "high",
+    "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
-    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "no-actionable-changes"
+      "deleted-generated-files",
+      "manual-review-required",
+      "verification-required"
     ]
   },
   "preservedLegacyFiles": false

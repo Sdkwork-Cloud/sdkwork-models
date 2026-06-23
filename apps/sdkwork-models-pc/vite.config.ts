@@ -2,7 +2,7 @@ import { cpSync, createReadStream, existsSync, statSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin } from "vite";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
 const appRoot = dirname(fileURLToPath(import.meta.url));
@@ -61,12 +61,15 @@ function catalogAssetsPlugin(root: string): Plugin {
   };
 }
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, appRoot, "");
+
   return {
   plugins: [react(), catalogAssetsPlugin(repositoryRoot)],
   root: appRoot,
   define: {
     "process.env.SDKWORK_MODELS_CATALOG_ROOT": JSON.stringify(catalogMountPath),
+    "process.env.SDKWORK_ACCESS_TOKEN": JSON.stringify(env.SDKWORK_ACCESS_TOKEN ?? ""),
   },
   resolve: {
     alias: {

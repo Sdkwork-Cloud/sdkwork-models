@@ -37,9 +37,14 @@ pub struct ListModelCatalogQuery {
     pub groups: Vec<String>,
     pub search_query: Option<String>,
     pub limit: Option<usize>,
+    pub offset: Option<usize>,
 }
 
 impl ListModelCatalogQuery {
+    pub fn normalized_offset(&self) -> usize {
+        self.offset.unwrap_or(0)
+    }
+
     pub fn normalized_vendor_codes(&self) -> Vec<String> {
         let mut values = normalize_filter_values(&self.vendor_codes);
         if let Some(vendor_code) = normalize_filter_value(self.vendor_code.as_deref()) {
@@ -139,6 +144,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
             .limit
             .unwrap_or(MAX_MODEL_CATALOG_LIMIT)
             .min(MAX_MODEL_CATALOG_LIMIT);
+        let offset = query.normalized_offset();
         let all_items = self
             .catalog
             .list_models(None)
@@ -237,6 +243,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                     search_query.as_deref(),
                 )
             })
+            .skip(offset)
             .take(limit)
             .collect();
 

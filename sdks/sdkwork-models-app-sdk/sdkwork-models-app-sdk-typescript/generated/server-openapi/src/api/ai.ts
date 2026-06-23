@@ -14,6 +14,7 @@ export interface AiModelsListParams {
   groups?: string[];
   q?: string;
   limit?: string;
+  offset?: string;
 }
 
 export class AiModelsApi {
@@ -24,7 +25,7 @@ export class AiModelsApi {
   }
 
 
-/** List models */
+/** List model catalog for Playground */
   async list(params?: AiModelsListParams): Promise<ModelsListResult> {
     const query = buildQueryString([
       { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
@@ -36,6 +37,7 @@ export class AiModelsApi {
       { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'limit', value: params?.limit, style: 'form', explode: true, allowReserved: false },
+      { name: 'offset', value: params?.offset, style: 'form', explode: true, allowReserved: false },
     ]);
     return this.client.get<ModelsListResult>(appendQueryString(appApiPath(`/ai/models`), query));
   }

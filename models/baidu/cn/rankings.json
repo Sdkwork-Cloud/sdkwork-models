@@ -17,7 +17,7 @@
           "rankNo": 13
         },
         {
-          "catalogKey": "baidu/ernie-4.5-turbo",
+          "catalogKey": "baidu/ernie-4.5-turbo-128k",
           "modelId": "ernie-4.5-turbo-128k",
           "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output",
           "rankNo": 14

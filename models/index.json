@@ -116,7 +116,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "baidu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "00ccf607392d4af049579ac206e26b8a446dfec7ae3aa7719ce5f57bf70180f2",
+      "sha256": "5f2395ea1170afa710cf4125e093a0edb51896f901340d58ffdb0e0b3a627d10",
       "vendorCode": "baidu"
     },
     {
@@ -653,7 +653,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "tencent/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "cb4ea1086ac4b807b93c24df3c0659e4eb3c997aa510e3a9e9d13b145a801d84",
+      "sha256": "3955afcfeaf3958995d13a6cba3e4ec07753c88fcd49408dc6d62a4245e08f2a",
       "vendorCode": "tencent"
     },
     {

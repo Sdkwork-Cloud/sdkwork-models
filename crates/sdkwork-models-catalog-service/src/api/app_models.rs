@@ -40,6 +40,7 @@ struct AppModelCatalogQuery {
     groups: Option<String>,
     q: Option<String>,
     limit: Option<usize>,
+    offset: Option<usize>,
 }
 
 #[derive(Debug, Serialize)]
@@ -175,6 +176,7 @@ where
         groups: comma_separated_query_values(query.groups.as_deref()),
         search_query: query.q,
         limit: query.limit,
+        offset: query.offset,
     }) {
         Ok(page) => Json(PlusApiResult::success(to_response(page))).into_response(),
         Err(error) => (

@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "733efb867bd89ef36492b3ae93306cbaab4a393517fe37674bd8fd15cd8f54b4"
+      "sha256": "41ccf3ddbd360ee14d8e21a7d8ab1b7c66fd8848b997cea70ffe61b6c0d99001"
     },
     {
       "path": "src/api/base.ts",
@@ -87,26 +87,6 @@
       "sha256": "b6ab2e9fe170114dbef41c55f0d62fe8eb24b69555e9c96793c0a0c5edd77520"
     },
     {
-      "path": "src/types/app-model-catalog-group-option.ts",
-      "sha256": "2c1f87efaf2f38c1f9aebdd7f371394c058cb32b83848d6b564e2d748268c7ae"
-    },
-    {
-      "path": "src/types/app-model-catalog-item.ts",
-      "sha256": "3ef36a032e13ffb62db4e44b0ffacf3950d8d750f609b56c68c2d5711b02d7c7"
-    },
-    {
-      "path": "src/types/app-model-catalog-price-availability.ts",
-      "sha256": "3c1e86c0815dd15c67a77ff883890241206b175d2357ff92dc41ab24cb62e1a5"
-    },
-    {
-      "path": "src/types/app-model-catalog-reference-price.ts",
-      "sha256": "ebb395b05dc23c1c9da3dd5553ea6c6878e9c333348f83a9821cd3a00a34713e"
-    },
-    {
-      "path": "src/types/app-model-catalog-response.ts",
-      "sha256": "5a8544b985eb4f6f767015fdb11b5ca22290812d3c1dccd1ff842257d66cf12d"
-    },
-    {
       "path": "src/types/common.ts",
       "sha256": "d2506be8c4bdbe8e7059393467e6e71d75ef1d8c018dbf997bb0ab2a77b6c7b6"
     },
@@ -116,7 +96,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "8e0af042445cf4d2d0b9e138519a99e7c26a19e3bb0ec27175f99a0f7f98f7e3"
+      "sha256": "c4311bcf537a5e9d1cbac59c8060729d192bfd729844acf1d569653ebb3705b7"
     },
     {
       "path": "src/types/json-null.ts",
@@ -160,7 +140,11 @@
     },
     {
       "path": "src/types/models-list-result.ts",
-      "sha256": "1657afe605327461d6a5a10547be510d8bf3e5cc10041b4b3a4a2240458add66"
+      "sha256": "c3d9b3a5f64afb2d552c54547b356bdb5b1ce96ef4c97aa86a1407bad54a30cf"
+    },
+    {
+      "path": "src/types/no-data.ts",
+      "sha256": "85014112e547cd24ccb577486023c163abaf5e8c9b98dae6d6f1c1bb3dd25836"
     },
     {
       "path": "src/types/problem-detail.ts",
