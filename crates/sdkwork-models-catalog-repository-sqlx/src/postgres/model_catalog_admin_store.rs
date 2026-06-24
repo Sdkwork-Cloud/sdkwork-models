@@ -2,29 +2,29 @@ use std::collections::BTreeMap;
 
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
+use crate::admin_models_list::{
+    normalized_search_pattern, optional_non_empty, LIST_MODELS_BASE_WHERE_POSTGRES,
+    LIST_MODELS_COUNT_WHERE_POSTGRES,
+};
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
     catalog_scope_vendor_codes, catalog_with_selected_vendors, is_dry_run_mode,
     load_catalog_root_with_pin, model_catalog_key as build_model_base_catalog_key,
     pricing_catalog_key as build_model_pricing_catalog_key, stable_uuid, CatalogScopeCounts,
 };
-use crate::admin_models_list::{
-    optional_non_empty, normalized_search_pattern, LIST_MODELS_BASE_WHERE_POSTGRES,
-    LIST_MODELS_COUNT_WHERE_POSTGRES,
-};
 use crate::model_modality;
 use crate::runtime_id::next_claw_runtime_id;
 use crate::ENV_MODELS_CATALOG_ROOT;
 use sdkwork_models_contract_service::{
-    AdminAiModelItem, AdminAiModelRegionPriceCommand, AdminModelCatalogSyncItem,
-    AdminModelCommandFuture, AdminModelMappingRuleBindingDraft, AdminModelMappingRuleBindingItem,
-    AdminModelMappingRuleItem, AdminModelMappingRuleItemDraft, AdminModelMappingRuleMappingItem,
-    AdminModelSubject, AdminModelVendorItem, CreateAdminAiModelCommand,
-    CreateAdminModelMappingCommand, CreateAdminModelVendorCommand, DeleteAdminAiModelCommand,
-    DeleteAdminModelMappingCommand, AdminAiModelListPage, ListAdminAiModelsQuery, ListAdminModelMappingsQuery,
-    ListAdminModelVendorsQuery, ModelCatalogAdminStore, ResolveAdminModelMappingQuery,
-    ResolveAdminModelMappingResult, SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand,
-    UpdateAdminModelMappingCommand,
+    AdminAiModelItem, AdminAiModelListPage, AdminAiModelRegionPriceCommand,
+    AdminModelCatalogSyncItem, AdminModelCommandFuture, AdminModelMappingRuleBindingDraft,
+    AdminModelMappingRuleBindingItem, AdminModelMappingRuleItem, AdminModelMappingRuleItemDraft,
+    AdminModelMappingRuleMappingItem, AdminModelSubject, AdminModelVendorItem,
+    CreateAdminAiModelCommand, CreateAdminModelMappingCommand, CreateAdminModelVendorCommand,
+    DeleteAdminAiModelCommand, DeleteAdminModelMappingCommand, ListAdminAiModelsQuery,
+    ListAdminModelMappingsQuery, ListAdminModelVendorsQuery, ModelCatalogAdminStore,
+    ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult, SyncAdminModelCatalogCommand,
+    UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
 };
 use sdkwork_models_contract_service::{DomainError, DomainResult};
 
