@@ -1,0 +1,75 @@
+{
+  "billingCurrency": "CNY",
+  "billingJurisdiction": "CN",
+  "capabilities": [
+    "chat"
+  ],
+  "clientApiCompatibility": {
+    "claude_code": {
+      "apiCodes": [],
+      "clientApiCode": "claude_code",
+      "displayName": "Claude Code",
+      "notes": "StepFun does not expose the Claude Code client API surface directly; use its declared Anthropic-compatible /v1/messages endpoint instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    },
+    "codex": {
+      "apiCodes": [],
+      "clientApiCode": "codex",
+      "displayName": "Codex",
+      "notes": "StepFun does not expose the Codex client API surface directly; use its declared OpenAI-compatible /v1/chat/completions endpoint instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    },
+    "gemini_cli": {
+      "apiCodes": [],
+      "clientApiCode": "gemini_cli",
+      "displayName": "Gemini CLI",
+      "notes": "StepFun does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    }
+  },
+  "countryRegion": "CN",
+  "description": "StepFun (阶跃星辰) mainland China model operation billed in CNY. Step Flash and Step multimodal families are modeled as product lines under the vendor identity.",
+  "displayName": "StepFun",
+  "docsUrl": "https://platform.stepfun.com/docs/zh",
+  "legalName": "StepFun",
+  "marketScope": "china_mainland",
+  "modelFamilies": [
+    "step-flash"
+  ],
+  "openSource": false,
+  "operatingRegions": [
+    "CN"
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "sortOrder": 125,
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+  },
+  "supportedProtocols": [
+    "openai_compatible",
+    "anthropic_messages"
+  ],
+  "vendorCode": "stepfun",
+  "vendorType": "commercial",
+  "websiteUrl": "https://www.stepfun.com"
+}

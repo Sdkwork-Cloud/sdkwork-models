@@ -1,1 +1,0 @@
-{"version":3,"file":"model-rankings-list-result.d.ts","sourceRoot":"","sources":["../../src/types/model-rankings-list-result.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,qBAAqB,EAAE,MAAM,2BAA2B,CAAC;AAEvE,gEAAgE;AAChE,MAAM,WAAW,uBAAuB;IACtC,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;IACb,gDAAgD;IAChD,IAAI,CAAC,EAAE,qBAAqB,CAAC;IAC7B,uCAAuC;IACvC,GAAG,CAAC,EAAE,MAAM,CAAC;CACd"}

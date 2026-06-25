@@ -79,6 +79,7 @@ export interface AiModelsListParams {
   q?: string;
   limit?: string;
   offset?: string;
+  modelTypes?: string;
 }
 
 export class AiModelsApi {
@@ -97,6 +98,7 @@ export class AiModelsApi {
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'limit', value: params?.limit, style: 'form', explode: true, allowReserved: false },
       { name: 'offset', value: params?.offset, style: 'form', explode: true, allowReserved: false },
+      { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
     return this.client.get<ModelsListResult>(appendQueryString(backendApiPath(`/ai/models`), query));
   }

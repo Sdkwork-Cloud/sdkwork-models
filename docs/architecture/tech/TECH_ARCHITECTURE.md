@@ -1,38 +1,57 @@
 # SDKWork Models Technical Architecture
 
-Status: active
-Owner: SDKWork maintainers
+Status: active  
+Owner: SDKWork maintainers  
 Updated: 2026-06-24
-Specs: ARCHITECTURE_DECISION_SPEC.md, DOCUMENTATION_SPEC.md
 
-## Document Map
+## 1. Overview
 
-- [TECH-client-api-compatibility-schema.md](TECH-client-api-compatibility-schema.md)
-- [TECH-client-api-plugins-standard.md](TECH-client-api-plugins-standard.md)
-- [TECH-client-api-schema-simple.md](TECH-client-api-schema-simple.md)
-- [TECH-client-api-standard-v2.md](TECH-client-api-standard-v2.md)
-- [TECH-converter-naming-standard.md](TECH-converter-naming-standard.md)
-- [TECH-root-layout.md](TECH-root-layout.md)
-- [TECH-standards-alignment.md](TECH-standards-alignment.md)
-- [TECH-vendor-model-architecture.md](TECH-vendor-model-architecture.md)
+`sdkwork-models` is a **composed product module** that can run standalone or mount into Claw Router. It owns intelligence catalog domain data, HTTP route crates, database module, and SDK families.
 
-## 1. Architecture Overview
+## 2. Layering
 
-Architecture detail lives in the linked TECH shards below.
+```
+models/ releases/ schemas/     → Catalog JSON authority
+tools/                         → Validation, index, OpenAPI export
+crates/
+  contract-service             → Store traits, domain errors
+  catalog-repository-sqlx      → Postgres/SQLite persistence
+  catalog-service              → HTTP handlers, application services
+  database-bootstrap           → Embedded DDL authority
+  database-host                → sdkwork-database lifecycle bootstrap
+  api-server                   → Route composition + standalone binary
+  router-catalog-{app,backend}-api → Route manifests + web framework
+sdks/                          → Generated @sdkwork/models-* SDK families
+apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
+```
 
+## 3. Runtime Topology
 
-## 2. Technology Choices
+| Mode | Ingress | Notes |
+| --- | --- | --- |
+| Composed | Claw Router backend/app routers | Primary production path |
+| Standalone | `sdkwork-models-api-server` | Declared in `specs/topology.spec.json` |
+| Cloud | `sdkwork-api-cloud-gateway` + app upstream | `configs/sdkwork-api-cloud-gateway.models.*.toml` |
 
-## 3. System Boundaries And Modules
+## 4. Security
 
-## 4. Directory And Package Layout
+- Backend routes: `with_required_permission(...)` on every operation
+- App routes: IAM web framework layer + `require_subject: true` for rankings
+- `/readyz`: fails closed; no internal error strings in response body
+- Production gateway: restricted CORS, upstream readiness checks
 
-## 5. API, SDK, And Data Ownership
+## 5. Data
 
-## 6. Security, Privacy, And Observability
+- L2 database module: `database/database.manifest.json`
+- Catalog sync from JSON via admin `models.refresh`
+- App catalog read uses `JsonPricingCatalog` snapshot in standalone mode
 
-## 7. Deployment And Runtime Topology
+## 6. Verification
 
-## 8. Architecture Decision Index
+```powershell
+pnpm run verify
+cargo check -p sdkwork-models-api-server
+pnpm run topology:validate
+```
 
-## 9. Verification
+See `docs/standards-alignment.md` for the current alignment matrix.

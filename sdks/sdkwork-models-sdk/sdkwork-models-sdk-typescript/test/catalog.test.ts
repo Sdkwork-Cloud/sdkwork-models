@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -28,9 +29,16 @@ import {
 
 const REPOSITORY_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
 
+function readRepositoryCatalogVersion(): string {
+  const index = JSON.parse(
+    readFileSync(join(REPOSITORY_ROOT, "models", "index.json"), "utf8"),
+  ) as { catalogVersion: string };
+  return index.catalogVersion;
+}
+
 test("loads local catalog", async () => {
   const catalog = await loadCatalog(REPOSITORY_ROOT);
-  assert.equal(catalog.catalogVersion, "2026.05.08.1");
+  assert.equal(catalog.catalogVersion, readRepositoryCatalogVersion());
   assert.equal(findModel(catalog, "openai/gpt-5.5")?.vendorCode, "openai");
   assert.equal(findModel(catalog, "openai/gpt-5.5")?.regionCode, "global");
   assert.equal(findModelByVendorRegion(catalog, "openai", "global", "gpt-5.5")?.vendorCode, "openai");
@@ -110,7 +118,7 @@ test("loads bundled catalog from SDKWORK_MODELS_CATALOG_ROOT", async () => {
   process.env.SDKWORK_MODELS_CATALOG_ROOT = REPOSITORY_ROOT;
   try {
     const catalog = await loadBundledCatalog();
-    assert.equal(catalog.catalogVersion, "2026.05.08.1");
+    assert.equal(catalog.catalogVersion, readRepositoryCatalogVersion());
     assert.equal(findModel(catalog, "openai/gpt-5.5")?.vendorCode, "openai");
   } finally {
     if (previousRoot === undefined) {
@@ -123,7 +131,7 @@ test("loads bundled catalog from SDKWORK_MODELS_CATALOG_ROOT", async () => {
 
 test("catalog key parser keeps slash-delimited provider model ids intact", () => {
   const catalog = {
-    catalogVersion: "2026.05.08.1",
+    catalogVersion: "fixture-1.0.0",
     schemaVersion: "1.1.0",
     meters: [],
     protocols: [],

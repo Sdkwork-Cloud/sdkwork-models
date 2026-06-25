@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.05.08.1",
-  "observedAt": "2026-06-03T00:00:00Z",
+  "catalogVersion": "2026.06.24.4",
+  "observedAt": "2026-06-24T00:00:00Z",
   "policy": {
     "officialFirst": true,
     "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
@@ -29,11 +29,12 @@
   "schemaVersion": "1.1.0",
   "vendors": [
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
-      "notes": "Alibaba Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; Qwen is a family/product line, not the vendor identity.",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "Alibaba Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing. Qwen3.7-Max is the current cn frontier model on Model Studio.",
       "official": {
         "additionalUrls": [
-          "https://help.aliyun.com/zh/model-studio/"
+          "https://help.aliyun.com/zh/model-studio/",
+          "https://developer.aliyun.com/article/1736226"
         ],
         "modelsUrl": "https://help.aliyun.com/zh/model-studio/text-generation-model",
         "pricingUrl": "https://help.aliyun.com/zh/model-studio/billing"
@@ -46,13 +47,16 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
+        "qwen3.7-max"
+      ],
+      "supportedModels": [
         "qwen3.6-max-preview"
       ],
       "vendorCode": "alibaba",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Alibaba Cloud international Qwen operation modeled as the global region with USD billing from QwenCloud/DashScope. The mainland cn region keeps its independent CNY deployment and pricing.",
       "official": {
         "additionalUrls": [
@@ -70,8 +74,8 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
-      "notes": "Official current Claude families plus local new-api/sub2api cross-checks. Pending independent official snapshot re-verification before official_verified status.",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "Official current Claude families plus local new-api/sub2api cross-checks. Claude Fable 5 remains in requiredModels for catalog discovery but is catalog_only after the 2026-06-12 suspension.",
       "official": {
         "additionalUrls": [
           "https://www.anthropic.com/pricing",
@@ -102,17 +106,20 @@
       ],
       "regionCode": "global",
       "requiredModels": [
-        "claude-fable-5",
         "claude-opus-4-8",
         "claude-opus-4-7",
         "claude-sonnet-4-6",
         "claude-haiku-4-5"
       ],
+      "supportedModels": [
+        "claude-fable-5",
+        "claude-mythos-5"
+      ],
       "vendorCode": "anthropic",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Baidu AI Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; ERNIE/Qianfan product names are not vendor identities.",
       "official": {
         "additionalUrls": [
@@ -132,11 +139,15 @@
       "requiredModels": [
         "ernie-5.0-thinking-preview"
       ],
+      "supportedModels": [
+        "ernie-4.5-turbo-128k",
+        "ernie-x1.1"
+      ],
       "vendorCode": "baidu",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "FLUX.2 Pro pricing uses official per-megapixel BFL rows rather than synthetic per-result pricing. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
@@ -155,12 +166,13 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
-      "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing; Volcengine/Doubao/Seed product names are platform or family names.",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing. Doubao Seed 2.1 Pro/Turbo (260628) launched on 2026-06-23 via Volcengine Ark.",
       "official": {
         "additionalUrls": [
           "https://www.volcengine.com/docs/",
-          "https://seed.bytedance.com/en/seed2"
+          "https://seed.bytedance.com/en/seed2",
+          "https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-2-1-pro"
         ],
         "modelsUrl": "https://www.volcengine.com/docs/82379",
         "pricingUrl": "https://www.volcengine.com/docs/82379"
@@ -173,13 +185,20 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
+        "doubao-seed-2-1-pro-260628",
+        "doubao-seed-2-1-turbo-260628"
+      ],
+      "supportedModels": [
+        "doubao-seed-2-0-code-preview-260215",
+        "doubao-seed-2-0-lite-260215",
+        "doubao-seed-2-0-mini-260215",
         "doubao-seed-2-0-pro-260215"
       ],
       "vendorCode": "bytedance",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-14T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "ByteDance international operation is modeled as the global region of the vendor with USD billing; Seedance is a model family, not the vendor identity.",
       "official": {
         "additionalUrls": [
@@ -197,15 +216,17 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "doubao-seed-2-0-code-preview-260215",
         "doubao-seed-2-0-lite-260215",
         "doubao-seed-2-0-mini-260215",
+        "doubao-seed-2-0-pro-260215",
         "doubao-seedance-2-0-260128"
       ],
       "vendorCode": "bytedance",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "DeepSeek international API operation is modeled as the global region of the vendor with USD billing. Official English pricing page provides USD cache-hit, cache-miss input, and output prices.",
       "official": {
         "additionalUrls": [
@@ -233,7 +254,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "DeepSeek mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese pricing page provides CNY cache-hit, cache-miss input, and output prices.",
       "official": {
         "additionalUrls": [
@@ -261,7 +282,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "ElevenLabs audio model catalog source.",
       "official": {
         "additionalUrls": [
@@ -279,7 +300,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Gemini 3.1 and Veo 3.1 model IDs and multimodal/token meters are sourced from official Gemini API model and pricing docs. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
@@ -321,11 +342,19 @@
         "veo-3.1-fast-generate-preview",
         "veo-3.1-lite-generate-preview"
       ],
+      "supportedModels": [
+        "gemini-3-pro-image",
+        "gemini-3.1-flash-image",
+        "gemini-3.1-pro",
+        "gemini-embedding-2",
+        "lyria-2",
+        "lyria-3"
+      ],
       "vendorCode": "google",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Kuaishou international operation is modeled as the global region of the vendor with USD billing; Kling is a model family, not the vendor identity.",
       "official": {
         "additionalUrls": [
@@ -346,7 +375,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Kuaishou mainland China operation is modeled as the cn region of the vendor with CNY billing. Supported Kling model metadata is listed, but pricing is intentionally not published until official domestic CNY price rows are confirmed.",
       "official": {
         "additionalUrls": [
@@ -365,7 +394,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "MiniMax international operation is modeled as the global region of the vendor with USD billing. Current non-legacy text models are sourced from official MiniMax Global models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
       "official": {
         "additionalUrls": [
@@ -397,7 +426,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Current non-legacy text models are sourced from official MiniMax China models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
       "official": {
         "additionalUrls": [
@@ -429,7 +458,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Moonshot/Kimi international API operation is modeled as the global region of the vendor with USD billing. Official international landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -453,11 +482,14 @@
         "kimi-k2.6",
         "kimi-k2.5"
       ],
+      "supportedModels": [
+        "kimi-k2.7-code-01hw"
+      ],
       "vendorCode": "moonshot",
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Moonshot/Kimi mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -481,11 +513,14 @@
         "kimi-k2.6",
         "kimi-k2.5"
       ],
+      "supportedModels": [
+        "kimi-k2.7-code-01hw"
+      ],
       "vendorCode": "moonshot",
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-06-03T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "OpenAI official API model and pricing docs. GPT-5.5 pro and GPT-5.4 pro are real API model IDs; their pro pricing is tracked from the per-model docs. gpt-5.2 and gpt-image-1.5 are kept as non-default historical catalog entries.",
       "official": {
         "additionalUrls": [
@@ -530,16 +565,20 @@
         "text-embedding-3-small",
         "gpt-4o-transcribe"
       ],
-      "vendorCode": "openai",
-      "verificationStatus": "official_url_declared",
       "supportedModels": [
         "gpt-realtime-1.5",
         "gpt-5.2",
-        "gpt-image-1.5"
-      ]
+        "gpt-image-1.5",
+        "gpt-4o-mini-transcribe",
+        "gpt-realtime-mini",
+        "gpt-realtime-translate",
+        "gpt-realtime-whisper"
+      ],
+      "vendorCode": "openai",
+      "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Stability AI image API public docs.",
       "official": {
         "additionalUrls": [
@@ -557,7 +596,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-07T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Suno API source.",
       "official": {
         "additionalUrls": [
@@ -575,7 +614,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Tencent Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; Hunyuan is a model family, not the vendor identity.",
       "official": {
         "additionalUrls": [
@@ -594,11 +633,36 @@
       "requiredModels": [
         "hunyuan-turbos-latest"
       ],
+      "supportedModels": [
+        "hunyuan-2.0-instruct-20251111",
+        "hunyuan-2.0-thinking-20251109"
+      ],
       "vendorCode": "tencent",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-14T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "StepFun (阶跃星辰) mainland China operation is modeled as the cn region of the vendor with CNY billing. Step Flash and Step multimodal families are product lines, not vendor identities.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash",
+          "https://platform.stepfun.com/docs/zh/step-plan/overview"
+        ],
+        "modelsUrl": "https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash",
+        "pricingUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [
+        "step-3.5-flash",
+        "step-3.5-flash-2603",
+        "step-3.7-flash"
+      ],
+      "vendorCode": "stepfun",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "xAI official docs list Grok 4.3, 4.20 series (reasoning, non-reasoning, multi-agent), and Build 0.1 models.",
       "official": {
         "additionalUrls": [
@@ -628,7 +692,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-13T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Xiaomi MiMo is an open-source AI model platform offering frontier multimodal and agentic models. Models include MiMo-V2.5-Pro (1T params), MiMo-V2.5 (310B params, multimodal), MiMo-V2-Flash (309B params, fast inference), and MiMo-V2.5-Pro-FP4-DFlash (554B params, FP4 quantized).",
       "official": {
         "additionalUrls": [
@@ -651,7 +715,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-13T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Xiaomi MiMo mainland China operation is modeled as the cn region of the vendor with CNY billing. Same models as global region but with CNY pricing.",
       "official": {
         "additionalUrls": [
@@ -674,14 +738,14 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-05-08T00:00:00Z",
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
       "notes": "Zhipu AI mainland China operation is modeled as the cn region of the vendor with CNY billing; GLM/BigModel product names are not vendor identities.",
       "official": {
         "additionalUrls": [
           "https://docs.bigmodel.cn/"
         ],
-        "modelsUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.1",
-        "pricingUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
+        "modelsUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2",
+        "pricingUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
       },
       "references": [
         {
@@ -691,6 +755,7 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
+        "glm-5.2",
         "glm-5.1"
       ],
       "vendorCode": "zhipu",

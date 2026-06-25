@@ -13,7 +13,7 @@ use sdkwork_models_catalog_service::{
 use sdkwork_models_contract_service::{
     AdminAiResourceStore, ModelCatalogAdminStore, ModelRankingRefreshStore, ModelRankingsReadModelStore,
 };
-use sdkwork_router_catalog_backend_api::admin_ai_resource_router_with_store;
+use sdkwork_router_models_catalog_backend_api::admin_ai_resource_router_with_store;
 use sqlx::{PgPool, SqlitePool};
 
 use crate::entity_uuid_generator::CatalogEntityUuidGenerator;

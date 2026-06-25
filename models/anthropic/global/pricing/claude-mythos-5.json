@@ -1,0 +1,42 @@
+{
+  "catalogKey": "anthropic/claude-mythos-5",
+  "currency": "USD",
+  "modelId": "claude-mythos-5",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-mythos-5-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "10.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-mythos-5-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "50.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "anthropic"
+}

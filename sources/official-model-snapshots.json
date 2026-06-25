@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.05.08.1",
-  "observedAt": "2026-06-03T00:00:00Z",
+  "catalogVersion": "2026.06.24.4",
+  "observedAt": "2026-06-24T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -12,12 +12,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-05-08T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "8df40886dd1e6087b5ad479474396d1c56799bbad673bc95fc1104455fd170dd",
+      "sourceSnapshotHash": "40b3189e6e9f46344eae84692c6fa9585acaa135a3c1f926128aea56debd8906",
       "vendorCode": "deepseek"
     },
     {
@@ -29,12 +29,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-05-08T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/quick_start/pricing"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "39649affcd4bc398a9c2476369cd32228e85febe5fd81f8fcb8103218ac40588",
+      "sourceSnapshotHash": "abb9106048f1a7cd21e5809c31d18c90fd712e9641f7a456a4639e8311b96c4d",
       "vendorCode": "deepseek"
     },
     {
@@ -58,7 +58,7 @@
           "modelId": "M2-her"
         }
       ],
-      "observedAt": "2026-06-03T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://platform.minimaxi.com/docs/guides/models-intro",
         "https://platform.minimaxi.com/docs/guides/pricing-paygo",
@@ -66,7 +66,7 @@
         "https://platform.minimaxi.com/docs/guides/text-chat"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "995517dcca9f7e64c2e105d57450b2b48e85431bd2ff832c230191db5ee7198d",
+      "sourceSnapshotHash": "427d7af5fd7fa771137833200a2b3a72f8bdb4231da1ae0c9cfde830eb314280",
       "vendorCode": "minimax"
     },
     {
@@ -90,7 +90,7 @@
           "modelId": "M2-her"
         }
       ],
-      "observedAt": "2026-06-03T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://platform.minimax.io/docs/guides/models-intro",
         "https://platform.minimax.io/docs/guides/pricing-paygo",
@@ -99,7 +99,7 @@
         "https://www.minimax.io/blog/minimax-m3"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "357520d37a8bce46fd8cb5b36aae7e995c29b122031112e969e6b26ee76f7727",
+      "sourceSnapshotHash": "1e415390a0b9449bf869e8161f34dd8b753baa79859d24580368de7c370799b1",
       "vendorCode": "minimax"
     },
     {
@@ -117,7 +117,7 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-06-14T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.com/",
         "https://platform.kimi.com/docs/pricing/chat-k27-code",
@@ -125,8 +125,8 @@
         "https://platform.kimi.com/docs/pricing/chat-k25"
       ],
       "regionCode": "cn",
-      "vendorCode": "moonshot",
-      "sourceSnapshotHash": "8a3cfe5337712665925c812667c75e4296f1a9597efe848b3fe543ab711edf98"
+      "sourceSnapshotHash": "339947cae36e48e960951b3415177d318412ecda9e1ee620137f08e49035fe91",
+      "vendorCode": "moonshot"
     },
     {
       "models": [
@@ -143,7 +143,7 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-06-14T00:00:00Z",
+      "observedAt": "2026-06-24T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.ai/",
         "https://platform.kimi.ai/docs/pricing/chat-k27-code",
@@ -151,8 +151,8 @@
         "https://platform.kimi.ai/docs/pricing/chat-k25"
       ],
       "regionCode": "global",
-      "vendorCode": "moonshot",
-      "sourceSnapshotHash": "bd5c8280dfd892d99e9ed48274ba49526d1bbac8a7589279a587d0704ef32240"
+      "sourceSnapshotHash": "adeb67ec21ca0b7978bfc79f5cb7b7e421416680a5ea8ede0d3d0a42d4120732",
+      "vendorCode": "moonshot"
     }
   ]
 }

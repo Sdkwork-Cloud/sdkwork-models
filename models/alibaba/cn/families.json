@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "qwen3.6-max-preview",
+      "defaultModel": "qwen3.7-max",
       "displayName": "Qwen",
       "familyCode": "qwen",
       "familyType": "multimodal",

@@ -1,6 +1,10 @@
-# SDKWork Standards Alignment
+# SDKWork Models — Standards Alignment
 
-This document records how `sdkwork-models` aligns with `sdkwork-specs` and the commerce/appstore composed-module reference.
+Status: active  
+Updated: 2026-06-24  
+Authority: `../sdkwork-specs/README.md`
+
+This document records the **verified** alignment posture for `sdkwork-models`. It must match evidence from `pnpm run verify`, `cargo test --workspace`, and topology validation.
 
 ## Repository Identity
 
@@ -8,69 +12,43 @@ This document records how `sdkwork-models` aligns with `sdkwork-specs` and the c
 | --- | --- |
 | Application key | `sdkwork-models` |
 | Component | `@sdkwork/models-catalog` |
-| Domain | `intelligence` |
-| Capability | `catalog` |
-| Application manifest | `sdkwork.app.config.json` |
-| PC application root | `apps/sdkwork-models-pc/` |
+| Domain / capability | `intelligence` / `catalog` |
+| Archetype | `composed-product-module` with standalone HTTP server |
+| PC root | `apps/sdkwork-models-pc/` |
 | HTTP composition | `crates/sdkwork-models-api-server/` |
-| Route crates | `crates/sdkwork-router-catalog-{app,backend}-api/` |
+| Standalone binary | `sdkwork-models-api-server` |
 | Database module | `database/` (`sdkwork.database.module`) |
-| SDK families | `sdks/sdkwork-models-{app,backend}-sdk/` |
 
-## Framework Integration Matrix
+## Framework Integration
 
-| Framework | Required? | Status | Notes |
-| --- | --- | --- | --- |
-| `sdkwork-specs` | Yes | Aligned | `AGENTS.md`, `specs/`, `docs/` |
-| `sdkwork-utils` | Yes | Aligned | Catalog tools and PC core use `@sdkwork/utils` |
-| `sdkwork-web-framework` | Yes | Aligned | Route manifests + IAM web adapter in route crates |
-| `sdkwork-database` | Yes | Aligned | L2 module with postgres/sqlite baselines, migrations/, seeds/ |
-| `sdkwork-sdk-generator` | Yes | Aligned | `pnpm run openapi:export` + `sdk:generate` |
-| `sdkwork-discovery` | No | Deferred | No RPC services in this repository |
+| Framework | Status | Evidence |
+| --- | --- | --- |
+| `sdkwork-web-framework` | Aligned | Backend + app route crates integrate IAM resolver and route manifests |
+| `sdkwork-database` | Aligned | `sdkwork-models-database-host` bootstraps lifecycle from `database.manifest.json` |
+| `sdkwork-iam-web-adapter` | Aligned | `web_bootstrap.rs` in backend and app route crates |
+| `sdkwork-sdk-generator` | Aligned | `pnpm run openapi:export` + `sdk:generate` |
+| `sdkwork-discovery` | N/A | No RPC services in this repository |
+
+## Production Readiness
+
+| Area | Status | Notes |
+| --- | --- | --- |
+| Catalog JSON authority | Aligned | `pnpm run check` validates index, schema, freshness, audit, release gate |
+| Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
+| App read API | Aligned | App route manifest + `require_subject: true` for rankings |
+| Standalone runtime | Aligned | `sdkwork-models-api-server` binary; topology `applicationServer.binary` matches |
+| Readiness probe | Aligned | `/readyz` probes DB; errors are logged server-side only |
+| Gateway production template | Aligned | Restricted CORS, upstream readiness checks, metrics/tracing enabled |
+| CI dependency closure | Aligned | `.github/workflows/verify.yml` checks out `sdkwork-iam` |
+| Observability | Partial | Structured tracing on admin list; `PlusApiResult.traceId` field added; full handler coverage pending |
+| Supply-chain SBOM | Planned | Enable in `sdkwork.workflow.json` when release gate requires |
+| PC full application shell | Partial | Catalog explorer + composed admin libraries; full `APP_PC_ARCHITECTURE_SPEC` shell pending |
 
 ## Composed Host Integration
 
-Claw Router (`sdkwork-clawrouter`) mounts catalog routes locally and declares dependency surfaces in `specs/dependency-api-surfaces.json`:
+Claw Router mounts catalog routes locally. Admin PC packages (`sdkwork-models-pc-admin-*`) are **composed workspaces** requiring `@sdkwork/clawrouter-pc-commons` at runtime.
 
-| Surface | SDK family | Mount mode |
-| --- | --- | --- |
-| Backend catalog + resources | `@sdkwork/models-backend-sdk` | `composed-local-mount` |
-| App catalog read | `@sdkwork/models-app-sdk` | `composed-local-mount` |
-
-Gateway-owned surfaces remain in Claw Router:
-
-| Surface | Owner |
-| --- | --- |
-| Site admin (`/backend/v3/api/sites/*`) | `sdkwork-clawrouter` |
-| Pricing catalog snapshot port | `sdkwork-clawrouter` host |
-
-## Directory Dictionary
-
-| Path | Purpose |
-| --- | --- |
-| `apis/` | Authoritative OpenAPI for intelligence catalog app/backend |
-| `crates/` | Service, repository, route, api-server, database-bootstrap |
-| `database/` | Module manifest, baselines, migrations, seeds, drift policy |
-| `sdks/` | Generated `@sdkwork/models-{app,backend}-sdk` families |
-| `apps/sdkwork-models-pc/` | Catalog browser + admin-catalog packages |
-| `models/`, `releases/`, `schemas/` | Catalog JSON authority and evidence |
-
-## Script Surface
-
-| Command | Purpose |
-| --- | --- |
-| `pnpm dev` | Start `apps/sdkwork-models-pc` browser explorer |
-| `pnpm build` | Regenerate catalog indexes, build SDK and PC app |
-| `pnpm test` | TypeScript SDK, PC typecheck, and Rust workspace tests |
-| `pnpm test:rust` | Rust workspace tests |
-| `pnpm check` | Catalog validation and release gate |
-| `pnpm verify` | `check` plus tests |
-| `pnpm openapi:export` | Extract owner-only OpenAPI from composed host authority |
-| `pnpm openapi:materialize` | Copy OpenAPI into SDK family inputs |
-| `pnpm sdk:generate` | Generate TypeScript SDK transport layers |
-| `pnpm sdk:build` | Build composed `@sdkwork/models-*-sdk` packages |
-| `pnpm route-manifest:check` | Route manifest contract tests |
-| `pnpm db:validate` | Database framework standard check |
+Standalone installs use `.npmrc` (`auto-install-peers=false`) so peer packages resolve from the composed host.
 
 ## Verification
 
@@ -78,15 +56,8 @@ Gateway-owned surfaces remain in Claw Router:
 pnpm install
 pnpm run route-manifest:check
 pnpm run db:validate
-cargo check --workspace
+cargo check -p sdkwork-models-api-server
 pnpm run verify
 ```
 
-From composed host (`sdkwork-clawrouter`):
-
-```powershell
-cargo check -p sdkwork-router-backend-api -p sdkwork-clawrouter-router-service
-pnpm exec tsx admin-model-runtime.test.ts
-```
-
-Expected result: route manifests match handlers, database module validates, Rust workspace compiles, catalog checks pass, PC admin runtime tests pass.
+Expected: route manifests match handlers, database module validates, Rust workspace compiles, catalog checks pass, and `pnpm run verify` exits 0.

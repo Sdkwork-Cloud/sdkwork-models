@@ -75,3 +75,53 @@ pub fn optional_subject_or_unauthorized(
         None => Ok(None),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::body::to_bytes;
+    use axum::http::StatusCode;
+    use sdkwork_claw_http::TrustedRequestSubject;
+
+    fn sample_subject() -> TrustedRequestSubject {
+        TrustedRequestSubject {
+            tenant_id: 100001,
+            organization_id: 1,
+            user_id: 42,
+            operator_id: 42,
+            operator_type: 1,
+        }
+    }
+
+    #[test]
+    fn optional_subject_requires_auth_when_flag_enabled() {
+        let result = optional_subject_or_unauthorized(None, true);
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn optional_subject_unauthorized_response_is_401() {
+        let response = optional_subject_or_unauthorized(None, true).expect_err("401");
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        let body = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("body");
+        let payload: serde_json::Value = serde_json::from_slice(&body).expect("json");
+        assert_eq!(payload["code"], "4010");
+    }
+
+    #[test]
+    fn optional_subject_allows_anonymous_when_flag_disabled() {
+        let result = optional_subject_or_unauthorized(None, false).expect("anonymous");
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn optional_subject_passes_through_present_subject() {
+        let subject = sample_subject();
+        let result = optional_subject_or_unauthorized(Some(subject.clone()), true)
+            .expect("subject")
+            .expect("some");
+        assert_eq!(result.tenant_id, subject.tenant_id);
+    }
+}

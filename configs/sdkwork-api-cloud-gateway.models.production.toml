@@ -24,15 +24,15 @@ serviceId = "sdkwork-models-app-api"
 baseUrl = "http://127.0.0.1:8080"
 
 [cors]
-allowAnyOrigin = true
-allowedOrigins = []
+allowAnyOrigin = false
+allowedOrigins = ["https://models.sdkwork.com", "https://admin.sdkwork.com"]
 
 [request]
 maxBodyBytes = 33554432
 timeoutMs = 0
 
 [readiness]
-checkUpstreams = false
+checkUpstreams = true
 timeoutMs = 1000
 
 [observability]
@@ -40,9 +40,9 @@ accessLogEnabled = true
 auditLogEnabled = true
 accessLogSampleRateBasisPoints = 10000
 auditLogSampleRateBasisPoints = 10000
-metricsEnabled = false
+metricsEnabled = true
 metricsPath = "/metrics"
-tracingEnabled = false
+tracingEnabled = true
 redactHeaders = ["authorization", "access-token", "cookie", "x-api-key", "set-cookie"]
 
 [diagnostics]

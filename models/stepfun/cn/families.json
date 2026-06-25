@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "step-3.5-flash-2603",
+      "displayName": "Step Flash",
+      "familyCode": "step-flash",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "stepfun"
+}

@@ -1,7 +1,0 @@
-import type { AdminAiModelItem } from './admin-ai-model-item';
-/** Admin ai models response schema exposed by Claw Router. */
-export interface AdminAiModelsResponse {
-    /** AI model catalog snapshots returned by the backend. */
-    items: AdminAiModelItem[];
-}
-//# sourceMappingURL=admin-ai-models-response.d.ts.map

@@ -230,7 +230,7 @@
     },
     "/app/v3/api/ai/models": {
       "get": {
-        "description": "Lists standard app model catalog entries used by Playground model pickers and grouped client-side by vendor and modality. Reads ai_model_vendor, ai_model, ai_model_capability, ai_model_pricing. Writes none. File targets none.",
+        "description": "List models. Reads ai_model_vendor, ai_model, ai_model_capability, ai_model_pricing, ai_channel_group, ai_channel_group_member. Writes none. File targets none.",
         "operationId": "models.list",
         "parameters": [
           {
@@ -359,16 +359,12 @@
             }
           },
           {
-            "description": "Offset query parameter.",
+            "description": "Comma-separated model type labels (Chat, Image, Embedding, ...).",
             "in": "query",
-            "name": "offset",
+            "name": "model_types",
             "required": false,
             "schema": {
-              "format": "int64",
-              "pattern": "^[0-9]+$",
-              "type": "string",
-              "x-sdkwork-int64-string": true,
-              "x-sdkwork-rust-type": "i64"
+              "type": "string"
             }
           }
         ],
@@ -430,7 +426,7 @@
             "AuthToken": []
           }
         ],
-        "summary": "List model catalog for Playground",
+        "summary": "List models",
         "tags": [
           "ai"
         ],
@@ -440,7 +436,9 @@
           "ai_model_vendor",
           "ai_model",
           "ai_model_capability",
-          "ai_model_pricing"
+          "ai_model_pricing",
+          "ai_channel_group",
+          "ai_channel_group_member"
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
@@ -449,7 +447,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
         "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-playground/src/appRuntimeApiOperations.ts",
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
         "x-write-tables": []
       }
     }
@@ -468,6 +466,413 @@
       }
     },
     "schemas": {
+      "AppModelCatalogGroupOption": {
+        "additionalProperties": false,
+        "description": "App model catalog group option schema exposed by Claw Router.",
+        "properties": {
+          "key": {
+            "description": "Key field on app model catalog group option.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "label": {
+            "description": "Label field on app model catalog group option.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "modelCount": {
+            "description": "Model count field on app model catalog group option.",
+            "format": "int64",
+            "pattern": "^[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "modelCount"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogItem": {
+        "additionalProperties": false,
+        "description": "App model catalog item schema exposed by Claw Router.",
+        "properties": {
+          "apiFormat": {
+            "description": "Api format field on app model catalog item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "capabilities": {
+            "description": "Capabilities field on app model catalog item.",
+            "items": {
+              "description": "Capabilities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 64,
+            "type": "array"
+          },
+          "capabilityIntro": {
+            "description": "Capability intro field on app model catalog item.",
+            "maxLength": 4096,
+            "nullable": true,
+            "type": "string"
+          },
+          "catalogKey": {
+            "description": "Catalog key field on app model catalog item.",
+            "maxLength": 256,
+            "minLength": 3,
+            "type": "string"
+          },
+          "categories": {
+            "description": "Categories field on app model catalog item.",
+            "items": {
+              "description": "Categories field on app model catalog item.",
+              "enum": [
+                "Recommended",
+                "Open Source",
+                "Proprietary",
+                "Free",
+                "New"
+              ],
+              "type": "string"
+            },
+            "maxItems": 5,
+            "type": "array"
+          },
+          "contextTokens": {
+            "description": "Context tokens field on app model catalog item.",
+            "format": "int64",
+            "nullable": true,
+            "pattern": "^[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "description": {
+            "description": "Description field on app model catalog item.",
+            "maxLength": 2048,
+            "nullable": true,
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Display name field on app model catalog item.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "groups": {
+            "description": "Groups field on app model catalog item.",
+            "items": {
+              "description": "Groups field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 32,
+            "type": "array"
+          },
+          "inputModalities": {
+            "description": "Input modalities field on app model catalog item.",
+            "items": {
+              "description": "Input modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "type": "array"
+          },
+          "limitations": {
+            "description": "Limitations field on app model catalog item.",
+            "items": {
+              "description": "Limitations field on app model catalog item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 64,
+            "type": "array"
+          },
+          "maxOutputTokens": {
+            "description": "Max output tokens field on app model catalog item.",
+            "format": "int64",
+            "nullable": true,
+            "pattern": "^[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "modalities": {
+            "description": "Modalities field on app model catalog item.",
+            "items": {
+              "description": "Modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "type": "array"
+          },
+          "model": {
+            "description": "Model field on app model catalog item.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "officialReferencePrices": {
+            "description": "Complete public official reference prices keyed by regionCode and billing meter. Customer, upstream, provider, and channel prices are never exposed here.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogReferencePrice"
+            },
+            "maxItems": 64,
+            "type": "array"
+          },
+          "outputModalities": {
+            "description": "Output modalities field on app model catalog item.",
+            "items": {
+              "description": "Output modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "type": "array"
+          },
+          "priceAvailability": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AppModelCatalogPriceAvailability"
+              }
+            ],
+            "description": "Price availability field on app model catalog item."
+          },
+          "providerCodes": {
+            "description": "Provider codes field on app model catalog item.",
+            "items": {
+              "description": "Provider codes field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 256,
+            "type": "array"
+          },
+          "releaseStage": {
+            "description": "Release stage field on app model catalog item.",
+            "format": "int64",
+            "nullable": true,
+            "pattern": "^-?[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "replacementModel": {
+            "description": "Replacement model field on app model catalog item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "routingState": {
+            "description": "Routing state field on app model catalog item.",
+            "format": "int64",
+            "nullable": true,
+            "pattern": "^-?[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "shelfState": {
+            "description": "Shelf state field on app model catalog item.",
+            "format": "int64",
+            "nullable": true,
+            "pattern": "^-?[0-9]+$",
+            "type": "string",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "supportedLanguages": {
+            "description": "Supported languages field on app model catalog item.",
+            "items": {
+              "description": "Supported languages field on app model catalog item.",
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "supportsJsonSchema": {
+            "description": "Supports json schema field on app model catalog item.",
+            "type": "boolean"
+          },
+          "supportsStreaming": {
+            "description": "Supports streaming field on app model catalog item.",
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "description": "Supports tools field on app model catalog item.",
+            "type": "boolean"
+          },
+          "trainingDataCutoff": {
+            "description": "Training data cutoff field on app model catalog item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "useCases": {
+            "description": "Use cases field on app model catalog item.",
+            "items": {
+              "description": "Use cases field on app model catalog item.",
+              "maxLength": 256,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 64,
+            "type": "array"
+          },
+          "vendor": {
+            "description": "Vendor field on app model catalog item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "vendorCode": {
+            "description": "Vendor code field on app model catalog item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "catalogKey",
+          "model",
+          "displayName",
+          "vendorCode",
+          "vendor",
+          "capabilities",
+          "groups",
+          "categories",
+          "description",
+          "modalities",
+          "inputModalities",
+          "outputModalities",
+          "apiFormat",
+          "capabilityIntro",
+          "limitations",
+          "supportedLanguages",
+          "useCases",
+          "trainingDataCutoff",
+          "contextTokens",
+          "maxOutputTokens",
+          "supportsStreaming",
+          "supportsTools",
+          "supportsJsonSchema",
+          "releaseStage",
+          "shelfState",
+          "routingState",
+          "replacementModel",
+          "providerCodes",
+          "officialReferencePrices",
+          "priceAvailability"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogPriceAvailability": {
+        "additionalProperties": false,
+        "description": "App model catalog price availability schema exposed by Claw Router.",
+        "properties": {
+          "reason": {
+            "description": "Reason field on app model catalog price availability.",
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "description": "Status field on app model catalog price availability.",
+            "enum": [
+              "reference",
+              "unavailable"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogReferencePrice": {
+        "additionalProperties": false,
+        "description": "App model catalog reference price schema exposed by Claw Router.",
+        "properties": {
+          "billingMeter": {
+            "description": "Billing meter field on app model catalog reference price.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "currency": {
+            "description": "Currency field on app model catalog reference price.",
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string"
+          },
+          "regionCode": {
+            "description": "Deployment or pricing region for this public reference price. Region is never encoded in catalogKey.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "unitPrice": {
+            "description": "Decimal unit price in the native official reference currency.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "regionCode",
+          "billingMeter",
+          "unitPrice",
+          "currency"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogResponse": {
+        "additionalProperties": false,
+        "description": "App model catalog response schema exposed by Claw Router.",
+        "name": "AppModelCatalogResponse",
+        "properties": {
+          "groups": {
+            "description": "Complete admin-maintained channel group catalog for the model library sidebar. Groups are returned even when the current model filter result contains no matching model.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogGroupOption"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "items": {
+            "description": "Items field on app model catalog response.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogItem"
+            },
+            "maxItems": 1000,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "groups"
+        ],
+        "type": "object"
+      },
       "FieldError": {
         "additionalProperties": false,
         "description": "Field-level validation problem detail.",
@@ -1020,10 +1425,10 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/NoData"
+                "$ref": "#/components/schemas/AppModelCatalogResponse"
               }
             ],
-            "description": "No business data returned by this operation."
+            "description": "Data field on models list result."
           },
           "msg": {
             "description": "Human-readable response message.",
@@ -1035,12 +1440,6 @@
         ],
         "type": "object",
         "x-operation-id": "models.list"
-      },
-      "NoData": {
-        "additionalProperties": false,
-        "description": "Closed empty payload for operations that complete without business data.",
-        "properties": {},
-        "type": "object"
       },
       "ProblemDetail": {
         "additionalProperties": {

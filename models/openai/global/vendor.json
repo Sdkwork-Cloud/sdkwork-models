@@ -8,6 +8,53 @@
     "audio",
     "video"
   ],
+  "clientApiCompatibility": {
+    "claude_code": {
+      "apiCodes": [],
+      "clientApiCode": "claude_code",
+      "displayName": "Claude Code",
+      "notes": "OpenAI does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    },
+    "codex": {
+      "apiCodes": [
+        "openai.codex.responses"
+      ],
+      "clientApiCode": "codex",
+      "displayName": "Codex",
+      "notes": "OpenAI exposes the Codex client API surface through its native documented API contract.",
+      "protocolCodes": [
+        "openai_responses"
+      ],
+      "resourceCodes": [
+        "api.openai.codex"
+      ],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/codex/"
+      },
+      "supportStatus": "supported"
+    },
+    "gemini_cli": {
+      "apiCodes": [],
+      "clientApiCode": "gemini_cli",
+      "displayName": "Gemini CLI",
+      "notes": "OpenAI does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+      "protocolCodes": [],
+      "resourceCodes": [],
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+      },
+      "supportStatus": "unsupported"
+    }
+  },
   "countryRegion": "US",
   "description": "OpenAI commercial AI model vendor.",
   "displayName": "OpenAI",
@@ -28,61 +75,14 @@
   "schemaVersion": "1.0.0",
   "sortOrder": 10,
   "source": {
-    "observedAt": "2026-05-07T00:00:00Z",
+    "observedAt": "2026-06-24T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/models"
   },
-  "vendorCode": "openai",
-  "vendorType": "commercial",
-  "websiteUrl": "https://openai.com",
   "supportedProtocols": [
     "openai_responses",
     "openai_compatible"
   ],
-  "clientApiCompatibility": {
-    "codex": {
-      "apiCodes": [
-        "openai.codex.responses"
-      ],
-      "clientApiCode": "codex",
-      "displayName": "Codex",
-      "notes": "OpenAI exposes the Codex client API surface through its native documented API contract.",
-      "protocolCodes": [
-        "openai_responses"
-      ],
-      "resourceCodes": [
-        "api.openai.codex"
-      ],
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://developers.openai.com/codex/"
-      },
-      "supportStatus": "supported"
-    },
-    "claude_code": {
-      "apiCodes": [],
-      "clientApiCode": "claude_code",
-      "displayName": "Claude Code",
-      "notes": "OpenAI does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
-      "protocolCodes": [],
-      "resourceCodes": [],
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
-      },
-      "supportStatus": "unsupported"
-    },
-    "gemini_cli": {
-      "apiCodes": [],
-      "clientApiCode": "gemini_cli",
-      "displayName": "Gemini CLI",
-      "notes": "OpenAI does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
-      "protocolCodes": [],
-      "resourceCodes": [],
-      "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
-        "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
-      },
-      "supportStatus": "unsupported"
-    }
-  }
+  "vendorCode": "openai",
+  "vendorType": "commercial",
+  "websiteUrl": "https://openai.com"
 }

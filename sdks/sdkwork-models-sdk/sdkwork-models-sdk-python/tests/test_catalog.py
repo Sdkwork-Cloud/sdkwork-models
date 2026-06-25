@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 from sdkwork_models import (
     JsonObject,
@@ -27,6 +28,13 @@ from sdkwork_models import (
 )
 
 
+def read_repository_catalog_version() -> str:
+    index_path = Path(__file__).resolve().parents[4] / "models" / "index.json"
+    with index_path.open(encoding="utf-8") as handle:
+        payload = json.load(handle)
+    return payload["catalogVersion"]
+
+
 def test_package_root_exports_catalog_types() -> None:
     assert ModelCatalog.__name__ == "ModelCatalog"
     assert JsonObject.__args__[1].__name__ == "Any"
@@ -34,7 +42,7 @@ def test_package_root_exports_catalog_types() -> None:
 
 def test_load_catalog() -> None:
     catalog = load_catalog(Path(__file__).resolve().parents[4])
-    assert catalog.catalog_version == "2026.05.08.1"
+    assert catalog.catalog_version == read_repository_catalog_version()
     assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"
     assert find_model(catalog, "openai/gpt-5.5")["regionCode"] == "global"
     assert find_model_by_vendor_region(catalog, "openai", "global", "gpt-5.5")["vendorCode"] == "openai"
@@ -139,11 +147,12 @@ def test_load_bundled_catalog_from_environment(monkeypatch=None) -> None:
         monkeypatch.setenv("SDKWORK_MODELS_CATALOG_ROOT", str(catalog_root))
         catalog = load_bundled_catalog()
     assert find_model(catalog, "openai/gpt-5.5")["vendorCode"] == "openai"
+    assert catalog.catalog_version == read_repository_catalog_version()
 
 
 def test_catalog_key_parser_keeps_slash_delimited_provider_model_ids_intact() -> None:
     catalog = ModelCatalog(
-        catalog_version="2026.05.08.1",
+        catalog_version="fixture-1.0.0",
         schema_version="1.1.0",
         meters=[],
         protocols=[],

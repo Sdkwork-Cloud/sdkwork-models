@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-13T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
       "unitPrice": "14.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-13T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
       "unitPrice": "42.000000",

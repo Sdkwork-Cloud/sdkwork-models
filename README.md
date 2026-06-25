@@ -337,7 +337,7 @@ reinstall:
 ```powershell
 sdkwork-claw-installer refresh-catalog
 sdkwork-claw-installer refresh-catalog --vendor openai
-sdkwork-claw-installer refresh-catalog --catalog-root D:\release\sdkwork-models --catalog-version 2026.05.08.1
+sdkwork-claw-installer refresh-catalog --catalog-root D:\release\sdkwork-models --catalog-version 2026.06.24.3
 sdkwork-claw-installer refresh-catalog --vendor alibaba --dry-run
 ```
 
@@ -408,13 +408,15 @@ YYYY.MM.DD.N
 Example:
 
 ```text
-2026.05.08.1
+2026.06.24.3
 ```
+
+The authoritative value is always `models/index.json` → `catalogVersion`.
 
 Recommended Git tag format:
 
 ```text
-catalog-v2026.05.08.1
+catalog-v2026.06.24.3
 ```
 
 

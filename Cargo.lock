@@ -1110,6 +1110,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "nu-ansi-term"
+version = "0.50.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
+dependencies = [
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "num-bigint-dig"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1511,7 +1520,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "tower",
- "tower-http",
+ "tower-http 0.6.11",
  "tower-service",
  "url",
  "wasm-bindgen",
@@ -1628,16 +1637,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
-name = "sdkwork-appbase-iam-bootstrap"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "sdkwork-iam-context-service",
- "sdkwork-iam-module-registry",
- "sqlx",
-]
-
-[[package]]
 name = "sdkwork-claw-config"
 version = "0.1.0"
 dependencies = [
@@ -1669,6 +1668,7 @@ dependencies = [
 name = "sdkwork-claw-http"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "axum",
  "base64",
  "hex",
@@ -1685,7 +1685,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "tokio",
- "tower-http",
+ "tower-http 0.6.11",
  "tracing",
 ]
 
@@ -1730,6 +1730,48 @@ dependencies = [
 ]
 
 [[package]]
+name = "sdkwork-database-history"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "sdkwork-database-config",
+ "sdkwork-database-sqlx",
+ "sha2",
+ "sqlx",
+ "thiserror",
+]
+
+[[package]]
+name = "sdkwork-database-lifecycle"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "sdkwork-database-config",
+ "sdkwork-database-history",
+ "sdkwork-database-spi",
+ "sdkwork-database-sqlx",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "sdkwork-database-spi"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "regex",
+ "sdkwork-database-config",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "thiserror",
+]
+
+[[package]]
 name = "sdkwork-database-sqlx"
 version = "0.1.0"
 dependencies = [
@@ -1739,6 +1781,16 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "sdkwork-iam-bootstrap"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "sdkwork-iam-context-service",
+ "sdkwork-iam-module-registry",
+ "sqlx",
 ]
 
 [[package]]
@@ -1774,16 +1826,18 @@ dependencies = [
  "password-hash",
  "rand_core 0.6.4",
  "reqwest",
- "sdkwork-appbase-iam-bootstrap",
  "sdkwork-database-sqlx",
+ "sdkwork-iam-bootstrap",
  "sdkwork-iam-context-service",
  "sdkwork-utils-rust",
  "sdkwork-web-axum",
  "sdkwork-web-core",
  "serde",
  "serde_json",
+ "sha1",
  "sha2",
  "sqlx",
+ "urlencoding",
  "uuid",
 ]
 
@@ -1808,12 +1862,16 @@ name = "sdkwork-models-api-server"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "dotenvy",
  "http-body-util",
+ "sdkwork-database-sqlx",
  "sdkwork-iam-web-adapter",
  "sdkwork-id-core",
+ "sdkwork-models",
  "sdkwork-models-catalog-repository-sqlx",
  "sdkwork-models-catalog-service",
  "sdkwork-models-contract-service",
+ "sdkwork-models-database-host",
  "sdkwork-router-catalog-app-api",
  "sdkwork-router-catalog-backend-api",
  "sdkwork-web-axum",
@@ -1822,6 +1880,9 @@ dependencies = [
  "sqlx",
  "tokio",
  "tower",
+ "tower-http 0.5.2",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -1853,6 +1914,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -1869,11 +1931,24 @@ name = "sdkwork-models-database-bootstrap"
 version = "0.1.0"
 
 [[package]]
+name = "sdkwork-models-database-host"
+version = "0.1.0"
+dependencies = [
+ "dotenvy",
+ "sdkwork-database-config",
+ "sdkwork-database-lifecycle",
+ "sdkwork-database-spi",
+ "sdkwork-database-sqlx",
+]
+
+[[package]]
 name = "sdkwork-router-catalog-app-api"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "sdkwork-iam-web-adapter",
  "sdkwork-models-catalog-service",
+ "sdkwork-web-axum",
  "sdkwork-web-core",
 ]
 
@@ -2020,6 +2095,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_yaml"
+version = "0.9.34+deprecated"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a8b1a1a2ebf674015cc02edccce75287f1a0130d394307b36743c2f5d504b47"
+dependencies = [
+ "indexmap",
+ "itoa",
+ "ryu",
+ "serde",
+ "unsafe-libyaml",
+]
+
+[[package]]
 name = "sha1"
 version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2045,6 +2133,15 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest",
+]
+
+[[package]]
+name = "sharded-slab"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
+dependencies = [
+ "lazy_static",
 ]
 
 [[package]]
@@ -2403,6 +2500,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "thread_local"
+version = "1.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f60246a4944f24f6e018aa17cdeffb7818b76356965d03b07d6a9886e8962185"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "tinystr"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2547,6 +2653,22 @@ dependencies = [
 
 [[package]]
 name = "tower-http"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e9cd434a998747dd2c4276bc96ee2e0c7a2eadf3cae88e52be55a05fa9053f5"
+dependencies = [
+ "bitflags",
+ "bytes",
+ "http",
+ "http-body",
+ "http-body-util",
+ "pin-project-lite",
+ "tower-layer",
+ "tower-service",
+]
+
+[[package]]
+name = "tower-http"
 version = "0.6.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4cfcf7e2740e6fc6d4d688b4ef00650406bb94adf4731e43c096c3a19fe40840"
@@ -2606,6 +2728,32 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db97caf9d906fbde555dd62fa95ddba9eecfd14cb388e4f491a66d74cd5fb79a"
 dependencies = [
  "once_cell",
+ "valuable",
+]
+
+[[package]]
+name = "tracing-log"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee855f1f400bd0e5c02d150ae5de3840039a3f54b025156404e34c23c03f47c3"
+dependencies = [
+ "log",
+ "once_cell",
+ "tracing-core",
+]
+
+[[package]]
+name = "tracing-subscriber"
+version = "0.3.23"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cb7f578e5945fb242538965c2d0b04418d38ec25c79d160cd279bf0731c8d319"
+dependencies = [
+ "nu-ansi-term",
+ "sharded-slab",
+ "smallvec",
+ "thread_local",
+ "tracing-core",
+ "tracing-log",
 ]
 
 [[package]]
@@ -2674,6 +2822,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "unsafe-libyaml"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "673aac59facbab8a9007c7f6108d11f63b603f7cabff99fabf650fea5c32b861"
+
+[[package]]
 name = "untrusted"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2714,6 +2868,12 @@ dependencies = [
  "sha1_smol",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "valuable"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba73ea9cf16a25df0c8caa16c51acb937d5712a8429db78a3ee29d5dcacd3a65"
 
 [[package]]
 name = "vcpkg"

@@ -57,18 +57,16 @@ export function ModelAdmin() {
     setLoading(true);
     setLoadError(null);
     try {
-      const page = await ModelService.fetchModelsPage({
+      const pageResult = await ModelService.fetchModelsPage({
         vendorId: vendor.id,
         vendorCode: vendor.vendorCode,
         q: search.trim() || undefined,
+        modelTypes: modalityFilters.length > 0 ? modalityFilters.join(',') : undefined,
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
-      const filtered = page.items.filter((model) =>
-        modalityFilters.length === 0 || modalityFilters.includes(model.type),
-      );
-      setModels(filtered);
-      setVendorModelTotal(page.totalCount);
+      setModels(pageResult.items);
+      setVendorModelTotal(pageResult.totalCount);
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to load model catalog');
     } finally {

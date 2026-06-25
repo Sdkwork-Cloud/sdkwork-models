@@ -106,6 +106,34 @@ function extractSurface(sourcePath, pathPrefixes, title, serverUrl) {
   };
 }
 
+function injectModelsListQueryParams(document) {
+  for (const pathKey of Object.keys(document.paths || {})) {
+    if (!pathKey.endsWith("/ai/models")) {
+      continue;
+    }
+    const operation = document.paths[pathKey]?.get;
+    if (!operation) {
+      continue;
+    }
+    const parameters = operation.parameters || [];
+    if (parameters.some((parameter) => parameter.name === "model_types")) {
+      continue;
+    }
+    parameters.push({
+      description:
+        "Comma-separated model type labels (Chat, Image, Embedding, ...).",
+      in: "query",
+      name: "model_types",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    });
+    operation.parameters = parameters;
+  }
+  return document;
+}
+
 function serializeJson(document) {
   return `${JSON.stringify(document, null, 2)}\n`;
 }
@@ -137,17 +165,21 @@ const appSource = join(
   "generated/openapi/clawrouter-models-catalog-app-openapi.json",
 );
 
-const backendDocument = extractSurface(
-  backendSource,
-  BACKEND_PATH_PREFIXES,
-  "SDKWork Models Backend API",
-  "/backend/v3/api",
+const backendDocument = injectModelsListQueryParams(
+  extractSurface(
+    backendSource,
+    BACKEND_PATH_PREFIXES,
+    "SDKWork Models Backend API",
+    "/backend/v3/api",
+  ),
 );
-const appDocument = extractSurface(
-  appSource,
-  APP_PATH_PREFIXES,
-  "SDKWork Models App API",
-  "/app/v3/api",
+const appDocument = injectModelsListQueryParams(
+  extractSurface(
+    appSource,
+    APP_PATH_PREFIXES,
+    "SDKWork Models App API",
+    "/app/v3/api",
+  ),
 );
 
 const backendTarget = join(root, "apis/backend-api/intelligence/openapi.json");

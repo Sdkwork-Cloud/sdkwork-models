@@ -1,0 +1,32 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "stepfun/step-3.7-flash",
+          "modelId": "step-3.7-flash",
+          "pricingText": "CNY 1.35 / 1M input; CNY 0.27 / 1M cache read; CNY 8.10 / 1M output",
+          "rankNo": 12
+        },
+        {
+          "catalogKey": "stepfun/step-3.5-flash-2603",
+          "modelId": "step-3.5-flash-2603",
+          "pricingText": "CNY 0.70 / 1M input; CNY 0.14 / 1M cache read; CNY 2.10 / 1M output",
+          "rankNo": 18
+        },
+        {
+          "catalogKey": "stepfun/step-3.5-flash",
+          "modelId": "step-3.5-flash",
+          "pricingText": "CNY 0.70 / 1M input; CNY 0.14 / 1M cache read; CNY 2.10 / 1M output",
+          "rankNo": 22
+        }
+      ],
+      "rankScope": "china-mainland-default",
+      "snapshotDate": "2026-06-24",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "stepfun"
+}

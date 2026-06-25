@@ -44,9 +44,8 @@ impl DecimalValue {
         })
     }
 
-    pub fn multiply(self, multiplier: Self) -> Self {
+    pub fn multiply(self, multiplier: Self) -> DomainResult<Self> {
         self.checked_multiply(multiplier)
-            .expect("decimal multiplication overflow")
     }
 
     pub fn checked_multiply(self, multiplier: Self) -> DomainResult<Self> {
@@ -90,9 +89,8 @@ impl DecimalValue {
         decimal_from_scaled(scaled, "decimal division overflow")
     }
 
-    pub fn subtract(self, amount: Self) -> Self {
+    pub fn subtract(self, amount: Self) -> DomainResult<Self> {
         self.checked_subtract(amount)
-            .expect("decimal subtraction overflow")
     }
 
     pub fn checked_add(self, amount: Self) -> DomainResult<Self> {
@@ -131,10 +129,10 @@ impl DecimalValue {
 }
 
 impl Add for DecimalValue {
-    type Output = Self;
+    type Output = DomainResult<Self>;
 
     fn add(self, amount: Self) -> Self::Output {
-        self.checked_add(amount).expect("decimal addition overflow")
+        self.checked_add(amount)
     }
 }
 
@@ -166,9 +164,8 @@ impl Money {
         Self::new("CNY", unit_price)
     }
 
-    pub fn multiply(&self, multiplier: DecimalValue) -> Self {
+    pub fn multiply(&self, multiplier: DecimalValue) -> DomainResult<Self> {
         self.checked_multiply(multiplier)
-            .expect("money multiplication overflow")
     }
 
     pub fn checked_multiply(&self, multiplier: DecimalValue) -> DomainResult<Self> {

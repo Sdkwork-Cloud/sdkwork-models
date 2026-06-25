@@ -1,11 +1,11 @@
 {
-  "catalogVersion": "2026.05.08.1",
-  "generatedAt": "2026-05-08T00:00:00Z",
-  "modelCount": 98,
-  "pricingFileCount": 97,
-  "regionCount": 25,
+  "catalogVersion": "2026.06.24.4",
+  "generatedAt": "2026-06-24T00:00:00Z",
+  "modelCount": 109,
+  "pricingFileCount": 108,
+  "regionCount": 26,
   "schemaVersion": "1.1.0",
-  "vendorCount": 18,
+  "vendorCount": 19,
   "vendors": [
     {
       "billingCurrency": "CNY",
@@ -15,21 +15,23 @@
       "familiesPath": "alibaba/cn/families.json",
       "familyCount": 1,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 2,
       "modelFiles": [
-        "alibaba/cn/models/qwen3.6-max-preview.json"
+        "alibaba/cn/models/qwen3.6-max-preview.json",
+        "alibaba/cn/models/qwen3.7-max.json"
       ],
       "modelsPath": "alibaba/cn/models",
       "path": "alibaba/cn/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 2,
       "pricingFiles": [
-        "alibaba/cn/pricing/qwen3.6-max-preview.json"
+        "alibaba/cn/pricing/qwen3.6-max-preview.json",
+        "alibaba/cn/pricing/qwen3.7-max.json"
       ],
       "pricingPath": "alibaba/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "27c1291910de95b2aa70f741c47c3332d2c7ee435dbf30bc0250b779cf7486cd",
+      "sha256": "50d1fb271ea9f3c98dc3060d68786fc51a6f2cb7f2b93af64f1f90bd233ffbd2",
       "vendorCode": "alibaba"
     },
     {
@@ -54,7 +56,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/global/rankings.json",
       "regionCode": "global",
-      "sha256": "8c0b1959ebc1fc5b1bfa6676a0ca4e3b555d08541a691d52e44d221791284226",
+      "sha256": "caf7c796f3818a38e8ff93f7eb407cc93a8128e4093fb25be408836dfc701a18",
       "vendorCode": "alibaba"
     },
     {
@@ -65,20 +67,22 @@
       "familiesPath": "anthropic/global/families.json",
       "familyCount": 1,
       "marketScope": "global",
-      "modelCount": 5,
+      "modelCount": 6,
       "modelFiles": [
         "anthropic/global/models/claude-fable-5.json",
         "anthropic/global/models/claude-haiku-4-5.json",
+        "anthropic/global/models/claude-mythos-5.json",
         "anthropic/global/models/claude-opus-4-7.json",
         "anthropic/global/models/claude-opus-4-8.json",
         "anthropic/global/models/claude-sonnet-4-6.json"
       ],
       "modelsPath": "anthropic/global/models",
       "path": "anthropic/global/vendor.json",
-      "pricingFileCount": 5,
+      "pricingFileCount": 6,
       "pricingFiles": [
         "anthropic/global/pricing/claude-fable-5.json",
         "anthropic/global/pricing/claude-haiku-4-5.json",
+        "anthropic/global/pricing/claude-mythos-5.json",
         "anthropic/global/pricing/claude-opus-4-7.json",
         "anthropic/global/pricing/claude-opus-4-8.json",
         "anthropic/global/pricing/claude-sonnet-4-6.json"
@@ -87,7 +91,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "anthropic/global/rankings.json",
       "regionCode": "global",
-      "sha256": "251626ef7a9176c4c1acc412b7929aa15c93bcaad58d2c9fcaac92fd5ab394d0",
+      "sha256": "e3490b0231eccb511112a1e1e13b45326c02d9677dbf62e5d1862d6314d56d64",
       "vendorCode": "anthropic"
     },
     {
@@ -116,7 +120,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "baidu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "5f2395ea1170afa710cf4125e093a0edb51896f901340d58ffdb0e0b3a627d10",
+      "sha256": "f0718111931df13f58c993eb7f3ef30a4616acdf52542807a0d4972358d494a9",
       "vendorCode": "baidu"
     },
     {
@@ -141,7 +145,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "black_forest_labs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "ba0a8fd4fbaaab79c8396f7377c3c9c16d570ca419e969d09fec90a9a6cb86ab",
+      "sha256": "2bd6575bfcbd385b55d0809e6611a5196546b09b08f60661cc83cbc9145420a5",
       "vendorCode": "black_forest_labs"
     },
     {
@@ -152,25 +156,31 @@
       "familiesPath": "bytedance/cn/families.json",
       "familyCount": 3,
       "marketScope": "china_mainland",
-      "modelCount": 3,
+      "modelCount": 6,
       "modelFiles": [
+        "bytedance/cn/models/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-lite-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-mini-260215.json",
-        "bytedance/cn/models/doubao-seed-2-0-pro-260215.json"
+        "bytedance/cn/models/doubao-seed-2-0-pro-260215.json",
+        "bytedance/cn/models/doubao-seed-2-1-pro-260628.json",
+        "bytedance/cn/models/doubao-seed-2-1-turbo-260628.json"
       ],
       "modelsPath": "bytedance/cn/models",
       "path": "bytedance/cn/vendor.json",
-      "pricingFileCount": 3,
+      "pricingFileCount": 6,
       "pricingFiles": [
+        "bytedance/cn/pricing/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-lite-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-mini-260215.json",
-        "bytedance/cn/pricing/doubao-seed-2-0-pro-260215.json"
+        "bytedance/cn/pricing/doubao-seed-2-0-pro-260215.json",
+        "bytedance/cn/pricing/doubao-seed-2-1-pro-260628.json",
+        "bytedance/cn/pricing/doubao-seed-2-1-turbo-260628.json"
       ],
       "pricingPath": "bytedance/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "2a61923ce345db2b1661567a70546780b870a05464e3029ba172bb7e73206d44",
+      "sha256": "56b4d5ea3db729dd2aab038eeb9f3dfdeff7cf3a401ceacbd8f8d96411510c30",
       "vendorCode": "bytedance"
     },
     {
@@ -181,25 +191,29 @@
       "familiesPath": "bytedance/global/families.json",
       "familyCount": 2,
       "marketScope": "international",
-      "modelCount": 3,
+      "modelCount": 5,
       "modelFiles": [
+        "bytedance/global/models/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/global/models/doubao-seed-2-0-lite-260215.json",
         "bytedance/global/models/doubao-seed-2-0-mini-260215.json",
+        "bytedance/global/models/doubao-seed-2-0-pro-260215.json",
         "bytedance/global/models/doubao-seedance-2-0-260128.json"
       ],
       "modelsPath": "bytedance/global/models",
       "path": "bytedance/global/vendor.json",
-      "pricingFileCount": 3,
+      "pricingFileCount": 5,
       "pricingFiles": [
+        "bytedance/global/pricing/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/global/pricing/doubao-seed-2-0-lite-260215.json",
         "bytedance/global/pricing/doubao-seed-2-0-mini-260215.json",
+        "bytedance/global/pricing/doubao-seed-2-0-pro-260215.json",
         "bytedance/global/pricing/doubao-seedance-2-0-260128.json"
       ],
       "pricingPath": "bytedance/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/global/rankings.json",
       "regionCode": "global",
-      "sha256": "8f0b8d0cc5512d90804836559207cd41f5a6ed7e39db375cbb9b78db5466ee4f",
+      "sha256": "014424af1309e2b6fb65ac9bbf664d15102052aaaeb21509f871fc7771c9b761",
       "vendorCode": "bytedance"
     },
     {
@@ -226,7 +240,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "deepseek/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "15e4a41b65a70977a47225021007af716901f913ca1e9ac6f1f03fb613a3349c",
+      "sha256": "c5710f56ae8e899cda8b31898ac0b27297528393e51d4d4939258c33a167e34d",
       "vendorCode": "deepseek"
     },
     {
@@ -253,7 +267,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "deepseek/global/rankings.json",
       "regionCode": "global",
-      "sha256": "9ff79b5afe3be5485011e2a62a0701ba892a93f32ceaafa0785c246426dd1ba3",
+      "sha256": "9f7b2c0aeb29f608b1543af41c5428c9b2ca17018d8f86954f29e783ccacc8bb",
       "vendorCode": "deepseek"
     },
     {
@@ -278,7 +292,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "elevenlabs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "5a3a29056c3359b4faa5ee5ddbb9da9ac171fedaa10f22da58fb566ec265b76f",
+      "sha256": "b8d456dfa2ac719623048a872639ca79d9f9d60135b3f16bcad6bab4f19e3dfe",
       "vendorCode": "elevenlabs"
     },
     {
@@ -337,7 +351,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "google/global/rankings.json",
       "regionCode": "global",
-      "sha256": "4eba63844e6d14282dad2f3ed820808ded2cf31f976466c4d15f3cde4ea8348d",
+      "sha256": "750eb1e0b18b35f3857da82a3f37451c2dcd52526910ae5ada3a95ed66e600e6",
       "vendorCode": "google"
     },
     {
@@ -360,7 +374,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "8bdba407682803365be0e4d3af8411c874e757742dc8ed15fd95227b9083eb2e",
+      "sha256": "ddad6aa0245d6a7906ba36586511140b7c27d2a0529ced5ea450a7da210fe22b",
       "vendorCode": "kuaishou"
     },
     {
@@ -385,7 +399,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/global/rankings.json",
       "regionCode": "global",
-      "sha256": "f4a68ec32515f466d88dabab41a1f0680b6864bd6ba88e1a8c0352fe649ec978",
+      "sha256": "3e1e12072b4302caa86d2e491768e48fe5a9a11b7ef6998f8e44fbda06b56bbc",
       "vendorCode": "kuaishou"
     },
     {
@@ -420,7 +434,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "f761217d1c5fc2508ee367315907138ebad393c5d0932c3bbcf64ab99fea8353",
+      "sha256": "1aa254680782ea86348d47b93500ad61eafa0e73c428346e0b9fa7fe7a6c2a8a",
       "vendorCode": "minimax"
     },
     {
@@ -455,7 +469,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/global/rankings.json",
       "regionCode": "global",
-      "sha256": "b778efd7539465ca08c12ef258e1ede9d77cd5175f43e2d7350b1242e8af5f36",
+      "sha256": "51ea7c4ee12f5f540cad2e8945825587f4431bef15230277e6a03982b77236ef",
       "vendorCode": "minimax"
     },
     {
@@ -486,7 +500,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "6ca8fb6a575ab22fd8c453f3e4218c23025eefa566e9968bca6493c414cd7992",
+      "sha256": "724a80b8e298e2400af3b3156fb977b43e00729420c753c0a9d49c9da61074cb",
       "vendorCode": "moonshot"
     },
     {
@@ -517,7 +531,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "moonshot/global/rankings.json",
       "regionCode": "global",
-      "sha256": "81374d36dcd043728d2a7937697226cc0faa3e314c74cbe9ec54e7fa2c18486f",
+      "sha256": "733091646b7e7d11d3d0632f87f5ec4b5f805111173f0535de2d38a4596469cc",
       "vendorCode": "moonshot"
     },
     {
@@ -574,7 +588,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "openai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "e8ebae8805213c752536b4a11d0b4842c23f54ddac4d6f8fedc3721ee6a9504a",
+      "sha256": "781f2bf43228c0706cc0c7e1dd8f637b63911c46c08f773905076aea5a597f07",
       "vendorCode": "openai"
     },
     {
@@ -599,8 +613,37 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "stability_ai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "d15e5e55f6b8daede2dd5e503fc4884f7ff590474f03d3a13a7f033e711ecd59",
+      "sha256": "747fcbe54732b6eef5ce58f5f5424de6a4a42f3bc9fd5da6fd9553d16652c498",
       "vendorCode": "stability_ai"
+    },
+    {
+      "billingCurrency": "CNY",
+      "billingJurisdiction": "CN",
+      "catalogKeyPrefix": "stepfun/",
+      "displayName": "StepFun",
+      "familiesPath": "stepfun/cn/families.json",
+      "familyCount": 1,
+      "marketScope": "china_mainland",
+      "modelCount": 3,
+      "modelFiles": [
+        "stepfun/cn/models/step-3.5-flash-2603.json",
+        "stepfun/cn/models/step-3.5-flash.json",
+        "stepfun/cn/models/step-3.7-flash.json"
+      ],
+      "modelsPath": "stepfun/cn/models",
+      "path": "stepfun/cn/vendor.json",
+      "pricingFileCount": 3,
+      "pricingFiles": [
+        "stepfun/cn/pricing/step-3.5-flash-2603.json",
+        "stepfun/cn/pricing/step-3.5-flash.json",
+        "stepfun/cn/pricing/step-3.7-flash.json"
+      ],
+      "pricingPath": "stepfun/cn/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "stepfun/cn/rankings.json",
+      "regionCode": "cn",
+      "sha256": "32410a92230b6c4ae4c185ff875e876698eec9baed686c090a7c5903f2aab392",
+      "vendorCode": "stepfun"
     },
     {
       "billingCurrency": "USD",
@@ -624,7 +667,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "suno/global/rankings.json",
       "regionCode": "global",
-      "sha256": "8b1157956b7fd84ef7bc4c1953ffbbf5b68f8950f5d4ab9d6d2f192992f171c0",
+      "sha256": "82ff8c7911c4f9fa2911956ac56113861b34ea78a0cff351160db935895eb878",
       "vendorCode": "suno"
     },
     {
@@ -653,7 +696,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "tencent/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "3955afcfeaf3958995d13a6cba3e4ec07753c88fcd49408dc6d62a4245e08f2a",
+      "sha256": "05dd5ecf1a9db5c9466d61b6c443eadc72b6ea776b2db3059a9a2c25c7f0bca0",
       "vendorCode": "tencent"
     },
     {
@@ -686,7 +729,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "e6a370bac5dde52f59bda10086e419c68004c6f7fbec9331678beb3ab702293f",
+      "sha256": "01b4ee77babaed729c0779b4a0dfa8bd09fceaa832fc6ed9a79f93a02d799cff",
       "vendorCode": "xai"
     },
     {
@@ -717,7 +760,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xiaomi/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "e7acad95d474945cd1f9e8ca13b7ccd7336aa4c878257ba0ef489cba0d3bc4d8",
+      "sha256": "cfb91b212854c240e023fbf55e343193f7b4741ea1a17ec749a4f5fa320c9b0b",
       "vendorCode": "xiaomi"
     },
     {
@@ -748,7 +791,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xiaomi/global/rankings.json",
       "regionCode": "global",
-      "sha256": "41c008b410b7c4cae22eecd0aa67205713210fff23df48984ea93a9110b3082e",
+      "sha256": "00b273ebec48addee4c2cc25b0f807aa1dfc095c5d345e421ee37cacda82f906",
       "vendorCode": "xiaomi"
     },
     {
@@ -759,21 +802,23 @@
       "familiesPath": "zhipu/cn/families.json",
       "familyCount": 1,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 2,
       "modelFiles": [
-        "zhipu/cn/models/glm-5.1.json"
+        "zhipu/cn/models/glm-5.1.json",
+        "zhipu/cn/models/glm-5.2.json"
       ],
       "modelsPath": "zhipu/cn/models",
       "path": "zhipu/cn/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 2,
       "pricingFiles": [
-        "zhipu/cn/pricing/glm-5.1.json"
+        "zhipu/cn/pricing/glm-5.1.json",
+        "zhipu/cn/pricing/glm-5.2.json"
       ],
       "pricingPath": "zhipu/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "zhipu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "13daaaa39c32249545730cd37909578443fddc8a9c18bbe8910b5d4ab15ae037",
+      "sha256": "feed565bf6e2f066920259907c80fd2452e31f2ed1d0943137617b2106775cbf",
       "vendorCode": "zhipu"
     }
   ]

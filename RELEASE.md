@@ -36,13 +36,13 @@ To update ClawRouter to a newer catalog:
 ```powershell
 cd data/sdkwork-models
 git fetch origin
-git checkout catalog-v2026.05.08.1
+git checkout catalog-v2026.06.24.3
 cd ..\..
 git add data/sdkwork-models
 git commit -m "update sdkwork models catalog"
 ```
 
-Use the actual release tag for the target catalog version.
+Use the actual release tag for the target catalog version. The authoritative catalog version lives in `models/index.json`; the current release is `2026.06.24.3` (`catalog-v2026.06.24.3`).
 
 ## Required Local Checks
 

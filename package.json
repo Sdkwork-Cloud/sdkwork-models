@@ -14,6 +14,7 @@
     "build:index": "node tools/build-index.mjs",
     "audit": "node tools/catalog-audit.mjs",
     "freshness": "node tools/freshness-report.mjs --max-age-policy catalog-freshness-policy.json",
+    "evidence:stamp": "node tools/stamp-catalog-evidence.mjs --observed-at 2026-06-24T00:00:00Z --catalog-version 2026.06.24.2",
     "diff": "node tools/catalog-diff.mjs",
     "release:check": "node tools/release-catalog.mjs --check",
     "release:validate": "node tools/release-catalog.mjs --check",
@@ -26,7 +27,7 @@
     "db:sqlite-baseline": "node tools/materialize-models-sqlite-baseline.mjs",
     "db:plan": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . plan",
     "db:status": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . status",
-    "route-manifest:check": "cargo test -p sdkwork-router-catalog-backend-api --test route_manifest && cargo test -p sdkwork-router-catalog-app-api --test route_manifest",
+    "route-manifest:check": "cargo test -p sdkwork-router-models-catalog-backend-api --test route_manifest && cargo test -p sdkwork-router-models-catalog-app-api --test route_manifest",
     "test:rust": "cargo test --workspace --offline",
     "topology:validate": "node ../sdkwork-app-topology/scripts/sdkwork-topology.mjs validate --root . --spec specs/topology.spec.json",
     "topology:plan": "node ../sdkwork-app-topology/scripts/sdkwork-topology.mjs plan --root . --spec specs/topology.spec.json",
@@ -35,5 +36,16 @@
   },
   "dependencies": {
     "@sdkwork/utils": "workspace:*"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@sdkwork/clawrouter-pc-commons",
+        "lucide-react",
+        "react",
+        "react-dom",
+        "react-i18next"
+      ]
+    }
   }
 }

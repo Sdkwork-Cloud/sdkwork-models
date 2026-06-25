@@ -1,0 +1,42 @@
+{
+  "catalogKey": "bytedance/doubao-seed-2-0-pro-260215",
+  "currency": "USD",
+  "modelId": "doubao-seed-2-0-pro-260215",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-global-doubao-seed-2-0-pro-260215-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://seed.bytedance.com/en/seed2"
+      },
+      "unitPrice": "0.670000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-global-doubao-seed-2-0-pro-260215-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://seed.bytedance.com/en/seed2"
+      },
+      "unitPrice": "3.360000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}

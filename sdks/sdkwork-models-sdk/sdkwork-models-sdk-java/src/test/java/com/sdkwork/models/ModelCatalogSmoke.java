@@ -15,7 +15,7 @@ public final class ModelCatalogSmoke {
 
     public static void main(String[] args) {
         ModelCatalog catalog = ModelCatalogLoader.fromParts(
-                "2026.05.08.1",
+                "fixture-1.0.0",
                 "1.0.0",
                 List.of(Map.of("meterCode", "llm_input_token", "defaultUnitSize", "1000000")),
                 List.of(

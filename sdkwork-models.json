@@ -1,19 +1,19 @@
 {
-  "name": "sdkwork-models",
-  "schemaVersion": "1.1.0",
-  "catalogVersion": "2026.05.08.1",
-  "generatedAt": "2026-05-08T00:00:00Z",
+  "catalogVersion": "2026.06.24.4",
   "defaultLocale": "en-US",
-  "supportedLocales": [
-    "en-US",
-    "zh-CN"
-  ],
-  "modelsRoot": "models",
-  "schemasRoot": "schemas",
-  "overlaysRoot": "overlays",
+  "generatedAt": "2026-06-24T00:00:00Z",
   "license": "MIT",
+  "modelsRoot": "models",
+  "name": "sdkwork-models",
+  "overlaysRoot": "overlays",
   "repository": {
     "type": "git",
     "url": "https://github.com/Sdkwork-Cloud/sdkwork-models.git"
-  }
+  },
+  "schemaVersion": "1.1.0",
+  "schemasRoot": "schemas",
+  "supportedLocales": [
+    "en-US",
+    "zh-CN"
+  ]
 }

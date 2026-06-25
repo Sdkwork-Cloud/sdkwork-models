@@ -1,0 +1,16 @@
+[package]
+name = "sdkwork-models-database-host"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SDKWork models catalog database bootstrap host."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+dotenvy = "0.15"
+sdkwork-database-config = { path = "../../../sdkwork-database/crates/sdkwork-database-config" }
+sdkwork-database-lifecycle = { path = "../../../sdkwork-database/crates/sdkwork-database-lifecycle" }
+sdkwork-database-spi = { path = "../../../sdkwork-database/crates/sdkwork-database-spi" }
+sdkwork-database-sqlx = { path = "../../../sdkwork-database/crates/sdkwork-database-sqlx" }

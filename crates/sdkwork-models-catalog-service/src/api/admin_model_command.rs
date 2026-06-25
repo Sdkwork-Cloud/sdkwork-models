@@ -195,11 +195,11 @@ struct AdminModelMappingsQuery {
 }
 
 #[derive(Debug, Default, Deserialize)]
-#[serde(rename_all = "camelCase")]
 struct AdminModelsListQuery {
     vendor_id: Option<String>,
     vendor_code: Option<String>,
     q: Option<String>,
+    model_types: Option<String>,
     limit: Option<i64>,
     offset: Option<i64>,
 }
@@ -563,12 +563,31 @@ async fn fetch_models(
 ) -> Response {
     let subject = map_subject(trusted);
     let list_query = build_list_models_query(subject, query);
+    tracing::info!(
+        operation = "models.list",
+        tenant_id = list_query.subject.tenant_id,
+        organization_id = list_query.subject.organization_id,
+        vendor_id = list_query.vendor_id.as_deref(),
+        vendor_code = list_query.vendor_code.as_deref(),
+        model_types = list_query.model_types.as_deref(),
+        limit = list_query.normalized_limit(),
+        offset = list_query.normalized_offset(),
+        "listing admin ai models"
+    );
     match state.store.list_models(list_query).await {
-        Ok(page) => Json(PlusApiResult::success(AdminModelListResponse {
-            items: page.items.into_iter().map(to_model_response).collect(),
-            total_count: Some(page.total_count),
-        }))
-        .into_response(),
+        Ok(page) => {
+            tracing::debug!(
+                operation = "models.list",
+                item_count = page.items.len(),
+                total_count = page.total_count,
+                "listed admin ai models"
+            );
+            Json(PlusApiResult::success(AdminModelListResponse {
+                items: page.items.into_iter().map(to_model_response).collect(),
+                total_count: Some(page.total_count),
+            }))
+            .into_response()
+        }
         Err(error) => admin_model_system_response("ai model read model is unavailable", error),
     }
 }
@@ -1013,6 +1032,7 @@ fn build_list_models_query(
         vendor_id: query.vendor_id,
         vendor_code: query.vendor_code,
         q: query.q,
+        model_types: query.model_types,
         limit: query.limit,
         offset: query.offset,
     }

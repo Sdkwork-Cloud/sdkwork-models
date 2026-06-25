@@ -2,7 +2,7 @@ import 'package:sdkwork_models/sdkwork_models.dart';
 
 Future<void> main() async {
   final catalog = ModelCatalog(
-    catalogVersion: '2026.05.08.1',
+    catalogVersion: 'fixture-1.0.0',
     schemaVersion: '1.1.0',
     meters: const [
       {'meterCode': 'llm_input_token', 'defaultUnitSize': '1000000'}

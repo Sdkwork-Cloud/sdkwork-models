@@ -1,0 +1,49 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "stepfun/step-3.7-flash",
+  "colorToken": "#0369a1",
+  "contextTokens": 256000,
+  "description": "StepFun flagship multimodal reasoning model with native image and video understanding.",
+  "displayName": "Step 3.7 Flash",
+  "familyCode": "step-flash",
+  "inputModalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 256000,
+  "maxOutputTokens": 65536,
+  "modelId": "step-3.7-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "960.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/models/step-3.5-flash"
+  },
+  "strengths": [
+    "Multimodal",
+    "Agents",
+    "Coding",
+    "Reasoning"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.950000",
+  "vendorCode": "stepfun",
+  "vendorName": "StepFun",
+  "winRate": "0.920000"
+}

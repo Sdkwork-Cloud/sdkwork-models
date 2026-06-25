@@ -99,7 +99,7 @@ pub fn app_model_rankings_router() -> Router {
         "/app/v3/api/ai/model_rankings",
         Arc::new(UnconfiguredModelRankingsReadStore),
         None,
-        false,
+        true,
         false,
     )
 }
@@ -111,7 +111,7 @@ pub fn app_model_rankings_router_with_read_store(
         "/app/v3/api/ai/model_rankings",
         read_store,
         None,
-        false,
+        true,
         false,
     )
 }

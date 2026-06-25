@@ -10,7 +10,7 @@ export const sdkMetadata = {
   standardProfile: "sdkwork-v3",
   baseUrl: "http://127.0.0.1:18080",
   apiPrefix: "/backend/v3/api",
-  sdkDependencies: [{"workspace":"sdkwork-appbase-backend-sdk","role":"appbase-backend-management-capability","required":true,"dependencyMode":"consumer-sdk","apiPrefix":"/backend/v3/api","apiAuthority":"sdkwork-appbase-backend-api","generatedTransportImportPolicy":"forbidden","packageByLanguage":{"typescript":"@sdkwork/appbase-backend-sdk","rust":"sdkwork-appbase-backend-sdk","java":"com.sdkwork:sdkwork-appbase-backend-sdk","python":"sdkwork-appbase-backend-sdk","go":"github.com/sdkwork/sdkwork-appbase-backend-sdk"}}],
+  sdkDependencies: [{"workspace":"sdkwork-iam-backend-sdk","role":"appbase-backend-management-capability","required":true,"dependencyMode":"consumer-sdk","apiPrefix":"/backend/v3/api","apiAuthority":"sdkwork-iam-backend-api","generatedTransportImportPolicy":"forbidden","packageByLanguage":{"typescript":"@sdkwork/iam-backend-sdk","rust":"sdkwork-iam-backend-sdk","java":"com.sdkwork:sdkwork-iam-backend-sdk","python":"sdkwork-iam-backend-sdk","go":"github.com/sdkwork/sdkwork-iam-backend-sdk"}}],
   dependencyApiExports: [],
 };
 

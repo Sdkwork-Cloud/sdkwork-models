@@ -43,6 +43,11 @@ jobs:
           repository: Sdkwork-Cloud/sdkwork-web-framework
           path: sdkwork-web-framework
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: Sdkwork-Cloud/sdkwork-iam
+          path: sdkwork-iam
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: pnpm/action-setup@v4
         with:
           version: 10.30.2

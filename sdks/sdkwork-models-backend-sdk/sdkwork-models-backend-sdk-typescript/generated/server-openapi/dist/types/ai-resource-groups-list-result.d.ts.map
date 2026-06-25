@@ -1,1 +1,0 @@
-{"version":3,"file":"ai-resource-groups-list-result.d.ts","sourceRoot":"","sources":["../../src/types/ai-resource-groups-list-result.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,6BAA6B,EAAE,MAAM,qCAAqC,CAAC;AAEzF,oEAAoE;AACpE,MAAM,WAAW,0BAA0B;IACzC,8BAA8B;IAC9B,IAAI,EAAE,MAAM,CAAC;IACb,oDAAoD;IACpD,IAAI,CAAC,EAAE,6BAA6B,CAAC;IACrC,uCAAuC;IACvC,GAAG,CAAC,EAAE,MAAM,CAAC;CACd"}

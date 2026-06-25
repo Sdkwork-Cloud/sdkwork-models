@@ -1,0 +1,58 @@
+{
+  "catalogKey": "bytedance/doubao-seed-2-1-pro-260628",
+  "currency": "CNY",
+  "modelId": "doubao-seed-2-1-pro-260628",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-23T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-cn-doubao-seed-2-1-pro-260628-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-23T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-cn-doubao-seed-2-1-pro-260628-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "unitPrice": "1.200000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-23T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "bytedance-cn-doubao-seed-2-1-pro-260628-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/82379"
+      },
+      "unitPrice": "30.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance"
+}

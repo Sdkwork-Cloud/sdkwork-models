@@ -4,6 +4,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 use serde_json::json;
+use tracing::warn;
 
 #[derive(Clone, Debug)]
 pub enum ModelsReadinessProbe {
@@ -64,16 +65,18 @@ async fn ready_check(State(probe): State<ModelsReadinessProbe>) -> Response {
                 })),
             )
                 .into_response(),
-            Err(error) => (
-                StatusCode::SERVICE_UNAVAILABLE,
-                Json(json!({
-                    "status": "not_ready",
-                    "service": "sdkwork-models",
-                    "database": "sqlite",
-                    "error": error.to_string()
-                })),
-            )
-                .into_response(),
+            Err(error) => {
+                warn!(service = "sdkwork-models", database = "sqlite", %error, "readiness probe failed");
+                (
+                    StatusCode::SERVICE_UNAVAILABLE,
+                    Json(json!({
+                        "status": "not_ready",
+                        "service": "sdkwork-models",
+                        "database": "sqlite"
+                    })),
+                )
+                    .into_response()
+            }
         },
         ModelsReadinessProbe::Postgres(pool) => match sqlx::query("SELECT 1")
             .execute(&pool)
@@ -88,16 +91,18 @@ async fn ready_check(State(probe): State<ModelsReadinessProbe>) -> Response {
                 })),
             )
                 .into_response(),
-            Err(error) => (
-                StatusCode::SERVICE_UNAVAILABLE,
-                Json(json!({
-                    "status": "not_ready",
-                    "service": "sdkwork-models",
-                    "database": "postgres",
-                    "error": error.to_string()
-                })),
-            )
-                .into_response(),
+            Err(error) => {
+                warn!(service = "sdkwork-models", database = "postgres", %error, "readiness probe failed");
+                (
+                    StatusCode::SERVICE_UNAVAILABLE,
+                    Json(json!({
+                        "status": "not_ready",
+                        "service": "sdkwork-models",
+                        "database": "postgres"
+                    })),
+                )
+                    .into_response()
+            }
         },
     }
 }

@@ -3,7 +3,13 @@
   "schemaVersion": "1.0.0",
   "snapshots": [
     {
-      "items": [
+        "items": [
+        {
+          "catalogKey": "zhipu/glm-5.2",
+          "modelId": "glm-5.2",
+          "pricingText": "CNY 8.00 / 1M input; CNY 2.00 / 1M cache read; CNY 28.00 / 1M output",
+          "rankNo": 10
+        },
         {
           "catalogKey": "zhipu/glm-5.1",
           "modelId": "glm-5.1",

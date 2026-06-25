@@ -16,10 +16,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sdkwork/clawrouter-pc-commons": "workspace:*",
     "@sdkwork/models-backend-sdk": "workspace:*"
   },
   "peerDependencies": {
+    "@sdkwork/clawrouter-pc-commons": ">=0.1.0",
     "lucide-react": ">=0.468.0 <2.0.0",
     "react": ">=18.2.0 <20.0.0",
     "react-dom": ">=18.2.0 <20.0.0",

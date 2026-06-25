@@ -1,4 +1,4 @@
-use sdkwork_router_catalog_backend_api::{backend_route_manifest, route_definitions};
+use sdkwork_router_models_catalog_backend_api::{backend_route_manifest, route_definitions};
 use sdkwork_web_core::RouteAuth;
 
 #[test]

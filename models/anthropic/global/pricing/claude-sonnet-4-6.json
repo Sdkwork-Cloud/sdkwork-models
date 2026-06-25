@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "15.000000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
@@ -63,7 +63,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
@@ -81,7 +81,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.750000",
@@ -97,7 +97,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,
@@ -115,7 +115,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.300000",
@@ -131,7 +131,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "thresholdTokens": 200000,

@@ -12,7 +12,7 @@
   "mode": "apply",
   "hasChanges": true,
   "hasDestructiveChanges": true,
-  "changeFingerprint": "3ca3592e277cdaf0dc989c25caed55289a9d2b6efbbb1c4269543d7159188ab4",
+  "changeFingerprint": "d5296c2315edd2b6a1bec3868eba325c93af393c39d049b2aa29a75337b34b3e",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
@@ -155,24 +155,28 @@
     "localVersions": []
   },
   "stats": {
-    "totalFiles": 40,
-    "models": 16,
+    "totalFiles": 44,
+    "models": 20,
     "apis": 1,
-    "types": 18
+    "types": 22
   },
   "warnings": [],
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 4,
+    "writtenFiles": 8,
     "skippedScaffoldFiles": 2,
     "skippedUnchangedGeneratedFiles": 34,
-    "deletedGeneratedFiles": 5,
+    "deletedGeneratedFiles": 1,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "3ca3592e277cdaf0dc989c25caed55289a9d2b6efbbb1c4269543d7159188ab4",
+    "changeFingerprint": "d5296c2315edd2b6a1bec3868eba325c93af393c39d049b2aa29a75337b34b3e",
     "changes": {
       "createdGeneratedFiles": [
-        "src/types/no-data.ts"
+        "src/types/app-model-catalog-group-option.ts",
+        "src/types/app-model-catalog-item.ts",
+        "src/types/app-model-catalog-price-availability.ts",
+        "src/types/app-model-catalog-reference-price.ts",
+        "src/types/app-model-catalog-response.ts"
       ],
       "updatedGeneratedFiles": [
         "src/api/ai.ts",
@@ -216,11 +220,7 @@
         "tsconfig.json"
       ],
       "deletedGeneratedFiles": [
-        "src/types/app-model-catalog-group-option.ts",
-        "src/types/app-model-catalog-item.ts",
-        "src/types/app-model-catalog-price-availability.ts",
-        "src/types/app-model-catalog-reference-price.ts",
-        "src/types/app-model-catalog-response.ts"
+        "src/types/no-data.ts"
       ],
       "scaffoldedFiles": [],
       "preservedScaffoldFiles": [

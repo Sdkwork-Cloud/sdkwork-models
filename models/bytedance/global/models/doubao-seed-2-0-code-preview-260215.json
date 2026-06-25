@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "bytedance/doubao-seed-2-0-code-preview-260215",
+  "colorToken": "#b91c1c",
+  "contextTokens": 256000,
+  "description": "Doubao Seed 2.0 Code model optimized for software engineering, debugging, and agentic coding workflows.",
+  "displayName": "Doubao Seed 2.0 Code",
+  "familyCode": "doubao-seed",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 256000,
+  "maxOutputTokens": 32768,
+  "modelId": "doubao-seed-2-0-code-preview-260215",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "870.000000",
+  "regionCode": "global",
+  "releaseStage": "preview",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://seed.bytedance.com/en/seed2"
+  },
+  "strengths": [
+    "Coding",
+    "Agents",
+    "Multimodal"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.900000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance"
+}

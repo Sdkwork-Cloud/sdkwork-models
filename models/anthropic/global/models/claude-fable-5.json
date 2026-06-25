@@ -6,7 +6,7 @@
   "catalogKey": "anthropic/claude-fable-5",
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
-  "description": "Anthropic's most capable widely released model, for the most demanding reasoning and long-horizon agentic work.",
+  "description": "Anthropic's most capable widely released model, for the most demanding reasoning and long-horizon agentic work. Public API access was suspended on 2026-06-12; catalog entry retained for discovery with Opus 4.8 as the active fallback.",
   "displayName": "Claude Fable 5",
   "familyCode": "claude",
   "inputModalities": [
@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 1000,
   "latencyP95Ms": 3500,
-  "lifecycle": "active",
+  "lifecycle": "catalog_only",
   "maxInputTokens": 1000000,
   "maxOutputTokens": 128000,
   "modelId": "claude-fable-5",
@@ -25,12 +25,12 @@
   "primaryCapability": "chat",
   "rankScore": "1200.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "preview",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-06-13T00:00:00Z",
+    "observedAt": "2026-06-24T00:00:00Z",
     "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models"
   },
   "strengths": [

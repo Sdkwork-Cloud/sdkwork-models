@@ -320,6 +320,7 @@ export type ModelListQuery = {
   vendorId?: string;
   vendorCode?: string;
   q?: string;
+  modelTypes?: string;
   limit?: number;
   offset?: number;
 };
@@ -334,6 +335,7 @@ async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
     vendorId?: string;
     vendorCode?: string;
     q?: string;
+    modelTypes?: string;
     limit?: string;
     offset?: string;
   } = {};
@@ -346,6 +348,9 @@ async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
   if (query.q) {
     params.q = query.q;
   }
+  if (query.modelTypes) {
+    params.modelTypes = query.modelTypes;
+  }
   if (query.limit !== undefined) {
     params.limit = String(query.limit);
   }
@@ -355,34 +360,6 @@ async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
   return Object.keys(params).length === 0
     ? getModelsBackendSdkClient().ai.models.list()
     : getModelsBackendSdkClient().ai.models.list(params);
-}
-
-function filterModelListPage(page: ModelListPage, query: ModelListQuery = {}): ModelListPage {
-  if (!query.vendorId && !query.vendorCode && !query.q && query.limit === undefined && query.offset === undefined) {
-    return page;
-  }
-  let items = page.items;
-  if (query.vendorId) {
-    items = items.filter((item) => item.vendorId === query.vendorId || item.vendorCode === query.vendorId);
-  }
-  if (query.vendorCode) {
-    items = items.filter((item) => item.vendorCode === query.vendorCode);
-  }
-  if (query.q) {
-    const normalizedQuery = query.q.trim().toLowerCase();
-    if (normalizedQuery) {
-      items = items.filter((item) =>
-        item.model.toLowerCase().includes(normalizedQuery)
-        || item.displayName.toLowerCase().includes(normalizedQuery)
-        || item.name.toLowerCase().includes(normalizedQuery));
-    }
-  }
-  const offset = Math.max(query.offset ?? 0, 0);
-  const limit = query.limit ?? items.length;
-  return {
-    items: items.slice(offset, offset + limit),
-    totalCount: items.length,
-  };
 }
 
 function readModelListPage(result: unknown, errorMessage: string): ModelListPage {
@@ -408,11 +385,9 @@ export class ModelService {
   static async fetchModelsPage(query: ModelListQuery = {}): Promise<ModelListPage> {
     const result = await listModelsRaw(query);
     const page = readModelListPage(result, 'Failed to fetch models');
-    const filtered = filterModelListPage(page, query);
-    const totalCount = readNumber(readApiRecord(result), 'totalCount') ?? filtered.totalCount;
     return {
-      items: await enrichModelsWithRankingCalls(filtered.items),
-      totalCount,
+      items: await enrichModelsWithRankingCalls(page.items),
+      totalCount: page.totalCount,
     };
   }
 
@@ -567,18 +542,15 @@ export class ModelService {
 
 export class ModelMappingService {
   static async fetchModelOptionsCatalog(): Promise<ModelMappingModelOptionsCatalog> {
-    const [vendorsResult, modelsResult] = await Promise.all([
+    const [vendorsResult, models] = await Promise.all([
       getModelsBackendSdkClient().ai.modelVendors.list(),
-      listModelsRaw({ limit: 200, offset: 0 }),
+      ModelService.fetchAllModels(),
     ]);
     ensureSdkworkApiSuccess(vendorsResult, 'Failed to fetch model mapping vendors');
-    ensureSdkworkApiSuccess(modelsResult, 'Failed to fetch model mapping models');
-    const modelsRecord = readApiRecord(modelsResult);
     return {
       vendors: readRequiredApiItems(vendorsResult, 'Failed to fetch model mapping vendors')
         .map(normalizeVendor),
-      models: readRequiredApiItems(modelsRecord, 'Failed to fetch model mapping models')
-        .map(normalizeModelMappingModelOption),
+      models: models.map(normalizeModelMappingModelOption),
     };
   }
 

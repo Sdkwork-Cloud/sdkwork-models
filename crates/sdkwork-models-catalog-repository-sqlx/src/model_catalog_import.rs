@@ -48,7 +48,7 @@ pub(crate) fn catalog_identity_models(
     models
 }
 
-pub(crate) fn public_catalog_identity_models(
+pub fn public_catalog_identity_models(
     catalog: &ModelCatalog,
 ) -> BTreeMap<String, (&VendorCatalog, &ModelInfo)> {
     catalog_identity_models(catalog)

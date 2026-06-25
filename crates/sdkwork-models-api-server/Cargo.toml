@@ -8,19 +8,31 @@ description = "SDKWork canonical intelligence catalog HTTP route composition for
 [lib]
 path = "src/lib.rs"
 
+[[bin]]
+name = "sdkwork-models-api-server"
+path = "src/main.rs"
+
 [dependencies]
 axum.workspace = true
+dotenvy = "0.15"
 serde_json.workspace = true
 sqlx.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "net"] }
+tower-http = { version = "0.5", features = ["cors"] }
+tracing.workspace = true
+tracing-subscriber = "0.3"
 sdkwork-id-core.workspace = true
 sdkwork_models_catalog_service.workspace = true
 sdkwork_models_catalog_repository_sqlx.workspace = true
 sdkwork_models_contract_service.workspace = true
-sdkwork_router_catalog_app_api.workspace = true
-sdkwork_router_catalog_backend_api.workspace = true
+sdkwork-models-database-host = { path = "../sdkwork-models-database-host" }
+sdkwork-models = { path = "../../sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust" }
+sdkwork_router_models_catalog_app_api.workspace = true
+sdkwork_router_models_catalog_backend_api.workspace = true
 sdkwork-iam-web-adapter.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-web-core.workspace = true
+sdkwork-database-sqlx = { path = "../../../sdkwork-database/crates/sdkwork-database-sqlx" }
 
 [dev-dependencies]
 http-body-util = "0.1"

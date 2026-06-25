@@ -12,7 +12,7 @@ class ModelCatalogTest {
     @Test
     void testFindModel() {
         ModelCatalog catalog = ModelCatalogLoader.fromParts(
-                "2026.05.08.1",
+                "fixture-1.0.0",
                 "1.0.0",
                 List.of(Map.of("meterCode", "llm_input_token", "defaultUnitSize", "1000000")),
                 List.of(
@@ -207,7 +207,7 @@ class ModelCatalogTest {
     @Test
     void catalogKeyParserKeepsSlashDelimitedProviderModelIdsIntact() {
         ModelCatalog catalog = new ModelCatalog(
-                "2026.05.08.1",
+                "fixture-1.0.0",
                 "1.1.0",
                 List.of(),
                 List.of(),

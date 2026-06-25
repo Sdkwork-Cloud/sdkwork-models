@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "glm-5.1",
+      "defaultModel": "glm-5.2",
       "displayName": "GLM",
       "familyCode": "glm",
       "familyType": "llm",

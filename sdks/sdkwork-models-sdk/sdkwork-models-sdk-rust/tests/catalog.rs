@@ -9,6 +9,21 @@ use sdkwork_models::{
 };
 use std::collections::BTreeSet;
 use std::fs;
+use std::path::Path;
+
+fn expected_repository_catalog_version() -> String {
+    let repo_root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("..")
+        .join("..");
+    let index_path = repo_root.join("models").join("index.json");
+    let content = fs::read_to_string(index_path).expect("models/index.json should exist");
+    let value: serde_json::Value = serde_json::from_str(&content).expect("index json should parse");
+    value["catalogVersion"]
+        .as_str()
+        .expect("catalogVersion should be present")
+        .to_string()
+}
 
 fn unsupported_client_api_compatibility_json() -> &'static str {
     r#""clientApiCompatibility":{
@@ -22,7 +37,10 @@ fn unsupported_client_api_compatibility_json() -> &'static str {
 fn bundled_catalog_loads_and_queries_models() {
     let catalog = load_bundled_catalog().expect("catalog should load");
 
-    assert_eq!("2026.05.08.1", catalog.manifest.catalog_version);
+    assert_eq!(
+        expected_repository_catalog_version(),
+        catalog.manifest.catalog_version
+    );
     assert!(catalog.vendors.len() >= 3);
     assert_eq!(
         Some("openai"),
@@ -185,7 +203,7 @@ fn catalog_key_parser_keeps_slash_delimited_provider_model_ids_intact() {
           "manifest": {
             "name": "sdkwork-models",
             "schemaVersion": "1.1.0",
-            "catalogVersion": "2026.05.08.1",
+            "catalogVersion": "fixture-1.0.0",
             "generatedAt": "2026-06-02T00:00:00Z",
             "modelsRoot": "models",
             "schemasRoot": "schemas"
@@ -292,7 +310,7 @@ fn local_loader_uses_index_as_source_of_truth() {
     fs::create_dir_all(root.join("models/unlisted/global/pricing")).expect("unlisted pricing dir");
     fs::write(
         root.join("sdkwork-models.json"),
-        r#"{"name":"sdkwork-models","schemaVersion":"1.1.0","catalogVersion":"2026.05.08.1","generatedAt":"2026-05-08T00:00:00Z","modelsRoot":"models","schemasRoot":"schemas"}"#,
+        r#"{"name":"sdkwork-models","schemaVersion":"1.1.0","catalogVersion":"fixture-1.0.0","generatedAt":"2026-05-08T00:00:00Z","modelsRoot":"models","schemasRoot":"schemas"}"#,
     )
     .expect("manifest");
     fs::write(
@@ -307,7 +325,7 @@ fn local_loader_uses_index_as_source_of_truth() {
     .expect("protocols");
     fs::write(
         root.join("models/index.json"),
-        r#"{"schemaVersion":"1.1.0","catalogVersion":"2026.05.08.1","generatedAt":"2026-05-08T00:00:00Z","vendorCount":1,"regionCount":1,"modelCount":1,"pricingFileCount":1,"vendors":[{"vendorCode":"openai","regionCode":"global","path":"openai/global/vendor.json","familiesPath":"openai/global/families.json","modelsPath":"openai/global/models","modelFiles":["openai/global/models/gpt-5.5.json"],"pricingPath":"openai/global/pricing","pricingFiles":["openai/global/pricing/gpt-5.5.json"],"rankingsPath":"openai/global/rankings.json","modelCount":1,"pricingFileCount":1,"rankingSnapshotCount":0,"sha256":"test"}]}"#,
+        r#"{"schemaVersion":"1.1.0","catalogVersion":"fixture-1.0.0","generatedAt":"2026-05-08T00:00:00Z","vendorCount":1,"regionCount":1,"modelCount":1,"pricingFileCount":1,"vendors":[{"vendorCode":"openai","regionCode":"global","path":"openai/global/vendor.json","familiesPath":"openai/global/families.json","modelsPath":"openai/global/models","modelFiles":["openai/global/models/gpt-5.5.json"],"pricingPath":"openai/global/pricing","pricingFiles":["openai/global/pricing/gpt-5.5.json"],"rankingsPath":"openai/global/rankings.json","modelCount":1,"pricingFileCount":1,"rankingSnapshotCount":0,"sha256":"test"}]}"#,
     )
     .expect("index");
     fs::write(

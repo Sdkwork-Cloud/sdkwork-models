@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "6.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,
@@ -47,7 +47,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "1.300000",
@@ -63,7 +63,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,
@@ -81,7 +81,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "24.000000",
@@ -97,7 +97,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-05-07T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,

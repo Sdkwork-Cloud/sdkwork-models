@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "2.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,
@@ -47,7 +47,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "12.000000",
@@ -63,7 +63,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,
@@ -81,7 +81,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.200000",
@@ -97,7 +97,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,

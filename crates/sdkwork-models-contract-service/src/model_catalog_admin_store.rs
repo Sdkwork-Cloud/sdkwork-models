@@ -205,6 +205,7 @@ pub struct ListAdminAiModelsQuery {
     pub vendor_id: Option<String>,
     pub vendor_code: Option<String>,
     pub q: Option<String>,
+    pub model_types: Option<String>,
     pub limit: Option<i64>,
     pub offset: Option<i64>,
 }

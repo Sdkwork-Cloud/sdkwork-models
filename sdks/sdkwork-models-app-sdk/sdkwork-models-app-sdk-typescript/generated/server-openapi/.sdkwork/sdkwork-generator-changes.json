@@ -9,10 +9,14 @@
     "protocol": "http",
     "packageName": "sdkwork-models-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "3ca3592e277cdaf0dc989c25caed55289a9d2b6efbbb1c4269543d7159188ab4",
+  "changeFingerprint": "d5296c2315edd2b6a1bec3868eba325c93af393c39d049b2aa29a75337b34b3e",
   "changes": {
     "createdGeneratedFiles": [
-      "src/types/no-data.ts"
+      "src/types/app-model-catalog-group-option.ts",
+      "src/types/app-model-catalog-item.ts",
+      "src/types/app-model-catalog-price-availability.ts",
+      "src/types/app-model-catalog-reference-price.ts",
+      "src/types/app-model-catalog-response.ts"
     ],
     "updatedGeneratedFiles": [
       "src/api/ai.ts",
@@ -56,11 +60,7 @@
       "tsconfig.json"
     ],
     "deletedGeneratedFiles": [
-      "src/types/app-model-catalog-group-option.ts",
-      "src/types/app-model-catalog-item.ts",
-      "src/types/app-model-catalog-price-availability.ts",
-      "src/types/app-model-catalog-reference-price.ts",
-      "src/types/app-model-catalog-response.ts"
+      "src/types/no-data.ts"
     ],
     "scaffoldedFiles": [],
     "preservedScaffoldFiles": [

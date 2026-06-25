@@ -1,1 +1,0 @@
-{"version":3,"file":"model-ranking-history-point.d.ts","sourceRoot":"","sources":["../../src/types/model-ranking-history-point.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,wBAAwB,EAAE,MAAM,+BAA+B,CAAC;AAE9E,iEAAiE;AACjE,MAAM,WAAW,wBAAwB;IACvC,iDAAiD;IACjD,IAAI,EAAE,MAAM,CAAC;IACb,oDAAoD;IACpD,OAAO,EAAE,wBAAwB,EAAE,CAAC;IACpC,kDAAkD;IAClD,KAAK,EAAE,MAAM,CAAC;CACf"}

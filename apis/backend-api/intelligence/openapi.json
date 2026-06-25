@@ -1311,6 +1311,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Comma-separated model type labels (Chat, Image, Embedding, ...).",
+            "in": "query",
+            "name": "model_types",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

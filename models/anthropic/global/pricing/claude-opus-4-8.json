@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "5.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "25.000000",
@@ -45,12 +45,12 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
+      "tierCode": "cache_write_5m",
       "unitPrice": "6.250000",
-      "unitSize": "1000000",
-      "tierCode": "cache_write_5m"
+      "unitSize": "1000000"
     },
     {
       "currency": "USD",
@@ -62,12 +62,12 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
+      "tierCode": "cache_write_1h",
       "unitPrice": "10.000000",
-      "unitSize": "1000000",
-      "tierCode": "cache_write_1h"
+      "unitSize": "1000000"
     },
     {
       "currency": "USD",
@@ -79,7 +79,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.500000",
@@ -95,12 +95,12 @@
       "pricingScope": "plan",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
+      "tierCode": "fast_mode",
       "unitPrice": "10.000000",
-      "unitSize": "1000000",
-      "tierCode": "fast_mode"
+      "unitSize": "1000000"
     },
     {
       "currency": "USD",
@@ -112,12 +112,12 @@
       "pricingScope": "plan",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-03T00:00:00Z",
+        "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
+      "tierCode": "fast_mode",
       "unitPrice": "50.000000",
-      "unitSize": "1000000",
-      "tierCode": "fast_mode"
+      "unitSize": "1000000"
     }
   ],
   "regionCode": "global",
