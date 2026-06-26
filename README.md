@@ -33,6 +33,7 @@ The authoritative SDKWork standards are:
 
 ```text
 ../sdkwork-specs/README.md
+../sdkwork-specs/REGION_SPEC.md
 specs/component.spec.json
 docs/standards-alignment.md
 docs/root-layout.md

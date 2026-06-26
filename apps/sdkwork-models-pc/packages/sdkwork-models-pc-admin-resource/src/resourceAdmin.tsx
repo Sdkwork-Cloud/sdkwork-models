@@ -4,7 +4,7 @@ import {
   BottomPagination,
   ConfirmDialog,
   type AiResourceSelectorOption,
-} from '@sdkwork/clawroutes-pc-commons';
+} from '@sdkwork/clawrouter-pc-commons';
 import { Edit, Loader2, Plus, RefreshCw, Search, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

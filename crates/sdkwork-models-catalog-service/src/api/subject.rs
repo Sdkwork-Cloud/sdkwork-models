@@ -86,7 +86,7 @@ mod tests {
     fn sample_subject() -> TrustedRequestSubject {
         TrustedRequestSubject {
             tenant_id: 100001,
-            organization_id: 1,
+            organization_id: 0,
             user_id: 42,
             operator_id: 42,
             operator_type: 1,

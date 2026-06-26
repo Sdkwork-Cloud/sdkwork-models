@@ -20,8 +20,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-claw-router
-          path: sdkwork-claw-router
+          repository: Sdkwork-Cloud/sdkwork-clawrouter
+          path: sdkwork-clawrouter
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:

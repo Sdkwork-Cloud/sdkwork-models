@@ -47,7 +47,7 @@
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
-        "@sdkwork/clawroutes-pc-commons",
+        "@sdkwork/clawrouter-pc-commons",
         "lucide-react",
         "react",
         "react-dom",

@@ -13,7 +13,7 @@ import {
   readString,
   readStringArray,
   type ApiRecord,
-} from '@sdkwork/clawroutes-pc-commons/runtime';
+} from '@sdkwork/clawrouter-pc-commons/runtime';
 import type {
   AdminAiModelCreateRequest,
   AdminAiModelUpdateRequest,

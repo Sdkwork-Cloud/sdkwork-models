@@ -28,7 +28,7 @@ sha2 = "0.10"
 sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio", "sqlite", "postgres", "macros", "migrate", "json", "uuid", "chrono"] }
 tokio = { version = "1.51", features = ["macros", "rt-multi-thread"] }
 tracing = "0.1"
-sdkwork-claw-http = { path = "../sdkwork-claw-router/crates/sdkwork-claw-http" }
+sdkwork-claw-http = { path = "../sdkwork-clawrouter/crates/sdkwork-claw-http" }
 sdkwork-id-core = { path = "../sdkwork-id/crates/sdkwork-id-core" }
 sdkwork-utils-rust = { path = "../sdkwork-utils/packages/sdkwork-utils-rust" }
 sdkwork-web-core = { path = "../sdkwork-web-framework/crates/sdkwork-web-core" }

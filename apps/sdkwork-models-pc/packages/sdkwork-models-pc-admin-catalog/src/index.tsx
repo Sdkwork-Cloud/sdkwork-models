@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { AdminTableShell, BottomPagination, BusinessStateTableRow, ConfirmDialog, readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons';
+import { AdminTableShell, BottomPagination, BusinessStateTableRow, ConfirmDialog, readMediaResourceUrl } from '@sdkwork/clawrouter-pc-commons';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
