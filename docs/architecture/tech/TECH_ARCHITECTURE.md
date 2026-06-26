@@ -1,4 +1,5 @@
 # SDKWork Models Technical Architecture
+Specs: ARCHITECTURE_DECISION_SPEC.md, DOCUMENTATION_SPEC.md
 
 Status: active  
 Owner: SDKWork maintainers  
@@ -55,3 +56,14 @@ pnpm run topology:validate
 ```
 
 See `docs/standards-alignment.md` for the current alignment matrix.
+
+## 8. Architecture Decision Index
+
+- [TECH-client-api-compatibility-schema.md](TECH-client-api-compatibility-schema.md)
+- [TECH-client-api-plugins-standard.md](TECH-client-api-plugins-standard.md)
+- [TECH-client-api-schema-simple.md](TECH-client-api-schema-simple.md)
+- [TECH-client-api-standard-v2.md](TECH-client-api-standard-v2.md)
+- [TECH-converter-naming-standard.md](TECH-converter-naming-standard.md)
+- [TECH-root-layout.md](TECH-root-layout.md)
+- [TECH-standards-alignment.md](TECH-standards-alignment.md)
+- [TECH-vendor-model-architecture.md](TECH-vendor-model-architecture.md)

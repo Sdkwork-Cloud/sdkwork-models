@@ -6,8 +6,8 @@ members = [
   "crates/sdkwork-models-database-bootstrap",
   "crates/sdkwork-models-database-host",
   "crates/sdkwork-models-api-server",
-  "crates/sdkwork-router-catalog-app-api",
-  "crates/sdkwork-router-catalog-backend-api",
+  "crates/sdkwork-routes-catalog-app-api",
+  "crates/sdkwork-routes-catalog-backend-api",
   "sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust",
 ]
 resolver = "2"
@@ -40,5 +40,5 @@ sdkwork_models_catalog_repository_sqlx = { package = "sdkwork-models-catalog-rep
 sdkwork_models_catalog_service = { package = "sdkwork-models-catalog-service", path = "crates/sdkwork-models-catalog-service" }
 sdkwork_models_database_bootstrap = { package = "sdkwork-models-database-bootstrap", path = "crates/sdkwork-models-database-bootstrap" }
 sdkwork_models_database_host = { package = "sdkwork-models-database-host", path = "crates/sdkwork-models-database-host" }
-sdkwork_router_models_catalog_app_api = { package = "sdkwork-router-models-catalog-app-api", path = "crates/sdkwork-router-catalog-app-api" }
-sdkwork_router_models_catalog_backend_api = { package = "sdkwork-router-models-catalog-backend-api", path = "crates/sdkwork-router-catalog-backend-api" }
+sdkwork_routes_models_catalog_app_api = { package = "sdkwork-routes-models-catalog-app-api", path = "crates/sdkwork-routes-catalog-app-api" }
+sdkwork_routes_models_catalog_backend_api = { package = "sdkwork-routes-models-catalog-backend-api", path = "crates/sdkwork-routes-catalog-backend-api" }

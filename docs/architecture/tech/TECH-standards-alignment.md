@@ -16,7 +16,7 @@ This document records how `sdkwork-models` aligns with `sdkwork-specs` and the c
 | Application manifest | `sdkwork.app.config.json` |
 | PC application root | `apps/sdkwork-models-pc/` |
 | HTTP composition | `crates/sdkwork-models-api-server/` |
-| Route crates | `crates/sdkwork-router-catalog-{app,backend}-api/` |
+| Route crates | `crates/sdkwork-routes-catalog-{app,backend}-api/` |
 | Database module | `database/` (`sdkwork.database.module`) |
 | SDK families | `sdks/sdkwork-models-{app,backend}-sdk/` |
 
@@ -88,7 +88,7 @@ pnpm run verify
 From composed host (`sdkwork-clawrouter`):
 
 ```powershell
-cargo check -p sdkwork-router-backend-api -p sdkwork-clawrouter-router-service
+cargo check -p sdkwork-routes-clawrouter-backend-api -p sdkwork-clawrouter-router-service
 pnpm exec tsx admin-model-runtime.test.ts
 ```
 

@@ -1872,8 +1872,8 @@ dependencies = [
  "sdkwork-models-catalog-service",
  "sdkwork-models-contract-service",
  "sdkwork-models-database-host",
- "sdkwork-router-catalog-app-api",
- "sdkwork-router-catalog-backend-api",
+ "sdkwork-routes-catalog-app-api",
+ "sdkwork-routes-catalog-backend-api",
  "sdkwork-web-axum",
  "sdkwork-web-core",
  "serde_json",
@@ -1942,7 +1942,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sdkwork-router-catalog-app-api"
+name = "sdkwork-routes-catalog-app-api"
 version = "0.1.0"
 dependencies = [
  "axum",
@@ -1953,7 +1953,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sdkwork-router-catalog-backend-api"
+name = "sdkwork-routes-catalog-backend-api"
 version = "0.1.0"
 dependencies = [
  "axum",

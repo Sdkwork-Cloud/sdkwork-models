@@ -74,14 +74,14 @@ impl ModelsServiceHost {
     }
 
     pub async fn backend_router_with_framework(self: Arc<Self>) -> Router {
-        sdkwork_router_models_catalog_backend_api::wrap_router_with_web_framework_from_env(
+        sdkwork_routes_models_catalog_backend_api::wrap_router_with_web_framework_from_env(
             self.backend_router(),
         )
         .await
     }
 
     pub async fn app_router_with_framework(self: Arc<Self>) -> Router {
-        sdkwork_router_models_catalog_app_api::wrap_router_with_web_framework_from_env(self.app_router())
+        sdkwork_routes_models_catalog_app_api::wrap_router_with_web_framework_from_env(self.app_router())
             .await
     }
 

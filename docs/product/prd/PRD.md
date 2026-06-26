@@ -1,4 +1,5 @@
 # SDKWork Models PRD
+Specs: REQUIREMENTS_SPEC.md, DOCUMENTATION_SPEC.md
 
 Status: active  
 Owner: SDKWork maintainers  

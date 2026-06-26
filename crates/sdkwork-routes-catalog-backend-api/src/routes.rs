@@ -1,4 +1,4 @@
-//! Route registration descriptors for sdkwork-router-catalog-backend-api.
+//! Route registration descriptors for sdkwork-routes-catalog-backend-api.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RouteDefinition {

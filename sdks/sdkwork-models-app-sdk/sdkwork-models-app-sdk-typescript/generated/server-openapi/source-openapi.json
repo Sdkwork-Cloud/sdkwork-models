@@ -139,7 +139,7 @@
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
-        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": []
       }
@@ -223,7 +223,7 @@
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
-        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": []
       }
@@ -446,7 +446,7 @@
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
-        "x-sdkwork-source-route-crate": "sdkwork-router-catalog-app-api",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-catalog-app-api",
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
         "x-write-tables": []
       }

@@ -1,4 +1,4 @@
-//! Route crate for intelligence catalog backend API (`sdkwork-router-catalog-backend-api`).
+//! Route crate for intelligence catalog backend API (`sdkwork-routes-catalog-backend-api`).
 
 pub mod http_route_manifest;
 pub mod paths;

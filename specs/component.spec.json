@@ -129,7 +129,7 @@
     "configKeys": [
       "SDKWORK_MODELS_CATALOG_ROOT"
     ],
-    "routeManifest": "crates/sdkwork-router-catalog-backend-api/src/routes.rs"
+    "routeManifest": "crates/sdkwork-routes-catalog-backend-api/src/routes.rs"
   },
   "integration": {
     "authority": "Root SDKWork specs remain authoritative. Local specs may extend but must not contradict them.",

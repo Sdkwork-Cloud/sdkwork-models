@@ -6,8 +6,8 @@ capabilities:
     serviceCode: SDKWORK_MODELS
     databaseModuleId: sdkwork-models
     routeCrates:
-      app: sdkwork-router-catalog-app-api
-      backend: sdkwork-router-catalog-backend-api
+      app: sdkwork-routes-catalog-app-api
+      backend: sdkwork-routes-catalog-backend-api
     apiAuthorities:
       app: sdkwork-models-app-api
       backend: sdkwork-models-backend-api

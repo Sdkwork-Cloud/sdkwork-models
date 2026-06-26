@@ -1,5 +1,5 @@
 [package]
-name = "sdkwork-router-models-catalog-app-api"
+name = "sdkwork-routes-models-catalog-app-api"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"

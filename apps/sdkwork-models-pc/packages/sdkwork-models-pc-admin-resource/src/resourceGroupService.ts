@@ -11,7 +11,7 @@ import {
   readString,
   requiredSafePathSegment,
   type ApiRecord,
-} from '@sdkwork/clawrouter-pc-commons/runtime';
+} from '@sdkwork/clawroutes-pc-commons/runtime';
 import type {
   AdminAiResourceGroupCreateRequest,
   AdminAiResourceGroupMemberInput,

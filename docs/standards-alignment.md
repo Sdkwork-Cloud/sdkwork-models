@@ -46,7 +46,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 
 ## Composed Host Integration
 
-Claw Router mounts catalog routes locally. Admin PC packages (`sdkwork-models-pc-admin-*`) are **composed workspaces** requiring `@sdkwork/clawrouter-pc-commons` at runtime.
+Claw Router mounts catalog routes locally. Admin PC packages (`sdkwork-models-pc-admin-*`) are **composed workspaces** requiring `@sdkwork/clawroutes-pc-commons` at runtime.
 
 Standalone installs use `.npmrc` (`auto-install-peers=false`) so peer packages resolve from the composed host.
 
