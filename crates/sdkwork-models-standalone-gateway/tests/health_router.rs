@@ -1,7 +1,7 @@
 use axum::body::Body;
 use axum::http::{Request, StatusCode};
 use http_body_util::BodyExt;
-use sdkwork_models_api_server::models_health_router;
+use sdkwork_models_standalone_gateway::models_health_router;
 use tower::ServiceExt;
 
 #[tokio::test]

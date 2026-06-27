@@ -1,6 +1,6 @@
 use std::sync::OnceLock;
 
-use sdkwork_id_core::SnowflakeIdGenerator;
+use sdkwork_database_id::SnowflakeIdGenerator;
 
 use sdkwork_models_contract_service::{DomainError, DomainResult};
 

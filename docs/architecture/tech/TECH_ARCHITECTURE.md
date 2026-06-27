@@ -20,7 +20,7 @@ crates/
   catalog-service              → HTTP handlers, application services
   database-bootstrap           → Embedded DDL authority
   database-host                → sdkwork-database lifecycle bootstrap
-  api-server                   → Route composition + standalone binary
+  standalone-gateway             → Route composition + standalone binary
   router-catalog-{app,backend}-api → Route manifests + web framework
 sdks/                          → Generated @sdkwork/models-* SDK families
 apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
@@ -31,7 +31,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 | Mode | Ingress | Notes |
 | --- | --- | --- |
 | Composed | Claw Router backend/app routers | Primary production path |
-| Standalone | `sdkwork-models-api-server` | Declared in `specs/topology.spec.json` |
+| Standalone | `sdkwork-models-standalone-gateway` | Declared in `specs/topology.spec.json` |
 | Cloud | `sdkwork-api-cloud-gateway` + app upstream | `configs/sdkwork-api-cloud-gateway.models.*.toml` |
 
 ## 4. Security
@@ -51,7 +51,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 
 ```powershell
 pnpm run verify
-cargo check -p sdkwork-models-api-server
+cargo check -p sdkwork-models-standalone-gateway
 pnpm run topology:validate
 ```
 

@@ -86,11 +86,11 @@
   },
   "components": {
     "applicationServer": {
-      "crate": "sdkwork-models-api-server",
+      "crate": "sdkwork-models-standalone-gateway",
       "binary": "sdkwork-models-standalone-gateway"
     },
     "cloudGateway": {
-      "crate": "sdkwork-api-cloud-gateway-api-server",
+      "crate": "sdkwork-api-cloud-gateway",
       "binary": "sdkwork-api-cloud-gateway",
       "repository": "sdkwork-api-cloud-gateway",
       "configGlob": "configs/sdkwork-api-cloud-gateway.models.{profile}.toml"
@@ -102,7 +102,7 @@
         "processes": [
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-api-server",
+            "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
             "required": true
           }
@@ -115,14 +115,14 @@
         "processes": [
           {
             "id": "platform.api-gateway",
-            "crate": "sdkwork-api-cloud-gateway-api-server",
+            "crate": "sdkwork-api-cloud-gateway",
             "binary": "sdkwork-api-cloud-gateway",
             "repository": "sdkwork-api-cloud-gateway",
             "required": false
           },
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-api-server",
+            "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
             "required": true
           }
@@ -136,14 +136,14 @@
         "processes": [
           {
             "id": "platform.api-gateway",
-            "crate": "sdkwork-api-cloud-gateway-api-server",
+            "crate": "sdkwork-api-cloud-gateway",
             "binary": "sdkwork-api-cloud-gateway",
             "repository": "sdkwork-api-cloud-gateway",
             "required": false
           },
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-api-server",
+            "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
             "required": true
           }

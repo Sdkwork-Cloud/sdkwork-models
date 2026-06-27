@@ -15,7 +15,7 @@ This document records how `sdkwork-models` aligns with `sdkwork-specs` and the c
 | Capability | `catalog` |
 | Application manifest | `sdkwork.app.config.json` |
 | PC application root | `apps/sdkwork-models-pc/` |
-| HTTP composition | `crates/sdkwork-models-api-server/` |
+| HTTP composition | `crates/sdkwork-models-standalone-gateway/` |
 | Route crates | `crates/sdkwork-routes-catalog-{app,backend}-api/` |
 | Database module | `database/` (`sdkwork.database.module`) |
 | SDK families | `sdks/sdkwork-models-{app,backend}-sdk/` |
@@ -52,7 +52,7 @@ Gateway-owned surfaces remain in Claw Router:
 | Path | Purpose |
 | --- | --- |
 | `apis/` | Authoritative OpenAPI for intelligence catalog app/backend |
-| `crates/` | Service, repository, route, api-server, database-bootstrap |
+| `crates/` | Service, repository, route, standalone-gateway, database-bootstrap |
 | `database/` | Module manifest, baselines, migrations, seeds, drift policy |
 | `sdks/` | Generated `@sdkwork/models-{app,backend}-sdk` families |
 | `apps/sdkwork-models-pc/` | Catalog browser + admin-catalog packages |

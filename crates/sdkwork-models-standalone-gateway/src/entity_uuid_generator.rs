@@ -1,4 +1,4 @@
-use sdkwork_id_core::uuid_v4;
+use sdkwork_database_id::uuid_v4;
 use sdkwork_models_contract_service::{DomainResult, EntityUuidGenerator};
 
 #[derive(Debug, Default, Clone, Copy)]

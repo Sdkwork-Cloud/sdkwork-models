@@ -1,5 +1,5 @@
 [package]
-name = "sdkwork-models-api-server"
+name = "sdkwork-models-standalone-gateway"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
@@ -9,7 +9,7 @@ description = "SDKWork canonical intelligence catalog HTTP route composition for
 path = "src/lib.rs"
 
 [[bin]]
-name = "sdkwork-models-api-server"
+name = "sdkwork-models-standalone-gateway"
 path = "src/main.rs"
 
 [dependencies]
@@ -21,7 +21,7 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "net"] }
 tower-http = { version = "0.5", features = ["cors"] }
 tracing.workspace = true
 tracing-subscriber = "0.3"
-sdkwork-id-core.workspace = true
+sdkwork-database-id.workspace = true
 sdkwork_models_catalog_service.workspace = true
 sdkwork_models_catalog_repository_sqlx.workspace = true
 sdkwork_models_contract_service.workspace = true
@@ -39,6 +39,3 @@ http-body-util = "0.1"
 tokio = { version = "1.51", features = ["macros", "rt-multi-thread"] }
 tower = { version = "0.5", features = ["util"] }
 
-[[bin]]
-name = "sdkwork-models-standalone-gateway"
-path = "src/main.rs"

@@ -5,7 +5,7 @@ members = [
   "crates/sdkwork-models-catalog-service",
   "crates/sdkwork-models-database-bootstrap",
   "crates/sdkwork-models-database-host",
-  "crates/sdkwork-models-api-server",
+  "crates/sdkwork-models-standalone-gateway",
   "crates/sdkwork-routes-catalog-app-api",
   "crates/sdkwork-routes-catalog-backend-api",
   "sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust",
@@ -29,7 +29,7 @@ sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio
 tokio = { version = "1.51", features = ["macros", "rt-multi-thread"] }
 tracing = "0.1"
 sdkwork-claw-http = { path = "../sdkwork-clawrouter/crates/sdkwork-claw-http" }
-sdkwork-id-core = { path = "../sdkwork-id/crates/sdkwork-id-core" }
+sdkwork-database-id = { path = "../sdkwork-database/crates/sdkwork-database-id", package = "sdkwork-database-id" }
 sdkwork-utils-rust = { path = "../sdkwork-utils/packages/sdkwork-utils-rust" }
 sdkwork-web-core = { path = "../sdkwork-web-framework/crates/sdkwork-web-core" }
 sdkwork-web-axum = { path = "../sdkwork-web-framework/crates/sdkwork-web-axum" }

@@ -11,7 +11,7 @@ path = "src/lib.rs"
 [dependencies]
 sdkwork-models.workspace = true
 sdkwork_models_contract_service.workspace = true
-sdkwork-id-core.workspace = true
+sdkwork-database-id.workspace = true
 hex.workspace = true
 serde = { version = "1.0", features = ["derive"] }
 serde_json.workspace = true

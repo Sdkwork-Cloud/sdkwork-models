@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::Router;
-use sdkwork_models_api_server::ModelsServiceHost;
+use sdkwork_models_standalone_gateway::ModelsServiceHost;
 use tower_http::cors::CorsLayer;
 use tracing::info;
 
@@ -28,13 +28,13 @@ async fn main() {
 
     let addr = std::env::var("SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND")
         .unwrap_or_else(|_| "127.0.0.1:8080".to_owned());
-    info!(%addr, "starting sdkwork-models-api-server");
+    info!(%addr, "starting sdkwork-models-standalone-gateway");
     let listener = tokio::net::TcpListener::bind(&addr)
         .await
-        .expect("bind sdkwork-models-api-server listener");
+        .expect("bind sdkwork-models-standalone-gateway listener");
     axum::serve(listener, app)
         .await
-        .expect("serve sdkwork-models-api-server");
+        .expect("serve sdkwork-models-standalone-gateway");
 }
 
 fn iam_enabled() -> bool {

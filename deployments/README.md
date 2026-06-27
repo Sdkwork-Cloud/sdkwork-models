@@ -6,8 +6,8 @@
 
 | Profile | Process | Binary |
 | --- | --- | --- |
-| `standalone.unified-process.*` | Application ingress | `sdkwork-models-api-server` |
-| `cloud.split-services.*` | Application ingress + optional cloud gateway | `sdkwork-models-api-server` + `sdkwork-api-cloud-gateway` |
+| `standalone.unified-process.*` | Application ingress | `sdkwork-models-standalone-gateway` |
+| `cloud.split-services.*` | Application ingress + optional cloud gateway | `sdkwork-models-standalone-gateway` + `sdkwork-api-cloud-gateway` |
 
 ## Bootstrap
 

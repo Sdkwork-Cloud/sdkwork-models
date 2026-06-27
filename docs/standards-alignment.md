@@ -15,8 +15,8 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Domain / capability | `intelligence` / `catalog` |
 | Archetype | `composed-product-module` with standalone HTTP server |
 | PC root | `apps/sdkwork-models-pc/` |
-| HTTP composition | `crates/sdkwork-models-api-server/` |
-| Standalone binary | `sdkwork-models-api-server` |
+| HTTP composition | `crates/sdkwork-models-standalone-gateway/` |
+| Standalone binary | `sdkwork-models-standalone-gateway` |
 | Database module | `database/` (`sdkwork.database.module`) |
 
 ## Framework Integration
@@ -36,7 +36,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Catalog JSON authority | Aligned | `pnpm run check` validates index, schema, freshness, audit, release gate |
 | Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
 | App read API | Aligned | App route manifest + `require_subject: true` for rankings |
-| Standalone runtime | Aligned | `sdkwork-models-api-server` binary; topology `applicationServer.binary` matches |
+| Standalone runtime | Aligned | `sdkwork-models-standalone-gateway` binary; topology `applicationServer.binary` matches |
 | Readiness probe | Aligned | `/readyz` probes DB; errors are logged server-side only |
 | Gateway production template | Aligned | Restricted CORS, upstream readiness checks, metrics/tracing enabled |
 | CI dependency closure | Aligned | `.github/workflows/verify.yml` checks out `sdkwork-iam` |
@@ -56,7 +56,7 @@ Standalone installs use `.npmrc` (`auto-install-peers=false`) so peer packages r
 pnpm install
 pnpm run route-manifest:check
 pnpm run db:validate
-cargo check -p sdkwork-models-api-server
+cargo check -p sdkwork-models-standalone-gateway
 pnpm run verify
 ```
 

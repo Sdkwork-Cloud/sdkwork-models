@@ -21,7 +21,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 - Authoritative catalog JSON with verification gates
 - Multi-tenant admin HTTP API with IAM enforcement
 - App read API for authenticated catalog consumers
-- Standalone deployable `sdkwork-models-api-server` binary
+- Standalone deployable `sdkwork-models-standalone-gateway` binary
 - Generated TypeScript/Rust/Java/Python/Dart SDK families
 
 ## 4. Non-Goals
@@ -35,7 +35,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 - `pnpm run verify` passes on every merge
 - OpenAPI authority matches composed host export (`models_openapi_export.mjs --check`)
 - Route manifest tests pass for app and backend crates
-- Standalone topology can start `sdkwork-models-api-server`
+- Standalone topology can start `sdkwork-models-standalone-gateway`
 
 ## 6. Phases
 
@@ -43,7 +43,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 | --- | --- | --- |
 | P0 | Catalog data + validation pipeline | Complete |
 | P1 | Backend admin API + IAM | Complete |
-| P2 | Standalone api-server + app-api web framework | Complete |
+| P2 | Standalone gateway + app-api web framework | Complete |
 | P3 | Full PC application shell per APP_PC_ARCHITECTURE_SPEC | In progress |
 | P4 | SBOM/signing release gate | Planned |
 
