@@ -1,11 +1,11 @@
-import type { ModelRankingRefreshJobHistoryPage } from './model-ranking-refresh-job-history-page';
+import type { NoData } from './no-data';
 
 /** Model rankings jobs list result schema exposed by Claw Router. */
 export interface ModelRankingsJobsListResult {
   /** Business response code. */
   code: string;
-  /** Data field on model rankings jobs list result. */
-  data?: ModelRankingRefreshJobHistoryPage;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }

@@ -11,6 +11,7 @@ path = "src/lib.rs"
 [dependencies]
 axum.workspace = true
 bytes.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 getrandom.workspace = true
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -19,4 +20,5 @@ sdkwork-claw-http.workspace = true
 sdkwork_models_contract_service.workspace = true
 sdkwork_models_catalog_repository_sqlx.workspace = true
 sdkwork-utils-rust.workspace = true
+sdkwork-web-core.workspace = true
 tracing.workspace = true

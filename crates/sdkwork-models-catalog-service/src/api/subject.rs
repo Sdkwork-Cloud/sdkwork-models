@@ -1,9 +1,8 @@
 use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
-use axum::Json;
+use axum::response::Response;
 use sdkwork_claw_http::{TrustedRequestSubject, TrustedRequestSubjectError};
 
-use crate::api::response::PlusApiResult;
+use crate::api::response::legacy_problem;
 
 #[derive(Debug, Clone, Copy)]
 pub struct AdminOperatorFields {
@@ -49,14 +48,11 @@ pub fn map_optional_app_user_subject<T>(
 }
 
 pub fn unauthorized_subject_response() -> Response {
-    (
+    legacy_problem(
         StatusCode::UNAUTHORIZED,
-        Json(PlusApiResult::<()>::error(
-            "4010",
-            TrustedRequestSubjectError::MissingExtension.to_string(),
-        )),
+        "4010",
+        TrustedRequestSubjectError::MissingExtension.to_string(),
     )
-        .into_response()
 }
 
 pub fn required_subject(
@@ -107,7 +103,8 @@ mod tests {
             .await
             .expect("body");
         let payload: serde_json::Value = serde_json::from_slice(&body).expect("json");
-        assert_eq!(payload["code"], "4010");
+        assert_eq!(payload["code"], 40101);
+        assert_eq!(payload["traceId"].as_str().is_some(), true);
     }
 
     #[test]

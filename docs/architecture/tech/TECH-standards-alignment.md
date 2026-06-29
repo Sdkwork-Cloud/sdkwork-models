@@ -1,7 +1,7 @@
-> Migrated from `docs/standards-alignment.md` on 2026-06-24.
-> Owner: SDKWork maintainers
-
 # SDKWork Standards Alignment
+
+Owner: SDKWork maintainers  
+Updated: 2026-06-29
 
 This document records how `sdkwork-models` aligns with `sdkwork-specs` and the commerce/appstore composed-module reference.
 
@@ -25,15 +25,32 @@ This document records how `sdkwork-models` aligns with `sdkwork-specs` and the c
 | Framework | Required? | Status | Notes |
 | --- | --- | --- | --- |
 | `sdkwork-specs` | Yes | Aligned | `AGENTS.md`, `specs/`, `docs/` |
-| `sdkwork-utils` | Yes | Aligned | Catalog tools and PC core use `@sdkwork/utils` |
-| `sdkwork-web-framework` | Yes | Aligned | Route manifests + IAM web adapter in route crates |
+| `sdkwork-utils` | Yes | Aligned | `catalog_time` + handler envelopes use `sdkwork-utils-rust`; tools/PC use `@sdkwork/utils` |
+| `sdkwork-web-framework` | Yes | Aligned | Route manifests + IAM web adapter; `SdkWorkApiResponse` wire format |
 | `sdkwork-database` | Yes | Aligned | L2 module with postgres/sqlite baselines, migrations/, seeds/ |
 | `sdkwork-sdk-generator` | Yes | Aligned | `pnpm run openapi:export` + `sdk:generate` |
 | `sdkwork-discovery` | No | Deferred | No RPC services in this repository |
+| `sdkwork-drive` | No | N/A | No file-upload surfaces |
+
+## HTTP API Envelope
+
+All app-api and backend-api operations follow `API_SPEC.md` section 15:
+
+- Success: `SdkWorkApiResponse` with numeric `code: 0`, typed `data`, and `traceId`
+- Errors: HTTP 4xx/5xx with `application/problem+json` (`ProblemDetail`)
+- OpenAPI export applies `migrateOpenApiDocument` before materialization
+- `pnpm run check` runs `check-api-response-envelope.mjs`
+
+## Security
+
+- Application ingress CORS is allowlist-driven via `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS` (see `application_cors_layer` in standalone gateway).
+- Production defaults: `https://models.sdkwork.com`, `https://admin.sdkwork.com`.
+- Development defaults: local Vite/API origins on `localhost` / `127.0.0.1`.
+- Emergency local-only override: `SDKWORK_MODELS_CORS_ALLOW_ANY=true` (not for production).
 
 ## Composed Host Integration
 
-Claw Router (`sdkwork-clawrouter`) mounts catalog routes locally and declares dependency surfaces in `specs/dependency-api-surfaces.json`:
+Claw Router (`sdkwork-clawrouter`) mounts catalog routes locally and declares dependency surfaces in composed host specs:
 
 | Surface | SDK family | Mount mode |
 | --- | --- | --- |
@@ -66,7 +83,7 @@ Gateway-owned surfaces remain in Claw Router:
 | `pnpm build` | Regenerate catalog indexes, build SDK and PC app |
 | `pnpm test` | TypeScript SDK, PC typecheck, and Rust workspace tests |
 | `pnpm test:rust` | Rust workspace tests |
-| `pnpm check` | Catalog validation and release gate |
+| `pnpm check` | Catalog validation, OpenAPI drift, API envelope gate |
 | `pnpm verify` | `check` plus tests |
 | `pnpm openapi:export` | Extract owner-only OpenAPI from composed host authority |
 | `pnpm openapi:materialize` | Copy OpenAPI into SDK family inputs |
@@ -92,5 +109,4 @@ cargo check -p sdkwork-routes-clawrouter-backend-api -p sdkwork-clawrouter-route
 pnpm exec tsx admin-model-runtime.test.ts
 ```
 
-Expected result: route manifests match handlers, database module validates, Rust workspace compiles, catalog checks pass, PC admin runtime tests pass.
-
+Expected result: route manifests match handlers, database module validates, Rust workspace compiles, catalog checks pass, API envelope check passes, PC admin runtime tests pass.

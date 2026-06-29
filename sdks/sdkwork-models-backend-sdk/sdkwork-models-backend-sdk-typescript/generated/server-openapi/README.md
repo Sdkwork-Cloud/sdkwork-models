@@ -27,7 +27,7 @@ client.setAuthToken('your-auth-token');
 client.setAccessToken('your-access-token');
 
 // Use the SDK
-const result = await client.ai.modelVendors.list();
+const result = await client.ai.modelMappings.list();
 ```
 
 ## Authentication
@@ -61,8 +61,8 @@ const client = new SdkworkBackendClient({
 ### ai
 
 ```typescript
-// List vendors
-const result = await client.ai.modelVendors.list();
+// List
+const result = await client.ai.modelMappings.list();
 ```
 
 ## Error Handling
@@ -71,7 +71,7 @@ const result = await client.ai.modelVendors.list();
 import { SdkworkBackendClient, NetworkError, TimeoutError, AuthenticationError } from 'sdkwork-models-backend-sdk-generated-typescript';
 
 try {
-  const result = await client.ai.modelVendors.list();
+  const result = await client.ai.modelMappings.list();
 } catch (error) {
   if (error instanceof AuthenticationError) {
     console.error('Authentication failed:', error.message);

@@ -9,7 +9,7 @@ use axum::{Json, Router};
 use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
 
-use crate::api::response::PlusApiResult;
+use crate::api::response::{legacy_problem, ApiResponse};
 use crate::api::subject::map_optional_app_user_subject;
 use crate::application::{
     ModelRankingRefreshWorker, ModelRankingRefreshWorkerConfig,
@@ -185,27 +185,21 @@ async fn trigger_model_ranking_refresh(
 ) -> Response {
     let subject = map_rankings_subject(trusted);
     let Some(refresh_store) = state.refresh_store.clone() else {
-        return (
+        return legacy_problem(
             StatusCode::SERVICE_UNAVAILABLE,
-            Json(PlusApiResult::error(
-                "5030",
-                "model ranking refresh store is not configured",
-            )),
-        )
-            .into_response();
+            "5030",
+            "model ranking refresh store is not configured",
+        );
     };
     let refresh_guard =
         match ManualRefreshRunningGuard::acquire(Arc::clone(&state.manual_refresh_running)) {
             Ok(guard) => guard,
             Err(()) => {
-                return (
+                return legacy_problem(
                     StatusCode::CONFLICT,
-                    Json(PlusApiResult::error(
-                        "4090",
-                        "model ranking refresh is already running",
-                    )),
-                )
-                    .into_response();
+                    "4090",
+                    "model ranking refresh is already running",
+                );
             }
         };
 
@@ -220,11 +214,9 @@ async fn trigger_model_ranking_refresh(
                     organization_id: subject.organization_id,
                     rank_scope: Some(result.rank_scope.clone()),
                 });
-            Json(PlusApiResult::success(result)).into_response()
+            Json(ApiResponse::success(result)).into_response()
         }
-        Err((status, code, message)) => {
-            (status, Json(PlusApiResult::error(code, message))).into_response()
-        }
+        Err((status, code, message)) => legacy_problem(status, code, message),
     }
 }
 
@@ -257,14 +249,13 @@ async fn fetch_model_ranking_jobs(
 
     let limit = query.limit.unwrap_or(DEFAULT_JOB_HISTORY_LIMIT);
     if !(1..=MAX_JOB_HISTORY_LIMIT).contains(&limit) {
-        return (
+        return legacy_problem(
             StatusCode::BAD_REQUEST,
-            Json(PlusApiResult::error(
-                "4001",
-                format!("model ranking refresh job history limit must be between 1 and {MAX_JOB_HISTORY_LIMIT}"),
-            )),
-        )
-            .into_response();
+            "4001",
+            format!(
+                "model ranking refresh job history limit must be between 1 and {MAX_JOB_HISTORY_LIMIT}"
+            ),
+        );
     }
 
     let query = ModelRankingRefreshJobHistoryQuery {
@@ -277,15 +268,12 @@ async fn fetch_model_ranking_jobs(
         .load_model_ranking_refresh_jobs(query, subject)
         .await
     {
-        Ok(page) => Json(PlusApiResult::success(page)).into_response(),
-        Err(error) => (
+        Ok(page) => Json(ApiResponse::success(page)).into_response(),
+        Err(error) => legacy_problem(
             StatusCode::SERVICE_UNAVAILABLE,
-            Json(PlusApiResult::error(
-                "5030",
-                format!("model ranking refresh job history read model is unavailable: {error}"),
-            )),
-        )
-            .into_response(),
+            "5030",
+            format!("model ranking refresh job history read model is unavailable: {error}"),
+        ),
     }
 }
 
@@ -308,15 +296,12 @@ async fn fetch_model_ranking_status(
         .load_model_ranking_refresh_status(query, subject)
         .await
     {
-        Ok(status) => Json(PlusApiResult::success(status)).into_response(),
-        Err(error) => (
+        Ok(status) => Json(ApiResponse::success(status)).into_response(),
+        Err(error) => legacy_problem(
             StatusCode::SERVICE_UNAVAILABLE,
-            Json(PlusApiResult::error(
-                "5030",
-                format!("model ranking refresh status read model is unavailable: {error}"),
-            )),
-        )
-            .into_response(),
+            "5030",
+            format!("model ranking refresh status read model is unavailable: {error}"),
+        ),
     }
 }
 
@@ -332,25 +317,16 @@ async fn fetch_model_rankings(
 
     let query = match validate_query(query) {
         Ok(query) => query,
-        Err(message) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json(PlusApiResult::error("4001", message)),
-            )
-                .into_response();
-        }
+        Err(message) => return legacy_problem(StatusCode::BAD_REQUEST, "4001", message),
     };
 
     match state.read_store.load_model_rankings(query, subject).await {
-        Ok(snapshot) => Json(PlusApiResult::success(snapshot)).into_response(),
-        Err(error) => (
+        Ok(snapshot) => Json(ApiResponse::success(snapshot)).into_response(),
+        Err(error) => legacy_problem(
             StatusCode::SERVICE_UNAVAILABLE,
-            Json(PlusApiResult::error(
-                "5030",
-                format!("model rankings read model is unavailable: {error}"),
-            )),
-        )
-            .into_response(),
+            "5030",
+            format!("model rankings read model is unavailable: {error}"),
+        ),
     }
 }
 

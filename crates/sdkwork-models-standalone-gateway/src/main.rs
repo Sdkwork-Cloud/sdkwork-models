@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use axum::Router;
 use sdkwork_models_standalone_gateway::ModelsServiceHost;
-use tower_http::cors::CorsLayer;
+use sdkwork_models_standalone_gateway::application_cors_layer;
 use tracing::info;
 
 #[tokio::main]
@@ -10,7 +10,6 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     if iam_enabled() {
-        sdkwork_iam_web_adapter::prime_signing_master_secret();
         info!("IAM session resolution enabled");
     }
 
@@ -24,7 +23,7 @@ async fn main() {
         .merge(host.health_router())
         .merge(host.clone().app_router_with_framework().await)
         .merge(host.backend_router_with_framework().await)
-        .layer(CorsLayer::permissive());
+        .layer(application_cors_layer());
 
     let addr = std::env::var("SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND")
         .unwrap_or_else(|_| "127.0.0.1:8080".to_owned());

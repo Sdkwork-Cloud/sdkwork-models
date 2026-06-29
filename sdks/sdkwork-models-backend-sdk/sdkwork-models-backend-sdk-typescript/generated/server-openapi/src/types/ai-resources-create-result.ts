@@ -1,11 +1,11 @@
-import type { AdminAiResourceMutationResponse } from './admin-ai-resource-mutation-response';
+import type { NoData } from './no-data';
 
 /** Ai resources create result schema exposed by Claw Router. */
 export interface AiResourcesCreateResult {
   /** Business response code. */
   code: string;
-  /** Data field on ai resources create result. */
-  data?: AdminAiResourceMutationResponse;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }

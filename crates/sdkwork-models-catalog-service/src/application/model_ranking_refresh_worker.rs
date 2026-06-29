@@ -1,9 +1,13 @@
 use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
 use std::sync::Arc;
-use std::time::{Instant, SystemTime, UNIX_EPOCH};
+use std::time::Instant;
 
 use tokio::time::{timeout, Duration};
 
+use crate::catalog_time::{
+    add_seconds_to_sql_timestamp, current_unix_seconds, date_string_from_unix_seconds,
+    iso_timestamp_from_unix, sql_timestamp_from_unix, sql_timestamp_now, start_of_day_unix_seconds,
+};
 use crate::domain::DomainResult;
 use crate::ports::{
     normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
@@ -180,11 +184,11 @@ impl ModelRankingRefreshWorker {
     fn build_command(&self) -> ModelRankingRefreshCommand {
         let now = current_unix_seconds();
         let snapshot_date = date_string_from_unix_seconds(now);
-        let window_end = format_iso_timestamp(days_from_unix_seconds(now) * 86_400);
-        let window_start = format_iso_timestamp(
-            (days_from_unix_seconds(now) - self.config.lookback_days) * 86_400,
+        let window_end = iso_timestamp_from_unix(start_of_day_unix_seconds(now));
+        let window_start = iso_timestamp_from_unix(
+            start_of_day_unix_seconds(now) - self.config.lookback_days * 86_400,
         );
-        let requested_at = format_sql_timestamp(now);
+        let requested_at = sql_timestamp_from_unix(now);
 
         ModelRankingRefreshCommand {
             tenant_id: self.config.tenant_id,
@@ -317,7 +321,7 @@ fn success_audit_command(
         window_start: outcome.window_start.clone(),
         window_end: outcome.window_end.clone(),
         started_at: started_at.to_owned(),
-        ended_at: current_timestamp_string(),
+        ended_at: sql_timestamp_now(),
         duration_ms: run_started.elapsed().as_millis().min(i64::MAX as u128) as i64,
         refresh_interval_seconds: command.refresh_interval_seconds,
         cache_max_age_seconds: command.cache_max_age_seconds,
@@ -356,7 +360,7 @@ fn failure_audit_command(
         window_start: command.window_start.clone(),
         window_end: command.window_end.clone(),
         started_at: started_at.to_owned(),
-        ended_at: current_timestamp_string(),
+        ended_at: sql_timestamp_now(),
         duration_ms: run_started.elapsed().as_millis().min(i64::MAX as u128) as i64,
         refresh_interval_seconds: command.refresh_interval_seconds,
         cache_max_age_seconds: command.cache_max_age_seconds,
@@ -379,7 +383,7 @@ fn failure_audit_command(
 }
 
 fn skipped_audit_command(command: &ModelRankingRefreshCommand) -> ModelRankingRefreshAuditCommand {
-    let now = current_timestamp_string();
+    let now = sql_timestamp_now();
     ModelRankingRefreshAuditCommand {
         job_name: JOB_NAME.to_owned(),
         status: "skipped".to_owned(),
@@ -447,84 +451,4 @@ fn normalize_trigger_type(value: i64) -> i64 {
         MODEL_RANKING_REFRESH_TRIGGER_MANUAL => MODEL_RANKING_REFRESH_TRIGGER_MANUAL,
         _ => MODEL_RANKING_REFRESH_TRIGGER_SCHEDULED,
     }
-}
-
-fn current_timestamp_string() -> String {
-    format_sql_timestamp(current_unix_seconds())
-}
-
-fn add_seconds_to_sql_timestamp(value: &str, seconds: i64) -> String {
-    let Some(base_seconds) = parse_sql_timestamp_to_seconds(value) else {
-        return String::new();
-    };
-    format_iso_timestamp(base_seconds + seconds.max(1))
-}
-
-fn parse_sql_timestamp_to_seconds(value: &str) -> Option<i64> {
-    let timestamp = value.trim().trim_end_matches('Z');
-    if timestamp.len() < 19 {
-        return None;
-    }
-    let year = timestamp[0..4].parse::<i64>().ok()?;
-    let month = timestamp[5..7].parse::<i64>().ok()?;
-    let day = timestamp[8..10].parse::<i64>().ok()?;
-    let hour = timestamp[11..13].parse::<i64>().ok()?;
-    let minute = timestamp[14..16].parse::<i64>().ok()?;
-    let second = timestamp[17..19].parse::<i64>().ok()?;
-    Some(days_from_civil(year, month, day) * 86_400 + hour * 3_600 + minute * 60 + second)
-}
-
-fn days_from_civil(year: i64, month: i64, day: i64) -> i64 {
-    let year = year - if month <= 2 { 1 } else { 0 };
-    let era = if year >= 0 { year } else { year - 399 } / 400;
-    let yoe = year - era * 400;
-    let month_prime = month + if month > 2 { -3 } else { 9 };
-    let doy = (153 * month_prime + 2) / 5 + day - 1;
-    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
-    era * 146_097 + doe - 719_468
-}
-
-fn current_unix_seconds() -> i64 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_secs() as i64
-}
-
-fn days_from_unix_seconds(seconds: i64) -> i64 {
-    seconds.div_euclid(86_400)
-}
-
-fn date_string_from_unix_seconds(seconds: i64) -> String {
-    let (year, month, day) = civil_from_days(days_from_unix_seconds(seconds));
-    format!("{year:04}-{month:02}-{day:02}")
-}
-
-fn format_sql_timestamp(seconds: i64) -> String {
-    let days = seconds.div_euclid(86_400);
-    let seconds_of_day = seconds.rem_euclid(86_400);
-    let (year, month, day) = civil_from_days(days);
-    let hour = seconds_of_day / 3_600;
-    let minute = (seconds_of_day % 3_600) / 60;
-    let second = seconds_of_day % 60;
-    format!("{year:04}-{month:02}-{day:02} {hour:02}:{minute:02}:{second:02}")
-}
-
-fn format_iso_timestamp(seconds: i64) -> String {
-    let sql = format_sql_timestamp(seconds);
-    format!("{}T{}Z", &sql[0..10], &sql[11..19])
-}
-
-fn civil_from_days(days: i64) -> (i64, i64, i64) {
-    let z = days + 719_468;
-    let era = if z >= 0 { z } else { z - 146_096 } / 146_097;
-    let doe = z - era * 146_097;
-    let yoe = (doe - doe / 1_460 + doe / 36_524 - doe / 146_096) / 365;
-    let y = yoe + era * 400;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2) / 153;
-    let d = doy - (153 * mp + 2) / 5 + 1;
-    let m = mp + if mp < 10 { 3 } else { -9 };
-    let year = y + if m <= 2 { 1 } else { 0 };
-    (year, m, d)
 }

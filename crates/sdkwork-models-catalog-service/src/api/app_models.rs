@@ -8,7 +8,7 @@ use axum::routing::get;
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 
-use crate::api::response::PlusApiResult;
+use crate::api::response::{legacy_problem, ApiResponse};
 use crate::application::{
     ListModelCatalogQuery, ModelCatalogGroup, ModelCatalogItem, ModelCatalogPage,
     ModelCatalogQueryService, PriceAvailability,
@@ -145,7 +145,7 @@ async fn fetch_model_vendors<C>(State(state): State<AppModelCatalogState<C>>) ->
 where
     C: PricingCatalog + Send + Sync + 'static,
 {
-    Json(PlusApiResult::success(to_vendor_response(
+    Json(ApiResponse::success(to_vendor_response(
         state.catalog.as_ref(),
     )))
     .into_response()
@@ -178,12 +178,8 @@ where
         limit: query.limit,
         offset: query.offset,
     }) {
-        Ok(page) => Json(PlusApiResult::success(to_response(page))).into_response(),
-        Err(error) => (
-            StatusCode::BAD_REQUEST,
-            Json(PlusApiResult::error("4001", error.to_string())),
-        )
-            .into_response(),
+        Ok(page) => Json(ApiResponse::success(to_response(page))).into_response(),
+        Err(error) => legacy_problem(StatusCode::BAD_REQUEST, "4001", error.to_string()),
     }
 }
 

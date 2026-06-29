@@ -11,7 +11,7 @@ use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
 
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
-use crate::api::response::PlusApiResult;
+use crate::api::response::{legacy_problem, ApiResponse};
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -295,7 +295,7 @@ async fn fetch_ai_resources(
         .list_ai_resources(ListAdminAiResourcesQuery { subject })
         .await
     {
-        Ok(items) => Json(PlusApiResult::success(AdminAiResourcesResponse {
+        Ok(items) => Json(ApiResponse::success(AdminAiResourcesResponse {
             items: items.into_iter().map(to_item_response).collect(),
         }))
         .into_response(),
@@ -315,7 +315,7 @@ async fn fetch_ai_resource_groups(
         .list_ai_resource_groups(ListAdminAiResourceGroupsQuery { subject })
         .await
     {
-        Ok(items) => Json(PlusApiResult::success(AdminAiResourceGroupsResponse {
+        Ok(items) => Json(ApiResponse::success(AdminAiResourceGroupsResponse {
             items: items.into_iter().map(to_group_response).collect(),
         }))
         .into_response(),
@@ -345,7 +345,7 @@ async fn fetch_ai_resource_group_resources(
         })
         .await
     {
-        Ok(items) => Json(PlusApiResult::success(
+        Ok(items) => Json(ApiResponse::success(
             AdminAiResourceGroupResourcesResponse {
                 items: items.into_iter().map(to_group_resource_response).collect(),
             },
@@ -376,7 +376,7 @@ async fn create_ai_resource(
     };
 
     match state.store.create_ai_resource(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminAiResourceItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminAiResourceItemEnvelope {
             item: to_item_response(item),
         }))
         .into_response(),
@@ -406,7 +406,7 @@ async fn create_ai_resource_group(
     };
 
     match state.store.create_ai_resource_group(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminAiResourceGroupItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminAiResourceGroupItemEnvelope {
             item: to_group_response(item),
         }))
         .into_response(),
@@ -441,7 +441,7 @@ async fn update_ai_resource_group(
     };
 
     match state.store.update_ai_resource_group(command).await {
-        Ok(Some(item)) => Json(PlusApiResult::success(AdminAiResourceGroupItemEnvelope {
+        Ok(Some(item)) => Json(ApiResponse::success(AdminAiResourceGroupItemEnvelope {
             item: to_group_response(item),
         }))
         .into_response(),
@@ -471,7 +471,7 @@ async fn delete_ai_resource_group(
     };
 
     match state.store.delete_ai_resource_group(command).await {
-        Ok(deleted) => Json(PlusApiResult::success(AdminAiResourceGroupDeleteResponse {
+        Ok(deleted) => Json(ApiResponse::success(AdminAiResourceGroupDeleteResponse {
             deleted,
         }))
         .into_response(),
@@ -505,7 +505,7 @@ async fn update_ai_resource(
     };
 
     match state.store.update_ai_resource(command).await {
-        Ok(Some(item)) => Json(PlusApiResult::success(AdminAiResourceItemEnvelope {
+        Ok(Some(item)) => Json(ApiResponse::success(AdminAiResourceItemEnvelope {
             item: to_item_response(item),
         }))
         .into_response(),
@@ -1159,27 +1159,15 @@ fn command_build_error_response(error: AiResourceCommandBuildError) -> Response 
 }
 
 fn bad_request(message: String) -> Response {
-    (
-        StatusCode::BAD_REQUEST,
-        Json(PlusApiResult::error("4001", message)),
-    )
-        .into_response()
+    legacy_problem(StatusCode::BAD_REQUEST, "4001", message)
 }
 
 fn not_found_response(message: impl Into<String>) -> Response {
-    (
-        StatusCode::NOT_FOUND,
-        Json(PlusApiResult::error("4040", message.into())),
-    )
-        .into_response()
+    legacy_problem(StatusCode::NOT_FOUND, "4040", message.into())
 }
 
 fn conflict_response(error: DomainError) -> Response {
-    (
-        StatusCode::CONFLICT,
-        Json(PlusApiResult::error("4090", error.to_string())),
-    )
-        .into_response()
+    legacy_problem(StatusCode::CONFLICT, "4090", error.to_string())
 }
 
 fn current_timestamp_string() -> String {
@@ -1216,9 +1204,9 @@ fn civil_from_days(days: i64) -> (i64, i64, i64) {
 }
 
 fn ai_resource_system_response(context: &str, error: DomainError) -> Response {
-    (
+    legacy_problem(
         StatusCode::INTERNAL_SERVER_ERROR,
-        Json(PlusApiResult::error("5000", format!("{context}: {error}"))),
+        "5000",
+        format!("{context}: {error}"),
     )
-        .into_response()
 }

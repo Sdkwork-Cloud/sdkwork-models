@@ -1505,6 +1505,16 @@ pub(crate) fn stable_uuid(prefix: &str, parts: &[&str]) -> String {
     format!("{prefix}-{}", &digest[..40])
 }
 
+pub(crate) fn catalog_sync_run_uuid(snapshot_uuid: &str) -> String {
+    const MAX_LEN: usize = 64;
+    let prefixed = format!("catalog-sync-{snapshot_uuid}");
+    if prefixed.len() <= MAX_LEN {
+        prefixed
+    } else {
+        snapshot_uuid.to_owned()
+    }
+}
+
 pub(crate) fn stable_catalog_id(prefix: &str, parts: &[&str]) -> i64 {
     let mut hasher = Sha256::new();
     hasher.update(prefix.as_bytes());
@@ -1675,7 +1685,31 @@ pub(crate) fn json_array(values: &[String]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::price_provider_code;
+    use super::{catalog_sync_run_uuid, price_provider_code};
+
+    #[test]
+    fn catalog_sync_run_uuid_fits_varchar_64_for_installer_style_snapshot_uuid() {
+        let snapshot_uuid = format!(
+            "catalog-refresh-{}",
+            "11111111-1111-4111-8111-111111111111"
+        );
+        let sync_run_uuid = catalog_sync_run_uuid(&snapshot_uuid);
+        assert!(
+            sync_run_uuid.len() <= 64,
+            "sync run uuid must fit VARCHAR(64): len={} value={sync_run_uuid}",
+            sync_run_uuid.len()
+        );
+        assert_eq!(snapshot_uuid, sync_run_uuid);
+    }
+
+    #[test]
+    fn catalog_sync_run_uuid_keeps_prefix_for_standard_snapshot_uuid() {
+        let snapshot_uuid = "11111111-1111-4111-8111-111111111111".to_owned();
+        assert_eq!(
+            "catalog-sync-11111111-1111-4111-8111-111111111111",
+            catalog_sync_run_uuid(&snapshot_uuid)
+        );
+    }
 
     #[test]
     fn price_provider_code_keeps_vendor_identity_separate_from_region() {

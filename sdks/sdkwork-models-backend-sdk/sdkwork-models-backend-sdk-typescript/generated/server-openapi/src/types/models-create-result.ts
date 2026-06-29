@@ -1,11 +1,11 @@
-import type { AdminAiModelMutationResponse } from './admin-ai-model-mutation-response';
+import type { NoData } from './no-data';
 
 /** Models create result schema exposed by Claw Router. */
 export interface ModelsCreateResult {
   /** Business response code. */
   code: string;
-  /** Data field on models create result. */
-  data?: AdminAiModelMutationResponse;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }

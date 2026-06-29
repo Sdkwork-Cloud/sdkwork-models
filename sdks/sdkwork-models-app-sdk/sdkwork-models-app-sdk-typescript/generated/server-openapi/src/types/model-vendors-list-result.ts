@@ -1,11 +1,11 @@
-import type { RankingVendorOptionsResponse } from './ranking-vendor-options-response';
+import type { NoData } from './no-data';
 
 /** Model vendors list result schema exposed by Claw Router. */
 export interface ModelVendorsListResult {
   /** Business response code. */
   code: string;
-  /** Data field on model vendors list result. */
-  data?: RankingVendorOptionsResponse;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }

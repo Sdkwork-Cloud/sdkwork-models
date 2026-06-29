@@ -2,6 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { migrateOpenApiDocument } from "../../sdkwork-specs/tools/lib/migrate-openapi-legacy-envelope.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const clawRouterRoot = join(root, "..", "sdkwork-clawrouter");
@@ -165,20 +166,24 @@ const appSource = join(
   "generated/openapi/clawrouter-models-catalog-app-openapi.json",
 );
 
-const backendDocument = injectModelsListQueryParams(
-  extractSurface(
-    backendSource,
-    BACKEND_PATH_PREFIXES,
-    "SDKWork Models Backend API",
-    "/backend/v3/api",
+const backendDocument = migrateOpenApiDocument(
+  injectModelsListQueryParams(
+    extractSurface(
+      backendSource,
+      BACKEND_PATH_PREFIXES,
+      "SDKWork Models Backend API",
+      "/backend/v3/api",
+    ),
   ),
 );
-const appDocument = injectModelsListQueryParams(
-  extractSurface(
-    appSource,
-    APP_PATH_PREFIXES,
-    "SDKWork Models App API",
-    "/app/v3/api",
+const appDocument = migrateOpenApiDocument(
+  injectModelsListQueryParams(
+    extractSurface(
+      appSource,
+      APP_PATH_PREFIXES,
+      "SDKWork Models App API",
+      "/app/v3/api",
+    ),
   ),
 );
 

@@ -2,6 +2,7 @@
 
 mod catalog_app_router;
 mod catalog_backend_router;
+mod cors;
 mod entity_uuid_generator;
 mod health_router;
 mod json_pricing_catalog;
@@ -18,6 +19,7 @@ pub use catalog_backend_router::{
 pub use entity_uuid_generator::CatalogEntityUuidGenerator;
 pub use health_router::{models_health_router, models_health_router_with_readiness, ModelsReadinessProbe};
 pub use json_pricing_catalog::JsonPricingCatalog;
+pub use cors::application_cors_layer;
 pub use service_host::ModelsServiceHost;
 pub use sdkwork_models_catalog_service::PricingCatalog;
 pub use sdkwork_routes_models_catalog_backend_api::{

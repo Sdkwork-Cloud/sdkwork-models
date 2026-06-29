@@ -1904,7 +1904,7 @@ async fn upsert_model_catalog_sync_run(
         command.subject.organization_id,
         &source_code,
     );
-    let sync_run_uuid = format!("catalog-sync-{}", command.snapshot_uuid);
+    let sync_run_uuid = crate::model_catalog_import::catalog_sync_run_uuid(&command.snapshot_uuid);
     let last_success_at = if dry_run {
         None
     } else {
@@ -1912,7 +1912,7 @@ async fn upsert_model_catalog_sync_run(
     };
     let metadata = serde_json::json!({
         "source": command.source,
-        "requestId": command.request_id,
+        "traceId": command.request_id,
         "catalogVersion": catalog_version,
         "requestedCatalogVersion": &command.catalog_version,
         "catalogRoot": &command.catalog_root,
@@ -1951,7 +1951,7 @@ async fn upsert_model_catalog_sync_run(
     if dry_run {
         let dry_run_metadata = serde_json::json!({
             "source": command.source,
-            "requestId": command.request_id,
+            "traceId": command.request_id,
             "syncMode": command.mode,
             "vendorCodes": command.vendor_codes,
             "force": command.force,

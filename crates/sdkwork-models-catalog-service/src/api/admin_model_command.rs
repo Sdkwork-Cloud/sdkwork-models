@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
-use crate::api::response::PlusApiResult;
+use crate::api::response::{legacy_problem, ApiResponse};
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -546,7 +546,7 @@ async fn fetch_vendors(
         .list_vendors(ListAdminModelVendorsQuery { subject })
         .await
     {
-        Ok(items) => Json(PlusApiResult::success(AdminModelListResponse {
+        Ok(items) => Json(ApiResponse::success(AdminModelListResponse {
             items: items.into_iter().map(to_vendor_response).collect(),
             total_count: None,
         }))
@@ -582,7 +582,7 @@ async fn fetch_models(
                 total_count = page.total_count,
                 "listed admin ai models"
             );
-            Json(PlusApiResult::success(AdminModelListResponse {
+            Json(ApiResponse::success(AdminModelListResponse {
                 items: page.items.into_iter().map(to_model_response).collect(),
                 total_count: Some(page.total_count),
             }))
@@ -604,7 +604,7 @@ async fn fetch_model_mappings(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.list_model_mappings(query).await {
-        Ok(items) => Json(PlusApiResult::success(AdminModelListResponse {
+        Ok(items) => Json(ApiResponse::success(AdminModelListResponse {
             items: items.into_iter().map(to_mapping_response).collect(),
             total_count: None,
         }))
@@ -629,7 +629,7 @@ async fn create_vendor(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.create_vendor(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminModelItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
             item: to_vendor_response(item),
         }))
         .into_response(),
@@ -656,7 +656,7 @@ async fn create_model(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.create_model(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminModelItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
             item: to_model_response(item),
         }))
         .into_response(),
@@ -683,7 +683,7 @@ async fn create_model_mapping(
             Err(error) => return command_build_error_response(error),
         };
     match state.store.create_model_mapping(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminModelItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
             item: to_mapping_response(item),
         }))
         .into_response(),
@@ -712,7 +712,7 @@ async fn update_model(
             Err(error) => return command_build_error_response(error),
         };
     match state.store.update_model(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminModelItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
             item: to_model_response(item),
         }))
         .into_response(),
@@ -746,7 +746,7 @@ async fn update_model_mapping(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.update_model_mapping(command).await {
-        Ok(item) => Json(PlusApiResult::success(AdminModelItemEnvelope {
+        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
             item: to_mapping_response(item),
         }))
         .into_response(),
@@ -770,7 +770,7 @@ async fn delete_model(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.delete_model(command).await {
-        Ok(()) => Json(PlusApiResult::success(
+        Ok(()) => Json(ApiResponse::success(
             serde_json::json!({ "deleted": true }),
         ))
         .into_response(),
@@ -792,7 +792,7 @@ async fn delete_model_mapping(
             Err(error) => return command_build_error_response(error),
         };
     match state.store.delete_model_mapping(command).await {
-        Ok(()) => Json(PlusApiResult::success(
+        Ok(()) => Json(ApiResponse::success(
             serde_json::json!({ "deleted": true }),
         ))
         .into_response(),
@@ -821,7 +821,7 @@ async fn resolve_model_mapping(
     };
     match state.store.resolve_model_mapping(query).await {
         Ok(result) => {
-            Json(PlusApiResult::success(to_mapping_resolve_response(result))).into_response()
+            Json(ApiResponse::success(to_mapping_resolve_response(result))).into_response()
         }
         Err(error) => {
             admin_model_system_response("model mapping resolve store is unavailable", error)
@@ -847,7 +847,7 @@ async fn sync_catalog(
         Err(error) => return command_build_error_response(error),
     };
     match state.store.sync_catalog(command).await {
-        Ok(item) => Json(PlusApiResult::success(to_sync_response(item))).into_response(),
+        Ok(item) => Json(ApiResponse::success(to_sync_response(item))).into_response(),
         Err(error) => admin_model_system_response("model catalog sync store is unavailable", error),
     }
 }
@@ -2764,27 +2764,15 @@ fn to_sync_response(item: AdminModelCatalogSyncItem) -> AdminModelCatalogSyncRes
 }
 
 fn bad_request(message: impl Into<String>) -> Response {
-    (
-        StatusCode::BAD_REQUEST,
-        Json(PlusApiResult::error("4001", message.into())),
-    )
-        .into_response()
+    legacy_problem(StatusCode::BAD_REQUEST, "4001", message.into())
 }
 
 fn not_found_response(message: String) -> Response {
-    (
-        StatusCode::NOT_FOUND,
-        Json(PlusApiResult::error("4040", message)),
-    )
-        .into_response()
+    legacy_problem(StatusCode::NOT_FOUND, "4040", message)
 }
 
 fn conflict_response(error: DomainError) -> Response {
-    (
-        StatusCode::CONFLICT,
-        Json(PlusApiResult::error("4090", error.to_string())),
-    )
-        .into_response()
+    legacy_problem(StatusCode::CONFLICT, "4090", error.to_string())
 }
 
 fn command_build_error_response(error: AdminModelCommandBuildError) -> Response {
@@ -2797,11 +2785,11 @@ fn command_build_error_response(error: AdminModelCommandBuildError) -> Response 
 }
 
 fn admin_model_system_response(context: &str, error: DomainError) -> Response {
-    (
+    legacy_problem(
         StatusCode::INTERNAL_SERVER_ERROR,
-        Json(PlusApiResult::error("5000", format!("{context}: {error}"))),
+        "5000",
+        format!("{context}: {error}"),
     )
-        .into_response()
 }
 
 fn current_timestamp_string() -> String {

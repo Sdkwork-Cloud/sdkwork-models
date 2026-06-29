@@ -1,19 +1,10 @@
 import { appApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { ModelRankingsListResult, ModelsListResult, ModelVendorsListResult } from '../types';
+import type { SdkWorkPageData } from '../types';
 
 
 export interface AiModelsListParams {
-  billingMeter?: string;
-  vendorCode?: string;
-  vendorCodes?: string[];
-  modalities?: string[];
-  capabilities?: string[];
-  categories?: string[];
-  groups?: string[];
-  q?: string;
-  limit?: string;
   modelTypes?: string;
 }
 
@@ -25,21 +16,12 @@ export class AiModelsApi {
   }
 
 
-/** List models */
-  async list(params?: AiModelsListParams): Promise<ModelsListResult> {
+/** List */
+  async list(params?: AiModelsListParams): Promise<SdkWorkPageData> {
     const query = buildQueryString([
-      { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
-      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
-      { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
-      { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
-      { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
-      { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
-      { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-      { name: 'limit', value: params?.limit, style: 'form', explode: true, allowReserved: false },
       { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelsListResult>(appendQueryString(appApiPath(`/ai/models`), query));
+    return this.client.get<SdkWorkPageData>(appendQueryString(appApiPath(`/ai/models`), query));
   }
 }
 
@@ -51,18 +33,10 @@ export class AiModelVendorsApi {
   }
 
 
-/** List ranking vendor filters */
-  async list(): Promise<ModelVendorsListResult> {
-    return this.client.get<ModelVendorsListResult>(appApiPath(`/ai/model_vendors`));
+/** List */
+  async list(): Promise<SdkWorkPageData> {
+    return this.client.get<SdkWorkPageData>(appApiPath(`/ai/model_vendors`));
   }
-}
-
-export interface AiModelRankingsListParams {
-  rankScope?: string;
-  vendorCode?: string;
-  modality?: string;
-  q?: string;
-  limit?: string;
 }
 
 export class AiModelRankingsApi {
@@ -73,16 +47,9 @@ export class AiModelRankingsApi {
   }
 
 
-/** List model rankings */
-  async list(params?: AiModelRankingsListParams): Promise<ModelRankingsListResult> {
-    const query = buildQueryString([
-      { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
-      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
-      { name: 'modality', value: params?.modality, style: 'form', explode: true, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-      { name: 'limit', value: params?.limit, style: 'form', explode: true, allowReserved: false },
-    ]);
-    return this.client.get<ModelRankingsListResult>(appendQueryString(appApiPath(`/ai/model_rankings`), query));
+/** List */
+  async list(): Promise<SdkWorkPageData> {
+    return this.client.get<SdkWorkPageData>(appApiPath(`/ai/model_rankings`));
   }
 }
 

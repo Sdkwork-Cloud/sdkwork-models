@@ -1,0 +1,8 @@
+import type { AiResourcesCreateResult } from './ai-resources-create-result';
+
+export interface AiResourcesCreateResponse {
+  code: 0;
+  data: unknown & Record<string, unknown>;
+  /** Server-owned request correlation id. */
+  traceId: string;
+}

@@ -1,11 +1,11 @@
-import type { ModelRankingRefreshTriggerResponse } from './model-ranking-refresh-trigger-response';
+import type { NoData } from './no-data';
 
 /** Model rankings refresh result schema exposed by Claw Router. */
 export interface ModelRankingsRefreshResult {
   /** Business response code. */
   code: string;
-  /** Data field on model rankings refresh result. */
-  data?: ModelRankingRefreshTriggerResponse;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }

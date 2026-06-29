@@ -15,6 +15,7 @@
 2. Set `SDKWORK_MODELS_CATALOG_ROOT` to the catalog JSON root (defaults to repository `models/`).
 3. Enable IAM when required: `SDKWORK_MODELS_IAM_ENABLED=true`.
 4. Bind ingress: `SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND=127.0.0.1:8080`.
+5. Configure CORS allowlist: `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS` (defaults follow `SDKWORK_MODELS_ENVIRONMENT`). Set `SDKWORK_MODELS_CORS_ALLOW_ANY=true` only for local debugging.
 
 ## Gateway
 

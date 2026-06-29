@@ -22,7 +22,7 @@ Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway chan
 
 Catalog DDL authority lives in this module. Composed hosts such as `sdkwork-clawrouter`
 must consume `crates/sdkwork-models-database-bootstrap` for baseline SQL and table
-inventory, matching the `sdkwork-commerce` / `sdkwork-appstore` composed-module pattern.
+inventory, matching the `sdkwork-commerce (deleted) (deleted)` / `sdkwork-appstore` composed-module pattern.
 
 Hosts must not embed `database/ddl` paths or duplicate catalog table inventories in
 their own installers.

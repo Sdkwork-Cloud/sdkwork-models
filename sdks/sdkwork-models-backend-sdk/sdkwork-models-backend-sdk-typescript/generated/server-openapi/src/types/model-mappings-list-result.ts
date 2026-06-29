@@ -1,11 +1,11 @@
-import type { AdminModelMappingsResponse } from './admin-model-mappings-response';
+import type { NoData } from './no-data';
 
 /** Model mappings list result schema exposed by Claw Router. */
 export interface ModelMappingsListResult {
   /** Business response code. */
   code: string;
-  /** Data field on model mappings list result. */
-  data?: AdminModelMappingsResponse;
+  /** No business data returned by this operation. */
+  data?: NoData;
   /** Human-readable response message. */
   msg?: string;
 }
