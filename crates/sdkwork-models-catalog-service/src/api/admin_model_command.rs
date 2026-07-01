@@ -3,17 +3,20 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
 use axum::extract::{Path, Query, State};
-use axum::http::{HeaderMap, StatusCode};
-use axum::response::{IntoResponse, Response};
+use axum::http::HeaderMap;
+use axum::response::Response;
 use axum::routing::{get, patch, post};
-use axum::{Json, Router};
+use axum::Router;
 use sdkwork_claw_http::TrustedRequestSubject;
 use sdkwork_utils_rust::slugify;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
-use crate::api::response::{legacy_problem, ApiResponse};
+use sdkwork_utils_rust::SdkWorkResultCode;
+
+use crate::api::response::{finish_success, problem_for};
+use sdkwork_web_core::WebRequestContext;
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -536,6 +539,7 @@ pub fn admin_model_management_router_with_store(
 }
 
 async fn fetch_vendors(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -546,16 +550,16 @@ async fn fetch_vendors(
         .list_vendors(ListAdminModelVendorsQuery { subject })
         .await
     {
-        Ok(items) => Json(ApiResponse::success(AdminModelListResponse {
+        Ok(items) => finish_success(&ctx, AdminModelListResponse {
             items: items.into_iter().map(to_vendor_response).collect(),
             total_count: None,
-        }))
-        .into_response(),
-        Err(error) => admin_model_system_response("model vendor read model is unavailable", error),
+        }),
+        Err(error) => admin_model_system_response(&ctx, "model vendor read model is unavailable", error),
     }
 }
 
 async fn fetch_models(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Query(query): Query<AdminModelsListQuery>,
     trusted: TrustedRequestSubject,
@@ -582,17 +586,17 @@ async fn fetch_models(
                 total_count = page.total_count,
                 "listed admin ai models"
             );
-            Json(ApiResponse::success(AdminModelListResponse {
+            finish_success(&ctx, AdminModelListResponse {
                 items: page.items.into_iter().map(to_model_response).collect(),
                 total_count: Some(page.total_count),
-            }))
-            .into_response()
+            })
         }
-        Err(error) => admin_model_system_response("ai model read model is unavailable", error),
+        Err(error) => admin_model_system_response(&ctx, "ai model read model is unavailable", error),
     }
 }
 
 async fn fetch_model_mappings(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Query(query): Query<AdminModelMappingsQuery>,
     trusted: TrustedRequestSubject,
@@ -601,19 +605,19 @@ async fn fetch_model_mappings(
     let subject = map_subject(trusted);
     let query = match build_list_model_mappings_query(subject, query) {
         Ok(query) => query,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.list_model_mappings(query).await {
-        Ok(items) => Json(ApiResponse::success(AdminModelListResponse {
+        Ok(items) => finish_success(&ctx, AdminModelListResponse {
             items: items.into_iter().map(to_mapping_response).collect(),
             total_count: None,
-        }))
-        .into_response(),
-        Err(error) => admin_model_system_response("model mapping read model is unavailable", error),
+        }),
+        Err(error) => admin_model_system_response(&ctx, "model mapping read model is unavailable", error),
     }
 }
 
 async fn create_vendor(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
@@ -622,25 +626,25 @@ async fn create_vendor(
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminModelVendorCreateRequest>(&body, "model vendor") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_create_vendor_command(state.clone(), &headers, subject, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_vendor(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
             item: to_vendor_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            admin_model_system_response("model vendor command store is unavailable", error)
+            admin_model_system_response(&ctx, "model vendor command store is unavailable", error)
         }
     }
 }
 
 async fn create_model(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
@@ -649,24 +653,24 @@ async fn create_model(
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminAiModelCreateRequest>(&body, "ai model") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_create_model_command(state.clone(), &headers, subject, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_model(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
             item: to_model_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
-        Err(error) => admin_model_system_response("ai model command store is unavailable", error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
+        Err(error) => admin_model_system_response(&ctx, "ai model command store is unavailable", error),
     }
 }
 
 async fn create_model_mapping(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
@@ -675,26 +679,26 @@ async fn create_model_mapping(
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminModelMappingCreateRequest>(&body, "model mapping") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command =
         match build_create_model_mapping_command(state.clone(), &headers, subject, request) {
             Ok(command) => command,
-            Err(error) => return command_build_error_response(error),
+            Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.create_model_mapping(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
             item: to_mapping_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            admin_model_system_response("model mapping command store is unavailable", error)
+            admin_model_system_response(&ctx, "model mapping command store is unavailable", error)
         }
     }
 }
 
 async fn update_model(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Path(model_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -704,25 +708,25 @@ async fn update_model(
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AdminAiModelUpdateRequest>(&body, "ai model update") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command =
         match build_update_model_command(state.clone(), &headers, subject, model_id, request) {
             Ok(command) => command,
-            Err(error) => return command_build_error_response(error),
+            Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.update_model(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
             item: to_model_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
-        Err(error) => admin_model_system_response("ai model update store is unavailable", error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
+        Err(error) => admin_model_system_response(&ctx, "ai model update store is unavailable", error),
     }
 }
 
 async fn update_model_mapping(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Path(mapping_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -733,7 +737,7 @@ async fn update_model_mapping(
     let request =
         match parse_json_body::<AdminModelMappingUpdateRequest>(&body, "model mapping update") {
             Ok(request) => request,
-            Err(message) => return bad_request(message),
+            Err(message) => return bad_request(&ctx, message),
         };
     let command = match build_update_model_mapping_command(
         state.clone(),
@@ -743,22 +747,22 @@ async fn update_model_mapping(
         request,
     ) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.update_model_mapping(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminModelItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
             item: to_mapping_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            admin_model_system_response("model mapping update store is unavailable", error)
+            admin_model_system_response(&ctx, "model mapping update store is unavailable", error)
         }
     }
 }
 
 async fn delete_model(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Path(model_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -767,19 +771,19 @@ async fn delete_model(
     let subject = map_subject(trusted);
     let command = match build_delete_model_command(state.clone(), &headers, subject, model_id) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.delete_model(command).await {
-        Ok(()) => Json(ApiResponse::success(
+        Ok(()) => finish_success(&ctx, 
             serde_json::json!({ "deleted": true }),
-        ))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) => admin_model_system_response("ai model delete store is unavailable", error),
+        ),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) => admin_model_system_response(&ctx, "ai model delete store is unavailable", error),
     }
 }
 
 async fn delete_model_mapping(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     Path(mapping_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -789,21 +793,21 @@ async fn delete_model_mapping(
     let command =
         match build_delete_model_mapping_command(state.clone(), &headers, subject, mapping_id) {
             Ok(command) => command,
-            Err(error) => return command_build_error_response(error),
+            Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.delete_model_mapping(command).await {
-        Ok(()) => Json(ApiResponse::success(
+        Ok(()) => finish_success(&ctx, 
             serde_json::json!({ "deleted": true }),
-        ))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
+        ),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
-            admin_model_system_response("model mapping delete store is unavailable", error)
+            admin_model_system_response(&ctx, "model mapping delete store is unavailable", error)
         }
     }
 }
 
 async fn resolve_model_mapping(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -813,23 +817,24 @@ async fn resolve_model_mapping(
     let request =
         match parse_json_body::<AdminModelMappingResolveRequest>(&body, "model mapping resolve") {
             Ok(request) => request,
-            Err(message) => return bad_request(message),
+            Err(message) => return bad_request(&ctx, message),
         };
     let query = match build_resolve_model_mapping_query(subject, request) {
         Ok(query) => query,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.resolve_model_mapping(query).await {
         Ok(result) => {
-            Json(ApiResponse::success(to_mapping_resolve_response(result))).into_response()
+            finish_success(&ctx, to_mapping_resolve_response(result))
         }
         Err(error) => {
-            admin_model_system_response("model mapping resolve store is unavailable", error)
+            admin_model_system_response(&ctx, "model mapping resolve store is unavailable", error)
         }
     }
 }
 
 async fn sync_catalog(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
     trusted: TrustedRequestSubject,
     headers: HeaderMap,
@@ -840,15 +845,15 @@ async fn sync_catalog(
         match parse_optional_json_body::<AdminModelCatalogSyncRequest>(&body, "model catalog sync")
         {
             Ok(request) => request,
-            Err(message) => return bad_request(message),
+            Err(message) => return bad_request(&ctx, message),
         };
     let command = match build_sync_catalog_command(state.clone(), &headers, subject, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.sync_catalog(command).await {
-        Ok(item) => Json(ApiResponse::success(to_sync_response(item))).into_response(),
-        Err(error) => admin_model_system_response("model catalog sync store is unavailable", error),
+        Ok(item) => finish_success(&ctx, to_sync_response(item)),
+        Err(error) => admin_model_system_response(&ctx, "model catalog sync store is unavailable", error),
     }
 }
 
@@ -2763,31 +2768,31 @@ fn to_sync_response(item: AdminModelCatalogSyncItem) -> AdminModelCatalogSyncRes
     }
 }
 
-fn bad_request(message: impl Into<String>) -> Response {
-    legacy_problem(StatusCode::BAD_REQUEST, "4001", message.into())
+fn bad_request(ctx: &WebRequestContext, message: impl Into<String>) -> Response {
+    problem_for(ctx, SdkWorkResultCode::ValidationError, message.into())
 }
 
-fn not_found_response(message: String) -> Response {
-    legacy_problem(StatusCode::NOT_FOUND, "4040", message)
+fn not_found_response(ctx: &WebRequestContext, message: String) -> Response {
+    problem_for(ctx, SdkWorkResultCode::NotFound, message)
 }
 
-fn conflict_response(error: DomainError) -> Response {
-    legacy_problem(StatusCode::CONFLICT, "4090", error.to_string())
+fn conflict_response(ctx: &WebRequestContext, error: DomainError) -> Response {
+    problem_for(ctx, SdkWorkResultCode::Conflict, error.to_string())
 }
 
-fn command_build_error_response(error: AdminModelCommandBuildError) -> Response {
+fn command_build_error_response(ctx: &WebRequestContext, error: AdminModelCommandBuildError) -> Response {
     match error {
-        AdminModelCommandBuildError::BadRequest(message) => bad_request(message),
+        AdminModelCommandBuildError::BadRequest(message) => bad_request(&ctx, message),
         AdminModelCommandBuildError::System(error) => {
-            admin_model_system_response("admin model command is invalid", error)
+            admin_model_system_response(&ctx, "admin model command is invalid", error)
         }
     }
 }
 
-fn admin_model_system_response(context: &str, error: DomainError) -> Response {
-    legacy_problem(
-        StatusCode::INTERNAL_SERVER_ERROR,
-        "5000",
+fn admin_model_system_response(ctx: &WebRequestContext, context: &str, error: DomainError) -> Response {
+    problem_for(
+        ctx,
+        SdkWorkResultCode::InternalError,
         format!("{context}: {error}"),
     )
 }

@@ -1,16 +1,13 @@
-> Migrated from `docs/client-api-compatibility-schema.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
-## 当前问题
+## �?�?��?��?
 
-1. 缺少明确的转换/映射配置
-2. 不支持时没有提供替代方案
-3. 缺少模型级别的映射配置
-4. 结构不够通用，难以扩展
+1. 缺�?�??确�??转�?�?��?�?�置
+2. 不�?��?��?�没�??提�?�?�代�?��?
+3. 缺�?模�??级�?��??�?��?�?��?4. �?�??不�?�??�?��?�?�以�?��?
+## �?��??�??�?��?�据�?�??设计
 
-## 新的通用数据结构设计
-
-### 1. Vendor级别配置
+### 1. Vendor级�?��?�置
 
 ```json
 {
@@ -53,8 +50,8 @@
         "audio": true|false
       },
       "limitations": [
-        "不支持system消息",
-        "不支持tool_choice参数"
+        "不�?��?�system�?息",
+        "不�?��?�tool_choice�?�?�"
       ],
       "source": {
         "observedAt": "2026-06-13T00:00:00Z",
@@ -65,9 +62,9 @@
 }
 ```
 
-### 2. 示例配置
+### 2. 示�?�?�置
 
-#### OpenAI Codex (原生支持)
+#### OpenAI Codex (�??�??�?��?�)
 ```json
 {
   "codex": {
@@ -95,7 +92,7 @@
 }
 ```
 
-#### Alibaba Claude Code (转换支持)
+#### Alibaba Claude Code (转换�?��?�)
 ```json
 {
   "claude_code": {
@@ -133,14 +130,14 @@
       "audio": false
     },
     "limitations": [
-      "仅支持global区域",
-      "部分高级功能可能不完全兼容"
+      "�?�?��?�global�?��??",
+      "�?��??�?级�??�?�可�?�不�?�?��?��?
     ]
   }
 }
 ```
 
-#### DeepSeek Claude Code (OpenAI兼容转换)
+#### DeepSeek Claude Code (OpenAI�?�容转换)
 ```json
 {
   "claude_code": {
@@ -192,45 +189,45 @@
       "audio": false
     },
     "limitations": [
-      "需要额外的代理层进行协议转换",
-      "部分Claude特有功能可能不支持"
+      "�??要额�?�??代�?�?�?�?协议转�?,
+      "�?��??Claude�?��??�??�?�可�?�不�?��??
     ]
   }
 }
 ```
 
-### 3. 模型映射类型
+### 3. 模�??�?��?类�??
 
-| 映射类型 | 说明 | 示例 |
+| �?��?类�?? | 说�?? | 示�? |
 |----------|------|------|
-| direct | 直接映射，模型名不变 | qwen3.7-max → qwen3.7-max |
-| prefix | 添加前缀 | v4-pro → deepseek-v4-pro |
-| suffix | 添加后缀 | claude → claude-sonnet |
-| custom | 自定义映射规则 | deepseek-v4-pro → claude-sonnet-4-20250514 |
+| direct | �?��?��?��?�?模�??名不�? | qwen3.7-max �??qwen3.7-max |
+| prefix | 添�?��?��? | v4-pro �??deepseek-v4-pro |
+| suffix | 添�?��?�? | claude �??claude-sonnet |
+| custom | �?��?�?�?��?�?�??| deepseek-v4-pro �??claude-sonnet-4-20250514 |
 
-### 4. 转换策略
+### 4. 转换�?�?�
 
-| 策略 | 说明 | 适用场景 |
+| �?�?� | 说�?? | �??�?��?��?� |
 |------|------|----------|
-| direct | 直接使用原生API | 原生支持的vendor |
-| proxy | 通过代理层转换 | 协议不兼容但功能相似 |
-| transform | 完全转换请求/响应 | 协议差异较大 |
+| direct | �?��?�使�?��??�??API | �??�??�?��?��??vendor |
+| proxy | �??�?代�?�?转�?| 协议不�?�容�?�??�?��?�似 |
+| transform | �?�?�转换请�?/�?��? | 协议差�?�?大 |
 
-### 5. 协议转换规则
+### 5. 协议转换�?�??
 
-| 转换规则 | 说明 |
+| 转换�?�?? | 说�?? |
 |----------|------|
-| passthrough | 直接透传，不转换 |
-| anthropic_to_openai | Anthropic格式 → OpenAI格式 |
-| openai_to_anthropic | OpenAI格式 → Anthropic格式 |
-| google_to_openai | Google格式 → OpenAI格式 |
-| openai_to_google | OpenAI格式 → Google格式 |
+| passthrough | �?��?��?�传�?不转换 |
+| anthropic_to_openai | Anthropic格式 �??OpenAI格式 |
+| openai_to_anthropic | OpenAI格式 �??Anthropic格式 |
+| google_to_openai | Google格式 �??OpenAI格式 |
+| openai_to_google | OpenAI格式 �??Google格式 |
 
-## 实施计划
+## �?�?�计�??
 
-1. 更新schema定义文件
-2. 更新vendors.json中的clientApiCompatibility结构
-3. 添加模型映射配置
-4. 验证新的数据结构
-5. 更新文档
+1. �?��?�schema�?�?�??件
+2. �?��?�vendors.json中�??clientApiCompatibility�?�??
+3. 添�?�模�??�?��?�?�置
+4. �?证�?��??�?�据�?�??
+5. �?��?��??档
 

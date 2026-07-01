@@ -20,6 +20,8 @@ pub enum ModelVendor {
     Suno,
     Tencent,
     Zhipu,
+    StepFun,
+    Xiaomi,
     Custom,
     Unknown,
 }
@@ -44,6 +46,8 @@ impl ModelVendor {
             Self::Suno => "suno",
             Self::Tencent => "tencent",
             Self::Zhipu => "zhipu",
+            Self::StepFun => "stepfun",
+            Self::Xiaomi => "xiaomi",
             Self::Custom => "custom",
             Self::Unknown => "unknown",
         }
@@ -68,6 +72,8 @@ impl ModelVendor {
             "suno" => Self::Suno,
             "tencent" => Self::Tencent,
             "zhipu" => Self::Zhipu,
+            "stepfun" => Self::StepFun,
+            "xiaomi" => Self::Xiaomi,
             "custom" => Self::Custom,
             "unknown" => Self::Unknown,
             _ => Self::Unknown,

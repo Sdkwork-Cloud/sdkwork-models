@@ -45,7 +45,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 | P1 | Backend admin API + IAM | Complete |
 | P2 | Standalone gateway + app-api web framework | Complete |
 | P3 | Full PC application shell per APP_PC_ARCHITECTURE_SPEC | In progress |
-| P4 | SBOM/signing release gate | Planned |
+| P4 | SBOM/signing release gate | Deferred | Enabled when `sdkwork.workflow.json` sets `security.sbomRequired: true` |
 
 ## 7. Linked Specs
 

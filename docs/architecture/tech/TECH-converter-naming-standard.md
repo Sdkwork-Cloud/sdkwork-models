@@ -1,4 +1,3 @@
-> Migrated from `docs/converter-naming-standard.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
 ## 命名规范
@@ -9,30 +8,29 @@
 <SOURCE_PROTOCOL>_TO_<TARGET_PROTOCOL>
 ```
 
-### 协议代码表
-
+### 协议代码�?
 | 代码 | 协议全称 | 说明 |
 |------|----------|------|
 | OPENAI_RESPONSES | OpenAI Responses API | /v1/responses |
 | OPENAI_COMPLETIONS | OpenAI Chat Completions | /v1/chat/completions |
 | ANTHROPIC_MESSAGES | Anthropic Messages API | /v1/messages |
 | GOOGLE_GEMINI | Google Gemini API | /v1/models/{model}:generateContent |
-| OPENAI_COMPATIBLE | OpenAI兼容格式 | 通用兼容层 |
+| OPENAI_COMPATIBLE | OpenAI兼容格式 | 通用兼容�?|
 
 ### 标准命名示例
 
-| 转换器名称 | 源协议 | 目标协议 | 说明 |
+| 转换器名�?| 源协�?| 目标协议 | 说明 |
 |------------|--------|----------|------|
-| OPENAI_RESPONSES_TO_ANTHROPIC_MESSAGES | OpenAI Responses | Anthropic Messages | Codex → Claude Code |
-| ANTHROPIC_MESSAGES_TO_OPENAI_RESPONSES | Anthropic Messages | OpenAI Responses | Claude Code → Codex |
-| OPENAI_COMPLETIONS_TO_ANTHROPIC_MESSAGES | OpenAI Completions | Anthropic Messages | DeepSeek → Claude Code |
-| ANTHROPIC_MESSAGES_TO_OPENAI_COMPLETIONS | Anthropic Messages | OpenAI Completions | Claude Code → DeepSeek |
-| OPENAI_COMPLETIONS_TO_OPENAI_RESPONSES | OpenAI Completions | OpenAI Responses | 通用OpenAI → Codex |
-| OPENAI_RESPONSES_TO_OPENAI_COMPLETIONS | OpenAI Responses | OpenAI Completions | Codex → 通用OpenAI |
-| GOOGLE_GEMINI_TO_OPENAI_COMPLETIONS | Google Gemini | OpenAI Completions | Gemini → 通用OpenAI |
-| OPENAI_COMPLETIONS_TO_GOOGLE_GEMINI | OpenAI Completions | Google Gemini | 通用OpenAI → Gemini |
-| GOOGLE_GEMINI_TO_ANTHROPIC_MESSAGES | Google Gemini | Anthropic Messages | Gemini → Claude Code |
-| ANTHROPIC_MESSAGES_TO_GOOGLE_GEMINI | Anthropic Messages | Google Gemini | Claude Code → Gemini |
+| OPENAI_RESPONSES_TO_ANTHROPIC_MESSAGES | OpenAI Responses | Anthropic Messages | Codex �?Claude Code |
+| ANTHROPIC_MESSAGES_TO_OPENAI_RESPONSES | Anthropic Messages | OpenAI Responses | Claude Code �?Codex |
+| OPENAI_COMPLETIONS_TO_ANTHROPIC_MESSAGES | OpenAI Completions | Anthropic Messages | DeepSeek �?Claude Code |
+| ANTHROPIC_MESSAGES_TO_OPENAI_COMPLETIONS | Anthropic Messages | OpenAI Completions | Claude Code �?DeepSeek |
+| OPENAI_COMPLETIONS_TO_OPENAI_RESPONSES | OpenAI Completions | OpenAI Responses | 通用OpenAI �?Codex |
+| OPENAI_RESPONSES_TO_OPENAI_COMPLETIONS | OpenAI Responses | OpenAI Completions | Codex �?通用OpenAI |
+| GOOGLE_GEMINI_TO_OPENAI_COMPLETIONS | Google Gemini | OpenAI Completions | Gemini �?通用OpenAI |
+| OPENAI_COMPLETIONS_TO_GOOGLE_GEMINI | OpenAI Completions | Google Gemini | 通用OpenAI �?Gemini |
+| GOOGLE_GEMINI_TO_ANTHROPIC_MESSAGES | Google Gemini | Anthropic Messages | Gemini �?Claude Code |
+| ANTHROPIC_MESSAGES_TO_GOOGLE_GEMINI | Anthropic Messages | Google Gemini | Claude Code �?Gemini |
 
 ## 目录结构
 
@@ -40,33 +38,33 @@
 converters/
 ├── Cargo.toml
 ├── src/
-│   ├── lib.rs
-│   ├── traits.rs                    # 核心trait定义
-│   ├── types.rs                     # 类型定义
-│   ├── error.rs                     # 错误处理
-│   ├── registry.rs                  # 转换器注册表
-│   ├── openai_responses_to_anthropic_messages/
-│   │   ├── mod.rs
-│   │   ├── converter.rs
-│   │   ├── request.rs
-│   │   ├── response.rs
-│   │   └── tests.rs
-│   ├── anthropic_messages_to_openai_responses/
-│   │   ├── mod.rs
-│   │   ├── converter.rs
-│   │   ├── request.rs
-│   │   ├── response.rs
-│   │   └── tests.rs
-│   ├── openai_completions_to_anthropic_messages/
-│   │   ├── mod.rs
-│   │   ├── converter.rs
-│   │   ├── request.rs
-│   │   ├── response.rs
-│   │   └── tests.rs
-│   └── ... (其他转换器)
+�?  ├── lib.rs
+�?  ├── traits.rs                    # 核心trait定义
+�?  ├── types.rs                     # 类型定义
+�?  ├── error.rs                     # 错误处理
+�?  ├── registry.rs                  # 转换器注册表
+�?  ├── openai_responses_to_anthropic_messages/
+�?  �?  ├── mod.rs
+�?  �?  ├── converter.rs
+�?  �?  ├── request.rs
+�?  �?  ├── response.rs
+�?  �?  └── tests.rs
+�?  ├── anthropic_messages_to_openai_responses/
+�?  �?  ├── mod.rs
+�?  �?  ├── converter.rs
+�?  �?  ├── request.rs
+�?  �?  ├── response.rs
+�?  �?  └── tests.rs
+�?  ├── openai_completions_to_anthropic_messages/
+�?  �?  ├── mod.rs
+�?  �?  ├── converter.rs
+�?  �?  ├── request.rs
+�?  �?  ├── response.rs
+�?  �?  └── tests.rs
+�?  └── ... (其他转换�?
 ├── tests/
-│   ├── integration_tests.rs
-│   └── common/
+�?  ├── integration_tests.rs
+�?  └── common/
 └── benches/
     └── converter_benchmarks.rs
 ```
@@ -84,20 +82,16 @@ use crate::types::*;
 /// 转换器核心trait
 #[async_trait]
 pub trait Converter: Send + Sync {
-    /// 转换器名称（遵循命名规范）
-    fn name(&self) -> &str;
+    /// 转换器名称（遵循命名规范�?    fn name(&self) -> &str;
     
-    /// 源协议
-    fn source_protocol(&self) -> Protocol;
+    /// 源协�?    fn source_protocol(&self) -> Protocol;
     
     /// 目标协议
     fn target_protocol(&self) -> Protocol;
     
-    /// 支持的能力
-    fn capabilities(&self) -> Vec<Capability>;
+    /// 支持的能�?    fn capabilities(&self) -> Vec<Capability>;
     
-    /// 是否支持该转换
-    fn can_convert(&self, source: &Protocol, target: &Protocol) -> bool {
+    /// 是否支持该转�?    fn can_convert(&self, source: &Protocol, target: &Protocol) -> bool {
         self.source_protocol() == *source && self.target_protocol() == *target
     }
     
@@ -115,8 +109,7 @@ pub trait Converter: Send + Sync {
 
 /// 映射器trait
 pub trait Mapper: Send + Sync {
-    /// 映射器名称
-    fn name(&self) -> &str;
+    /// 映射器名�?    fn name(&self) -> &str;
     
     /// 映射单个模型
     fn map(&self, source_model: &str, mapping: &ModelMapping) -> Result<String, ConverterError>;
@@ -132,8 +125,7 @@ pub trait Mapper: Send + Sync {
 
 /// 转换器工厂trait
 pub trait ConverterFactory: Send + Sync {
-    /// 创建转换器
-    fn create(&self, config: &ConverterConfig) -> Result<Box<dyn Converter>, ConverterError>;
+    /// 创建转换�?    fn create(&self, config: &ConverterConfig) -> Result<Box<dyn Converter>, ConverterError>;
     
     /// 支持的协议对
     fn supported_pairs(&self) -> Vec<(Protocol, Protocol)>;
@@ -286,8 +278,7 @@ pub struct Usage {
     pub total_tokens: u32,
 }
 
-/// 转换流
-pub type ConversionStream = tokio::sync::mpsc::Receiver<ConversionResponse>;
+/// 转换�?pub type ConversionStream = tokio::sync::mpsc::Receiver<ConversionResponse>;
 
 /// 模型映射
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -296,15 +287,13 @@ pub struct ModelMapping {
     pub wildcard_rules: Option<Vec<WildcardRule>>,
 }
 
-/// 通配符规则
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// 通配符规�?#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WildcardRule {
     pub pattern: String,
     pub target: String,
 }
 
-/// 转换器配置
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// 转换器配�?#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConverterConfig {
     pub name: String,
     pub source_protocol: Protocol,
@@ -348,8 +337,7 @@ pub enum ConverterError {
 }
 ```
 
-## 转换器实现示例
-
+## 转换器实现示�?
 ### openai_responses_to_anthropic_messages/converter.rs
 
 ```rust
@@ -360,8 +348,7 @@ use crate::types::*;
 use super::request::convert_request;
 use super::response::convert_response;
 
-/// OpenAI Responses → Anthropic Messages 转换器
-pub struct OpenAiResponsesToAnthropicMessagesConverter {
+/// OpenAI Responses �?Anthropic Messages 转换�?pub struct OpenAiResponsesToAnthropicMessagesConverter {
     model_mapping: ModelMapping,
 }
 
@@ -452,8 +439,7 @@ fn map_model(model: &str, mapping: &ModelMapping) -> Result<String, ConverterErr
         return Ok(target.clone());
     }
     
-    // 通配符匹配
-    if let Some(rules) = &mapping.wildcard_rules {
+    // 通配符匹�?    if let Some(rules) = &mapping.wildcard_rules {
         for rule in rules {
             if matches_pattern(model, &rule.pattern) {
                 return Ok(rule.target.replace("*", model));
@@ -544,8 +530,7 @@ fn convert_content_part(part: &ContentPart) -> Result<ContentPart, ConverterErro
 }
 
 fn convert_tools(tools: &[Tool]) -> Result<Vec<Tool>, ConverterError> {
-    // Anthropic和OpenAI的工具格式基本相同
-    Ok(tools.to_vec())
+    // Anthropic和OpenAI的工具格式基本相�?    Ok(tools.to_vec())
 }
 ```
 
@@ -740,8 +725,7 @@ tokio-test = "0.4"
 ### 构建
 
 ```bash
-# 构建库
-cargo build --release
+# 构建�?cargo build --release
 
 # 运行测试
 cargo test

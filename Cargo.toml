@@ -18,6 +18,10 @@ edition = "2021"
 license = "Apache-2.0"
 
 [workspace.dependencies]
+sdkwork-database-sqlx = { path = "../sdkwork-database/crates/sdkwork-database-sqlx" }
+sdkwork-database-spi = { path = "../sdkwork-database/crates/sdkwork-database-spi" }
+sdkwork-database-lifecycle = { path = "../sdkwork-database/crates/sdkwork-database-lifecycle" }
+sdkwork-database-config = { path = "../sdkwork-database/crates/sdkwork-database-config" }
 axum = { version = "0.8", default-features = false, features = ["json", "macros", "matched-path", "form", "query", "original-uri"] }
 bytes = "1.10"
 getrandom = "0.3"

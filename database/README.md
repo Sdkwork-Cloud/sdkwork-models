@@ -18,11 +18,23 @@ Catalog dictionary and public model facts imported from the JSON catalog:
 
 Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway channels, and tenant pricing plans.
 
+## Initialization state
+
+This module is in **initialization state** for greenfield deployments:
+
+1. **Baseline** — `database/ddl/baseline/{engine}/0001_sdkwork-models_baseline.sql` contains the full DDL snapshot.
+2. **Migrations** — `database/migrations/{engine}/` is reserved for post-GA incremental schema changes only. It is intentionally empty at initialization.
+3. **Drift** — run `pnpm db:drift:check` before release.
+
 ## Commands
 
-Catalog DDL authority lives in this module. Composed hosts such as `sdkwork-clawrouter`
-must consume `crates/sdkwork-models-database-bootstrap` for baseline SQL and table
-inventory, matching the `sdkwork-commerce (deleted) (deleted)` / `sdkwork-appstore` composed-module pattern.
-
-Hosts must not embed `database/ddl` paths or duplicate catalog table inventories in
-their own installers.
+```bash
+pnpm run db:validate
+pnpm run db:materialize:contract
+pnpm run db:plan
+pnpm run db:init
+pnpm run db:migrate
+pnpm run db:seed
+pnpm run db:status
+pnpm run db:drift:check
+```

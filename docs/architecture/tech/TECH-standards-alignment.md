@@ -26,7 +26,7 @@ This document records how `sdkwork-models` aligns with `sdkwork-specs` and the c
 | --- | --- | --- | --- |
 | `sdkwork-specs` | Yes | Aligned | `AGENTS.md`, `specs/`, `docs/` |
 | `sdkwork-utils` | Yes | Aligned | `catalog_time` + handler envelopes use `sdkwork-utils-rust`; tools/PC use `@sdkwork/utils` |
-| `sdkwork-web-framework` | Yes | Aligned | Route manifests + IAM web adapter; `SdkWorkApiResponse` wire format |
+| `sdkwork-web-framework` | Yes | Aligned | Route manifests + IAM web adapter; handlers inject `WebRequestContext` and finish through `finish_success` / `problem_for(SdkWorkResultCode)` |
 | `sdkwork-database` | Yes | Aligned | L2 module with postgres/sqlite baselines, migrations/, seeds/ |
 | `sdkwork-sdk-generator` | Yes | Aligned | `pnpm run openapi:export` + `sdk:generate` |
 | `sdkwork-discovery` | No | Deferred | No RPC services in this repository |

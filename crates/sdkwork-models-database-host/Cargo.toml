@@ -10,7 +10,7 @@ path = "src/lib.rs"
 
 [dependencies]
 dotenvy = "0.15"
-sdkwork-database-config = { path = "../../../sdkwork-database/crates/sdkwork-database-config" }
-sdkwork-database-lifecycle = { path = "../../../sdkwork-database/crates/sdkwork-database-lifecycle" }
-sdkwork-database-spi = { path = "../../../sdkwork-database/crates/sdkwork-database-spi" }
-sdkwork-database-sqlx = { path = "../../../sdkwork-database/crates/sdkwork-database-sqlx" }
+sdkwork-database-config = { workspace = true }
+sdkwork-database-lifecycle = { workspace = true }
+sdkwork-database-spi = { workspace = true }
+sdkwork-database-sqlx = { workspace = true }

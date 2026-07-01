@@ -32,7 +32,7 @@ sdkwork_routes_models_catalog_backend_api.workspace = true
 sdkwork-iam-web-adapter.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-web-core.workspace = true
-sdkwork-database-sqlx = { path = "../../../sdkwork-database/crates/sdkwork-database-sqlx" }
+sdkwork-database-sqlx = { workspace = true }
 
 [dev-dependencies]
 http-body-util = "0.1"

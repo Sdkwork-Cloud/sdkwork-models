@@ -37,7 +37,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 ## 4. Security
 
 - Backend routes: `with_required_permission(...)` on every operation
-- App routes: IAM web framework layer + `require_subject: true` for rankings
+- App routes: public catalog list endpoints (`models.list`, `modelVendors.list`, `modelRankings.list`) plus IAM web framework layer for protected surfaces
 - `/readyz`: fails closed; no internal error strings in response body
 - Production gateway: restricted CORS, upstream readiness checks
 

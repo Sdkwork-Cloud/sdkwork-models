@@ -1,4 +1,3 @@
-> Migrated from `docs/root-layout.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
 This repository is the SDKWork application repository for the portable AI model catalog product.

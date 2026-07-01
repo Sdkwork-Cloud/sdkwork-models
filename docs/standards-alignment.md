@@ -24,7 +24,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Framework | Status | Evidence |
 | --- | --- | --- |
 | `sdkwork-specs` | Aligned | `AGENTS.md`, `specs/`, envelope check in `pnpm run check` |
-| `sdkwork-web-framework` | Aligned | Route manifests + `WebFrameworkLayer`; handlers emit `SdkWorkApiResponse` / `ProblemDetail` |
+| `sdkwork-web-framework` | Aligned | Route manifests + `WebFrameworkLayer`; handlers use `WebRequestContext` + `finish_success` / `problem_for` |
 | `sdkwork-database` | Aligned | `sdkwork-models-database-host` bootstraps lifecycle from `database.manifest.json` |
 | `sdkwork-iam-web-adapter` | Aligned | `web_bootstrap.rs` in backend and app route crates |
 | `sdkwork-utils` | Aligned | Rust handlers use `SdkWorkApiResponse`; tools/PC use `@sdkwork/utils` |
@@ -37,7 +37,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Requirement | Status | Evidence |
 | --- | --- | --- |
 | Success `{ code: 0, data, traceId }` | Aligned | `catalog-service/src/api/response.rs` (`ApiResponse`, `finish_success`) |
-| Errors `application/problem+json` | Aligned | `legacy_problem` + `ProblemResponse`; platform numeric `code` + `traceId` |
+| Errors `application/problem+json` | Aligned | `problem_for(SdkWorkResultCode, …)` + `ProblemDetail`; request-scoped `traceId` |
 | OpenAPI authority | Aligned | `apis/*/intelligence/openapi.json` migrated via `migrateOpenApiDocument` |
 | Envelope gate | Aligned | `check-api-response-envelope.mjs` in `pnpm run check` |
 
@@ -47,14 +47,15 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | --- | --- | --- |
 | Catalog JSON authority | Aligned | `pnpm run check` validates index, schema, freshness, audit, release gate |
 | Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
-| App read API | Aligned | App route manifest + `require_subject: true` for rankings |
+| App read API | Aligned | App catalog list routes are public (`RouteAuth::Public`) |
 | Standalone runtime | Aligned | `sdkwork-models-standalone-gateway` binary; topology `applicationServer.binary` matches |
-| Readiness probe | Aligned | `/readyz` probes DB; errors are logged server-side only |
+| Readiness probe | Aligned | `/healthz` and `/readyz` are infra probes (not business API envelope); `/readyz` probes DB |
 | Gateway production template | Aligned | Restricted CORS via `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS`; cloud gateway configs validated |
 | CI dependency closure | Aligned | `.github/workflows/verify.yml` checks out platform crates |
-| Observability | Partial | Structured tracing on admin list; full handler coverage pending |
-| Supply-chain SBOM | Planned | Enable in `sdkwork.workflow.json` when release gate requires |
-| PC full application shell | Partial | Catalog explorer + composed admin libraries; full `APP_PC_ARCHITECTURE_SPEC` shell pending |
+| Observability | Aligned | Request-scoped `traceId` on success and error via `WebRequestContext`; structured tracing on admin model list |
+| Supply-chain SBOM | Deferred | `security.sbomRequired: false` in `sdkwork.workflow.json` until release gate enables evidence |
+| PC browser catalog | Aligned | `apps/sdkwork-models-pc/` standalone catalog explorer via `@sdkwork/models` |
+| PC admin UI | Composed | Admin packages (`sdkwork-models-pc-admin-*`) mount in Claw Router host per `APP_PC_ARCHITECTURE_SPEC` |
 
 ## Composed Host Integration
 

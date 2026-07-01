@@ -2,14 +2,15 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use axum::extract::{Query, State};
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
+use axum::response::Response;
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use sdkwork_claw_http::TrustedRequestSubject;
+use sdkwork_utils_rust::SdkWorkResultCode;
+use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
-use crate::api::response::{legacy_problem, ApiResponse};
+use crate::api::response::{finish_success, problem_for};
 use crate::api::subject::map_optional_app_user_subject;
 use crate::application::{
     ModelRankingRefreshWorker, ModelRankingRefreshWorkerConfig,
@@ -99,7 +100,7 @@ pub fn app_model_rankings_router() -> Router {
         "/app/v3/api/ai/model_rankings",
         Arc::new(UnconfiguredModelRankingsReadStore),
         None,
-        true,
+        false,
         false,
     )
 }
@@ -111,7 +112,7 @@ pub fn app_model_rankings_router_with_read_store(
         "/app/v3/api/ai/model_rankings",
         read_store,
         None,
-        true,
+        false,
         false,
     )
 }
@@ -179,15 +180,16 @@ fn model_rankings_router(
 }
 
 async fn trigger_model_ranking_refresh(
+    ctx: WebRequestContext,
     State(state): State<ModelRankingsState>,
     trusted: TrustedRequestSubject,
     Json(request): Json<ModelRankingRefreshHttpRequest>,
 ) -> Response {
     let subject = map_rankings_subject(trusted);
     let Some(refresh_store) = state.refresh_store.clone() else {
-        return legacy_problem(
-            StatusCode::SERVICE_UNAVAILABLE,
-            "5030",
+        return problem_for(
+            &ctx,
+            SdkWorkResultCode::ServiceUnavailable,
             "model ranking refresh store is not configured",
         );
     };
@@ -195,9 +197,9 @@ async fn trigger_model_ranking_refresh(
         match ManualRefreshRunningGuard::acquire(Arc::clone(&state.manual_refresh_running)) {
             Ok(guard) => guard,
             Err(()) => {
-                return legacy_problem(
-                    StatusCode::CONFLICT,
-                    "4090",
+                return problem_for(
+                    &ctx,
+                    SdkWorkResultCode::Conflict,
                     "model ranking refresh is already running",
                 );
             }
@@ -214,9 +216,9 @@ async fn trigger_model_ranking_refresh(
                     organization_id: subject.organization_id,
                     rank_scope: Some(result.rank_scope.clone()),
                 });
-            Json(ApiResponse::success(result)).into_response()
+            finish_success(&ctx, result)
         }
-        Err((status, code, message)) => legacy_problem(status, code, message),
+        Err((code, message)) => problem_for(&ctx, code, message),
     }
 }
 
@@ -224,34 +226,34 @@ async fn run_manual_refresh(
     refresh_store: Arc<dyn ModelRankingRefreshStore + Send + Sync>,
     subject: ModelRankingsSubject,
     request: ModelRankingRefreshHttpRequest,
-) -> Result<ModelRankingRefreshTriggerResponse, (StatusCode, &'static str, String)> {
+) -> Result<ModelRankingRefreshTriggerResponse, (SdkWorkResultCode, String)> {
     let config = manual_refresh_config(subject, request)?;
     let worker = ModelRankingRefreshWorker::new(refresh_store, config.clone());
     match worker.run_once().await {
         Ok(outcome) => Ok(trigger_response(subject, &config, outcome)),
         Err(error) => Err((
-            StatusCode::SERVICE_UNAVAILABLE,
-            "5030",
+            SdkWorkResultCode::ServiceUnavailable,
             format!("model ranking refresh failed: {error}"),
         )),
     }
 }
 
 async fn fetch_model_ranking_jobs(
+    ctx: WebRequestContext,
     State(state): State<ModelRankingsState>,
     subject: Option<TrustedRequestSubject>,
     Query(query): Query<ModelRankingJobsHttpQuery>,
 ) -> Response {
-    let subject = match optional_rankings_subject(subject, state.require_subject) {
+    let subject = match optional_rankings_subject(&ctx, subject, state.require_subject) {
         Ok(subject) => subject,
         Err(response) => return response,
     };
 
     let limit = query.limit.unwrap_or(DEFAULT_JOB_HISTORY_LIMIT);
     if !(1..=MAX_JOB_HISTORY_LIMIT).contains(&limit) {
-        return legacy_problem(
-            StatusCode::BAD_REQUEST,
-            "4001",
+        return problem_for(
+            &ctx,
+            SdkWorkResultCode::ValidationError,
             format!(
                 "model ranking refresh job history limit must be between 1 and {MAX_JOB_HISTORY_LIMIT}"
             ),
@@ -268,21 +270,22 @@ async fn fetch_model_ranking_jobs(
         .load_model_ranking_refresh_jobs(query, subject)
         .await
     {
-        Ok(page) => Json(ApiResponse::success(page)).into_response(),
-        Err(error) => legacy_problem(
-            StatusCode::SERVICE_UNAVAILABLE,
-            "5030",
+        Ok(page) => finish_success(&ctx, page),
+        Err(error) => problem_for(
+            &ctx,
+            SdkWorkResultCode::ServiceUnavailable,
             format!("model ranking refresh job history read model is unavailable: {error}"),
         ),
     }
 }
 
 async fn fetch_model_ranking_status(
+    ctx: WebRequestContext,
     State(state): State<ModelRankingsState>,
     subject: Option<TrustedRequestSubject>,
     Query(query): Query<ModelRankingStatusHttpQuery>,
 ) -> Response {
-    let subject = match optional_rankings_subject(subject, state.require_subject) {
+    let subject = match optional_rankings_subject(&ctx, subject, state.require_subject) {
         Ok(subject) => subject,
         Err(response) => return response,
     };
@@ -296,35 +299,38 @@ async fn fetch_model_ranking_status(
         .load_model_ranking_refresh_status(query, subject)
         .await
     {
-        Ok(status) => Json(ApiResponse::success(status)).into_response(),
-        Err(error) => legacy_problem(
-            StatusCode::SERVICE_UNAVAILABLE,
-            "5030",
+        Ok(status) => finish_success(&ctx, status),
+        Err(error) => problem_for(
+            &ctx,
+            SdkWorkResultCode::ServiceUnavailable,
             format!("model ranking refresh status read model is unavailable: {error}"),
         ),
     }
 }
 
 async fn fetch_model_rankings(
+    ctx: WebRequestContext,
     State(state): State<ModelRankingsState>,
     subject: Option<TrustedRequestSubject>,
     Query(query): Query<ModelRankingsHttpQuery>,
 ) -> Response {
-    let subject = match optional_rankings_subject(subject, state.require_subject) {
+    let subject = match optional_rankings_subject(&ctx, subject, state.require_subject) {
         Ok(subject) => subject,
         Err(response) => return response,
     };
 
     let query = match validate_query(query) {
         Ok(query) => query,
-        Err(message) => return legacy_problem(StatusCode::BAD_REQUEST, "4001", message),
+        Err(message) => {
+            return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
+        }
     };
 
     match state.read_store.load_model_rankings(query, subject).await {
-        Ok(snapshot) => Json(ApiResponse::success(snapshot)).into_response(),
-        Err(error) => legacy_problem(
-            StatusCode::SERVICE_UNAVAILABLE,
-            "5030",
+        Ok(snapshot) => finish_success(&ctx, snapshot),
+        Err(error) => problem_for(
+            &ctx,
+            SdkWorkResultCode::ServiceUnavailable,
             format!("model rankings read model is unavailable: {error}"),
         ),
     }
@@ -380,10 +386,11 @@ fn map_rankings_subject(trusted: TrustedRequestSubject) -> ModelRankingsSubject 
 }
 
 fn optional_rankings_subject(
+    ctx: &WebRequestContext,
     subject: Option<TrustedRequestSubject>,
     require_subject: bool,
 ) -> Result<Option<ModelRankingsSubject>, Response> {
-    map_optional_app_user_subject(subject, require_subject, map_rankings_subject)
+    map_optional_app_user_subject(ctx, subject, require_subject, map_rankings_subject)
 }
 
 fn validate_query(query: ModelRankingsHttpQuery) -> Result<ModelRankingsQuery, String> {
@@ -430,7 +437,7 @@ impl Drop for ManualRefreshRunningGuard {
 fn manual_refresh_config(
     subject: ModelRankingsSubject,
     request: ModelRankingRefreshHttpRequest,
-) -> Result<ModelRankingRefreshWorkerConfig, (StatusCode, &'static str, String)> {
+) -> Result<ModelRankingRefreshWorkerConfig, (SdkWorkResultCode, String)> {
     let defaults = ModelRankingRefreshWorkerConfig::default();
     let refresh_interval_seconds = validate_optional_range(
         "model ranking refresh interval seconds",
@@ -483,7 +490,7 @@ fn manual_refresh_config(
 fn validate_rank_scope(
     value: Option<String>,
     fallback: &str,
-) -> Result<String, (StatusCode, &'static str, String)> {
+) -> Result<String, (SdkWorkResultCode, String)> {
     let value = normalize_query_string(value)
         .unwrap_or_else(|| fallback.to_owned())
         .to_ascii_lowercase();
@@ -505,7 +512,7 @@ fn validate_rank_scope(
 fn validate_snapshot_period(
     value: Option<String>,
     fallback: &str,
-) -> Result<String, (StatusCode, &'static str, String)> {
+) -> Result<String, (SdkWorkResultCode, String)> {
     let value = normalize_query_string(value)
         .unwrap_or_else(|| fallback.to_owned())
         .to_ascii_lowercase();
@@ -523,7 +530,7 @@ fn validate_optional_range(
     fallback: i64,
     min: i64,
     max: i64,
-) -> Result<i64, (StatusCode, &'static str, String)> {
+) -> Result<i64, (SdkWorkResultCode, String)> {
     let value = value.unwrap_or(fallback);
     if (min..=max).contains(&value) {
         Ok(value)
@@ -532,10 +539,8 @@ fn validate_optional_range(
     }
 }
 
-fn bad_refresh_request<T>(
-    message: impl Into<String>,
-) -> Result<T, (StatusCode, &'static str, String)> {
-    Err((StatusCode::BAD_REQUEST, "4001", message.into()))
+fn bad_refresh_request<T>(message: impl Into<String>) -> Result<T, (SdkWorkResultCode, String)> {
+    Err((SdkWorkResultCode::ValidationError, message.into()))
 }
 
 fn trigger_response(

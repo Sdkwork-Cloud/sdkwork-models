@@ -1,4 +1,5 @@
 # sdkwork-models
+repository-kind: foundation-dependency
 
 `sdkwork-models` is the standalone model catalog project for Sdkwork products
 and application integrations. It stores model vendor data, model facts, billing

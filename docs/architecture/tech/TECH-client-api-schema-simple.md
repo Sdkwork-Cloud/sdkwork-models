@@ -1,8 +1,6 @@
-> Migrated from `docs/client-api-schema-simple.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
-## 简化后的数据结构
-
+## �?�??�?�??�?�据�?�??
 ```json
 {
   "clientApi": {
@@ -15,36 +13,36 @@
         "map": { "deepseek-v4-pro": "claude-sonnet-4" }
       },
       "caps": ["stream", "tools", "vision"],
-      "note": "仅支持global区域"
+      "note": "�?�?��?�global�?��??"
     }
   }
 }
 ```
 
-## 字段说明
+## �?段说�??
 
-| 字段 | 类型 | 说明 |
+| �?段 | 类�?? | 说�?? |
 |------|------|------|
-| status | string | native=原生支持, convert=需转换, none=不支持 |
-| protocol | string | 使用的协议代码 |
-| endpoint | string | API端点 |
+| status | string | native=�??�??�?��?�, convert=�??转换, none=不�?��??|
+| protocol | string | 使�?��??协议代�?|
+| endpoint | string | API端�?� |
 | convert.from | string | 转换来源协议 |
-| convert.map | object | 模型映射 {源模型: 目标模型} |
-| caps | array | 支持的能力 |
-| note | string | 备注说明 |
+| convert.map | object | 模�??�?��? {源模�?? �?��?模�??} |
+| caps | array | �?��?��??�?��??|
+| note | string | �?注说�?? |
 
-## 能力代码
+## �?��??代码
 
-| 代码 | 说明 |
+| 代码 | 说�?? |
 |------|------|
-| stream | 流式输出 |
-| tools | 工具调用 |
-| vision | 图像理解 |
-| audio | 音频处理 |
+| stream | 流式�?�?� |
+| tools | 工�?��?�?� |
+| vision | �?��?��?解 |
+| audio | �?��?�?�? |
 
-## 示例配置
+## 示�?�?�置
 
-### OpenAI (原生支持Codex)
+### OpenAI (�??�??�?��?�Codex)
 ```json
 {
   "clientApi": {
@@ -58,7 +56,7 @@
 }
 ```
 
-### Alibaba (转换支持Claude Code)
+### Alibaba (转换�?��?�Claude Code)
 ```json
 {
   "clientApi": {
@@ -71,13 +69,13 @@
         "map": { "qwen3.7-max": "claude-sonnet-4" }
       },
       "caps": ["stream", "tools"],
-      "note": "仅global区域，Qwen3.7-Max兼容Anthropic格式"
+      "note": "�?global�?��??�?Qwen3.7-Max�?�容Anthropic格式"
     }
   }
 }
 ```
 
-### DeepSeek (通过代理支持Claude Code)
+### DeepSeek (�??�?代�?�?��?�Claude Code)
 ```json
 {
   "clientApi": {
@@ -93,19 +91,19 @@
         }
       },
       "caps": ["stream", "tools"],
-      "note": "需要代理层进行协议转换"
+      "note": "�??要代�?�?�?�?协议转换"
     }
   }
 }
 ```
 
-### 不支持的情况
+### 不�?��?��??�??�?�
 ```json
 {
   "clientApi": {
     "claude_code": {
       "status": "none",
-      "note": "不支持Claude Code客户端API"
+      "note": "不�?��?�Claude Code客�?�端API"
     }
   }
 }

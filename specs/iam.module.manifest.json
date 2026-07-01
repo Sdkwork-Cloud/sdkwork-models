@@ -74,14 +74,6 @@
           { "operationId": "aiResourceGroups.update", "permission": "intelligence.resources.manage" },
           { "operationId": "aiResourceGroups.delete", "permission": "intelligence.resources.manage" }
         ]
-      },
-      {
-        "apiAuthority": "sdkwork-models-app-api",
-        "operationPermissions": [
-          { "operationId": "modelVendors.list", "permission": "intelligence.models.read" },
-          { "operationId": "models.list", "permission": "intelligence.models.read" },
-          { "operationId": "modelRankings.list", "permission": "intelligence.models.read" }
-        ]
       }
     ]
   },

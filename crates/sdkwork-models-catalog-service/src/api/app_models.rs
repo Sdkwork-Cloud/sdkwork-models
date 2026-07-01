@@ -2,13 +2,14 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use axum::extract::{Query, State};
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
+use axum::response::Response;
 use axum::routing::get;
-use axum::{Json, Router};
+use axum::Router;
+use sdkwork_utils_rust::SdkWorkResultCode;
+use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
-use crate::api::response::{legacy_problem, ApiResponse};
+use crate::api::response::{finish_success, problem_for};
 use crate::application::{
     ListModelCatalogQuery, ModelCatalogGroup, ModelCatalogItem, ModelCatalogPage,
     ModelCatalogQueryService, PriceAvailability,
@@ -141,17 +142,18 @@ where
         .with_state(AppModelCatalogState { catalog })
 }
 
-async fn fetch_model_vendors<C>(State(state): State<AppModelCatalogState<C>>) -> Response
+async fn fetch_model_vendors<C>(
+    ctx: WebRequestContext,
+    State(state): State<AppModelCatalogState<C>>,
+) -> Response
 where
     C: PricingCatalog + Send + Sync + 'static,
 {
-    Json(ApiResponse::success(to_vendor_response(
-        state.catalog.as_ref(),
-    )))
-    .into_response()
+    finish_success(&ctx, to_vendor_response(state.catalog.as_ref()))
 }
 
 async fn fetch_models<C>(
+    ctx: WebRequestContext,
     State(state): State<AppModelCatalogState<C>>,
     Query(query): Query<AppModelCatalogQuery>,
 ) -> Response
@@ -178,8 +180,8 @@ where
         limit: query.limit,
         offset: query.offset,
     }) {
-        Ok(page) => Json(ApiResponse::success(to_response(page))).into_response(),
-        Err(error) => legacy_problem(StatusCode::BAD_REQUEST, "4001", error.to_string()),
+        Ok(page) => finish_success(&ctx, to_response(page)),
+        Err(error) => problem_for(&ctx, SdkWorkResultCode::ValidationError, error.to_string()),
     }
 }
 

@@ -10,7 +10,7 @@
     "domain": "intelligence",
     "declaredDomain": null,
     "capability": "model",
-    "status": "standardizing",
+    "status": "ready",
     "languages": [
       "typescript"
     ],

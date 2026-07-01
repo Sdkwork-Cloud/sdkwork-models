@@ -1,14 +1,16 @@
 use std::sync::Arc;
 
 use axum::extract::State;
-use axum::http::{HeaderMap, StatusCode, Uri};
-use axum::response::{IntoResponse, Response};
+use axum::http::{HeaderMap, Uri};
+use axum::response::Response;
 use axum::routing::get;
-use axum::{Json, Router};
+use axum::Router;
 use sdkwork_claw_http::ApiKeyIdentity;
+use sdkwork_utils_rust::SdkWorkResultCode;
+use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
-use crate::api::response::{legacy_problem, ApiResponse};
+use crate::api::response::{finish_success, problem_for};
 use crate::application::{
     ApiKeyAuthenticator, ApiKeySecretHasher, AuthenticateApiKeyQuery, ListModelCatalogQuery,
     ModelCatalogItem, ModelCatalogPage, ModelCatalogPriceView, ModelCatalogQueryService,
@@ -103,6 +105,7 @@ where
 }
 
 async fn fetch_models<C>(
+    ctx: WebRequestContext,
     State(state): State<AdminModelCatalogState<C>>,
     headers: HeaderMap,
     uri: Uri,
@@ -112,24 +115,19 @@ where
 {
     let request = match parse_query(uri.query()) {
         Ok(request) => request,
-        Err(message) => return legacy_problem(StatusCode::BAD_REQUEST, "4001", message),
+        Err(message) => {
+            return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
+        }
     };
     let identity = match ApiKeyIdentity::from_headers_and_uri(&headers, &uri) {
         Ok(identity) => identity,
         Err(error) => {
-            return legacy_problem(StatusCode::BAD_REQUEST, "4001", error.to_string());
+            return problem_for(&ctx, SdkWorkResultCode::ValidationError, error.to_string());
         }
     };
     let api_key_id = match resolve_api_key_id(&state, &identity, request.api_key_id) {
         Ok(api_key_id) => api_key_id,
-        Err((status, message)) => {
-            let code = if status == StatusCode::UNAUTHORIZED {
-                "4010"
-            } else {
-                "4001"
-            };
-            return legacy_problem(status, code, message.to_string());
-        }
+        Err((code, message)) => return problem_for(&ctx, code, message),
     };
     let billing_meter = request
         .billing_meter
@@ -151,8 +149,8 @@ where
         limit: None,
         offset: None,
     }) {
-        Ok(page) => Json(ApiResponse::success(to_response(page, &billing_meter))).into_response(),
-        Err(error) => legacy_problem(StatusCode::BAD_REQUEST, "4001", error.to_string()),
+        Ok(page) => finish_success(&ctx, to_response(page, &billing_meter)),
+        Err(error) => problem_for(&ctx, SdkWorkResultCode::ValidationError, error.to_string()),
     }
 }
 
@@ -193,20 +191,28 @@ fn resolve_api_key_id<C>(
     state: &AdminModelCatalogState<C>,
     identity: &ApiKeyIdentity,
     request_api_key_id: Option<i64>,
-) -> Result<Option<i64>, (StatusCode, &'static str)>
+) -> Result<Option<i64>, (SdkWorkResultCode, &'static str)>
 where
     C: PricingCatalog + Send + Sync + 'static,
 {
     if let Some(hasher) = state.api_key_hasher.as_ref() {
         let Some(credential_secret) = identity.credential_secret() else {
-            return Err((StatusCode::UNAUTHORIZED, "api key credential is required"));
+            return Err((
+                SdkWorkResultCode::AuthenticationRequired,
+                "api key credential is required",
+            ));
         };
 
         let authenticator = ApiKeyAuthenticator::new(state.catalog.as_ref(), hasher.as_ref());
         return authenticator
             .authenticate(AuthenticateApiKeyQuery { credential_secret })
             .map(|context| Some(context.api_key_id))
-            .map_err(|_| (StatusCode::UNAUTHORIZED, "api key credential is invalid"));
+            .map_err(|_| {
+                (
+                    SdkWorkResultCode::AuthenticationRequired,
+                    "api key credential is invalid",
+                )
+            });
     }
 
     if let Some(api_key_id) = identity.api_key_id() {
@@ -216,7 +222,7 @@ where
         return Ok(request_api_key_id);
     }
     Err((
-        StatusCode::UNAUTHORIZED,
+        SdkWorkResultCode::AuthenticationRequired,
         "api key credential authentication is not configured",
     ))
 }

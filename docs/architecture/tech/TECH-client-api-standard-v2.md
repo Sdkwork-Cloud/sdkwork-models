@@ -1,15 +1,12 @@
-> Migrated from `docs/client-api-standard-v2.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
-## 设计原则
+## 设计�??�??
 
-1. **完整性** - 覆盖所有可能的客户端工具和协议
-2. **可扩展性** - 支持未来新增工具、协议、能力
-3. **向后兼容** - 新版本结构兼容旧版本数据
-4. **简洁性** - 字段命名简洁，结构清晰
-5. **可验证性** - 支持配置验证和一致性检查
-
-## 核心数据结构
+1. **�?�?��??* - �?�??�??�??可�?��??客�?�端工�?��??协议
+2. **可�?��?�??* - �?��?��?�来�?��?工�?��?�协议�?��?��??3. **�?�?�?�容** - �?��??�?��?�??�?�容�?��??�?��?�据
+4. **�?洁�??* - �?段�?�名�?洁�?�?�??�?�?�
+5. **可�?证�??* - �?��?��?�置�?证�??�?�?��?��?�??
+## 核�?�?�据�?�??
 
 ```json
 {
@@ -32,91 +29,85 @@
 }
 ```
 
-## 字段定义
+## �?段�?�?
 
-### 必填字段
+### �?填�?段
 
-| 字段 | 类型 | 说明 | 示例 |
+| �?段 | 类�?? | 说�?? | 示�? |
 |------|------|------|------|
-| status | string | 支持状态 | native, convert, none |
+| status | string | �?��?��?��??| native, convert, none |
 | protocol | string | 协议代码 | anthropic_messages, openai_compatible |
 
-### 可选字段
-
-| 字段 | 类型 | 说明 | 默认值 |
+### 可�??�?�?
+| �?段 | 类�?? | 说�?? | �?认�??|
 |------|------|------|--------|
-| version | string | 配置版本 | "1.0" |
-| endpoint | string | API端点 | - |
-| convert | object | 转换配置 | null |
-| caps | array | 能力列表 | [] |
-| regions | array | 支持区域 | ["global"] |
-| note | string | 备注说明 | - |
-| meta | object | 扩展元数据 | {} |
+| version | string | �?�置�??�?� | "1.0" |
+| endpoint | string | API端�?� | - |
+| convert | object | 转换�?�置 | null |
+| caps | array | �?��??�??表 | [] |
+| regions | array | �?��?��?��?? | ["global"] |
+| note | string | �?注说�?? | - |
+| meta | object | �?��?�??�?��?| {} |
 
 ### convert 对象
 
-| 字段 | 类型 | 说明 |
+| �?段 | 类�?? | 说�?? |
 |------|------|------|
 | from | string | 转换来源协议 |
-| map | object | 模型映射 {源: 目标} |
+| map | object | 模�??�?��? {�? �?��?} |
 
-## 状态定义
-
-| 状态 | 说明 | 使用场景 |
+## �?��?��?�?
+| �?��??| 说�?? | 使�?��?��?� |
 |------|------|----------|
-| native | 原生支持 | vendor直接暴露该API |
-| convert | 需要转换 | 通过协议转换支持 |
-| none | 不支持 | 无法使用该API |
+| native | �??�??�?��?� | vendor�?��?��?��?�该API |
+| convert | �??要转�?| �??�?协议转换�?��?� |
+| none | 不�?��??| �?��?使�?�该API |
 
-## 协议代码表
-
-| 代码 | 说明 | 版本 |
+## 协议代码�?
+| 代码 | 说�?? | �??�?� |
 |------|------|------|
 | anthropic_messages | Anthropic Messages API | 2023-06-01 |
 | openai_responses | OpenAI Responses API | 2024-10-01 |
-| openai_compatible | OpenAI兼容格式 | - |
+| openai_compatible | OpenAI�?�容格式 | - |
 | google_gemini | Google Gemini API | v1 |
-| vendor_native | 厂商原生API | - |
+| vendor_native | �??�??�??�??API | - |
 
-## 能力代码表
-
-| 代码 | 说明 | 可扩展 |
+## �?��??代码�?
+| 代码 | 说�?? | 可�?��?|
 |------|------|--------|
-| stream | 流式输出 | - |
-| tools | 工具调用 | - |
-| vision | 图像理解 | - |
-| audio | 音频处理 | - |
-| video | 视频处理 | ✓ |
-| image | 图像生成 | ✓ |
-| music | 音乐生成 | ✓ |
-| code | 代码生成 | ✓ |
-| reasoning | 推理能力 | ✓ |
+| stream | 流式�?�?� | - |
+| tools | 工�?��?�?� | - |
+| vision | �?��?��?解 | - |
+| audio | �?��?�?�? | - |
+| video | �?�?�?�? | �??|
+| image | �?��?��??�?� | �??|
+| music | �?�乐�??�?� | �??|
+| code | 代码�??�?� | �??|
+| reasoning | �?��?�?��?? | �??|
 
-## 区域代码表
-
-| 代码 | 说明 |
+## �?��??代码�?
+| 代码 | 说�?? |
 |------|------|
-| global | 全球区域 |
-| cn | 中国大陆 |
-| us | 美国 |
-| eu | 欧盟 |
-| asia | 亚太 |
+| global | �?��?�?��?? |
+| cn | 中�?�大�?? |
+| us | �?�?� |
+| eu | 欧�?? |
+| asia | �?太 |
 
-## API代码表
-
-| 代码 | 说明 | 可扩展 |
+## API代码�?
+| 代码 | 说�?? | 可�?��?|
 |------|------|--------|
 | claude_code | Anthropic Claude Code | - |
 | codex | OpenAI Codex | - |
 | gemini_cli | Google Gemini CLI | - |
-| cursor | Cursor IDE | ✓ |
-| copilot | GitHub Copilot | ✓ |
-| cline | Cline | ✓ |
-| aider | Aider | ✓ |
+| cursor | Cursor IDE | �??|
+| copilot | GitHub Copilot | �??|
+| cline | Cline | �??|
+| aider | Aider | �??|
 
-## 扩展机制
+## �?��?�?��?�
 
-### 1. meta 扩展
+### 1. meta �?��?
 
 ```json
 {
@@ -130,8 +121,7 @@
 }
 ```
 
-### 2. 动态配置
-
+### 2. �?��?��?��?
 ```json
 {
   "dynamic": {
@@ -142,7 +132,7 @@
 }
 ```
 
-### 3. 版本兼容
+### 3. �??�?��?�容
 
 ```json
 {
@@ -155,9 +145,9 @@
 }
 ```
 
-## 完整示例
+## �?�?�示�?
 
-### OpenAI (原生支持Codex)
+### OpenAI (�??�??�?��?�Codex)
 
 ```json
 {
@@ -169,7 +159,7 @@
       "endpoint": "/v1/responses",
       "caps": ["stream", "tools", "vision", "code"],
       "regions": ["global"],
-      "note": "OpenAI原生Codex API",
+      "note": "OpenAI�??�??Codex API",
       "meta": {
         "api_version": "2024-10-01",
         "max_tokens": 128000
@@ -179,7 +169,7 @@
 }
 ```
 
-### Alibaba Cloud (转换支持Claude Code)
+### Alibaba Cloud (转换�?��?�Claude Code)
 
 ```json
 {
@@ -198,17 +188,17 @@
       },
       "caps": ["stream", "tools"],
       "regions": ["global"],
-      "note": "Qwen3.7-Max兼容Anthropic格式，仅global区域",
+      "note": "Qwen3.7-Max�?�容Anthropic格式�?�?global�?��??",
       "meta": {
         "compatibility_level": "high",
-        "limitations": ["不支持vision"]
+        "limitations": ["不�?��?�vision"]
       }
     }
   }
 }
 ```
 
-### DeepSeek (通过代理支持Claude Code)
+### DeepSeek (�??�?代�?�?��?�Claude Code)
 
 ```json
 {
@@ -227,7 +217,7 @@
       },
       "caps": ["stream", "tools", "code"],
       "regions": ["cn", "global"],
-      "note": "需要代理层进行协议转换",
+      "note": "�??要代�?�?�?�?协议转换",
       "meta": {
         "proxy_required": true,
         "conversion_overhead": "low"
@@ -237,7 +227,7 @@
 }
 ```
 
-### 未来扩展示例 (Cursor)
+### �?�来�?��?示�? (Cursor)
 
 ```json
 {
@@ -256,7 +246,7 @@
       },
       "caps": ["stream", "tools", "code", "vision"],
       "regions": ["global"],
-      "note": "通过OpenAI兼容接口支持Cursor",
+      "note": "�??�?OpenAI�?�容�?�口�?��?�Cursor",
       "meta": {
         "ide_integration": true,
         "context_window": 128000
@@ -266,39 +256,33 @@
 }
 ```
 
-## 验证规则
+## �?证�?�??
 
-### 必填验证
+### �?填�?证
 
-- status 必须是 native|convert|none
-- protocol 必须在协议代码表中
-- 当 status=convert 时，convert.from 必填
+- status �?须�??native|convert|none
+- protocol �?须�?�协议代码表�?- �?status=convert �?��?convert.from �?填
 
-### 一致性验证
+### �?�?��?��?�?
+- �?status=native �?��?convert �?为 null �??enabled=false
+- �?status=none �?��?protocol �??endpoint 可�??- caps 中�??�?��??代码�?须�?��?��??代码表�?
+### �?��?�?证
 
-- 当 status=native 时，convert 应为 null 或 enabled=false
-- 当 status=none 时，protocol 和 endpoint 可选
-- caps 中的能力代码必须在能力代码表中
+- meta 中�??�?��?�?�?段不影�?�核�?�??�?�
+- version �?须遵循语�?�??�??�?��?�??- regions 中�??�?��??代码�?须�?��?��??代码表�?
+## 迁移�??�?
 
-### 扩展验证
+### v1 �??v2
 
-- meta 中的自定义字段不影响核心功能
-- version 必须遵循语义化版本规范
-- regions 中的区域代码必须在区域代码表中
+1. 添�?� version �?段
+2. �?supportStatus �?�为 status
+3. �?capabilities �?�为 caps
+4. �?limitations �?�为 note
+5. �?�??convert �?�??
 
-## 迁移指南
+### �?�?�?�容
 
-### v1 → v2
-
-1. 添加 version 字段
-2. 将 supportStatus 改为 status
-3. 将 capabilities 改为 caps
-4. 将 limitations 改为 note
-5. 简化 convert 结构
-
-### 向后兼容
-
-- v2 结构可以读取 v1 数据
-- v1 工具需要适配器才能读取 v2 数据
-- 建议逐步迁移，保持双版本支持
+- v2 �?�??可以读�? v1 �?�据
+- v1 工�?��??要�??�?��?��?��?�读�?v2 �?�据
+- 建议�?�步迁移�?保�?��?�??�?��?��?�
 

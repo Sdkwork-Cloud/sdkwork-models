@@ -1,4 +1,3 @@
-> Migrated from `docs/vendor-model-architecture.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
 Generated: 2026-06-13

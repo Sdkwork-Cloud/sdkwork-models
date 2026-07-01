@@ -6,11 +6,11 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const postgresPath = join(
   root,
-  "database/ddl/baseline/postgres/0001_sdkwork_models_catalog_baseline.sql",
+  "database/ddl/baseline/postgres/0001_sdkwork-models_baseline.sql",
 );
 const sqlitePath = join(
   root,
-  "database/ddl/baseline/sqlite/0001_sdkwork_models_catalog_baseline.sql",
+  "database/ddl/baseline/sqlite/0001_sdkwork-models_baseline.sql",
 );
 
 const postgres = readFileSync(postgresPath, "utf8");

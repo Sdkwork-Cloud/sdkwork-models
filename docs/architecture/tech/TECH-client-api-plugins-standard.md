@@ -1,91 +1,80 @@
-> Migrated from `docs/client-api-plugins-standard.md` on 2026-06-24.
 > Owner: SDKWork maintainers
 
-## 概述
+## �?述
 
-Plugins体系用于实现不同客户端工具之间的协议转换和模型映射。每个vendor可以定义自己的转换器plugin，支持将vendor的原生API转换为各种客户端工具期望的格式。
-
-## 目录结构
+Plugins�?系�?��?�?�?�不�?客�?�端工�?��?�?��??协议转换�??模�??�?��?�??每个vendor可以�?�?�?�己�??转换�?�plugin�?�?��?��?vendor�??�??�??API转换为�?种客�?�端工�?��??�??�??格式�??
+## �?��?�?�??
 
 ```
 plugins/
-├── README.md                    # 插件体系说明
-├── manifest.json                # 插件注册表
-├── core/                        # 核心插件框架
-│   ├── base-converter.ts       # 转换器基类
-│   ├── base-mapper.ts          # 映射器基类
-│   ├── types.ts                # 类型定义
-│   └── registry.ts             # 插件注册表
-├── converters/                  # 协议转换器
-│   ├── anthropic-to-openai/    # Anthropic → OpenAI
-│   │   ├── index.ts
-│   │   ├── request.ts
-│   │   ├── response.ts
-│   │   └── tests/
-│   ├── openai-to-anthropic/    # OpenAI → Anthropic
-│   │   ├── index.ts
-│   │   ├── request.ts
-│   │   ├── response.ts
-│   │   └── tests/
-│   ├── google-to-openai/       # Google → OpenAI
-│   │   ├── index.ts
-│   │   ├── request.ts
-│   │   ├── response.ts
-│   │   └── tests/
-│   └── custom/                 # 自定义转换器
-│       └── vendor-specific/
-├── mappers/                     # 模型映射器
-│   ├── direct-mapper.ts        # 直接映射
-│   ├── prefix-mapper.ts        # 前缀映射
-│   ├── suffix-mapper.ts        # 后缀映射
-│   └── custom-mapper.ts        # 自定义映射
-├── vendors/                     # Vendor插件
-│   ├── openai/
-│   │   ├── plugin.json
-│   │   ├── converter.ts
-│   │   ├── mapper.ts
-│   │   └── tests/
-│   ├── anthropic/
-│   │   ├── plugin.json
-│   │   ├── converter.ts
-│   │   ├── mapper.ts
-│   │   └── tests/
-│   ├── alibaba/
-│   │   ├── plugin.json
-│   │   ├── converter.ts
-│   │   ├── mapper.ts
-│   │   └── tests/
-│   └── deepseek/
-│       ├── plugin.json
-│       ├── converter.ts
-│       ├── mapper.ts
-│       └── tests/
-└── tools/                       # 客户端工具插件
-    ├── claude-code/
-    │   ├── plugin.json
-    │   ├── adapter.ts
-    │   └── tests/
-    ├── codex/
-    │   ├── plugin.json
-    │   ├── adapter.ts
-    │   └── tests/
-    ├── gemini-cli/
-    │   ├── plugin.json
-    │   ├── adapter.ts
-    │   └── tests/
-    └── cursor/
-        ├── plugin.json
-        ├── adapter.ts
-        └── tests/
+�??�??�?? README.md                    # �?件�?系说�??
+�??�??�?? manifest.json                # �?件注�??�?�??�??�?? core/                        # 核�?�?件�?�?�
+�??  �??�??�?? base-converter.ts       # 转换�?��?��?�??  �??�??�?? base-mapper.ts          # �?��?�?��?��?�??  �??�??�?? types.ts                # 类�??�?�?
+�??  �??�??�?? registry.ts             # �?件注�??�?�??�??�?? converters/                  # 协议转换�??�??  �??�??�?? anthropic-to-openai/    # Anthropic �??OpenAI
+�??  �??  �??�??�?? index.ts
+�??  �??  �??�??�?? request.ts
+�??  �??  �??�??�?? response.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? openai-to-anthropic/    # OpenAI �??Anthropic
+�??  �??  �??�??�?? index.ts
+�??  �??  �??�??�?? request.ts
+�??  �??  �??�??�?? response.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? google-to-openai/       # Google �??OpenAI
+�??  �??  �??�??�?? index.ts
+�??  �??  �??�??�?? request.ts
+�??  �??  �??�??�?? response.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? custom/                 # �?��?�?转换�?�
+�??      �??�??�?? vendor-specific/
+�??�??�?? mappers/                     # 模�??�?��?�??�??  �??�??�?? direct-mapper.ts        # �?��?��?��?
+�??  �??�??�?? prefix-mapper.ts        # �?��?�?��?
+�??  �??�??�?? suffix-mapper.ts        # �?�?�?��?
+�??  �??�??�?? custom-mapper.ts        # �?��?�?�?��?�??�??�?? vendors/                     # Vendor�?件
+�??  �??�??�?? openai/
+�??  �??  �??�??�?? plugin.json
+�??  �??  �??�??�?? converter.ts
+�??  �??  �??�??�?? mapper.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? anthropic/
+�??  �??  �??�??�?? plugin.json
+�??  �??  �??�??�?? converter.ts
+�??  �??  �??�??�?? mapper.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? alibaba/
+�??  �??  �??�??�?? plugin.json
+�??  �??  �??�??�?? converter.ts
+�??  �??  �??�??�?? mapper.ts
+�??  �??  �??�??�?? tests/
+�??  �??�??�?? deepseek/
+�??      �??�??�?? plugin.json
+�??      �??�??�?? converter.ts
+�??      �??�??�?? mapper.ts
+�??      �??�??�?? tests/
+�??�??�?? tools/                       # 客�?�端工�?��?�?    �??�??�?? claude-code/
+    �??  �??�??�?? plugin.json
+    �??  �??�??�?? adapter.ts
+    �??  �??�??�?? tests/
+    �??�??�?? codex/
+    �??  �??�??�?? plugin.json
+    �??  �??�??�?? adapter.ts
+    �??  �??�??�?? tests/
+    �??�??�?? gemini-cli/
+    �??  �??�??�?? plugin.json
+    �??  �??�??�?? adapter.ts
+    �??  �??�??�?? tests/
+    �??�??�?? cursor/
+        �??�??�?? plugin.json
+        �??�??�?? adapter.ts
+        �??�??�?? tests/
 ```
 
-## 核心类型定义
+## 核�?类�??�?�?
 
 ### types.ts
 
 ```typescript
-// 支持状态
-export type SupportStatus = 'native' | 'convert' | 'none';
+// �?��?��?��??export type SupportStatus = 'native' | 'convert' | 'none';
 
 // 协议代码
 export type ProtocolCode = 
@@ -95,7 +84,7 @@ export type ProtocolCode =
   | 'google_gemini'
   | 'vendor_native';
 
-// 能力代码
+// �?��??代码
 export type CapabilityCode = 
   | 'stream'
   | 'tools'
@@ -117,7 +106,7 @@ export type ApiCode =
   | 'cline'
   | 'aider';
 
-// 区域代码
+// �?��??代码
 export type RegionCode = 
   | 'global'
   | 'cn'
@@ -125,7 +114,7 @@ export type RegionCode =
   | 'eu'
   | 'asia';
 
-// 模型映射规则
+// 模�??�?��?�?�??
 export interface ModelMapping {
   source: string;
   target: string;
@@ -133,14 +122,14 @@ export interface ModelMapping {
   config?: Record<string, any>;
 }
 
-// 转换配置
+// 转换�?�置
 export interface ConvertConfig {
   from: ProtocolCode;
   map: Record<string, string>;
   rules?: TransformRule[];
 }
 
-// 转换规则
+// 转换�?�??
 export interface TransformRule {
   type: 'request' | 'response';
   field: string;
@@ -150,7 +139,7 @@ export interface TransformRule {
   transform?: (value: any) => any;
 }
 
-// 客户端API配置
+// 客�?�端API�?�置
 export interface ClientApiConfig {
   status: SupportStatus;
   version?: string;
@@ -163,15 +152,14 @@ export interface ClientApiConfig {
   meta?: Record<string, any>;
 }
 
-// Vendor配置
+// Vendor�?�置
 export interface VendorConfig {
   vendorCode: string;
   displayName: string;
   clientApi: Record<ApiCode, ClientApiConfig>;
 }
 
-// 转换器接口
-export interface IConverter {
+// 转换�?��?��?export interface IConverter {
   readonly name: string;
   readonly sourceProtocol: ProtocolCode;
   readonly targetProtocol: ProtocolCode;
@@ -181,15 +169,14 @@ export interface IConverter {
   convertResponse(response: any): any;
 }
 
-// 映射器接口
-export interface IMapper {
+// �?��?�?��?��?export interface IMapper {
   readonly name: string;
   
   map(sourceModel: string, mapping: Record<string, string>): string;
   mapBatch(models: string[], mapping: Record<string, string>): string[];
 }
 
-// 插件接口
+// �?件�?�口
 export interface IPlugin {
   readonly name: string;
   readonly version: string;
@@ -202,8 +189,7 @@ export interface IPlugin {
   getConfig(): ClientApiConfig;
 }
 
-// 插件注册表
-export interface PluginRegistry {
+// �?件注�??�?export interface PluginRegistry {
   register(plugin: IPlugin): void;
   unregister(name: string): void;
   get(name: string): IPlugin | undefined;
@@ -213,7 +199,7 @@ export interface PluginRegistry {
 }
 ```
 
-## 插件配置格式
+## �?件�?�置格式
 
 ### plugin.json
 
@@ -221,7 +207,7 @@ export interface PluginRegistry {
 {
   "name": "alibaba-claude-code",
   "version": "1.0.0",
-  "description": "Alibaba Cloud Claude Code转换器",
+  "description": "Alibaba Cloud Claude Code转换�??,
   "vendorCode": "alibaba",
   "apiCode": "claude_code",
   "author": "SDKWork",
@@ -240,8 +226,8 @@ export interface PluginRegistry {
     },
     "capabilities": ["stream", "tools"],
     "limitations": [
-      "仅支持global区域",
-      "部分高级功能可能不完全兼容"
+      "�?�?��?�global�?��??",
+      "�?��??�?级�??�?�可�?�不�?�?��?��?
     ]
   },
   "transforms": {
@@ -263,8 +249,7 @@ export interface PluginRegistry {
 }
 ```
 
-## 转换器实现示例
-
+## 转换�?��?�?�示�?
 ### Alibaba Claude Code Converter
 
 ```typescript
@@ -288,12 +273,12 @@ export class AlibabaClaudeCodeConverter implements IConverter {
   convertRequest(request: any): any {
     const converted = { ...request };
     
-    // 映射模型名称
+    // �?��?模�??名称
     if (converted.model && this.modelMapping[converted.model]) {
       converted.model = this.modelMapping[converted.model];
     }
     
-    // 转换系统消息格式
+    // 转换系�?�?息格式
     if (converted.system && typeof converted.system === 'string') {
       converted.system = [{ type: 'text', text: converted.system }];
     }
@@ -304,7 +289,7 @@ export class AlibabaClaudeCodeConverter implements IConverter {
   convertResponse(response: any): any {
     const converted = { ...response };
     
-    // 反向映射模型名称
+    // 反�?�?��?模�??名称
     const reverseMapping = Object.fromEntries(
       Object.entries(this.modelMapping).map(([k, v]) => [v, k])
     );
@@ -318,7 +303,7 @@ export class AlibabaClaudeCodeConverter implements IConverter {
 }
 ```
 
-### DeepSeek Claude Code Converter (通过OpenAI兼容)
+### DeepSeek Claude Code Converter (�??�?OpenAI�?�容)
 
 ```typescript
 // plugins/vendors/deepseek/converter.ts
@@ -339,7 +324,7 @@ export class DeepSeekClaudeCodeConverter implements IConverter {
   }
   
   convertRequest(request: any): any {
-    // OpenAI格式 → Anthropic格式
+    // OpenAI格式 �??Anthropic格式
     return {
       model: this.modelMapping[request.model] || request.model,
       max_tokens: request.max_tokens || 4096,
@@ -351,7 +336,7 @@ export class DeepSeekClaudeCodeConverter implements IConverter {
   }
   
   convertResponse(response: any): any {
-    // Anthropic格式 → OpenAI格式
+    // Anthropic格式 �??OpenAI格式
     return {
       id: response.id,
       object: 'chat.completion',
@@ -422,8 +407,7 @@ export class DeepSeekClaudeCodeConverter implements IConverter {
 }
 ```
 
-## 映射器实现示例
-
+## �?��?�?��?�?�示�?
 ### Custom Mapper
 
 ```typescript
@@ -441,15 +425,13 @@ export class CustomMapper implements IMapper {
     return models.map(model => this.map(model, mapping));
   }
   
-  // 支持通配符匹配
-  mapWithWildcard(sourceModel: string, mapping: Record<string, string>): string {
-    // 精确匹配
+  // �?��?��??�?�符�?��??  mapWithWildcard(sourceModel: string, mapping: Record<string, string>): string {
+    // 精确�?��?�
     if (mapping[sourceModel]) {
       return mapping[sourceModel];
     }
     
-    // 通配符匹配
-    for (const [pattern, target] of Object.entries(mapping)) {
+    // �??�?�符�?��??    for (const [pattern, target] of Object.entries(mapping)) {
       if (pattern.includes('*')) {
         const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
         if (regex.test(sourceModel)) {
@@ -463,7 +445,7 @@ export class CustomMapper implements IMapper {
 }
 ```
 
-## Vendor插件配置示例
+## Vendor�?件�?�置示�?
 
 ### Alibaba Plugin
 
@@ -486,17 +468,17 @@ export class CustomMapper implements IMapper {
       },
       "caps": ["stream", "tools"],
       "regions": ["global"],
-      "note": "Qwen3.7-Max兼容Anthropic格式"
+      "note": "Qwen3.7-Max�?�容Anthropic格式"
     },
     "codex": {
       "status": "none",
       "protocol": "openai_compatible",
-      "note": "不支持Codex客户端API"
+      "note": "不�?��?�Codex客�?�端API"
     },
     "gemini_cli": {
       "status": "none",
       "protocol": "google_gemini",
-      "note": "不支持Gemini CLI客户端API"
+      "note": "不�?��?�Gemini CLI客�?�端API"
     }
   }
 }
@@ -523,23 +505,23 @@ export class CustomMapper implements IMapper {
       },
       "caps": ["stream", "tools", "code"],
       "regions": ["cn", "global"],
-      "note": "需要代理层进行协议转换"
+      "note": "�??要代�?�?�?�?协议转换"
     },
     "codex": {
       "status": "none",
       "protocol": "openai_compatible",
-      "note": "不支持Codex客户端API"
+      "note": "不�?��?�Codex客�?�端API"
     },
     "gemini_cli": {
       "status": "none",
       "protocol": "google_gemini",
-      "note": "不支持Gemini CLI客户端API"
+      "note": "不�?��?�Gemini CLI客�?�端API"
     }
   }
 }
 ```
 
-## 工具插件配置示例
+## 工�?��?件�?�置示�?
 
 ### Claude Code Tool Plugin
 
@@ -548,7 +530,7 @@ export class CustomMapper implements IMapper {
   "name": "claude-code-tool",
   "version": "1.0.0",
   "apiCode": "claude_code",
-  "description": "Claude Code客户端工具适配器",
+  "description": "Claude Code客�?�端工�?��??�?��??,
   "supportedProtocols": ["anthropic_messages"],
   "requiredCapabilities": ["stream", "tools"],
   "modelRequirements": {
@@ -567,9 +549,9 @@ export class CustomMapper implements IMapper {
 }
 ```
 
-## 使用示例
+## 使�?�示�?
 
-### 注册插件
+### 注�??�?件
 
 ```typescript
 import { PluginRegistry } from './core/registry';
@@ -578,7 +560,7 @@ import { CustomMapper } from './mappers/custom-mapper';
 
 const registry = new PluginRegistry();
 
-// 注册Alibaba插件
+// 注�??Alibaba�?件
 registry.register({
   name: 'alibaba-claude-code',
   version: '1.0.0',
@@ -611,20 +593,19 @@ registry.register({
       },
       caps: ['stream', 'tools'],
       regions: ['global'],
-      note: 'Qwen3.7-Max兼容Anthropic格式'
+      note: 'Qwen3.7-Max�?�容Anthropic格式'
     };
   }
 });
 ```
 
-### 使用转换器
-
+### 使�?�转换�??
 ```typescript
 import { AlibabaClaudeCodeConverter } from './vendors/alibaba/converter';
 
 const converter = new AlibabaClaudeCodeConverter();
 
-// 转换请求
+// 转换请�?
 const openaiRequest = {
   model: 'qwen3.7-max',
   messages: [
@@ -637,7 +618,7 @@ const openaiRequest = {
 
 const anthropicRequest = converter.convertRequest(openaiRequest);
 console.log(anthropicRequest);
-// 输出:
+// �?�?�:
 // {
 //   model: 'claude-sonnet-4',
 //   max_tokens: 1024,
@@ -647,32 +628,25 @@ console.log(anthropicRequest);
 // }
 ```
 
-## 验证规则
+## �?证�?�??
 
-### 插件验证
+### �?件�?证
 
-1. **必填字段**：name, version, vendorCode/apiCode
-2. **版本格式**：遵循语义化版本规范
-3. **依赖检查**：检查依赖插件是否存在
-4. **接口实现**：确保实现所有必需接口
+1. **�?填�?段**�?name, version, vendorCode/apiCode
+2. **�??�?�格式**�?遵循语�?�??�??�?��?�??
+3. **依�?�?�??*�?�?�?�依�?�?件�?�否�?�??4. **�?�口�?�?�**�?确保�?�?��??�??�?�??�?�口
 
-### 转换器验证
+### 转换�?��?�?
+1. **协议�?�容**�?�?�?�源/�?��?协议�?�否�?�容
+2. **模�??�?��?**�?�?证�?��?�?�??�??�??�??�??3. **�?��??�?�??*�?确保转换�?��?��?��??�??�?��??
+4. **�?�?�?�??**�?要�?提�?�?�??�?�?
+### �?�置�?证
 
-1. **协议兼容**：检查源/目标协议是否兼容
-2. **模型映射**：验证映射规则的有效性
-3. **能力检查**：确保转换器支持所需能力
-4. **测试覆盖**：要求提供单元测试
+1. **�?��?��??�??*�?status�?须�?�native/convert/none
+2. **协议�??�??**�?protocol�?须�?�协议代码表�?3. **�?��??�??�??**�?regions�?须�?��?��??代码表�?4. **�?��??�??�??**�?caps�?须�?��?��??代码表�?
+## �?��?�?��?�
 
-### 配置验证
-
-1. **状态有效**：status必须是native/convert/none
-2. **协议有效**：protocol必须在协议代码表中
-3. **区域有效**：regions必须在区域代码表中
-4. **能力有效**：caps必须在能力代码表中
-
-## 扩展机制
-
-### 自定义转换器
+### �?��?�?转换�?�
 
 ```typescript
 // plugins/converters/custom/my-converter.ts
@@ -683,11 +657,11 @@ export class MyCustomConverter implements IConverter {
   readonly sourceProtocol = 'vendor_native';
   readonly targetProtocol = 'openai_compatible';
   
-  // 实现自定义转换逻辑
+  // �?�?��?��?�?转换�?��?
 }
 ```
 
-### 自定义映射器
+### �?��?�?�?��?�?�
 
 ```typescript
 // plugins/mappers/custom/my-mapper.ts
@@ -696,13 +670,13 @@ import { IMapper } from '../core/types';
 export class MyCustomMapper implements IMapper {
   readonly name = 'my-custom-mapper';
   
-  // 实现自定义映射逻辑
+  // �?�?��?��?�?�?��?�?��?
 }
 ```
 
-## 测试规范
+## �?�?�?�??
 
-### 单元测试
+### �?�??�?�?
 
 ```typescript
 // plugins/vendors/alibaba/tests/converter.test.ts
@@ -740,55 +714,53 @@ describe('AlibabaClaudeCodeConverter', () => {
 });
 ```
 
-## 部署和发布
-
-### 打包
+## �?�署�??�?�?
+### �??�??
 
 ```bash
-# 打包插件
+# �??�??�?件
 npm run package:plugin -- --name=alibaba-claude-code
 
-# 验证插件
+# �?证�?件
 npm run validate:plugin -- --name=alibaba-claude-code
 
-# 发布插件
+# �?�?�?件
 npm run publish:plugin -- --name=alibaba-claude-code
 ```
 
-### 版本管理
+### �??�?�管�?
 
 ```bash
-# 更新版本
-npm version patch  # 1.0.0 → 1.0.1
-npm version minor  # 1.0.0 → 1.1.0
-npm version major  # 1.0.0 → 2.0.0
+# �?��?��??�?�
+npm version patch  # 1.0.0 �??1.0.1
+npm version minor  # 1.0.0 �??1.1.0
+npm version major  # 1.0.0 �??2.0.0
 ```
 
-## 文档生成
+## �??档�??�?�
 
 ```bash
-# 生成API文档
+# �??�?�API�??档
 npm run docs:generate
 
-# 生成插件文档
+# �??�?��?件�??档
 npm run docs:plugin -- --name=alibaba-claude-code
 ```
 
-## 监控和日志
-
-### 性能监控
+## �??�?��??�?��?
+### �?��?��??�?�
 
 ```typescript
 import { metrics } from './core/metrics';
 
-// 记录转换时间
+// 记�?转换�?��?�
 metrics.recordConversion('alibaba-claude-code', 'request', duration);
 
-// 记录错误
+// 记�?�??误
 metrics.recordError('alibaba-claude-code', 'validation_error');
 ```
 
-### 日志记录
+### �?��?记�?
 
 ```typescript
 import { logger } from './core/logger';

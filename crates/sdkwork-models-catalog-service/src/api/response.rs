@@ -3,7 +3,9 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
-use sdkwork_utils_rust::{SdkWorkApiResponse, SdkWorkProblemDetail, SdkWorkResultCode};
+use sdkwork_utils_rust::{
+    SdkWorkApiResponse, SdkWorkProblemDetail, SdkWorkResultCode, SDKWORK_TRACE_ID_HEADER,
+};
 use sdkwork_web_core::WebRequestContext;
 use serde::Serialize;
 
@@ -32,32 +34,30 @@ impl ApiResponse {
         SdkWorkApiResponse::success(data, trace_id_from_context(Some(ctx)))
     }
 
-    pub fn error(code: impl AsRef<str>, message: impl Into<String>) -> ProblemResponse {
-        ProblemResponse::from_legacy(code.as_ref(), message.into(), new_trace_id())
+    pub fn error(code: SdkWorkResultCode, message: impl Into<String>) -> ProblemResponse {
+        ProblemResponse::from_code(code, message.into(), new_trace_id())
     }
 
     pub fn error_for(
         ctx: &WebRequestContext,
-        code: impl AsRef<str>,
+        code: SdkWorkResultCode,
         message: impl Into<String>,
     ) -> ProblemResponse {
-        ProblemResponse::from_legacy(
-            code.as_ref(),
+        ProblemResponse::from_code(
+            code,
             message.into(),
             trace_id_from_context(Some(ctx)),
         )
     }
 }
 
-/// Builds a ProblemDetail response, optionally overriding HTTP status for legacy handler paths.
-pub fn legacy_problem(
-    status: StatusCode,
-    code: impl AsRef<str>,
+/// Builds a request-scoped ProblemDetail response for a platform result code.
+pub fn problem_for(
+    ctx: &WebRequestContext,
+    code: SdkWorkResultCode,
     message: impl Into<String>,
 ) -> Response {
-    let mut response = ApiResponse::error(code, message).into_response();
-    *response.status_mut() = status;
-    response
+    ApiResponse::error_for(ctx, code, message).into_response()
 }
 
 pub fn finish_success<T: Serialize>(ctx: &WebRequestContext, data: T) -> Response {
@@ -70,10 +70,10 @@ pub fn finish_success<T: Serialize>(ctx: &WebRequestContext, data: T) -> Respons
 
 pub fn finish_error(
     ctx: &WebRequestContext,
-    code: impl AsRef<str>,
+    code: SdkWorkResultCode,
     message: impl Into<String>,
 ) -> Response {
-    ApiResponse::error_for(ctx, code, message).into_response()
+    problem_for(ctx, code, message)
 }
 
 #[derive(Debug, Clone)]
@@ -82,10 +82,9 @@ pub struct ProblemResponse {
 }
 
 impl ProblemResponse {
-    pub fn from_legacy(legacy_code: &str, message: String, trace_id: String) -> Self {
-        let result_code = map_legacy_wire_code(legacy_code);
+    pub fn from_code(code: SdkWorkResultCode, message: String, trace_id: String) -> Self {
         Self {
-            problem: SdkWorkProblemDetail::platform(result_code, message, trace_id),
+            problem: SdkWorkProblemDetail::platform(code, message, trace_id),
         }
     }
 }
@@ -102,30 +101,10 @@ impl IntoResponse for ProblemResponse {
 }
 
 pub fn attach_trace_header(response: &mut Response, trace_id: &str) {
-    if let Ok(value) = HeaderValue::from_str(trace_id) {
-        response.headers_mut().insert(
-            HeaderName::from_static("x-sdkwork-trace-id"),
-            value,
-        );
-    }
-}
-
-fn map_legacy_wire_code(legacy_code: &str) -> SdkWorkResultCode {
-    match legacy_code.trim() {
-        "4001" | "4004" => SdkWorkResultCode::ValidationError,
-        "4010" => SdkWorkResultCode::AuthenticationRequired,
-        "4040" => SdkWorkResultCode::NotFound,
-        "4090" => SdkWorkResultCode::Conflict,
-        "4220" => SdkWorkResultCode::UnprocessableEntity,
-        "5000" => SdkWorkResultCode::InternalError,
-        "5030" => SdkWorkResultCode::ServiceUnavailable,
-        "not_found" => SdkWorkResultCode::NotFound,
-        "invalid_input" | "validation_error" => SdkWorkResultCode::ValidationError,
-        "forbidden" => SdkWorkResultCode::PermissionRequired,
-        "conflict" => SdkWorkResultCode::Conflict,
-        "rate_limited" => SdkWorkResultCode::RateLimitExceeded,
-        "provider_error" => SdkWorkResultCode::BadGateway,
-        _ => SdkWorkResultCode::InternalError,
+    if let Ok(header_name) = HeaderName::try_from(SDKWORK_TRACE_ID_HEADER) {
+        if let Ok(value) = HeaderValue::from_str(trace_id) {
+            response.headers_mut().insert(header_name, value);
+        }
     }
 }
 
@@ -172,8 +151,8 @@ mod tests {
     }
 
     #[test]
-    fn legacy_error_maps_to_problem_detail() {
-        let response = ApiResponse::error("4040", "missing resource");
+    fn platform_error_uses_problem_detail() {
+        let response = ApiResponse::error(SdkWorkResultCode::NotFound, "missing resource");
         assert_eq!(404, response.problem.status);
         assert_eq!(40401, response.problem.code);
     }
@@ -182,5 +161,16 @@ mod tests {
     fn finish_success_attaches_trace_header() {
         let response = finish_success(&test_context(), serde_json::json!({"item": 1}));
         assert!(response.headers().get("x-sdkwork-trace-id").is_some());
+    }
+
+    #[test]
+    fn problem_for_uses_context_trace_id() {
+        let ctx = test_context();
+        let response = problem_for(&ctx, SdkWorkResultCode::ValidationError, "invalid input");
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        assert_eq!(
+            response.headers().get("x-sdkwork-trace-id").and_then(|v| v.to_str().ok()),
+            Some("trace-from-context-abc")
+        );
     }
 }

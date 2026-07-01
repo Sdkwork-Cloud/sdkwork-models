@@ -206,25 +206,9 @@ impl PricingCatalog for JsonPricingCatalog {
 fn map_vendor_definition(vendor: &VendorCatalog) -> ModelVendorDefinition {
     ModelVendorDefinition::new(
         &vendor.vendor_code,
-        map_vendor_kind(&vendor.vendor_code),
+        ModelVendor::from_code(&vendor.vendor_code),
         &vendor.vendor.display_name,
     )
-}
-
-fn map_vendor_kind(vendor_code: &str) -> ModelVendor {
-    match vendor_code {
-        "openai" => ModelVendor::OpenAi,
-        "anthropic" => ModelVendor::Anthropic,
-        "google" => ModelVendor::Google,
-        "deepseek" => ModelVendor::DeepSeek,
-        "moonshot" => ModelVendor::Moonshot,
-        "alibaba" => ModelVendor::Alibaba,
-        "bytedance" => ModelVendor::ByteDance,
-        "baidu" => ModelVendor::Baidu,
-        "minimax" => ModelVendor::MiniMax,
-        "zhipu" => ModelVendor::Zhipu,
-        _ => ModelVendor::Unknown,
-    }
 }
 
 fn map_model(vendor: &VendorCatalog, model: &ModelInfo) -> AiModel {

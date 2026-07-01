@@ -3,15 +3,18 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
 use axum::extract::{Path, State};
-use axum::http::{HeaderMap, StatusCode};
-use axum::response::{IntoResponse, Response};
+use axum::http::HeaderMap;
+use axum::response::Response;
 use axum::routing::{get, patch, put};
-use axum::{Json, Router};
+use axum::Router;
 use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
 
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
-use crate::api::response::{legacy_problem, ApiResponse};
+use sdkwork_utils_rust::SdkWorkResultCode;
+
+use crate::api::response::{finish_success, problem_for};
+use sdkwork_web_core::WebRequestContext;
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -284,6 +287,7 @@ pub fn admin_ai_resource_router_with_store(
 }
 
 async fn fetch_ai_resources(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -295,15 +299,15 @@ async fn fetch_ai_resources(
         .list_ai_resources(ListAdminAiResourcesQuery { subject })
         .await
     {
-        Ok(items) => Json(ApiResponse::success(AdminAiResourcesResponse {
+        Ok(items) => finish_success(&ctx, AdminAiResourcesResponse {
             items: items.into_iter().map(to_item_response).collect(),
-        }))
-        .into_response(),
-        Err(error) => ai_resource_system_response("AI resource read model is unavailable", error),
+        }),
+        Err(error) => ai_resource_system_response(&ctx, "AI resource read model is unavailable", error),
     }
 }
 
 async fn fetch_ai_resource_groups(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -315,17 +319,17 @@ async fn fetch_ai_resource_groups(
         .list_ai_resource_groups(ListAdminAiResourceGroupsQuery { subject })
         .await
     {
-        Ok(items) => Json(ApiResponse::success(AdminAiResourceGroupsResponse {
+        Ok(items) => finish_success(&ctx, AdminAiResourceGroupsResponse {
             items: items.into_iter().map(to_group_response).collect(),
-        }))
-        .into_response(),
+        }),
         Err(error) => {
-            ai_resource_system_response("AI resource group read model is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource group read model is unavailable", error)
         }
     }
 }
 
 async fn fetch_ai_resource_group_resources(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(group_id_or_code): Path<String>,
     trusted: TrustedRequestSubject,
@@ -334,7 +338,7 @@ async fn fetch_ai_resource_group_resources(
     let subject = map_subject(trusted);
     let group_id_or_code = group_id_or_code.trim().to_owned();
     if group_id_or_code.is_empty() {
-        return bad_request("AI resource group id or code is required".to_owned());
+        return bad_request(&ctx, "AI resource group id or code is required".to_owned());
     }
 
     match state
@@ -345,14 +349,13 @@ async fn fetch_ai_resource_group_resources(
         })
         .await
     {
-        Ok(items) => Json(ApiResponse::success(
+        Ok(items) => finish_success(&ctx, 
             AdminAiResourceGroupResourcesResponse {
                 items: items.into_iter().map(to_group_resource_response).collect(),
             },
-        ))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) => ai_resource_system_response(
+        ),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) => ai_resource_system_response(&ctx, 
             "AI resource group resource read model is unavailable",
             error,
         ),
@@ -360,6 +363,7 @@ async fn fetch_ai_resource_group_resources(
 }
 
 async fn create_ai_resource(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -368,27 +372,27 @@ async fn create_ai_resource(
     let subject = map_subject(trusted);
     let request = match parse_json_body::<AiResourceCreateRequest>(&body, "AI resource") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_create_command(state.clone(), subject, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
 
     match state.store.create_ai_resource(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminAiResourceItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminAiResourceItemEnvelope {
             item: to_item_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            ai_resource_system_response("AI resource command store is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource command store is unavailable", error)
         }
     }
 }
 
 async fn create_ai_resource_group(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
@@ -398,27 +402,27 @@ async fn create_ai_resource_group(
     let request = match parse_json_body::<AiResourceGroupCreateRequest>(&body, "AI resource group")
     {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_group_create_command(state.clone(), subject, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
 
     match state.store.create_ai_resource_group(command).await {
-        Ok(item) => Json(ApiResponse::success(AdminAiResourceGroupItemEnvelope {
+        Ok(item) => finish_success(&ctx, AdminAiResourceGroupItemEnvelope {
             item: to_group_response(item),
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            ai_resource_system_response("AI resource group command store is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
         }
     }
 }
 
 async fn update_ai_resource_group(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(group_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -428,33 +432,33 @@ async fn update_ai_resource_group(
     let subject = map_subject(trusted);
     let group_id = match parse_positive_id(&group_id, "AI resource group id") {
         Ok(group_id) => group_id,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let request =
         match parse_json_body::<AiResourceGroupUpdateRequest>(&body, "AI resource group update") {
             Ok(request) => request,
-            Err(message) => return bad_request(message),
+            Err(message) => return bad_request(&ctx, message),
         };
     let command = match build_group_update_command(state.clone(), subject, group_id, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
 
     match state.store.update_ai_resource_group(command).await {
-        Ok(Some(item)) => Json(ApiResponse::success(AdminAiResourceGroupItemEnvelope {
+        Ok(Some(item)) => finish_success(&ctx, AdminAiResourceGroupItemEnvelope {
             item: to_group_response(item),
-        }))
-        .into_response(),
-        Ok(None) => not_found_response("AI resource group was not found"),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Ok(None) => not_found_response(&ctx, "AI resource group was not found"),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            ai_resource_system_response("AI resource group command store is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
         }
     }
 }
 
 async fn delete_ai_resource_group(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(group_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -463,27 +467,27 @@ async fn delete_ai_resource_group(
     let subject = map_subject(trusted);
     let group_id = match parse_positive_id(&group_id, "AI resource group id") {
         Ok(group_id) => group_id,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_group_delete_command(state.clone(), subject, group_id) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
 
     match state.store.delete_ai_resource_group(command).await {
-        Ok(deleted) => Json(ApiResponse::success(AdminAiResourceGroupDeleteResponse {
+        Ok(deleted) => finish_success(&ctx, AdminAiResourceGroupDeleteResponse {
             deleted,
-        }))
-        .into_response(),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            ai_resource_system_response("AI resource group command store is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
         }
     }
 }
 
 async fn update_ai_resource(
+    ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(resource_id): Path<String>,
     trusted: TrustedRequestSubject,
@@ -493,27 +497,26 @@ async fn update_ai_resource(
     let subject = map_subject(trusted);
     let resource_id = match parse_positive_id(&resource_id, "AI resource id") {
         Ok(resource_id) => resource_id,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let request = match parse_json_body::<AiResourceUpdateRequest>(&body, "AI resource update") {
         Ok(request) => request,
-        Err(message) => return bad_request(message),
+        Err(message) => return bad_request(&ctx, message),
     };
     let command = match build_update_command(state.clone(), subject, resource_id, request) {
         Ok(command) => command,
-        Err(error) => return command_build_error_response(error),
+        Err(error) => return command_build_error_response(&ctx, error),
     };
 
     match state.store.update_ai_resource(command).await {
-        Ok(Some(item)) => Json(ApiResponse::success(AdminAiResourceItemEnvelope {
+        Ok(Some(item)) => finish_success(&ctx, AdminAiResourceItemEnvelope {
             item: to_item_response(item),
-        }))
-        .into_response(),
-        Ok(None) => not_found_response("AI resource was not found"),
-        Err(error) if error.is_not_found() => not_found_response(error.to_string()),
-        Err(error) if error.is_conflict() => conflict_response(error),
+        }),
+        Ok(None) => not_found_response(&ctx, "AI resource was not found"),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
-            ai_resource_system_response("AI resource command store is unavailable", error)
+            ai_resource_system_response(&ctx, "AI resource command store is unavailable", error)
         }
     }
 }
@@ -1149,25 +1152,25 @@ fn request_id_error(error: RequestIdError) -> AiResourceCommandBuildError {
     }
 }
 
-fn command_build_error_response(error: AiResourceCommandBuildError) -> Response {
+fn command_build_error_response(ctx: &WebRequestContext, error: AiResourceCommandBuildError) -> Response {
     match error {
-        AiResourceCommandBuildError::BadRequest(message) => bad_request(message),
+        AiResourceCommandBuildError::BadRequest(message) => bad_request(&ctx, message),
         AiResourceCommandBuildError::System(error) => {
-            ai_resource_system_response("AI resource command is invalid", error)
+            ai_resource_system_response(&ctx, "AI resource command is invalid", error)
         }
     }
 }
 
-fn bad_request(message: String) -> Response {
-    legacy_problem(StatusCode::BAD_REQUEST, "4001", message)
+fn bad_request(ctx: &WebRequestContext, message: String) -> Response {
+    problem_for(ctx, SdkWorkResultCode::ValidationError, message)
 }
 
-fn not_found_response(message: impl Into<String>) -> Response {
-    legacy_problem(StatusCode::NOT_FOUND, "4040", message.into())
+fn not_found_response(ctx: &WebRequestContext, message: impl Into<String>) -> Response {
+    problem_for(ctx, SdkWorkResultCode::NotFound, message.into())
 }
 
-fn conflict_response(error: DomainError) -> Response {
-    legacy_problem(StatusCode::CONFLICT, "4090", error.to_string())
+fn conflict_response(ctx: &WebRequestContext, error: DomainError) -> Response {
+    problem_for(ctx, SdkWorkResultCode::Conflict, error.to_string())
 }
 
 fn current_timestamp_string() -> String {
@@ -1203,10 +1206,10 @@ fn civil_from_days(days: i64) -> (i64, i64, i64) {
     (year, month, day)
 }
 
-fn ai_resource_system_response(context: &str, error: DomainError) -> Response {
-    legacy_problem(
-        StatusCode::INTERNAL_SERVER_ERROR,
-        "5000",
+fn ai_resource_system_response(ctx: &WebRequestContext, context: &str, error: DomainError) -> Response {
+    problem_for(
+        ctx,
+        SdkWorkResultCode::InternalError,
         format!("{context}: {error}"),
     )
 }

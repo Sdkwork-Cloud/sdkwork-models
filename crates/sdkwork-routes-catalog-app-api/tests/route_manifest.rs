@@ -13,7 +13,7 @@ fn app_route_manifest_matches_route_definitions() {
                     entry.method, entry.path
                 )
             });
-        assert_eq!(matched.auth, RouteAuth::DualToken);
+        assert_eq!(matched.auth, RouteAuth::Public);
         assert_eq!(matched.operation_id, entry.operation_id);
     }
 }

@@ -5,12 +5,12 @@
 
 /// Canonical Postgres baseline for catalog dictionary tables owned by `sdkwork-models`.
 pub fn models_catalog_foundation_migration_sql() -> &'static str {
-    include_str!("../../../database/ddl/baseline/postgres/0001_sdkwork_models_catalog_baseline.sql")
+    include_str!("../../../database/ddl/baseline/postgres/0001_sdkwork-models_baseline.sql")
 }
 
 /// SQLite mirror of the catalog module baseline for host installers and drift checks.
 pub fn models_catalog_foundation_migration_sqlite() -> &'static str {
-    include_str!("../../../database/ddl/baseline/sqlite/0001_sdkwork_models_catalog_baseline.sql")
+    include_str!("../../../database/ddl/baseline/sqlite/0001_sdkwork-models_baseline.sql")
 }
 
 /// Tables that must exist after the catalog module baseline is applied.
