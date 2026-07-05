@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "sfx"
+  ],
+  "catalogKey": "kuaishou/kling-sound-t2a",
+  "colorToken": "#6d28d9",
+  "description": "Kling text-to-sound API for standalone sound-effect generation from text prompts with 3 to 10 second MP3 output variants.",
+  "displayName": "Kling Sound Text to Audio",
+  "familyCode": "kling-sfx",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 8000,
+  "latencyP95Ms": 30000,
+  "lifecycle": "active",
+  "modelId": "kling-sound-t2a",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "sfx",
+  "rankScore": "780.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/global/dev/document-api/apiReference/model/textToAudio"
+  },
+  "strengths": [
+    "Text to SFX",
+    "Ambient sound",
+    "Foley",
+    "3-10s duration"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.900000"
+}

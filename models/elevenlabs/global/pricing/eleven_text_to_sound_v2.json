@@ -5,18 +5,18 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-05-07T00:00:00Z",
-      "meterCode": "sfx_result",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "audio_output_minute",
       "minimumQuantity": "0",
-      "priceId": "elevenlabs-eleven-text-to-sound-v2-result",
+      "priceId": "elevenlabs-eleven-text-to-sound-v2-minute",
       "priceSide": "official",
       "pricingScope": "model",
-      "quantityStep": "1",
+      "quantityStep": "0.001",
       "source": {
         "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://elevenlabs.io/docs/api-reference"
+        "sourceUrl": "https://elevenlabs.io/pricing/api"
       },
-      "unitPrice": "0.050000",
+      "unitPrice": "0.120000",
       "unitSize": "1"
     }
   ],

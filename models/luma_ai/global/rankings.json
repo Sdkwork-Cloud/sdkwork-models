@@ -1,0 +1,26 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "luma_ai/ray-2",
+          "modelId": "ray-2",
+          "pricingText": "USD 0.09 / output second (720p)",
+          "rankNo": 18
+        },
+        {
+          "catalogKey": "luma_ai/ray-flash-2",
+          "modelId": "ray-flash-2",
+          "pricingText": "USD 0.031 / output second (720p)",
+          "rankNo": 24
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "luma_ai"
+}

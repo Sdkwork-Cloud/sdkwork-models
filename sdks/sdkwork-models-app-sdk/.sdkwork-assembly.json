@@ -1,13 +1,21 @@
 {
-  "schemaVersion": 1,
-  "assemblyKind": "sdkwork.sdk.assembly",
+  "workspace": "sdkwork-models-app-sdk",
   "sdkFamily": "sdkwork-models-app-sdk",
   "sdkOwner": "sdkwork-models",
-  "domain": "intelligence",
   "apiAuthority": "sdkwork-models-app-api",
-  "apiPrefix": "/app/v3/api",
+  "authoritySpec": "openapi/sdkwork-models-app-api.openapi.json",
   "generationInputSpec": "openapi/sdkwork-models-app-api.openapi.json",
-  "standardProfile": "sdkwork-v3",
+  "derivedSpecs": {
+    "default": "openapi/sdkwork-models-app-api.openapi.json"
+  },
+  "discoverySurface": {
+    "sdkTarget": "app",
+    "apiPrefix": "/app/v3/api",
+    "generatedProtocols": [
+      "http-openapi"
+    ],
+    "manualTransports": []
+  },
   "sdkDependencies": [
     {
       "workspace": "sdkwork-iam-app-sdk",
@@ -26,18 +34,5 @@
       }
     }
   ],
-  "workspace": "sdkwork-models-app-sdk",
-  "authoritySpec": "openapi/sdkwork-models-app-api.openapi.json",
-  "derivedSpecs": {
-    "default": "openapi/sdkwork-models-app-api.openapi.json"
-  },
-  "discoverySurface": {
-    "sdkTarget": "app",
-    "apiPrefix": "/app/v3/api",
-    "generatedProtocols": [
-      "http-openapi"
-    ],
-    "manualTransports": []
-  },
   "dependencyApiExports": []
 }

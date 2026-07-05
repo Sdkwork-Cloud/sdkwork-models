@@ -15,14 +15,22 @@ The catalog is designed for two consumers:
 
 ## Status
 
-This directory is being prepared as an independent Git repository and as the
+Production catalog repository for Sdkwork model intelligence. The catalog ships as
+versioned JSON under `models/`, consumed by `@sdkwork/models` SDKs, the standalone
+gateway, and ClawRouter catalog sync.
+
+Current catalog version: **2026.07.05.3** (see `sdkwork-models.json`). TTS voice
+(speaker) catalog uses `voices.json` and `model-voices/` bindings; video generation
+profiles use `model-video-profiles/` per model. See `specs/voice-catalog.spec.json`
+and `specs/video-generation-profile.spec.json`.
+
 ClawRouter submodule mount point:
 
 ```text
 data/sdkwork-models
 ```
 
-The intended upstream repository is:
+Upstream repository:
 
 ```text
 https://github.com/Sdkwork-Cloud/sdkwork-models.git
@@ -61,6 +69,9 @@ sdkwork-models/
     family.schema.json
     model.schema.json
     pricing.schema.json
+    voice.schema.json
+    model-voice.schema.json
+    model-video-profiles.schema.json
     ranking.schema.json
     provider-overlay.schema.json
   models/
@@ -74,6 +85,11 @@ sdkwork-models/
         models/
           <modelId>.json
         pricing/
+          <modelId>.json
+        voices.json
+        model-voices/
+          <modelId>.json
+        model-video-profiles/
           <modelId>.json
         rankings.json
   overlays/
@@ -155,15 +171,88 @@ Provider/channel routing belongs in overlays.
 
 `models/index.json` is the generated file manifest for all SDK loaders. Each
 vendor-region entry declares `path`, `familiesPath`, `rankingsPath`,
-`modelFiles`, and `pricingFiles`. SDKs must use these file lists instead of
-enumerating directories so the same catalog root works from a local checkout,
-GitHub raw URLs, CDN/object storage, and application asset bundles.
+`modelFiles`, `pricingFiles`, and optional `voicesPath` / `modelVoicesPath` /
+`modelVoiceFiles` for TTS speaker catalogs. SDKs must use these file lists
+instead of enumerating directories so the same catalog root works from a local
+checkout, GitHub raw URLs, CDN/object storage, and application asset bundles.
 
 `schemas/index.schema.json` defines the machine-readable index contract. The
-validator additionally checks the semantic contract: the declared `modelFiles`
-and `pricingFiles` must exactly match the generated file lists for each
-`vendorCode/regionCode`, declared paths must stay under the same vendor-region
-directory, and counts plus hashes must match `tools/build-index.mjs`.
+validator additionally checks the semantic contract: the declared `modelFiles`,
+`pricingFiles`, and voice binding files must exactly match the generated file
+lists for each `vendorCode/regionCode`, declared paths must stay under the same
+vendor-region directory, and counts plus hashes must match `tools/build-index.mjs`.
+
+## TTS Voice Catalog
+
+TTS speakers are first-class catalog entities, separate from model facts but
+bound to TTS models through many-to-many `model-voices/{modelId}.json` files.
+Contract authority: `specs/voice-catalog.spec.json`.
+
+Storage per vendor region:
+
+```text
+models/openai/global/voices.json
+models/openai/global/model-voices/gpt-4o-mini-tts.json
+```
+
+Current seeded vendors: OpenAI, Google Gemini TTS, ElevenLabs (dynamic voice
+library), MiniMax (cn/global), and ByteDance Seed TTS (cn).
+
+SDK query helpers (all language SDKs): `listVoices`, `listVoicesForModel`,
+`listModelsForVoice`.
+
+HTTP read surfaces (SdkWork v3 list envelope: `data.items` + `data.pageInfo`):
+
+| Surface | Route | Auth |
+| --- | --- | --- |
+| App | `GET /app/v3/api/ai/voices` | Public |
+| App | `GET /app/v3/api/ai/models/{modelId}/voices` | Public |
+| Backend | `GET /backend/v3/api/ai/voices` | `intelligence.models.read` |
+| Backend | `GET /backend/v3/api/ai/models/{modelId}/voices` | `intelligence.models.read` |
+
+Query parameters: `vendor_code`, `region_code`, `locale`, `model_id`,
+`catalog_key`, `q`.
+
+Database tables `ai_model_voice` and `ai_model_voice_binding` are defined in
+baseline DDL (`database/ddl/baseline/*/0001_sdkwork-models_baseline.sql`) and
+populated during catalog sync import.
+
+## Video Generation Profiles
+
+Video models declare supported generation modes, duration policies, and wire
+mappings in per-model profile files. Contract authority:
+`specs/video-generation-profile.spec.json`.
+
+Storage:
+
+```text
+models/kuaishou/global/model-video-profiles/kling-v3.json
+```
+
+Each profile describes one executable configuration (for example t2v + 5s + 720p,
+or i2v + 3–15s range). Duration buckets use canonical tier codes (`dur_5s`,
+`dur_10s`, …) cross-referenced from pricing `tierCode` when billing is per result.
+
+Every catalog model with `primaryCapability: video` must have a
+`model-video-profiles/{modelId}.json` file. Use `node tools/seed-video-profiles.mjs`
+to scaffold missing profiles from vendor defaults.
+
+Database table `ai_model_video_profile` is populated during catalog sync import.
+
+SDK query helpers: `listVideoProfiles`, `listVideoProfilesForModel`,
+`findVideoProfile`.
+
+HTTP read surfaces (SdkWork v3 list envelope):
+
+| Surface | Route | Auth |
+| --- | --- | --- |
+| App | `GET /app/v3/api/ai/video_profiles` | Public |
+| App | `GET /app/v3/api/ai/models/{modelId}/video_profiles` | Public |
+| Backend | `GET /backend/v3/api/ai/video_profiles` | `intelligence.models.read` |
+| Backend | `GET /backend/v3/api/ai/models/{modelId}/video_profiles` | `intelligence.models.read` |
+
+Query parameters: `vendor_code`, `region_code`, `model_id`, `catalog_key`,
+`generation_mode`, `duration_tier_code`, `resolution`.
 
 ## Source Evidence
 

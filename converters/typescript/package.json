@@ -2,7 +2,7 @@
   "name": "@sdkwork/converters",
   "version": "0.1.0",
   "description": "SDKWork Client API Protocol Converters",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
@@ -17,6 +17,9 @@
     "protocol"
   ],
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",
@@ -27,5 +30,12 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
   }
 }

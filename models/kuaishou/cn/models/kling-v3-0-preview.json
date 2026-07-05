@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 54000,
   "latencyP95Ms": 160000,
-  "lifecycle": "catalog_only",
+  "lifecycle": "preview",
   "modelId": "kling-v3-0-preview",
   "outputModalities": [
     "video"
@@ -26,7 +26,7 @@
   "releaseStage": "preview",
   "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "hidden",
+  "shelfState": "listed",
   "source": {
     "observedAt": "2026-06-24T00:00:00Z",
     "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"

@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "elevenlabs/eleven_multilingual_v2",
+  "colorToken": "#7c2d12",
+  "description": "ElevenLabs Multilingual v2 lifelike text-to-speech model with rich emotional expression.",
+  "displayName": "Eleven Multilingual v2",
+  "familyCode": "elevenlabs-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 280,
+  "latencyP95Ms": 900,
+  "lifecycle": "active",
+  "modelId": "eleven_multilingual_v2",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "770.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/overview/models"
+  },
+  "strengths": [
+    "Text to speech",
+    "Emotional expression",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.880000"
+}

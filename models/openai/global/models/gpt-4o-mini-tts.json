@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-4o-mini-tts",
+  "colorToken": "#6366f1",
+  "description": "Instructable text-to-speech model with steerable tone, pacing, and emotion.",
+  "displayName": "GPT-4o mini TTS",
+  "familyCode": "gpt-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 450,
+  "latencyP95Ms": 1500,
+  "lifecycle": "active",
+  "modelId": "gpt-4o-mini-tts",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "820.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
+  },
+  "strengths": [
+    "Text to speech",
+    "Voice instructions",
+    "Low latency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.900000"
+}

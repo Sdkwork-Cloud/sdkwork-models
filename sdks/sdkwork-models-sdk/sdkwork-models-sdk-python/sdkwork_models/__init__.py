@@ -15,10 +15,18 @@ from .query import (
     list_models_by_capability,
     list_models_by_modality,
     list_models_by_protocol,
+    list_models_for_voice,
     list_protocols,
     list_protocols_by_vendor,
     list_vendor_regions,
     list_vendors,
+    list_video_profiles,
+    list_video_profiles_for_model,
+    find_video_profile,
+    list_voices,
+    list_voices_for_model,
+    video_profile_catalog_key,
+    voice_catalog_key,
 )
 from .types import JsonObject, ModelCatalog, ProtocolStandard
 from .validation import validate_catalog
@@ -50,4 +58,12 @@ __all__ = [
     "find_protocol",
     "list_protocols_by_vendor",
     "list_models_by_protocol",
+    "voice_catalog_key",
+    "list_voices",
+    "list_voices_for_model",
+    "list_models_for_voice",
+    "video_profile_catalog_key",
+    "list_video_profiles",
+    "list_video_profiles_for_model",
+    "find_video_profile",
 ]

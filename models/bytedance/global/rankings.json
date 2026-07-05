@@ -8,11 +8,17 @@
           "catalogKey": "bytedance/doubao-seedance-2-0-260128",
           "modelId": "doubao-seedance-2-0-260128",
           "pricingText": "USD 0.12 / output second",
-          "rankNo": 21
+          "rankNo": 20
+        },
+        {
+          "catalogKey": "bytedance/doubao-seedance-2-0-fast-260128",
+          "modelId": "doubao-seedance-2-0-fast-260128",
+          "pricingText": "USD 0.08 / output second",
+          "rankNo": 22
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-08",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

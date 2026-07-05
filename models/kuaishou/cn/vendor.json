@@ -3,7 +3,7 @@
   "billingJurisdiction": "CN",
   "capabilities": [
     "video",
-    "image"
+    "sfx"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -53,7 +53,8 @@
   "legalName": "Kuaishou",
   "marketScope": "china_mainland",
   "modelFamilies": [
-    "kling"
+    "kling",
+    "kling-sfx"
   ],
   "openSource": false,
   "operatingRegions": [

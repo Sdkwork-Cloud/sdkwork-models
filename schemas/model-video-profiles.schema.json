@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/model-video-profiles.schema.json",
+  "title": "Sdkwork Model Video Generation Profiles",
+  "description": "Per-model video generation profiles describing supported modes, duration policies, and vendor wire mappings.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "modelId",
+    "catalogKey",
+    "profiles",
+    "source"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "modelId": {
+      "type": "string"
+    },
+    "catalogKey": {
+      "type": "string"
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/videoGenerationProfile"
+      }
+    },
+    "source": {
+      "$ref": "catalog.schema.json#/$defs/sourceEvidence"
+    }
+  },
+  "$defs": {
+    "generationMode": {
+      "enum": [
+        "text_to_video",
+        "image_to_video",
+        "reference_to_video",
+        "start_end_frame",
+        "video_extension",
+        "video_edit",
+        "multi_shot"
+      ]
+    },
+    "durationPolicy": {
+      "enum": [
+        "fixed",
+        "discrete",
+        "range",
+        "continuous"
+      ]
+    },
+    "durationTierCode": {
+      "enum": [
+        "dur_5s",
+        "dur_6s",
+        "dur_8s",
+        "dur_10s",
+        "dur_15s",
+        "dur_30s",
+        "dur_60s"
+      ]
+    },
+    "resolutionTierCode": {
+      "enum": [
+        "res_512p",
+        "res_720p",
+        "res_768p",
+        "res_1080p",
+        "res_4k"
+      ]
+    },
+    "videoGenerationProfile": {
+      "type": "object",
+      "required": [
+        "profileCode",
+        "catalogKey",
+        "displayName",
+        "generationMode",
+        "durationPolicy",
+        "resolution",
+        "wireParameters"
+      ],
+      "properties": {
+        "profileCode": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "catalogKey": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "generationMode": {
+          "$ref": "#/$defs/generationMode"
+        },
+        "durationPolicy": {
+          "$ref": "#/$defs/durationPolicy"
+        },
+        "durationSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "durationOptions": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 1
+        },
+        "durationTierCode": {
+          "$ref": "#/$defs/durationTierCode"
+        },
+        "durationTierCodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/durationTierCode"
+          }
+        },
+        "minDurationSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxDurationSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "durationStepSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "resolution": {
+          "type": "string",
+          "pattern": "^(512p|720p|768p|1080p|4k)$"
+        },
+        "resolutionTierCode": {
+          "$ref": "#/$defs/resolutionTierCode"
+        },
+        "aspectRatios": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputAudio": {
+          "type": "boolean"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "sortOrder": {
+          "type": "integer"
+        },
+        "pricingTierCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wireParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "$ref": "catalog.schema.json#/$defs/sourceEvidence"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

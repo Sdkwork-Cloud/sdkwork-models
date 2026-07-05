@@ -23,6 +23,11 @@ import {
   listProtocolsByVendor,
   listVendorRegions,
   listVendors,
+  listVoices,
+  listVoicesForModel,
+  listVideoProfiles,
+  listVideoProfilesForModel,
+  findVideoProfile,
   loadBundledCatalog,
   loadCatalog,
 } from "../dist/index.js";
@@ -111,6 +116,13 @@ test("loads local catalog", async () => {
     getBestReferencePrice(catalog, "openai/gpt-5.5", "llm_input_token")?.unitPrice,
     "5.000000",
   );
+  assert.ok(listVoices(catalog, { vendorCode: "openai", regionCode: "global" }).length >= 11);
+  assert.ok(listVoicesForModel(catalog, "openai/gpt-4o-mini-tts").length >= 11);
+  assert.ok(listVoices(catalog).length >= 23);
+  assert.ok(listVideoProfiles(catalog, { vendorCode: "kuaishou", regionCode: "global" }).length >= 3);
+  assert.ok(listVideoProfilesForModel(catalog, "openai/sora-2").length >= 2);
+  assert.ok(listVideoProfiles(catalog).length >= 80);
+  assert.ok(findVideoProfile(catalog, "vidu/viduq3-pro/t2v_5s_720p"));
 });
 
 test("loads bundled catalog from SDKWORK_MODELS_CATALOG_ROOT", async () => {

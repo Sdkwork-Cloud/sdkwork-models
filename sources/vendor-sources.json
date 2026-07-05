@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "2026.06.24.4",
+  "catalogVersion": "2026.07.05.3",
   "observedAt": "2026-06-24T00:00:00Z",
   "policy": {
     "officialFirst": true,
@@ -30,7 +30,7 @@
   "vendors": [
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Alibaba Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing. Qwen3.7-Max is the current cn frontier model on Model Studio.",
+      "notes": "Alibaba Cloud mainland China operation with Qwen LLM, Wanxiang image/video, and text embedding models.",
       "official": {
         "additionalUrls": [
           "https://help.aliyun.com/zh/model-studio/",
@@ -47,7 +47,12 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
-        "qwen3.7-max"
+        "qwen3.7-max",
+        "wan2.6-t2i",
+        "wan2.6-t2v",
+        "wan2.6-i2v",
+        "wan2.6-r2v",
+        "text-embedding-v3"
       ],
       "supportedModels": [
         "qwen3.6-max-preview"
@@ -75,7 +80,7 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Official current Claude families plus local new-api/sub2api cross-checks. Claude Fable 5 remains in requiredModels for catalog discovery but is catalog_only after the 2026-06-12 suspension.",
+      "notes": "Official Claude families including Sonnet 5 (June 2026 GA) plus Fable/Mythos catalog entries. Claude Fable 5 remains catalog_only after the 2026-06-12 suspension.",
       "official": {
         "additionalUrls": [
           "https://www.anthropic.com/pricing",
@@ -85,7 +90,8 @@
           "https://www.anthropic.com/news/claude-opus-4-8",
           "https://platform.claude.com/docs/en/about-claude/pricing",
           "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
-          "https://docs.anthropic.com/en/docs/about-claude/models"
+          "https://docs.anthropic.com/en/docs/about-claude/models",
+          "https://www.anthropic.com/news/claude-sonnet-5"
         ],
         "modelsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
         "pricingUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
@@ -107,6 +113,7 @@
       "regionCode": "global",
       "requiredModels": [
         "claude-opus-4-8",
+        "claude-sonnet-5",
         "claude-opus-4-7",
         "claude-sonnet-4-6",
         "claude-haiku-4-5"
@@ -162,12 +169,15 @@
       "requiredModels": [
         "flux-2-pro"
       ],
+      "supportedModels": [
+        "flux-2-flex"
+      ],
       "vendorCode": "black_forest_labs",
       "verificationStatus": "official_url_declared"
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing. Doubao Seed 2.1 Pro/Turbo (260628) launched on 2026-06-23 via Volcengine Ark.",
+      "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing. Doubao Seed 2.1 Pro/Turbo (260628) launched on 2026-06-23 via Volcengine Ark. Seedance 2.0 standard and fast models are listed for cn with official CNY per-second pricing.",
       "official": {
         "additionalUrls": [
           "https://www.volcengine.com/docs/",
@@ -186,7 +196,13 @@
       "regionCode": "cn",
       "requiredModels": [
         "doubao-seed-2-1-pro-260628",
-        "doubao-seed-2-1-turbo-260628"
+        "doubao-seed-2-1-turbo-260628",
+        "doubao-seedance-2-0-260128",
+        "doubao-seedance-2-0-fast-260128",
+        "seed-tts-2.0-standard",
+        "seed-tts-2.0-expressive",
+        "doubao-seedream-4-0-250828",
+        "seed-music-gensong-v4"
       ],
       "supportedModels": [
         "doubao-seed-2-0-code-preview-260215",
@@ -199,7 +215,7 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "ByteDance international operation is modeled as the global region of the vendor with USD billing; Seedance is a model family, not the vendor identity.",
+      "notes": "ByteDance international operation with Doubao Seed LLM and Seedance video families billed in USD.",
       "official": {
         "additionalUrls": [
           "https://www.volcengine.com/docs/82379",
@@ -216,11 +232,20 @@
       ],
       "regionCode": "global",
       "requiredModels": [
+        "doubao-seed-2-1-pro-260628",
+        "doubao-seed-2-1-turbo-260628",
         "doubao-seed-2-0-code-preview-260215",
         "doubao-seed-2-0-lite-260215",
         "doubao-seed-2-0-mini-260215",
         "doubao-seed-2-0-pro-260215",
-        "doubao-seedance-2-0-260128"
+        "doubao-seedance-2-0-260128",
+        "doubao-seedance-2-0-fast-260128"
+      ],
+      "supportedModels": [
+        "doubao-seed-2-0-code-preview-260215",
+        "doubao-seed-2-0-lite-260215",
+        "doubao-seed-2-0-mini-260215",
+        "doubao-seed-2-0-pro-260215"
       ],
       "vendorCode": "bytedance",
       "verificationStatus": "official_url_declared"
@@ -283,10 +308,12 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "ElevenLabs audio model catalog source.",
+      "notes": "ElevenLabs audio model catalog source. Added Flash v2.5, Multilingual v2 TTS, Scribe v2 Realtime STT, and Text-to-Sound v2 SFX with official API pricing.",
       "official": {
         "additionalUrls": [
-          "https://elevenlabs.io/docs/"
+          "https://elevenlabs.io/docs/",
+          "https://elevenlabs.io/pricing/api",
+          "https://elevenlabs.io/docs/capabilities/sound-effects"
         ],
         "modelsUrl": "https://elevenlabs.io/docs/models",
         "pricingUrl": "https://elevenlabs.io/docs/api-reference"
@@ -294,6 +321,12 @@
       "references": [],
       "regionCode": "global",
       "requiredModels": [
+        "eleven_v3",
+        "eleven_flash_v2_5",
+        "eleven_multilingual_v2",
+        "music_v2",
+        "scribe_v2",
+        "scribe_v2_realtime",
         "eleven_text_to_sound_v2"
       ],
       "vendorCode": "elevenlabs",
@@ -301,14 +334,15 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Gemini 3.1 and Veo 3.1 model IDs and multimodal/token meters are sourced from official Gemini API model and pricing docs. Pending independent official snapshot re-verification before official_verified status.",
+      "notes": "Gemini 3.1 and Veo 3.1 model IDs and multimodal/token meters are sourced from official Gemini API model and pricing docs. Added Gemini 2.5 Flash/Pro TTS preview models.",
       "official": {
         "additionalUrls": [
           "https://ai.google.dev/pricing",
           "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
           "https://cloud.google.com/vertex-ai/generative-ai/pricing",
           "https://ai.google.dev/gemini-api/docs/models/gemini",
-          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
+          "https://ai.google.dev/gemini-api/docs/imagen"
         ],
         "modelsUrl": "https://ai.google.dev/gemini-api/docs/models",
         "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing"
@@ -337,16 +371,21 @@
         "gemini-3.1-flash-live-preview",
         "gemini-3.1-flash-image-preview",
         "gemini-3.1-flash-tts-preview",
+        "gemini-2.5-flash-preview-tts",
+        "gemini-2.5-pro-preview-tts",
         "imagen-4.0-generate-001",
+        "gemini-3.1-flash-image",
+        "gemini-3-pro-image",
+        "gemini-2.5-flash-image",
         "veo-3.1-generate-preview",
         "veo-3.1-fast-generate-preview",
         "veo-3.1-lite-generate-preview"
       ],
       "supportedModels": [
-        "gemini-3-pro-image",
-        "gemini-3.1-flash-image",
         "gemini-3.1-pro",
         "gemini-embedding-2",
+        "imagen-4.0-fast-generate-001",
+        "imagen-4.0-ultra-generate-001",
         "lyria-2",
         "lyria-3"
       ],
@@ -355,18 +394,24 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Kuaishou international operation is modeled as the global region of the vendor with USD billing; Kling is a model family, not the vendor identity.",
+      "notes": "Kuaishou international operation is modeled as the global region of the vendor with USD billing; Kling is a model family, not the vendor identity. Kling Video 3.0 and Kling Sound text-to-audio / video-to-audio SFX APIs.",
       "official": {
         "additionalUrls": [
-          "https://klingai.com"
+          "https://klingai.com",
+          "https://app.klingai.com/global/dev/document-api/apiReference/model/textToAudio",
+          "https://app.klingai.com/global/dev/document-api/apiReference/model/videoToAudio",
+          "https://app.klingai.com/global/dev/document-api/consumptionTable"
         ],
         "modelsUrl": "https://app.klingai.com/global/dev/document-api",
-        "pricingUrl": "https://app.klingai.com/global/dev/document-api"
+        "pricingUrl": "https://app.klingai.com/global/dev/document-api/consumptionTable"
       },
       "references": [],
       "regionCode": "global",
       "requiredModels": [
-        "kling-v3-0-preview"
+        "kling-v3",
+        "kling-v3-omni",
+        "kling-sound-t2a",
+        "kling-sound-v2a"
       ],
       "supportedModels": [
         "kling-v3-0-preview"
@@ -376,33 +421,63 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Kuaishou mainland China operation is modeled as the cn region of the vendor with CNY billing. Supported Kling model metadata is listed, but pricing is intentionally not published until official domestic CNY price rows are confirmed.",
+      "notes": "Kuaishou mainland China operation with Kling Video 3.0 models, Kling Sound SFX APIs, and official CNY per-task pricing.",
       "official": {
         "additionalUrls": [
-          "https://klingai.kuaishou.com"
+          "https://klingai.kuaishou.com",
+          "https://app.klingai.com/cn/dev/document-api/apiReference/model/textToAudio",
+          "https://app.klingai.com/cn/dev/document-api/apiReference/model/videoToAudio",
+          "https://app.klingai.com/cn/dev/document-api/consumptionTable"
         ],
         "modelsUrl": "https://app.klingai.com/cn/dev/document-api/",
-        "pricingUrl": "https://app.klingai.com/cn/dev/document-api/"
+        "pricingUrl": "https://app.klingai.com/cn/dev/document-api/consumptionTable"
       },
       "references": [],
       "regionCode": "cn",
-      "requiredModels": [],
-      "supportedModels": [
-        "kling-v3-0-preview"
+      "requiredModels": [
+        "kling-v3",
+        "kling-v3-omni",
+        "kling-v3-0-preview",
+        "kling-sound-t2a",
+        "kling-sound-v2a"
       ],
+      "supportedModels": [],
       "vendorCode": "kuaishou",
       "verificationStatus": "official_url_declared"
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "MiniMax international operation is modeled as the global region of the vendor with USD billing. Current non-legacy text models are sourced from official MiniMax Global models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
+      "notes": "Luma AI Dream Machine video API with Ray 2 and Ray 2 Flash models for text-to-video and image-to-video.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.lumalabs.ai/docs/video-generation"
+        ],
+        "modelsUrl": "https://docs.lumalabs.ai/docs/video-generation",
+        "pricingUrl": "https://lumalabs.ai/api"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "ray-2",
+        "ray-flash-2"
+      ],
+      "supportedModels": [],
+      "vendorCode": "luma_ai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "MiniMax international operation is modeled as the global region of the vendor with USD billing. Added Hailuo video, Music 2.6, Music Cover, and Speech 2.8 models from official pricing.",
       "official": {
         "additionalUrls": [
           "https://platform.minimax.io/docs/guides/text-generation",
           "https://platform.minimax.io/docs/guides/text-chat",
           "https://platform.minimax.io/docs/api-reference/api-overview",
           "https://www.minimax.io/",
-          "https://www.minimax.io/blog/minimax-m3"
+          "https://www.minimax.io/blog/minimax-m3",
+          "https://platform.minimax.io/docs/guides/pricing-video",
+          "https://platform.minimax.io/docs/guides/image-generation",
+          "https://platform.minimax.io/docs/api-reference/music-generation"
         ],
         "modelsUrl": "https://platform.minimax.io/docs/guides/models-intro",
         "pricingUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
@@ -420,14 +495,24 @@
         "MiniMax-M2.7-highspeed",
         "MiniMax-M2.5",
         "MiniMax-M2.5-highspeed",
-        "M2-her"
+        "M2-her",
+        "music-2.6",
+        "speech-2.8-turbo",
+        "image-01",
+        "hailuo-2.3"
+      ],
+      "supportedModels": [
+        "music-cover",
+        "speech-2.8-hd",
+        "hailuo-02",
+        "hailuo-2.3-fast"
       ],
       "vendorCode": "minimax",
       "verificationStatus": "official_verified"
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Current non-legacy text models are sourced from official MiniMax China models and pay-as-you-go pricing pages; the old abab family is not listed officially and is removed.",
+      "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Added Speech 2.8 Turbo/HD and Music 2.6 with official pay-as-you-go pricing.",
       "official": {
         "additionalUrls": [
           "https://platform.minimaxi.com/docs/guides/text-generation",
@@ -452,10 +537,32 @@
         "MiniMax-M2.7-highspeed",
         "MiniMax-M2.5",
         "MiniMax-M2.5-highspeed",
-        "M2-her"
+        "M2-her",
+        "speech-2.8-turbo",
+        "speech-2.8-hd",
+        "music-2.6",
+        "image-01"
       ],
       "vendorCode": "minimax",
       "verificationStatus": "official_verified"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "Meituan mainland China operation is modeled as the cn region of the vendor with CNY billing. LongCat (Longmao) is tracked as the default model family entry pending richer official price-table snapshots.",
+      "official": {
+        "additionalUrls": [
+          "https://www.meituan.com"
+        ],
+        "modelsUrl": "https://www.meituan.com",
+        "pricingUrl": "https://www.meituan.com"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [
+        "longcat-1.0"
+      ],
+      "vendorCode": "meituan",
+      "verificationStatus": "official_url_declared"
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
@@ -521,7 +628,7 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "OpenAI official API model and pricing docs. GPT-5.5 pro and GPT-5.4 pro are real API model IDs; their pro pricing is tracked from the per-model docs. gpt-5.2 and gpt-image-1.5 are kept as non-default historical catalog entries.",
+      "notes": "OpenAI official API model and pricing docs. Added GPT-4o mini TTS, TTS-1 HD, GPT-4o transcribe diarize, and Whisper-1 alongside GPT Realtime and transcription defaults.",
       "official": {
         "additionalUrls": [
           "https://platform.openai.com/docs/pricing",
@@ -533,7 +640,11 @@
           "https://developers.openai.com/api/docs/models/gpt-5.4-pro",
           "https://developers.openai.com/api/docs/models/gpt-realtime-2",
           "https://platform.openai.com/docs/models",
-          "https://platform.openai.com/docs/api-reference"
+          "https://platform.openai.com/docs/api-reference",
+          "https://developers.openai.com/api/docs/deprecations",
+          "https://platform.openai.com/docs/guides/text-to-speech",
+          "https://platform.openai.com/docs/guides/speech-to-text",
+          "https://openai.com/index/previewing-gpt-5-6-sol/"
         ],
         "modelsUrl": "https://platform.openai.com/docs/models",
         "pricingUrl": "https://openai.com/api/pricing/"
@@ -562,7 +673,10 @@
         "gpt-5.4-nano",
         "gpt-image-2",
         "gpt-realtime-2",
+        "gpt-4o-mini-tts",
+        "sora-2",
         "text-embedding-3-small",
+        "text-embedding-3-large",
         "gpt-4o-transcribe"
       ],
       "supportedModels": [
@@ -570,19 +684,29 @@
         "gpt-5.2",
         "gpt-image-1.5",
         "gpt-4o-mini-transcribe",
+        "gpt-4o-transcribe-diarize",
+        "tts-1-hd",
+        "whisper-1",
+        "sora-2-pro",
         "gpt-realtime-mini",
         "gpt-realtime-translate",
-        "gpt-realtime-whisper"
+        "gpt-realtime-whisper",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna"
       ],
       "vendorCode": "openai",
       "verificationStatus": "official_url_declared"
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Stability AI image API public docs.",
+      "notes": "Stability AI image and audio API public docs. Added Stable Audio 2.5 music generation and text-to-audio SFX mode.",
       "official": {
         "additionalUrls": [
-          "https://platform.stability.ai/docs/"
+          "https://platform.stability.ai/docs/",
+          "https://stability.ai/news-updates/stability-ai-introduces-stable-audio-25-the-first-audio-model-built-for-enterprise-sound-production-at-scale",
+          "https://platform.stability.ai/pricing",
+          "https://stability.ai/api-pricing-update-25"
         ],
         "modelsUrl": "https://platform.stability.ai/docs",
         "pricingUrl": "https://platform.stability.ai/docs"
@@ -590,9 +714,57 @@
       "references": [],
       "regionCode": "global",
       "requiredModels": [
-        "stable-image-ultra"
+        "stable-image-ultra",
+        "stable-audio-2.5",
+        "stable-audio-2.5-sfx"
+      ],
+      "supportedModels": [
+        "stable-image-core"
       ],
       "vendorCode": "stability_ai",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "Mureka official API platform from Kunlun Tech for song and instrumental generation.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.mureka.ai/docs/en/quickstart.html",
+          "https://platform.mureka.ai/docs/en/faq.html"
+        ],
+        "modelsUrl": "https://platform.mureka.ai/docs/",
+        "pricingUrl": "https://platform.mureka.ai/docs/en/faq.html"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "mureka-v7.5",
+        "mureka-o1"
+      ],
+      "vendorCode": "mureka",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "Runway generative video and image API with Gen-4 video and image models billed per second or per image.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.dev.runwayml.com/"
+        ],
+        "modelsUrl": "https://docs.dev.runwayml.com/guides/pricing/",
+        "pricingUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "gen4.5",
+        "gen4_turbo",
+        "gen4_image"
+      ],
+      "supportedModels": [
+        "gen4_image_turbo"
+      ],
+      "vendorCode": "runway",
       "verificationStatus": "official_url_declared"
     },
     {
@@ -663,7 +835,95 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "xAI official docs list Grok 4.3, 4.20 series (reasoning, non-reasoning, multi-agent), and Build 0.1 models.",
+      "notes": "ShengShu Technology Vidu mainland China API with Q3 video models and Audio 1.0 text-to-audio / timing-to-audio SFX APIs billed in CNY credits.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.vidu.cn/docs/text-to-video",
+          "https://platform.vidu.cn/docs/image-to-video",
+          "https://platform.vidu.cn/docs/text-to-audio",
+          "https://platform.vidu.cn/docs/timing-to-audio"
+        ],
+        "modelsUrl": "https://platform.vidu.cn/docs/text-to-video",
+        "pricingUrl": "https://platform.vidu.cn/docs/pricing"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [
+        "viduq3-pro",
+        "viduq3-turbo",
+        "audio1.0-text2audio",
+        "audio1.0-timing2audio"
+      ],
+      "supportedModels": [],
+      "vendorCode": "vidu",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "ShengShu Technology Vidu international API with Q3 video models and Audio 1.0 text-to-audio / timing-to-audio SFX APIs billed in USD credits.",
+      "official": {
+        "additionalUrls": [
+          "https://platform.vidu.com/docs",
+          "https://platform.vidu.com/docs/text-to-audio",
+          "https://platform.vidu.com/docs/timing-to-audio"
+        ],
+        "modelsUrl": "https://platform.vidu.com/docs/pricing",
+        "pricingUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "viduq3-pro",
+        "viduq3-turbo",
+        "audio1.0-text2audio",
+        "audio1.0-timing2audio"
+      ],
+      "supportedModels": [],
+      "vendorCode": "vidu",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "AIsphere PixVerse (拍我AI) mainland China video models via Alibaba DashScope and domestic open platform.",
+      "official": {
+        "additionalUrls": [
+          "https://help.aliyun.com/zh/model-studio/pixverse-text-to-video-api-reference"
+        ],
+        "modelsUrl": "https://help.aliyun.com/zh/model-studio/pixverse-text-to-video-api-reference",
+        "pricingUrl": "https://help.aliyun.com/zh/model-studio/pixverse-text-to-video-api-reference"
+      },
+      "references": [],
+      "regionCode": "cn",
+      "requiredModels": [
+        "pixverse-v6-t2v",
+        "pixverse-c1-t2v"
+      ],
+      "supportedModels": [],
+      "vendorCode": "pixverse",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "AIsphere PixVerse international open API with V6 text-to-video, image-to-video, and reference-to-video.",
+      "official": {
+        "additionalUrls": [
+          "https://docs.platform.pixverse.ai/"
+        ],
+        "modelsUrl": "https://docs.platform.pixverse.ai/model-pricing-796039m0",
+        "pricingUrl": "https://docs.platform.pixverse.ai/model-pricing-796039m0"
+      },
+      "references": [],
+      "regionCode": "global",
+      "requiredModels": [
+        "pixverse-v6"
+      ],
+      "supportedModels": [],
+      "vendorCode": "pixverse",
+      "verificationStatus": "official_url_declared"
+    },
+    {
+      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "notes": "xAI official docs list Grok 4.3, 4.20 series, Build 0.1, and Grok Imagine image/video models.",
       "official": {
         "additionalUrls": [
           "https://docs.x.ai/",
@@ -686,7 +946,13 @@
         "grok-4.20-0309-non-reasoning",
         "grok-4.20-multi-agent-0309",
         "grok-4.3",
-        "grok-build-0.1"
+        "grok-build-0.1",
+        "grok-imagine-image",
+        "grok-imagine-video"
+      ],
+      "supportedModels": [
+        "grok-imagine-image-quality",
+        "grok-imagine-video-1.5"
       ],
       "vendorCode": "xai",
       "verificationStatus": "official_url_declared"
@@ -739,7 +1005,7 @@
     },
     {
       "lastCheckedAt": "2026-06-24T00:00:00Z",
-      "notes": "Zhipu AI mainland China operation is modeled as the cn region of the vendor with CNY billing; GLM/BigModel product names are not vendor identities.",
+      "notes": "Zhipu AI mainland China operation with GLM chat, CogView image, CogVideoX video, and Embedding-3 models.",
       "official": {
         "additionalUrls": [
           "https://docs.bigmodel.cn/"
@@ -756,7 +1022,10 @@
       "regionCode": "cn",
       "requiredModels": [
         "glm-5.2",
-        "glm-5.1"
+        "glm-5.1",
+        "cogview-4-250304",
+        "cogvideox-3",
+        "embedding-3"
       ],
       "vendorCode": "zhipu",
       "verificationStatus": "official_url_declared"

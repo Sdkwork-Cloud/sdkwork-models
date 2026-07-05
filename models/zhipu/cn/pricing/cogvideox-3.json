@@ -1,0 +1,26 @@
+{
+  "catalogKey": "zhipu/cogvideox-3",
+  "currency": "CNY",
+  "modelId": "cogvideox-3",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "api_result",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-cogvideox-3-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/video-generation/cogvideox-3"
+      },
+      "unitPrice": "1.000000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "zhipu"
+}

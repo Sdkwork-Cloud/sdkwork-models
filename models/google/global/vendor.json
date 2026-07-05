@@ -4,7 +4,9 @@
   "capabilities": [
     "chat",
     "image",
-    "video"
+    "video",
+    "audio",
+    "music"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -61,8 +63,11 @@
   "marketScope": "global",
   "modelFamilies": [
     "gemini",
+    "gemini-image",
     "imagen",
-    "veo"
+    "veo",
+    "gemini-tts",
+    "lyria"
   ],
   "openSource": false,
   "operatingRegions": [

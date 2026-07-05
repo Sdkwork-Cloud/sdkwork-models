@@ -1,0 +1,47 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "google/gemini-2.5-flash-preview-tts",
+  "colorToken": "#7c3aed",
+  "contextTokens": 8192,
+  "description": "Gemini 2.5 Flash preview text-to-speech model optimized for low-latency expressive speech.",
+  "displayName": "Gemini 2.5 Flash TTS Preview",
+  "familyCode": "gemini-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 600,
+  "latencyP95Ms": 2200,
+  "lifecycle": "preview",
+  "maxInputTokens": 8192,
+  "maxOutputTokens": 16384,
+  "modelId": "gemini-2.5-flash-preview-tts",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "830.000000",
+  "regionCode": "global",
+  "releaseStage": "preview",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-preview-tts"
+  },
+  "strengths": [
+    "Text to speech",
+    "Multi-speaker",
+    "Low latency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.860000"
+}

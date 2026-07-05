@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "bytedance/doubao-seedance-2-0-260128",
+  "colorToken": "#dc2626",
+  "description": "ByteDance Seedance 2.0 video generation model with unified multimodal audio-video output.",
+  "displayName": "Doubao Seedance 2.0",
+  "familyCode": "seedance",
+  "inputModalities": [
+    "text",
+    "image",
+    "video",
+    "audio"
+  ],
+  "latencyP50Ms": 50000,
+  "latencyP95Ms": 150000,
+  "lifecycle": "active",
+  "modelId": "doubao-seedance-2-0-260128",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "780.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/82379"
+  },
+  "strengths": [
+    "Video generation",
+    "Image to video",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.860000"
+}

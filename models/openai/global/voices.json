@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai",
+  "regionCode": "global",
+  "voices": [
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "alloy",
+      "displayName": "Alloy",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/alloy",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "neutral",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "ash",
+      "displayName": "Ash",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/ash",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "ballad",
+      "displayName": "Ballad",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/ballad",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "neutral",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "coral",
+      "displayName": "Coral",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/coral",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "echo",
+      "displayName": "Echo",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/echo",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "fable",
+      "displayName": "Fable",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/fable",
+      "primaryLocale": "en-GB",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "neutral",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "onyx",
+      "displayName": "Onyx",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/onyx",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "nova",
+      "displayName": "Nova",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/nova",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "sage",
+      "displayName": "Sage",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/sage",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "shimmer",
+      "displayName": "Shimmer",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/shimmer",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "verse",
+      "displayName": "Verse",
+      "vendorCode": "openai",
+      "regionCode": "global",
+      "catalogKey": "openai/verse",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "builtin",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      }
+    }
+  ]
+}

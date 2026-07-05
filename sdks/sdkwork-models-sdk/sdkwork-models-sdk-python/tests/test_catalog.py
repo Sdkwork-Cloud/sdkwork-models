@@ -19,10 +19,16 @@ from sdkwork_models import (
     list_models_by_capability,
     list_models_by_modality,
     list_models_by_protocol,
+    list_models_for_voice,
     list_protocols,
     list_protocols_by_vendor,
     list_vendor_regions,
     list_vendors,
+    list_voices,
+    list_voices_for_model,
+    list_video_profiles,
+    list_video_profiles_for_model,
+    find_video_profile,
     load_catalog,
     load_bundled_catalog,
 )
@@ -94,6 +100,23 @@ def test_load_catalog() -> None:
     assert get_model_region_prices(catalog, "openai/gpt-5.5", "cn") == []
     assert get_model_prices(catalog, "openai/global/gpt-5.5") == []
     assert get_best_reference_price(catalog, "openai/gpt-5.5", "llm_input_token")["unitPrice"] == "5.000000"
+
+
+def test_voice_catalog_queries() -> None:
+    catalog = load_bundled_catalog()
+    openai_voices = list_voices(catalog, vendor_code="openai", region_code="global")
+    assert len(openai_voices) >= 11
+    assert len(list_voices_for_model(catalog, "openai/gpt-4o-mini-tts")) >= 11
+    assert len(list_voices(catalog)) >= 23
+    assert list_models_for_voice(catalog, openai_voices[0]["catalogKey"])
+
+
+def test_video_generation_profile_queries() -> None:
+    catalog = load_bundled_catalog()
+    assert len(list_video_profiles(catalog, vendor_code="kuaishou", region_code="global")) >= 3
+    assert len(list_video_profiles_for_model(catalog, "openai/sora-2")) >= 2
+    assert len(list_video_profiles(catalog)) >= 80
+    assert find_video_profile(catalog, "vidu/viduq3-pro/t2v_5s_720p")
 
 
 def test_protocol_queries() -> None:

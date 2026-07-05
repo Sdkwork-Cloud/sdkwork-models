@@ -7,6 +7,14 @@
       "familyType": "multimodal",
       "primaryModality": "text",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "grok-imagine-video",
+      "displayName": "Grok Imagine",
+      "familyCode": "grok-imagine",
+      "familyType": "multimodal",
+      "primaryModality": "image",
+      "sortOrder": 20
     }
   ],
   "regionCode": "global",

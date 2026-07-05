@@ -1,0 +1,26 @@
+{
+  "catalogKey": "minimax/image-01",
+  "currency": "USD",
+  "modelId": "image-01",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-image-01-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "unitPrice": "0.003500",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

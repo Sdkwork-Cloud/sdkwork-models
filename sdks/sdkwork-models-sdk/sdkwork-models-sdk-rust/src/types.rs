@@ -197,6 +197,107 @@ pub struct RankingFile {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct TtsVoice {
+    pub schema_version: String,
+    pub voice_id: String,
+    pub display_name: String,
+    pub vendor_code: String,
+    pub region_code: String,
+    pub catalog_key: String,
+    pub primary_locale: String,
+    #[serde(default)]
+    pub supported_locales: Vec<String>,
+    pub gender: String,
+    pub voice_kind: String,
+    pub provisioning_mode: String,
+    pub wire_parameter: String,
+    pub vendor_voice_namespace: Option<String>,
+    #[serde(default)]
+    pub styles: Vec<String>,
+    #[serde(default)]
+    pub roles: Vec<String>,
+    pub preview_audio_url: Option<String>,
+    pub vendor_list_endpoint: Option<String>,
+    pub description: Option<String>,
+    pub lifecycle: String,
+    pub release_stage: String,
+    pub shelf_state: String,
+    pub routing_state: String,
+    pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ModelVoiceBinding {
+    pub voice_key: String,
+    pub voice_id: String,
+    #[serde(default)]
+    pub is_default: bool,
+    pub compatibility: String,
+    #[serde(default)]
+    pub sort_order: Option<i32>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ModelVoiceBindingsFile {
+    pub schema_version: String,
+    pub vendor_code: String,
+    pub region_code: String,
+    pub model_id: String,
+    pub catalog_key: String,
+    #[serde(default)]
+    pub bindings: Vec<ModelVoiceBinding>,
+    pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct VideoGenerationProfile {
+    pub profile_code: String,
+    pub catalog_key: String,
+    pub display_name: String,
+    pub generation_mode: String,
+    pub duration_policy: String,
+    pub duration_seconds: Option<i32>,
+    #[serde(default)]
+    pub duration_options: Vec<i32>,
+    pub duration_tier_code: Option<String>,
+    #[serde(default)]
+    pub duration_tier_codes: Vec<String>,
+    pub min_duration_seconds: Option<i32>,
+    pub max_duration_seconds: Option<i32>,
+    pub duration_step_seconds: Option<i32>,
+    pub resolution: String,
+    pub resolution_tier_code: Option<String>,
+    #[serde(default)]
+    pub aspect_ratios: Vec<String>,
+    pub output_audio: Option<bool>,
+    #[serde(default)]
+    pub is_default: bool,
+    pub sort_order: Option<i32>,
+    #[serde(default)]
+    pub pricing_tier_codes: Vec<String>,
+    #[serde(default)]
+    pub wire_parameters: std::collections::BTreeMap<String, String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ModelVideoProfilesFile {
+    pub schema_version: String,
+    pub vendor_code: String,
+    pub region_code: String,
+    pub model_id: String,
+    pub catalog_key: String,
+    #[serde(default)]
+    pub profiles: Vec<VideoGenerationProfile>,
+    pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct CatalogIndex {
     pub schema_version: String,
     pub catalog_version: String,
@@ -215,6 +316,13 @@ pub struct CatalogIndexVendor {
     pub model_files: Vec<String>,
     #[serde(default)]
     pub pricing_files: Vec<String>,
+    pub voices_path: Option<String>,
+    pub model_voices_path: Option<String>,
+    #[serde(default)]
+    pub model_voice_files: Vec<String>,
+    pub model_video_profiles_path: Option<String>,
+    #[serde(default)]
+    pub model_video_profile_files: Vec<String>,
     pub rankings_path: Option<String>,
 }
 
@@ -247,6 +355,12 @@ pub struct VendorCatalog {
     pub models: Vec<ModelInfo>,
     pub pricing: Vec<ModelPricing>,
     pub rankings: Vec<RankingSnapshot>,
+    #[serde(default)]
+    pub voices: Vec<TtsVoice>,
+    #[serde(default)]
+    pub model_voice_bindings: Vec<ModelVoiceBindingsFile>,
+    #[serde(default)]
+    pub model_video_profiles: Vec<ModelVideoProfilesFile>,
 }
 
 #[derive(Debug, Clone, PartialEq)]

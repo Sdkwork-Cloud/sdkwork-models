@@ -1,0 +1,62 @@
+{
+  "catalogKey": "vidu/viduq3-pro",
+  "currency": "USD",
+  "modelId": "viduq3-pro",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "vidu-global-viduq3-pro-second-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "unitPrice": "0.100000",
+      "unitSize": "1"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-04T00:00:00Z",
+      "meterCode": "video_result",
+      "minimumQuantity": "0",
+      "notes": "Official 5 second 720p generation bucket for Vidu Q3 Pro.",
+      "priceId": "vidu-global-viduq3-pro-result-5s-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-04T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "tierCode": "dur_5s",
+      "unitPrice": "0.500000",
+      "unitSize": "1"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-04T00:00:00Z",
+      "meterCode": "video_result",
+      "minimumQuantity": "0",
+      "notes": "Official 10 second 720p generation bucket for Vidu Q3 Pro.",
+      "priceId": "vidu-global-viduq3-pro-result-10s-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-04T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "tierCode": "dur_10s",
+      "unitPrice": "1.000000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu"
+}

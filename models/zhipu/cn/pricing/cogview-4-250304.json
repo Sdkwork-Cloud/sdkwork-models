@@ -1,0 +1,26 @@
+{
+  "catalogKey": "zhipu/cogview-4-250304",
+  "currency": "CNY",
+  "modelId": "cogview-4-250304",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-cogview-4-250304-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/image-generation/cogview-4"
+      },
+      "unitPrice": "0.060000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "zhipu"
+}

@@ -1,0 +1,26 @@
+{
+  "catalogKey": "openai/whisper-1",
+  "currency": "USD",
+  "modelId": "whisper-1",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "stt_audio_minute",
+      "minimumQuantity": "0",
+      "priceId": "openai-whisper-1-minute",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/speech-to-text"
+      },
+      "unitPrice": "0.006000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

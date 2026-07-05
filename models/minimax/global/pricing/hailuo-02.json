@@ -1,0 +1,26 @@
+{
+  "catalogKey": "minimax/hailuo-02",
+  "currency": "USD",
+  "modelId": "hailuo-02",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-hailuo-02-second-768p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-video"
+      },
+      "unitPrice": "0.045000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

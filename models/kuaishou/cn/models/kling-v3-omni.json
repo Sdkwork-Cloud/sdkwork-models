@@ -1,0 +1,49 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "kuaishou/kling-v3-omni",
+  "colorToken": "#5b21b6",
+  "description": "Kling Video 3.0 Omni unified multimodal video generation and editing with reference video, elements, and multi-shot direction.",
+  "displayName": "Kling v3 Omni",
+  "familyCode": "kling",
+  "inputModalities": [
+    "text",
+    "image",
+    "video",
+    "audio"
+  ],
+  "latencyP50Ms": 56000,
+  "latencyP95Ms": 165000,
+  "lifecycle": "active",
+  "modelId": "kling-v3-omni",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "835.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"
+  },
+  "strengths": [
+    "Video editing",
+    "Reference video",
+    "Multi-shot storyboarding",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.970000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.920000"
+}

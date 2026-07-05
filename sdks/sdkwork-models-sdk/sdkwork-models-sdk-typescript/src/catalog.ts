@@ -14,10 +14,18 @@ export {
   listModelsByCapability,
   listModelsByModality,
   listModelsByProtocol,
+  listModelsForVoice,
   listProtocols,
   listProtocolsByVendor,
   listVendorRegions,
+  listVideoProfiles,
+  listVideoProfilesForModel,
+  findVideoProfile,
+  listVoices,
+  listVoicesForModel,
   listVendors,
+  videoProfileCatalogKey,
+  voiceCatalogKey,
 } from "./query.js";
 export { validateCatalog } from "./validation.js";
 export type * from "./types.js";

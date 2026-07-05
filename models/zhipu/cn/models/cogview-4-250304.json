@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "zhipu/cogview-4-250304",
+  "colorToken": "#2563eb",
+  "description": "CogView-4 text-to-image model with strong Chinese character rendering and flexible resolution output.",
+  "displayName": "CogView 4",
+  "familyCode": "cogview",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 4000,
+  "latencyP95Ms": 14000,
+  "lifecycle": "active",
+  "modelId": "cogview-4-250304",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "760.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/image-generation/cogview-4"
+  },
+  "strengths": [
+    "Text to image",
+    "Chinese characters",
+    "Flexible resolution"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "zhipu",
+  "vendorName": "Zhipu AI",
+  "winRate": "0.860000"
+}

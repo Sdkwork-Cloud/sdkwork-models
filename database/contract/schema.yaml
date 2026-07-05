@@ -1,13 +1,77 @@
-schemaVersion: 1
-kind: sdkwork.database.contract
-moduleId: sdkwork-models
-serviceCode: SDKWORK_MODELS
-owner: sdkwork-models-platform
-domain: intelligence
-capability: catalog
-description: >
-  Portable AI model catalog dictionary tables. Composed hosts apply baseline DDL
-  through sdkwork-models-database-bootstrap and must not regenerate these tables
-  as local schema authority.
-tablesRegistry: contract/table-registry.json
-prefixRegistry: contract/prefix-registry.json
+schema_version: 1
+kind: sdkwork.database.schema
+module_id: sdkwork-models
+contract_version: 1.0.0
+owner_team: sdkwork-models-platform
+compliance_level: L2
+engines:
+  - postgres
+  - sqlite
+table_prefix: ai_model_
+tables:
+  - name: ai_model_vendor
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_modality
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_api_endpoint
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_vendor_modality
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_vendor_api_endpoint
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_modality_api_endpoint
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_modality
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_api_endpoint
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_resource
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_resource_group
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_resource_group_item
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_family
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_capability
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_catalog_source
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_catalog_sync_run
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_billing_meter
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_pricing
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_rank_snapshot
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_voice
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_voice_binding
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: ai_model_video_profile
+    lifecycle_status: active
+    owner: sdkwork-models-platform

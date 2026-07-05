@@ -1,5 +1,5 @@
 import { sha256Hash } from "@sdkwork/utils/crypto";
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, existsSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 
 export const DECIMAL_PATTERN = /^(0|[1-9][0-9]*)(\.[0-9]+)?$/;
@@ -83,6 +83,9 @@ export const collectVendorDirectories = collectRegionalCatalogDirectories;
 
 export function collectJsonFiles(root) {
   const files = [];
+  if (!existsSync(root) || !statSync(root).isDirectory()) {
+    return files;
+  }
   function visit(directory) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const path = join(directory, entry.name);
@@ -100,6 +103,9 @@ export function collectJsonFiles(root) {
 }
 
 function collectJsonFileRefs(modelsRoot, root) {
+  if (!existsSync(root) || !statSync(root).isDirectory()) {
+    return [];
+  }
   return collectJsonFiles(root).map((path) => relative(modelsRoot, path).replace(/\\/g, "/"));
 }
 
@@ -115,6 +121,10 @@ export function catalogKey(vendorCode, modelId) {
   return `${vendorCode}/${modelId}`;
 }
 
+export function videoProfileCatalogKey(vendorCode, modelId, profileCode) {
+  return `${vendorCode}/${modelId}/${profileCode}`;
+}
+
 export function projectRootFromTool(importMetaUrl) {
   return dirname(dirname(new URL(importMetaUrl).pathname.replace(/^\/([A-Za-z]:)/, "$1")));
 }
@@ -127,6 +137,36 @@ export function loadMeters(root) {
   return readJsonFile(join(root, "models", "meters.json")).meters ?? [];
 }
 
+function loadVoicesFile(regionDir, vendorCode, regionCode, schemaVersion) {
+  const voicesPath = join(regionDir, "voices.json");
+  if (!existsSync(voicesPath) || !statSync(voicesPath).isFile()) {
+    return { schemaVersion, vendorCode, regionCode, voices: [] };
+  }
+  const file = readJsonFile(voicesPath);
+  return {
+    schemaVersion: file.schemaVersion ?? schemaVersion,
+    vendorCode: file.vendorCode ?? vendorCode,
+    regionCode: file.regionCode ?? regionCode,
+    voices: file.voices ?? [],
+  };
+}
+
+function loadModelVoiceBindings(regionDir) {
+  const modelVoicesDir = join(regionDir, "model-voices");
+  if (!existsSync(modelVoicesDir) || !statSync(modelVoicesDir).isDirectory()) {
+    return [];
+  }
+  return collectJsonFiles(modelVoicesDir).map(readJsonFile);
+}
+
+function loadModelVideoProfiles(regionDir) {
+  const profilesDir = join(regionDir, "model-video-profiles");
+  if (!existsSync(profilesDir) || !statSync(profilesDir).isDirectory()) {
+    return [];
+  }
+  return collectJsonFiles(profilesDir).map(readJsonFile);
+}
+
 export function loadVendorBundle(regionDir) {
   const vendorCode = vendorCodeFromDirectory(regionDir);
   const regionCode = regionCodeFromDirectory(regionDir);
@@ -134,6 +174,9 @@ export function loadVendorBundle(regionDir) {
   const families = readJsonFile(join(regionDir, "families.json"));
   const models = collectJsonFiles(join(regionDir, "models")).map(readJsonFile);
   const pricing = collectJsonFiles(join(regionDir, "pricing")).map(readJsonFile);
+  const voicesFile = loadVoicesFile(regionDir, vendorCode, regionCode, vendor.schemaVersion);
+  const modelVoices = loadModelVoiceBindings(regionDir);
+  const modelVideoProfiles = loadModelVideoProfiles(regionDir);
   const rankingsPath = join(regionDir, "rankings.json");
   const rankings = statSync(rankingsPath).isFile()
     ? readJsonFile(rankingsPath)
@@ -146,6 +189,10 @@ export function loadVendorBundle(regionDir) {
     families,
     models,
     pricing,
+    voices: voicesFile.voices,
+    voicesFile,
+    modelVoices,
+    modelVideoProfiles,
     rankings,
   };
 }
@@ -156,10 +203,13 @@ export function vendorHash(regionDir) {
     join(regionDir, "families.json"),
     ...collectJsonFiles(join(regionDir, "models")),
     ...collectJsonFiles(join(regionDir, "pricing")),
+    join(regionDir, "voices.json"),
+    ...collectJsonFiles(join(regionDir, "model-voices")),
+    ...collectJsonFiles(join(regionDir, "model-video-profiles")),
     join(regionDir, "rankings.json"),
   ];
   const body = files
-    .filter((path) => statSync(path).isFile())
+    .filter((path) => existsSync(path) && statSync(path).isFile())
     .map((path) => `${relative(dirname(dirname(regionDir)), path)}\n${stableJson(readJsonFile(path))}`)
     .join("\n");
   return sha256Text(body);
@@ -170,9 +220,14 @@ export function buildCatalogIndex(root) {
   const modelsRoot = join(root, manifest.modelsRoot);
   const regionalCatalogDirs = collectRegionalCatalogDirectories(modelsRoot);
   const vendors = regionalCatalogDirs.map((regionDir) => {
-    const { vendor, families, models, pricing, rankings, vendorCode, regionCode } = loadVendorBundle(regionDir);
+    const bundle = loadVendorBundle(regionDir);
+    const { vendor, families, models, pricing, rankings, voices, modelVoices, modelVideoProfiles, vendorCode, regionCode } = bundle;
     const modelFiles = collectJsonFileRefs(modelsRoot, join(regionDir, "models"));
     const pricingFiles = collectJsonFileRefs(modelsRoot, join(regionDir, "pricing"));
+    const modelVoiceFiles = collectJsonFileRefs(modelsRoot, join(regionDir, "model-voices"));
+    const modelVideoProfileFiles = collectJsonFileRefs(modelsRoot, join(regionDir, "model-video-profiles"));
+    const voicesPath = `${vendorCode}/${regionCode}/voices.json`;
+    const hasVoicesFile = existsSync(join(regionDir, "voices.json"));
     return {
       vendorCode,
       regionCode,
@@ -187,10 +242,22 @@ export function buildCatalogIndex(root) {
       modelFiles,
       pricingPath: `${vendorCode}/${regionCode}/pricing`,
       pricingFiles,
+      voicesPath: hasVoicesFile ? voicesPath : null,
+      modelVoicesPath: `${vendorCode}/${regionCode}/model-voices`,
+      modelVoiceFiles,
+      modelVideoProfilesPath: `${vendorCode}/${regionCode}/model-video-profiles`,
+      modelVideoProfileFiles,
       rankingsPath: `${vendorCode}/${regionCode}/rankings.json`,
       modelCount: models.length,
       familyCount: families.families?.length ?? 0,
       pricingFileCount: pricing.length,
+      voiceCount: voices.length,
+      modelVoiceFileCount: modelVoices.length,
+      videoProfileCount: modelVideoProfiles.reduce(
+        (sum, file) => sum + (file.profiles?.length ?? 0),
+        0,
+      ),
+      modelVideoProfileFileCount: modelVideoProfiles.length,
       rankingSnapshotCount: rankings.snapshots?.length ?? 0,
       sha256: vendorHash(regionDir),
     };
@@ -198,6 +265,13 @@ export function buildCatalogIndex(root) {
   const vendorCount = new Set(vendors.map((vendor) => vendor.vendorCode)).size;
   const modelCount = vendors.reduce((sum, vendor) => sum + vendor.modelCount, 0);
   const pricingFileCount = vendors.reduce((sum, vendor) => sum + vendor.pricingFileCount, 0);
+  const voiceCount = vendors.reduce((sum, vendor) => sum + vendor.voiceCount, 0);
+  const modelVoiceFileCount = vendors.reduce((sum, vendor) => sum + vendor.modelVoiceFileCount, 0);
+  const videoProfileCount = vendors.reduce((sum, vendor) => sum + vendor.videoProfileCount, 0);
+  const modelVideoProfileFileCount = vendors.reduce(
+    (sum, vendor) => sum + vendor.modelVideoProfileFileCount,
+    0,
+  );
   return {
     schemaVersion: manifest.schemaVersion,
     catalogVersion: manifest.catalogVersion,
@@ -206,6 +280,10 @@ export function buildCatalogIndex(root) {
     regionCount: vendors.length,
     modelCount,
     pricingFileCount,
+    voiceCount,
+    modelVoiceFileCount,
+    videoProfileCount,
+    modelVideoProfileFileCount,
     vendors,
   };
 }

@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "elevenlabs/scribe_v2_realtime",
+  "colorToken": "#7c2d12",
+  "description": "ElevenLabs Scribe v2 Realtime low-latency speech-to-text model.",
+  "displayName": "Scribe v2 Realtime",
+  "familyCode": "elevenlabs-stt",
+  "inputModalities": [
+    "audio"
+  ],
+  "latencyP50Ms": 180,
+  "latencyP95Ms": 600,
+  "lifecycle": "active",
+  "modelId": "scribe_v2_realtime",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/overview/models"
+  },
+  "strengths": [
+    "Realtime STT",
+    "Low latency",
+    "Word timestamps"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.880000"
+}

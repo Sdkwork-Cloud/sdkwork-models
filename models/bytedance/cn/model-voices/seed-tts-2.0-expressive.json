@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance",
+  "regionCode": "cn",
+  "modelId": "seed-tts-2.0-expressive",
+  "catalogKey": "bytedance/seed-tts-2.0-expressive",
+  "bindings": [
+    {
+      "voiceKey": "bytedance/_catalog_dynamic",
+      "voiceId": "_catalog_dynamic",
+      "isDefault": true,
+      "compatibility": "full",
+      "sortOrder": 10,
+      "notes": "Use any voice_type from the Volcengine Seed TTS voice catalog API."
+    }
+  ],
+  "source": {
+    "observedAt": "2026-07-04T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/6561/132950"
+  }
+}

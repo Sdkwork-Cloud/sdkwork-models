@@ -1,0 +1,26 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "mureka/mureka-o1",
+          "modelId": "mureka-o1",
+          "pricingText": "$0.20 / song generation",
+          "rankNo": 18
+        },
+        {
+          "catalogKey": "mureka/mureka-v7.5",
+          "modelId": "mureka-v7.5",
+          "pricingText": "$0.045 / song generation",
+          "rankNo": 19
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "mureka"
+}

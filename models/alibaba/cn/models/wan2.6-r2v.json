@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "alibaba/wan2.6-r2v",
+  "colorToken": "#ff6a00",
+  "description": "Tongyi Wanxiang 2.6 reference-to-video model for character-consistent video generation from reference clips.",
+  "displayName": "Wan 2.6 Reference to Video",
+  "familyCode": "wanx-video",
+  "inputModalities": [
+    "text",
+    "video"
+  ],
+  "latencyP50Ms": 120000,
+  "latencyP95Ms": 300000,
+  "lifecycle": "active",
+  "modelId": "wan2.6-r2v",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "795.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
+  },
+  "strengths": [
+    "Reference to video",
+    "Character consistency",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.870000"
+}

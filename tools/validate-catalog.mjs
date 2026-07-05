@@ -16,7 +16,28 @@ import {
   projectRootFromTool,
   readJsonFile,
   stableJson,
+  videoProfileCatalogKey,
 } from "./catalog-lib.mjs";
+
+const GENERATION_MODE_INPUTS = {
+  text_to_video: ["text"],
+  image_to_video: ["image"],
+  reference_to_video: ["video", "image"],
+  start_end_frame: ["image"],
+  video_extension: ["video"],
+  video_edit: ["video"],
+  multi_shot: ["text"],
+};
+
+const DURATION_TIER_CODES = new Set([
+  "dur_5s",
+  "dur_6s",
+  "dur_8s",
+  "dur_10s",
+  "dur_15s",
+  "dur_30s",
+  "dur_60s",
+]);
 
 export function validateCatalog(root) {
   const issues = [];
@@ -39,6 +60,9 @@ export function validateCatalog(root) {
     "schemas/model.schema.json",
     "schemas/pricing.schema.json",
     "schemas/protocol.schema.json",
+    "schemas/voice.schema.json",
+    "schemas/model-voice.schema.json",
+    "schemas/model-video-profiles.schema.json",
   ]) {
     requireFile(rel);
   }
@@ -292,6 +316,180 @@ export function validateCatalog(root) {
         if (!vendorModelIds.has(item.modelId)) {
           issues.push(issue("ranking.model.missing", `${pathPrefix}/rankings.json#/snapshots/${snapshot.snapshotDate}/items/${index}/modelId`, `${item.modelId} is not defined for ${bundle.vendorCode}`));
         }
+      }
+    }
+
+    const voiceByKey = new Map();
+    for (const [index, voice] of (bundle.voices ?? []).entries()) {
+      const voicePath = `${pathPrefix}/voices.json#/voices/${index}`;
+      const expectedVoiceKey = catalogKey(bundle.vendorCode, voice.voiceId);
+      if (voice.catalogKey !== expectedVoiceKey) {
+        issues.push(issue("voice.catalog_key.mismatch", `${voicePath}/catalogKey`, `catalogKey must be ${expectedVoiceKey}`));
+      }
+      if (voice.vendorCode !== bundle.vendorCode) {
+        issues.push(issue("voice.vendor.mismatch", `${voicePath}/vendorCode`, "voice vendorCode must match directory"));
+      }
+      if (voice.regionCode !== bundle.regionCode) {
+        issues.push(issue("voice.region.mismatch", `${voicePath}/regionCode`, "voice regionCode must match directory"));
+      }
+      if (!voice.source?.sourceUrl || !voice.source?.observedAt) {
+        issues.push(issue("voice.source.missing", `${voicePath}/source`, "voice sourceUrl and observedAt are required"));
+      }
+      if (voiceByKey.has(voice.catalogKey)) {
+        issues.push(issue("voice.catalog_key.duplicate", `${voicePath}/catalogKey`, `${voice.catalogKey} is duplicated in voices.json`));
+      }
+      voiceByKey.set(voice.catalogKey, voice);
+    }
+
+    for (const bindingFile of bundle.modelVoices ?? []) {
+      const bindingPath = `${pathPrefix}/model-voices/${safeModelIdPath(bindingFile.modelId, issues, `${pathPrefix}/model-voices`) }.json`;
+      if (bindingFile.vendorCode !== bundle.vendorCode) {
+        issues.push(issue("model_voice.vendor.mismatch", `${bindingPath}#/vendorCode`, "model voice vendorCode must match directory"));
+      }
+      if (bindingFile.regionCode !== bundle.regionCode) {
+        issues.push(issue("model_voice.region.mismatch", `${bindingPath}#/regionCode`, "model voice regionCode must match directory"));
+      }
+      const expectedModelKey = catalogKey(bundle.vendorCode, bindingFile.modelId);
+      if (bindingFile.catalogKey !== expectedModelKey) {
+        issues.push(issue("model_voice.catalog_key.mismatch", `${bindingPath}#/catalogKey`, `catalogKey must be ${expectedModelKey}`));
+      }
+      if (!vendorModelIds.has(bindingFile.modelId)) {
+        issues.push(issue("model_voice.model.missing", `${bindingPath}#/modelId`, `${bindingFile.modelId} is not defined for ${bundle.vendorCode}`));
+      }
+      if (!bindingFile.source?.sourceUrl || !bindingFile.source?.observedAt) {
+        issues.push(issue("model_voice.source.missing", `${bindingPath}#/source`, "sourceUrl and observedAt are required"));
+      }
+      let defaultCount = 0;
+      for (const [index, binding] of (bindingFile.bindings ?? []).entries()) {
+        if (!voiceByKey.has(binding.voiceKey)) {
+          issues.push(issue("model_voice.binding.voice_missing", `${bindingPath}#/bindings/${index}/voiceKey`, `${binding.voiceKey} is not defined in ${pathPrefix}/voices.json`));
+        }
+        if (binding.voiceKey !== catalogKey(bundle.vendorCode, binding.voiceId)) {
+          issues.push(issue("model_voice.binding.voice_key.mismatch", `${bindingPath}#/bindings/${index}/voiceKey`, `voiceKey must be ${catalogKey(bundle.vendorCode, binding.voiceId)}`));
+        }
+        if (binding.isDefault) {
+          defaultCount += 1;
+        }
+      }
+      if (defaultCount > 1) {
+        issues.push(issue("model_voice.binding.default.duplicate", `${bindingPath}#/bindings`, "at most one binding may set isDefault"));
+      }
+    }
+
+    const modelById = new Map(bundle.models.map((model) => [model.modelId, model]));
+    const pricingTierCodesByModel = new Map();
+    for (const pricing of bundle.pricing ?? []) {
+      const tiers = new Set(
+        (pricing.prices ?? [])
+          .map((price) => price.tierCode)
+          .filter((tierCode) => typeof tierCode === "string" && tierCode.length > 0),
+      );
+      pricingTierCodesByModel.set(pricing.modelId, tiers);
+    }
+
+    for (const profileFile of bundle.modelVideoProfiles ?? []) {
+      const profilePath = `${pathPrefix}/model-video-profiles/${safeModelIdPath(profileFile.modelId, issues, `${pathPrefix}/model-video-profiles`)}.json`;
+      if (profileFile.vendorCode !== bundle.vendorCode) {
+        issues.push(issue("model_video_profile.vendor.mismatch", `${profilePath}#/vendorCode`, "model video profile vendorCode must match directory"));
+      }
+      if (profileFile.regionCode !== bundle.regionCode) {
+        issues.push(issue("model_video_profile.region.mismatch", `${profilePath}#/regionCode`, "model video profile regionCode must match directory"));
+      }
+      const expectedModelKey = catalogKey(bundle.vendorCode, profileFile.modelId);
+      if (profileFile.catalogKey !== expectedModelKey) {
+        issues.push(issue("model_video_profile.catalog_key.mismatch", `${profilePath}#/catalogKey`, `catalogKey must be ${expectedModelKey}`));
+      }
+      if (!vendorModelIds.has(profileFile.modelId)) {
+        issues.push(issue("model_video_profile.model.missing", `${profilePath}#/modelId`, `${profileFile.modelId} is not defined for ${bundle.vendorCode}`));
+      }
+      if (!profileFile.source?.sourceUrl || !profileFile.source?.observedAt) {
+        issues.push(issue("model_video_profile.source.missing", `${profilePath}#/source`, "sourceUrl and observedAt are required"));
+      }
+      const model = modelById.get(profileFile.modelId);
+      const profileCodes = new Set();
+      let defaultCount = 0;
+      for (const [index, profile] of (profileFile.profiles ?? []).entries()) {
+        const itemPath = `${profilePath}#/profiles/${index}`;
+        const expectedProfileKey = videoProfileCatalogKey(bundle.vendorCode, profileFile.modelId, profile.profileCode);
+        if (profile.catalogKey !== expectedProfileKey) {
+          issues.push(issue("model_video_profile.profile.catalog_key.mismatch", `${itemPath}/catalogKey`, `catalogKey must be ${expectedProfileKey}`));
+        }
+        if (profileCodes.has(profile.profileCode)) {
+          issues.push(issue("model_video_profile.profile.duplicate", `${itemPath}/profileCode`, `${profile.profileCode} is duplicated`));
+        }
+        profileCodes.add(profile.profileCode);
+        if (profile.isDefault) {
+          defaultCount += 1;
+        }
+        if (model) {
+          const requiredInputs = GENERATION_MODE_INPUTS[profile.generationMode] ?? [];
+          if (
+            requiredInputs.length > 0
+            && !requiredInputs.some((modality) => (model.inputModalities ?? []).includes(modality))
+          ) {
+            issues.push(
+              issue(
+                "model_video_profile.generation_mode.input_mismatch",
+                `${itemPath}/generationMode`,
+                `${profile.generationMode} requires one of ${requiredInputs.join(", ")} input modalities`,
+              ),
+            );
+          }
+          if (model.primaryCapability !== "video" && !(model.capabilities ?? []).includes("video")) {
+            issues.push(issue("model_video_profile.model.not_video", `${profilePath}#/modelId`, `${profileFile.modelId} is not a video model`));
+          }
+        }
+        if (profile.durationPolicy === "fixed") {
+          if (!Number.isInteger(profile.durationSeconds) || profile.durationSeconds <= 0) {
+            issues.push(issue("model_video_profile.duration.fixed.missing", `${itemPath}/durationSeconds`, "durationSeconds is required for fixed durationPolicy"));
+          }
+          if (!DURATION_TIER_CODES.has(profile.durationTierCode)) {
+            issues.push(issue("model_video_profile.duration.tier.invalid", `${itemPath}/durationTierCode`, "durationTierCode must use canonical dur_* vocabulary"));
+          }
+        } else if (profile.durationPolicy === "discrete") {
+          if (!Array.isArray(profile.durationOptions) || profile.durationOptions.length === 0) {
+            issues.push(issue("model_video_profile.duration.discrete.missing", `${itemPath}/durationOptions`, "durationOptions is required for discrete durationPolicy"));
+          }
+          if (!Array.isArray(profile.durationTierCodes) || profile.durationTierCodes.length !== profile.durationOptions?.length) {
+            issues.push(issue("model_video_profile.duration.tier_codes.mismatch", `${itemPath}/durationTierCodes`, "durationTierCodes must align with durationOptions"));
+          }
+          for (const tierCode of profile.durationTierCodes ?? []) {
+            if (!DURATION_TIER_CODES.has(tierCode)) {
+              issues.push(issue("model_video_profile.duration.tier.invalid", `${itemPath}/durationTierCodes`, "durationTierCodes must use canonical dur_* vocabulary"));
+            }
+          }
+        } else if (profile.durationPolicy === "range" || profile.durationPolicy === "continuous") {
+          if (!Number.isInteger(profile.minDurationSeconds) || !Number.isInteger(profile.maxDurationSeconds)) {
+            issues.push(issue("model_video_profile.duration.range.missing", `${itemPath}`, "minDurationSeconds and maxDurationSeconds are required for range/continuous durationPolicy"));
+          } else if (profile.minDurationSeconds > profile.maxDurationSeconds) {
+            issues.push(issue("model_video_profile.duration.range.invalid", `${itemPath}`, "minDurationSeconds must be <= maxDurationSeconds"));
+          }
+          if (!Number.isInteger(profile.durationStepSeconds) || profile.durationStepSeconds <= 0) {
+            issues.push(issue("model_video_profile.duration.step.missing", `${itemPath}/durationStepSeconds`, "durationStepSeconds is required for range/continuous durationPolicy"));
+          }
+        }
+        for (const tierCode of profile.pricingTierCodes ?? []) {
+          const modelTiers = pricingTierCodesByModel.get(profileFile.modelId) ?? new Set();
+          if (!modelTiers.has(tierCode)) {
+            issues.push(issue("model_video_profile.pricing.tier.missing", `${itemPath}/pricingTierCodes`, `${tierCode} is not declared on ${expectedModelKey} pricing`));
+          }
+        }
+      }
+      if (defaultCount > 1) {
+        issues.push(issue("model_video_profile.default.duplicate", `${profilePath}#/profiles`, "at most one profile may set isDefault"));
+      }
+    }
+
+    const profileModelIds = new Set((bundle.modelVideoProfiles ?? []).map((file) => file.modelId));
+    for (const model of bundle.models) {
+      if (model.primaryCapability === "video" && !profileModelIds.has(model.modelId)) {
+        issues.push(
+          issue(
+            "model_video_profile.model.required",
+            `${pathPrefix}/model-video-profiles/${model.modelId}.json`,
+            `${model.modelId} is a video model and requires a model-video-profiles file`,
+          ),
+        );
       }
     }
   }

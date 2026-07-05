@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "embedding"
+  ],
+  "catalogKey": "openai/text-embedding-3-large",
+  "colorToken": "#64748b",
+  "description": "High-dimensional text embedding model for retrieval, search, and semantic indexing at higher accuracy.",
+  "displayName": "Text embedding 3 large",
+  "familyCode": "embedding-3",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 280,
+  "latencyP95Ms": 900,
+  "lifecycle": "active",
+  "modelId": "text-embedding-3-large",
+  "outputModalities": [
+    "embedding"
+  ],
+  "primaryCapability": "embedding",
+  "rankScore": "740.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/guides/embeddings"
+  },
+  "strengths": [
+    "Embedding",
+    "Retrieval",
+    "High accuracy"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.780000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.860000"
+}

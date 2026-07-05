@@ -39,6 +39,24 @@
           "modelId": "M2-her",
           "pricingText": "CNY 2.100000 / 1M input; CNY 8.400000 / 1M output",
           "rankNo": 6
+        },
+        {
+          "catalogKey": "minimax/speech-2.8-turbo",
+          "modelId": "speech-2.8-turbo",
+          "pricingText": "CNY 0.20 / 1K characters",
+          "rankNo": 7
+        },
+        {
+          "catalogKey": "minimax/speech-2.8-hd",
+          "modelId": "speech-2.8-hd",
+          "pricingText": "CNY 0.35 / 1K characters",
+          "rankNo": 8
+        },
+        {
+          "catalogKey": "minimax/music-2.6",
+          "modelId": "music-2.6",
+          "pricingText": "CNY 1.00 / song",
+          "rankNo": 9
         }
       ],
       "rankScope": "china-mainland-default",

@@ -112,6 +112,7 @@
         "image",
         "audio",
         "music",
+        "sfx",
         "video",
         "rerank",
         "tool"

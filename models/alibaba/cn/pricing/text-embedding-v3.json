@@ -1,0 +1,26 @@
+{
+  "catalogKey": "alibaba/text-embedding-v3",
+  "currency": "CNY",
+  "modelId": "text-embedding-v3",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "embedding_input_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-cn-text-embedding-v3-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/embedding"
+      },
+      "unitPrice": "0.000500",
+      "unitSize": "1000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

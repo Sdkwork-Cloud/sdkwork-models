@@ -1,11 +1,20 @@
 {
   "families": [
     {
+      "defaultModel": "kling-v3",
       "displayName": "Kling",
       "familyCode": "kling",
       "familyType": "video",
       "primaryModality": "video",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "kling-sound-t2a",
+      "displayName": "Kling 音效",
+      "familyCode": "kling-sfx",
+      "familyType": "sfx",
+      "primaryModality": "sfx",
+      "sortOrder": 20
     }
   ],
   "regionCode": "cn",

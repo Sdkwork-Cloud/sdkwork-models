@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu",
+  "regionCode": "global",
+  "modelId": "viduq3-pro",
+  "catalogKey": "vidu/viduq3-pro",
+  "profiles": [
+    {
+      "profileCode": "t2v_5s_720p",
+      "catalogKey": "vidu/viduq3-pro/t2v_5s_720p",
+      "displayName": "Text to Video · 5s · 720p",
+      "generationMode": "text_to_video",
+      "durationPolicy": "fixed",
+      "durationSeconds": 5,
+      "durationTierCode": "dur_5s",
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "isDefault": true,
+      "sortOrder": 10,
+      "pricingTierCodes": ["dur_5s"],
+      "wireParameters": {
+        "duration": "5",
+        "resolution": "720p"
+      }
+    },
+    {
+      "profileCode": "t2v_10s_720p",
+      "catalogKey": "vidu/viduq3-pro/t2v_10s_720p",
+      "displayName": "Text to Video · 10s · 720p",
+      "generationMode": "text_to_video",
+      "durationPolicy": "fixed",
+      "durationSeconds": 10,
+      "durationTierCode": "dur_10s",
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "sortOrder": 20,
+      "pricingTierCodes": ["dur_10s"],
+      "wireParameters": {
+        "duration": "10",
+        "resolution": "720p"
+      }
+    },
+    {
+      "profileCode": "i2v_5s_720p",
+      "catalogKey": "vidu/viduq3-pro/i2v_5s_720p",
+      "displayName": "Image to Video · 5s · 720p",
+      "generationMode": "image_to_video",
+      "durationPolicy": "fixed",
+      "durationSeconds": 5,
+      "durationTierCode": "dur_5s",
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "sortOrder": 30,
+      "pricingTierCodes": ["dur_5s"],
+      "wireParameters": {
+        "duration": "5",
+        "resolution": "720p"
+      }
+    },
+    {
+      "profileCode": "se2v_5s_720p",
+      "catalogKey": "vidu/viduq3-pro/se2v_5s_720p",
+      "displayName": "Start-End Frame · 5s · 720p",
+      "generationMode": "start_end_frame",
+      "durationPolicy": "fixed",
+      "durationSeconds": 5,
+      "durationTierCode": "dur_5s",
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "sortOrder": 40,
+      "pricingTierCodes": ["dur_5s"],
+      "wireParameters": {
+        "duration": "5",
+        "resolution": "720p",
+        "mode": "start_end"
+      }
+    }
+  ],
+  "source": {
+    "observedAt": "2026-07-04T00:00:00Z",
+    "sourceUrl": "https://platform.vidu.com/docs/pricing"
+  }
+}

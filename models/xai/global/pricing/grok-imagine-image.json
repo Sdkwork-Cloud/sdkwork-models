@@ -1,0 +1,26 @@
+{
+  "catalogKey": "xai/grok-imagine-image",
+  "currency": "USD",
+  "modelId": "grok-imagine-image",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "xai-global-grok-imagine-image-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/developers/pricing"
+      },
+      "unitPrice": "0.020000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xai"
+}

@@ -1,0 +1,49 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/claude-sonnet-5",
+  "colorToken": "#d97706",
+  "contextTokens": 1000000,
+  "description": "Claude Sonnet 5 is Anthropic's most agentic Sonnet model for coding, tool use, and autonomous workflows with introductory API pricing through August 2026.",
+  "displayName": "Claude Sonnet 5",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 850,
+  "latencyP95Ms": 2900,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-sonnet-5",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1120.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.anthropic.com/news/claude-sonnet-5"
+  },
+  "strengths": [
+    "Agents",
+    "Coding",
+    "Tool use",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.980000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.970000"
+}

@@ -9,10 +9,16 @@
           "modelId": "flux-2-pro",
           "pricingText": "$0.015 / input MP; $0.030 / output MP",
           "rankNo": 24
+        },
+        {
+          "catalogKey": "black_forest_labs/flux-2-flex",
+          "modelId": "flux-2-flex",
+          "pricingText": "$0.030 / input MP; $0.060 / output MP",
+          "rankNo": 25
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-07",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

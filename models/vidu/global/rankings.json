@@ -1,0 +1,38 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "vidu/viduq3-pro",
+          "modelId": "viduq3-pro",
+          "pricingText": "USD 0.10 / output second (720p)",
+          "rankNo": 14
+        },
+        {
+          "catalogKey": "vidu/viduq3-turbo",
+          "modelId": "viduq3-turbo",
+          "pricingText": "USD 0.055 / output second (720p)",
+          "rankNo": 21
+        },
+        {
+          "catalogKey": "vidu/audio1.0-text2audio",
+          "modelId": "audio1.0-text2audio",
+          "pricingText": "USD 0.05–0.10 / sfx result",
+          "rankNo": 22
+        },
+        {
+          "catalogKey": "vidu/audio1.0-timing2audio",
+          "modelId": "audio1.0-timing2audio",
+          "pricingText": "USD 0.05–0.10 / sfx result",
+          "rankNo": 23
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-03",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "vidu"
+}

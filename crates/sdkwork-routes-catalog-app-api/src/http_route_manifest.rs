@@ -21,6 +21,30 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         SDK_DOMAIN,
         "modelRankings.list",
     ),
+    HttpRoute::public(
+        HttpMethod::Get,
+        "/app/v3/api/ai/voices",
+        SDK_DOMAIN,
+        "voices.list",
+    ),
+    HttpRoute::public(
+        HttpMethod::Get,
+        "/app/v3/api/ai/models/{modelId}/voices",
+        SDK_DOMAIN,
+        "modelVoices.list",
+    ),
+    HttpRoute::public(
+        HttpMethod::Get,
+        "/app/v3/api/ai/video_profiles",
+        SDK_DOMAIN,
+        "videoProfiles.list",
+    ),
+    HttpRoute::public(
+        HttpMethod::Get,
+        "/app/v3/api/ai/models/{modelId}/video_profiles",
+        SDK_DOMAIN,
+        "modelVideoProfiles.list",
+    ),
 ];
 
 pub fn app_route_manifest() -> HttpRouteManifest {

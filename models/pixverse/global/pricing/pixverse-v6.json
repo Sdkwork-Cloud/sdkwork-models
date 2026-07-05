@@ -1,0 +1,26 @@
+{
+  "catalogKey": "pixverse/pixverse-v6",
+  "currency": "USD",
+  "modelId": "pixverse-v6",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "pixverse-global-v6-second-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.platform.pixverse.ai/model-pricing-796039m0"
+      },
+      "unitPrice": "0.100000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "pixverse"
+}

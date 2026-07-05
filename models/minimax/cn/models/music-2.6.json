@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "minimax/music-2.6",
+  "colorToken": "#2563eb",
+  "description": "MiniMax Music 2.6 generates full-length songs with vocals or instrumental tracks from prompts and lyrics.",
+  "displayName": "MiniMax Music 2.6",
+  "familyCode": "minimax-music",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 25000,
+  "latencyP95Ms": 90000,
+  "lifecycle": "active",
+  "modelId": "music-2.6",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "780.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+  },
+  "strengths": [
+    "Song generation",
+    "Instrumental mode",
+    "Lyrics optimizer",
+    "BPM and key control"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.880000"
+}

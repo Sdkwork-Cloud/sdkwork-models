@@ -5,44 +5,50 @@
     {
       "items": [
         {
-          "catalogKey": "minimax/MiniMax-M3",
-          "modelId": "MiniMax-M3",
-          "pricingText": "$0.30 / 1M input; $1.20 / 1M output",
-          "rankNo": 1
+          "catalogKey": "minimax/hailuo-2.3",
+          "modelId": "hailuo-2.3",
+          "pricingText": "USD 0.045 / output second (768p)",
+          "rankNo": 16
         },
         {
-          "catalogKey": "minimax/MiniMax-M2.7",
-          "modelId": "MiniMax-M2.7",
-          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 2
+          "catalogKey": "minimax/hailuo-02",
+          "modelId": "hailuo-02",
+          "pricingText": "USD 0.045 / output second (768p)",
+          "rankNo": 17
         },
         {
-          "catalogKey": "minimax/MiniMax-M2.7-highspeed",
-          "modelId": "MiniMax-M2.7-highspeed",
-          "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
-          "rankNo": 3
+          "catalogKey": "minimax/music-2.6",
+          "modelId": "music-2.6",
+          "pricingText": "$0.15 / song (up to 5 min)",
+          "rankNo": 18
         },
         {
-          "catalogKey": "minimax/MiniMax-M2.5",
-          "modelId": "MiniMax-M2.5",
-          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 4
+          "catalogKey": "minimax/music-cover",
+          "modelId": "music-cover",
+          "pricingText": "$0.15 / cover generation",
+          "rankNo": 19
         },
         {
-          "catalogKey": "minimax/MiniMax-M2.5-highspeed",
-          "modelId": "MiniMax-M2.5-highspeed",
-          "pricingText": "USD 0.600000 / 1M input; USD 2.400000 / 1M output",
-          "rankNo": 5
+          "catalogKey": "minimax/hailuo-2.3-fast",
+          "modelId": "hailuo-2.3-fast",
+          "pricingText": "USD 0.031 / output second (768p)",
+          "rankNo": 23
         },
         {
-          "catalogKey": "minimax/M2-her",
-          "modelId": "M2-her",
-          "pricingText": "USD 0.300000 / 1M input; USD 1.200000 / 1M output",
-          "rankNo": 6
+          "catalogKey": "minimax/speech-2.8-hd",
+          "modelId": "speech-2.8-hd",
+          "pricingText": "$0.10 / 1K characters",
+          "rankNo": 24
+        },
+        {
+          "catalogKey": "minimax/speech-2.8-turbo",
+          "modelId": "speech-2.8-turbo",
+          "pricingText": "$0.06 / 1K characters",
+          "rankNo": 25
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-08",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

@@ -1,12 +1,36 @@
 {
   "families": [
     {
-      "defaultModel": "eleven_text_to_sound_v2",
-      "displayName": "ElevenLabs Audio",
-      "familyCode": "elevenlabs-audio",
+      "defaultModel": "eleven_v3",
+      "displayName": "ElevenLabs TTS",
+      "familyCode": "elevenlabs-tts",
       "familyType": "audio",
       "primaryModality": "audio",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "scribe_v2",
+      "displayName": "ElevenLabs STT",
+      "familyCode": "elevenlabs-stt",
+      "familyType": "audio",
+      "primaryModality": "audio",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "music_v2",
+      "displayName": "ElevenLabs Music",
+      "familyCode": "elevenlabs-music",
+      "familyType": "music",
+      "primaryModality": "music",
+      "sortOrder": 30
+    },
+    {
+      "defaultModel": "eleven_text_to_sound_v2",
+      "displayName": "ElevenLabs Sound Effects",
+      "familyCode": "elevenlabs-sfx",
+      "familyType": "sfx",
+      "primaryModality": "sfx",
+      "sortOrder": 40
     }
   ],
   "regionCode": "global",

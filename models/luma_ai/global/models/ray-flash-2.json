@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "luma_ai/ray-flash-2",
+  "colorToken": "#6366f1",
+  "description": "Luma Ray 2 Flash Dream Machine model for faster and lower-cost video generation.",
+  "displayName": "Ray 2 Flash",
+  "familyCode": "luma-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 30000,
+  "latencyP95Ms": 90000,
+  "lifecycle": "active",
+  "modelId": "ray-flash-2",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "800.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.lumalabs.ai/docs/video-generation"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Fast generation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "luma_ai",
+  "vendorName": "Luma AI",
+  "winRate": "0.850000"
+}

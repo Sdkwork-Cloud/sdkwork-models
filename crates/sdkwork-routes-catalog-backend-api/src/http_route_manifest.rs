@@ -109,6 +109,34 @@ const HTTP_ROUTES: &[HttpRoute] = &[
     )
     .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(
+        HttpMethod::Get,
+        "/backend/v3/api/ai/voices",
+        SDK_DOMAIN,
+        "voices.list",
+    )
+    .with_required_permission("intelligence.models.read"),
+    HttpRoute::dual_token(
+        HttpMethod::Get,
+        "/backend/v3/api/ai/models/{modelId}/voices",
+        SDK_DOMAIN,
+        "modelVoices.list",
+    )
+    .with_required_permission("intelligence.models.read"),
+    HttpRoute::dual_token(
+        HttpMethod::Get,
+        "/backend/v3/api/ai/video_profiles",
+        SDK_DOMAIN,
+        "videoProfiles.list",
+    )
+    .with_required_permission("intelligence.models.read"),
+    HttpRoute::dual_token(
+        HttpMethod::Get,
+        "/backend/v3/api/ai/models/{modelId}/video_profiles",
+        SDK_DOMAIN,
+        "modelVideoProfiles.list",
+    )
+    .with_required_permission("intelligence.models.read"),
+    HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/model_rankings/refresh",
         SDK_DOMAIN,

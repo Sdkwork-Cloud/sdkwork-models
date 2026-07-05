@@ -10,10 +10,12 @@ mod service_host;
 
 pub use catalog_app_router::{
     catalog_app_router_with_catalog, catalog_app_router_with_catalog_and_read_store,
-    catalog_app_router_with_postgres_pool, catalog_app_router_with_sqlite_pool,
+    catalog_app_router_with_catalog_voice_and_read_store, catalog_app_router_with_postgres_pool,
+    catalog_app_router_with_sqlite_pool,
 };
 pub use catalog_backend_router::{
-    catalog_backend_router_with_postgres_pool, catalog_backend_router_with_sqlite_pool,
+    catalog_backend_router_with_postgres_pool, catalog_backend_router_with_postgres_pool_and_catalog,
+    catalog_backend_router_with_sqlite_pool, catalog_backend_router_with_sqlite_pool_and_catalog,
     catalog_backend_router_with_stores, catalog_backend_router_without_stores,
 };
 pub use entity_uuid_generator::CatalogEntityUuidGenerator;

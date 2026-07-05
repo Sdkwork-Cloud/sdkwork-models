@@ -1,0 +1,23 @@
+{
+  "families": [
+    {
+      "defaultModel": "viduq3-pro",
+      "displayName": "Vidu Q3",
+      "familyCode": "vidu-video",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 10
+    },
+    {
+      "defaultModel": "audio1.0-text2audio",
+      "displayName": "Vidu 音频",
+      "familyCode": "vidu-audio",
+      "familyType": "sfx",
+      "primaryModality": "sfx",
+      "sortOrder": 20
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu"
+}

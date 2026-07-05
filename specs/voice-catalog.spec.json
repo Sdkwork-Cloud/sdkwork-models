@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.voice-catalog.spec",
+  "displayName": "TTS Voice Catalog Contract",
+  "description": "Industry-aligned speaker/voice catalog for text-to-speech models with many-to-many model bindings and multi-language SDK access.",
+  "designReferences": [
+    "W3C Speech Synthesis API SpeechSynthesisVoice (name, lang, voiceURI)",
+    "Microsoft Azure Neural Voice (ShortName, Locale, Gender, VoiceType, StyleList)",
+    "Google Cloud Text-to-Speech Voice (name, languageCodes, ssmlGender)",
+    "OpenAI Audio speech.create voice enum",
+    "SSML voice element attributes"
+  ],
+  "entities": {
+    "voice": {
+      "schema": "schemas/voice.schema.json",
+      "catalogKeyPattern": "{vendorCode}/{voiceId}",
+      "identityFields": [
+        "voiceId",
+        "displayName",
+        "vendorCode",
+        "primaryLocale",
+        "gender",
+        "voiceKind",
+        "provisioningMode",
+        "wireParameter"
+      ],
+      "regionalFields": [
+        "regionCode",
+        "source",
+        "previewAudioUrl",
+        "vendorListEndpoint"
+      ]
+    },
+    "modelVoiceBinding": {
+      "schema": "schemas/model-voice.schema.json",
+      "storagePath": "models/{vendorCode}/{regionCode}/model-voices/{modelId}.json",
+      "relationship": "many-to-many between ai_model and ai_model_voice"
+    }
+  },
+  "storageLayout": {
+    "voicesAggregate": "models/{vendorCode}/{regionCode}/voices.json",
+    "modelVoiceBindings": "models/{vendorCode}/{regionCode}/model-voices/*.json"
+  },
+  "databaseTables": [
+    "ai_model_voice",
+    "ai_model_voice_binding"
+  ],
+  "apiSurfaces": {
+    "app": [
+      "GET /app/v3/api/ai/voices",
+      "GET /app/v3/api/ai/models/{modelId}/voices"
+    ],
+    "backend": [
+      "GET /backend/v3/api/ai/voices",
+      "GET /backend/v3/api/ai/models/{modelId}/voices"
+    ]
+  },
+  "sdkHelpers": [
+    "loadCatalog",
+    "loadVendorCatalog",
+    "listVoices",
+    "listVoicesForModel",
+    "listModelsForVoice"
+  ],
+  "queryParameters": {
+    "locale": "BCP-47 filter; matches primaryLocale or supportedLocales",
+    "vendor_code": "Vendor filter",
+    "model_id": "Model filter (catalog model id)",
+    "catalog_key": "Full model catalog key vendor/modelId",
+    "q": "Free-text search on displayName and voiceId"
+  }
+}

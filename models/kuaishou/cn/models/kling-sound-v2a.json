@@ -1,0 +1,47 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "sfx"
+  ],
+  "catalogKey": "kuaishou/kling-sound-v2a",
+  "colorToken": "#5b21b6",
+  "description": "Kling 可灵视频生音效 API，为已有 Kling 视频任务添加同步音效与环境声。",
+  "displayName": "Kling Sound Video to Audio",
+  "familyCode": "kling-sfx",
+  "inputModalities": [
+    "text",
+    "video"
+  ],
+  "latencyP50Ms": 12000,
+  "latencyP95Ms": 45000,
+  "lifecycle": "active",
+  "modelId": "kling-sound-v2a",
+  "outputModalities": [
+    "audio",
+    "video"
+  ],
+  "primaryCapability": "sfx",
+  "rankScore": "760.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/apiReference/model/videoToAudio"
+  },
+  "strengths": [
+    "视频配音",
+    "同步音效",
+    "环境声",
+    "Kling 任务链"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.880000"
+}

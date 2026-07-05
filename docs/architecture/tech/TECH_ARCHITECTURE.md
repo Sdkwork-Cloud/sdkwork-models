@@ -3,7 +3,7 @@ Specs: ARCHITECTURE_DECISION_SPEC.md, DOCUMENTATION_SPEC.md
 
 Status: active  
 Owner: SDKWork maintainers  
-Updated: 2026-06-24
+Updated: 2026-07-04
 
 ## 1. Overview
 
@@ -37,15 +37,18 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 ## 4. Security
 
 - Backend routes: `with_required_permission(...)` on every operation
-- App routes: public catalog list endpoints (`models.list`, `modelVendors.list`, `modelRankings.list`) plus IAM web framework layer for protected surfaces
+- App routes: public catalog list endpoints (`models.list`, `modelVendors.list`, `modelRankings.list`, `voices.list`, `modelVoices.list`, `videoProfiles.list`, `modelVideoProfiles.list`) plus IAM web framework layer for protected surfaces
+- Backend voice and video profile routes require `intelligence.models.read`
 - `/readyz`: fails closed; no internal error strings in response body
 - Production gateway: restricted CORS, upstream readiness checks
 
 ## 5. Data
 
 - L2 database module: `database/database.manifest.json`
-- Catalog sync from JSON via admin `models.refresh`
-- App catalog read uses `JsonPricingCatalog` snapshot in standalone mode
+- Catalog sync from JSON via admin `models.refresh` (imports models, pricing, voices, voice bindings, and video generation profiles)
+- App catalog read uses in-memory `ModelCatalog` JSON snapshot in standalone mode
+- TTS voice catalog: `voices.json` + `model-voices/` per vendor region; persisted to `ai_model_voice` / `ai_model_voice_binding`
+- Video generation profiles: `model-video-profiles/{modelId}.json` per video model; persisted to `ai_model_video_profile`
 
 ## 6. Verification
 

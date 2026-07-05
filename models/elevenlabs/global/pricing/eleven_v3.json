@@ -1,0 +1,26 @@
+{
+  "catalogKey": "elevenlabs/eleven_v3",
+  "currency": "USD",
+  "modelId": "eleven_v3",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "tts_input_character",
+      "minimumQuantity": "0",
+      "priceId": "elevenlabs-eleven-v3-character",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://elevenlabs.io/pricing/api"
+      },
+      "unitPrice": "0.100000",
+      "unitSize": "1000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "elevenlabs"
+}

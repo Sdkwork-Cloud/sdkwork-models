@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "minimax/hailuo-2.3",
+  "colorToken": "#7c3aed",
+  "description": "MiniMax Hailuo 2.3 video generation model with improved motion quality and prompt adherence.",
+  "displayName": "Hailuo 2.3",
+  "familyCode": "minimax-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "hailuo-2.3",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "850.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-video"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "High quality motion"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.890000"
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@sdkwork/models-pc-picker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Reusable grouped model picker UI for PC surfaces.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "lucide-react": "catalog:",
+    "react-i18next": "catalog:"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0 <20.0.0",
+    "react-dom": ">=18.2.0 <20.0.0",
+    "react-i18next": ">=14.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "sdkwork": {
+    "workspace": "sdkwork-models",
+    "architecture": "pc",
+    "domain": "intelligence",
+    "capability": "catalog",
+    "status": "ready"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "bytedance/doubao-seedream-4-0-250828",
+  "colorToken": "#dc2626",
+  "description": "Doubao Seedream 4.0 unified image generation and editing model with multi-reference support up to 4K.",
+  "displayName": "Seedream 4.0",
+  "familyCode": "seedream",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4500,
+  "latencyP95Ms": 16000,
+  "lifecycle": "active",
+  "modelId": "doubao-seedream-4-0-250828",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "800.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/6561/1598757"
+  },
+  "strengths": [
+    "Text to image",
+    "Image editing",
+    "Multi-reference fusion",
+    "4K output"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.890000"
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/voice.schema.json",
+  "title": "Sdkwork TTS Voice",
+  "description": "First-class text-to-speech voice (speaker) definition aligned with W3C SpeechSynthesisVoice, Azure Neural Voice, and Google Cloud TTS voice metadata.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "voiceId",
+    "displayName",
+    "vendorCode",
+    "regionCode",
+    "catalogKey",
+    "primaryLocale",
+    "gender",
+    "voiceKind",
+    "provisioningMode",
+    "wireParameter",
+    "lifecycle",
+    "releaseStage",
+    "shelfState",
+    "routingState",
+    "source"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "voiceId": {
+      "type": "string",
+      "description": "Vendor wire identifier passed to the synthesis API (e.g. alloy, zh-CN-XiaoxiaoNeural)."
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "catalogKey": {
+      "type": "string",
+      "description": "Stable catalog identity vendorCode/voiceId."
+    },
+    "primaryLocale": {
+      "type": "string",
+      "description": "Primary BCP-47 locale tag (e.g. en-US, zh-CN)."
+    },
+    "supportedLocales": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Locales this voice can synthesize when the vendor documents cross-locale support."
+    },
+    "gender": {
+      "$ref": "#/$defs/gender"
+    },
+    "voiceKind": {
+      "$ref": "#/$defs/voiceKind"
+    },
+    "provisioningMode": {
+      "$ref": "#/$defs/provisioningMode"
+    },
+    "wireParameter": {
+      "type": "string",
+      "description": "Request field name on the vendor API (voice, voice_id, speaker_id, ...)."
+    },
+    "vendorVoiceNamespace": {
+      "type": "string",
+      "description": "Fully qualified vendor voice name when different from voiceId (Azure ShortName, Google name)."
+    },
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "previewAudioUrl": {
+      "type": "string",
+      "format": "uri"
+    },
+    "vendorListEndpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "Official dynamic voice listing endpoint when provisioningMode is vendor_api."
+    },
+    "description": {
+      "type": "string"
+    },
+    "lifecycle": {
+      "enum": [
+        "active",
+        "preview",
+        "deprecated",
+        "catalog_only",
+        "retired"
+      ]
+    },
+    "releaseStage": {
+      "enum": [
+        "active",
+        "preview",
+        "deprecated",
+        "retired"
+      ]
+    },
+    "shelfState": {
+      "enum": [
+        "listed",
+        "unlisted",
+        "hidden"
+      ]
+    },
+    "routingState": {
+      "enum": [
+        "enabled",
+        "disabled",
+        "catalog_only"
+      ]
+    },
+    "source": {
+      "$ref": "catalog.schema.json#/$defs/sourceEvidence"
+    }
+  },
+  "$defs": {
+    "gender": {
+      "enum": [
+        "male",
+        "female",
+        "neutral",
+        "unspecified"
+      ]
+    },
+    "voiceKind": {
+      "enum": [
+        "builtin",
+        "standard",
+        "neural",
+        "premium",
+        "cloned",
+        "custom",
+        "role"
+      ]
+    },
+    "provisioningMode": {
+      "enum": [
+        "static",
+        "vendor_api"
+      ],
+      "description": "static: enumerated in catalog; vendor_api: fetched from vendor official list API at runtime."
+    }
+  }
+}

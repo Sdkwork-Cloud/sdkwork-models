@@ -213,6 +213,124 @@ def list_models_by_protocol(catalog: ModelCatalog, protocol_code: str) -> list[d
     return list_models(catalog, api_format=protocol_code)
 
 
+def voice_catalog_key(vendor_code: str, voice_id: str) -> str:
+    return f"{vendor_code}/{voice_id}"
+
+
+def list_voices(catalog: ModelCatalog, filter: dict | None = None, **filters: str) -> list[dict]:
+    standard_filters = dict(filter or {})
+    standard_filters.update(filters)
+    result = [
+        voice
+        for vendor_catalog in catalog.vendor_catalogs
+        for voice in vendor_catalog.get("voices", [])
+    ]
+    if vendor_code := _filter_value(standard_filters, "vendorCode", "vendor_code"):
+        result = [voice for voice in result if voice.get("vendorCode") == vendor_code]
+    if region_code := _filter_value(standard_filters, "regionCode", "region_code"):
+        result = [voice for voice in result if voice.get("regionCode") == region_code]
+    if locale := _filter_value(standard_filters, "locale"):
+        result = [
+            voice
+            for voice in result
+            if voice.get("primaryLocale") == locale or locale in voice.get("supportedLocales", [])
+        ]
+    if query := _filter_value(standard_filters, "q"):
+        query_lower = query.lower()
+        result = [
+            voice
+            for voice in result
+            if query_lower in str(voice.get("displayName", "")).lower()
+            or query_lower in str(voice.get("voiceId", "")).lower()
+        ]
+    if model_catalog_key := _filter_value(standard_filters, "modelCatalogKey", "model_catalog_key"):
+        result = [
+            voice
+            for voice in result
+            if _voice_bound_to_model(catalog, voice.get("catalogKey", ""), model_catalog_key)
+        ]
+    return result
+
+
+def list_voices_for_model(catalog: ModelCatalog, model_catalog_key: str) -> list[dict]:
+    return list_voices(catalog, model_catalog_key=model_catalog_key)
+
+
+def list_models_for_voice(catalog: ModelCatalog, voice_catalog_key_value: str) -> list[dict]:
+    model_keys: set[str] = set()
+    for vendor_catalog in catalog.vendor_catalogs:
+        for binding in vendor_catalog.get("modelVoiceBindings", []):
+            if not any(
+                entry.get("voiceKey") == voice_catalog_key_value
+                for entry in binding.get("bindings", [])
+            ):
+                continue
+            catalog_key = binding.get("catalogKey")
+            if isinstance(catalog_key, str) and catalog_key:
+                model_keys.add(catalog_key)
+    return [model for model in list_models(catalog) if model.get("catalogKey") in model_keys]
+
+
+def video_profile_catalog_key(vendor_code: str, model_id: str, profile_code: str) -> str:
+    return f"{vendor_code}/{model_id}/{profile_code}"
+
+
+def list_video_profiles(catalog: ModelCatalog, filter: dict | None = None, **filters: str) -> list[dict]:
+    merged = {**(filter or {}), **filters}
+    vendor_code = merged.get("vendor_code") or merged.get("vendorCode")
+    region_code = merged.get("region_code") or merged.get("regionCode")
+    model_catalog_key = merged.get("model_catalog_key") or merged.get("modelCatalogKey")
+    generation_mode = merged.get("generation_mode") or merged.get("generationMode")
+    duration_tier_code = merged.get("duration_tier_code") or merged.get("durationTierCode")
+    resolution = merged.get("resolution")
+    result: list[dict] = []
+    for vendor_catalog in catalog.vendor_catalogs:
+        if vendor_code and vendor_catalog.get("vendorCode") != vendor_code:
+            continue
+        if region_code and vendor_catalog.get("regionCode") != region_code:
+            continue
+        for profile_file in vendor_catalog.get("modelVideoProfiles", []):
+            if model_catalog_key and profile_file.get("catalogKey") != model_catalog_key:
+                continue
+            for profile in profile_file.get("profiles", []):
+                if generation_mode and profile.get("generationMode") != generation_mode:
+                    continue
+                if duration_tier_code and profile.get("durationTierCode") != duration_tier_code:
+                    tier_codes = profile.get("durationTierCodes") or []
+                    if duration_tier_code not in tier_codes:
+                        continue
+                if resolution and profile.get("resolution") != resolution:
+                    continue
+                result.append(profile)
+    return result
+
+
+def list_video_profiles_for_model(catalog: ModelCatalog, model_catalog_key: str) -> list[dict]:
+    return list_video_profiles(catalog, model_catalog_key=model_catalog_key)
+
+
+def find_video_profile(catalog: ModelCatalog, profile_catalog_key: str) -> dict | None:
+    for vendor_catalog in catalog.vendor_catalogs:
+        for profile_file in vendor_catalog.get("modelVideoProfiles", []):
+            for profile in profile_file.get("profiles", []):
+                if profile.get("catalogKey") == profile_catalog_key:
+                    return profile
+    return None
+
+
+def _voice_bound_to_model(catalog: ModelCatalog, voice_catalog_key_value: str, model_catalog_key: str) -> bool:
+    for vendor_catalog in catalog.vendor_catalogs:
+        for binding in vendor_catalog.get("modelVoiceBindings", []):
+            if binding.get("catalogKey") != model_catalog_key:
+                continue
+            if any(
+                entry.get("voiceKey") == voice_catalog_key_value
+                for entry in binding.get("bindings", [])
+            ):
+                return True
+    return False
+
+
 def _split_catalog_key(catalog_key_value: str) -> tuple[str, str] | None:
     separator_index = catalog_key_value.find("/")
     if separator_index <= 0 or separator_index == len(catalog_key_value) - 1:

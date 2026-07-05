@@ -1,0 +1,46 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "meituan/longcat-1.0",
+  "colorToken": "#0284c7",
+  "contextTokens": 256000,
+  "description": "Meituan LongCat (Longmao) general-purpose reasoning model for Chinese enterprise and application workflows.",
+  "displayName": "LongCat 1.0",
+  "familyCode": "longcat",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 256000,
+  "maxOutputTokens": 32768,
+  "modelId": "longcat-1.0",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "890.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.meituan.com"
+  },
+  "strengths": [
+    "Chinese",
+    "Reasoning",
+    "Instruction following"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.880000",
+  "vendorCode": "meituan",
+  "vendorName": "Meituan",
+  "winRate": "0.860000"
+}

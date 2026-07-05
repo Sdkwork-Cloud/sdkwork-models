@@ -5,6 +5,8 @@
   "language": "typescript",
   "sdkType": "backend",
   "packageName": "sdkwork-models-backend-sdk-generated-typescript",
+  "transportPackageName": "sdkwork-models-backend-sdk-generated-typescript",
+  "consumerPackageName": "@sdkwork/models-backend-sdk",
   "generator": "@sdkwork/sdk-generator",
   "capabilities": {
     "supportsGeneratedTests": true,

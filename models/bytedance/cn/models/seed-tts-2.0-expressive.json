@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "bytedance/seed-tts-2.0-expressive",
+  "colorToken": "#dc2626",
+  "description": "Doubao Seed TTS 2.0 expressive voice synthesis with QA and voice-tag control.",
+  "displayName": "Seed TTS 2.0 Expressive",
+  "familyCode": "audio",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 400,
+  "latencyP95Ms": 1400,
+  "lifecycle": "active",
+  "modelId": "seed-tts-2.0-expressive",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "750.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/6561/1598757"
+  },
+  "strengths": [
+    "Text to speech",
+    "Expressive delivery",
+    "Voice instructions"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.860000"
+}

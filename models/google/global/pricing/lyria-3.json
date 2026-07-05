@@ -5,10 +5,10 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-14T00:00:00Z",
-      "meterCode": "llm_input_token",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "api_result",
       "minimumQuantity": "0",
-      "priceId": "google-lyria-3-input",
+      "priceId": "google-lyria-3-song",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
@@ -16,24 +16,8 @@
         "observedAt": "2026-06-24T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
-      "unitPrice": "0.500000",
-      "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-06-14T00:00:00Z",
-      "meterCode": "llm_output_token",
-      "minimumQuantity": "0",
-      "priceId": "google-lyria-3-output",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
-      },
-      "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitPrice": "0.080000",
+      "unitSize": "1"
     }
   ],
   "regionCode": "global",

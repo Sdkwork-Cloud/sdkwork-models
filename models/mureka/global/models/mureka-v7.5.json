@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "mureka/mureka-v7.5",
+  "colorToken": "#7c3aed",
+  "description": "Mureka V7.5 music generation model with improved melody, arrangement, and vocal realism.",
+  "displayName": "Mureka V7.5",
+  "familyCode": "mureka",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 45000,
+  "latencyP95Ms": 120000,
+  "lifecycle": "active",
+  "modelId": "mureka-v7.5",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "790.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.mureka.ai/docs/"
+  },
+  "strengths": [
+    "Song generation",
+    "Streaming playback",
+    "Multilingual vocals"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "mureka",
+  "vendorName": "Mureka",
+  "winRate": "0.890000"
+}

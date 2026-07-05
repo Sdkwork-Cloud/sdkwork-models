@@ -3,7 +3,7 @@
   "schemaVersion": "1.0.0",
   "snapshots": [
     {
-        "items": [
+      "items": [
         {
           "catalogKey": "zhipu/glm-5.2",
           "modelId": "glm-5.2",

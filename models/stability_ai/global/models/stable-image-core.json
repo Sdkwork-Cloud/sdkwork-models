@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "stability_ai/stable-image-core",
+  "colorToken": "#0d9488",
+  "description": "Stability AI fast and cost-effective image generation model optimized for high throughput.",
+  "displayName": "Stable Image Core",
+  "familyCode": "stable-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 2800,
+  "latencyP95Ms": 10000,
+  "lifecycle": "active",
+  "modelId": "stable-image-core",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "720.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.stability.ai/docs"
+  },
+  "strengths": [
+    "Image generation",
+    "Fast turnaround",
+    "Cost efficiency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.840000",
+  "vendorCode": "stability_ai",
+  "vendorName": "Stability AI",
+  "winRate": "0.850000"
+}

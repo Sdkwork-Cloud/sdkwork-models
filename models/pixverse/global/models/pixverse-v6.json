@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "pixverse/pixverse-v6",
+  "colorToken": "#ec4899",
+  "description": "PixVerse V6 open API for text-to-video, image-to-video, reference-to-video, and video extension.",
+  "displayName": "PixVerse V6",
+  "familyCode": "pixverse-video",
+  "inputModalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "pixverse-v6",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "850.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.platform.pixverse.ai/model-pricing-796039m0"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Reference to video",
+    "Video extension"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "pixverse",
+  "vendorName": "PixVerse",
+  "winRate": "0.900000"
+}

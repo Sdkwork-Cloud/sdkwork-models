@@ -14,8 +14,10 @@ pub use query::{
     catalog_key, find_meter, find_model, find_model_by_vendor_region, find_protocol,
     get_best_reference_price, get_model_prices, get_model_region_prices, list_available_models,
     list_client_api_compatibility_by_vendor, list_meters, list_models, list_models_by_capability,
-    list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
-    list_vendor_regions, list_vendors, ModelFilter,
+    list_models_by_modality, list_models_by_protocol, list_models_for_voice, list_protocols,
+    list_protocols_by_vendor, list_vendor_regions, list_video_profiles, list_video_profiles_for_model,
+    find_video_profile, list_voices, list_voices_for_model, list_vendors, video_profile_catalog_key,
+    ModelFilter, VideoProfileFilter, VoiceFilter,
 };
 pub use types::*;
 pub use validation::{validate_catalog, CatalogIssue};

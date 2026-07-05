@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "sfx"
+  ],
+  "catalogKey": "vidu/audio1.0-timing2audio",
+  "colorToken": "#6d28d9",
+  "description": "Vidu audio1.0 可控文生音效 API，支持时间轴多事件、可重叠的音效编排（2 至 10 秒）。",
+  "displayName": "Vidu Audio 1.0 Timing to Audio",
+  "familyCode": "vidu-audio",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 8000,
+  "latencyP95Ms": 30000,
+  "lifecycle": "active",
+  "modelId": "audio1.0-timing2audio",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "sfx",
+  "rankScore": "820.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.vidu.cn/docs/timing-to-audio"
+  },
+  "strengths": [
+    "时序音效",
+    "多事件编排",
+    "事件重叠",
+    "拟音控制"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "vidu",
+  "vendorName": "Vidu",
+  "winRate": "0.920000"
+}

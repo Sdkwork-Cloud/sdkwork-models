@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "runway/gen4_image_turbo",
+  "colorToken": "#0f172a",
+  "description": "Runway Gen-4 Image Turbo for fast and cost-efficient image generation.",
+  "displayName": "Gen-4 Image Turbo",
+  "familyCode": "runway-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 8000,
+  "latencyP95Ms": 25000,
+  "lifecycle": "active",
+  "modelId": "gen4_image_turbo",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+  },
+  "strengths": [
+    "Text to image",
+    "Fast generation",
+    "Cost efficient"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.860000",
+  "vendorCode": "runway",
+  "vendorName": "Runway",
+  "winRate": "0.820000"
+}

@@ -8,10 +8,13 @@
   "contextTokens": 32768,
   "description": "Gemini 3 Pro Image generates high-quality images from text prompts with strong instruction following.",
   "displayName": "Gemini 3 Pro Image",
-  "familyCode": "imagen",
+  "familyCode": "gemini-image",
   "inputModalities": [
-    "text"
+    "text",
+    "image"
   ],
+  "latencyP50Ms": 4800,
+  "latencyP95Ms": 18000,
   "lifecycle": "active",
   "maxInputTokens": 32768,
   "modelId": "gemini-3-pro-image",
@@ -19,6 +22,7 @@
     "image"
   ],
   "primaryCapability": "image",
+  "rankScore": "880.000000",
   "regionCode": "global",
   "releaseStage": "active",
   "routingState": "enabled",
@@ -30,8 +34,14 @@
   },
   "strengths": [
     "Image generation",
-    "Instruction following"
+    "Instruction following",
+    "High fidelity"
   ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.930000",
   "vendorCode": "google",
-  "vendorName": "Google"
+  "vendorName": "Google",
+  "winRate": "0.900000"
 }

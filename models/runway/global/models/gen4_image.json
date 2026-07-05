@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "runway/gen4_image",
+  "colorToken": "#0f172a",
+  "description": "Runway Gen-4 Image generation model for high-quality text-to-image and image editing.",
+  "displayName": "Gen-4 Image",
+  "familyCode": "runway-image",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 15000,
+  "latencyP95Ms": 45000,
+  "lifecycle": "active",
+  "modelId": "gen4_image",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "780.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+  },
+  "strengths": [
+    "Text to image",
+    "Image editing",
+    "High fidelity"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "runway",
+  "vendorName": "Runway",
+  "winRate": "0.840000"
+}

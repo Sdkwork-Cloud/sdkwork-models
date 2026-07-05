@@ -11,14 +11,16 @@
   "inputModalities": [
     "text",
     "image",
-    "video"
+    "video",
+    "audio"
   ],
   "latencyP50Ms": 50000,
   "latencyP95Ms": 150000,
   "lifecycle": "active",
   "modelId": "doubao-seedance-2-0-260128",
   "outputModalities": [
-    "video"
+    "video",
+    "audio"
   ],
   "primaryCapability": "video",
   "rankScore": "780.000000",

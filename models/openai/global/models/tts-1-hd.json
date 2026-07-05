@@ -1,0 +1,43 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/tts-1-hd",
+  "colorToken": "#6366f1",
+  "description": "High-definition text-to-speech model for premium audio fidelity.",
+  "displayName": "TTS-1 HD",
+  "familyCode": "gpt-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 800,
+  "latencyP95Ms": 2500,
+  "lifecycle": "active",
+  "modelId": "tts-1-hd",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+  },
+  "strengths": [
+    "Text to speech",
+    "High fidelity"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.850000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.860000"
+}

@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "ray-2",
+      "displayName": "Dream Machine",
+      "familyCode": "luma-video",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "luma_ai"
+}

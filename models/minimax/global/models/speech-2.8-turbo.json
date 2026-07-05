@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "minimax/speech-2.8-turbo",
+  "colorToken": "#2563eb",
+  "description": "MiniMax Speech 2.8 Turbo text-to-speech model with low-latency multilingual voice synthesis.",
+  "displayName": "MiniMax Speech 2.8 Turbo",
+  "familyCode": "minimax-speech",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 220,
+  "latencyP95Ms": 800,
+  "lifecycle": "active",
+  "modelId": "speech-2.8-turbo",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "750.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+  },
+  "strengths": [
+    "Text to speech",
+    "Low latency",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.870000"
+}

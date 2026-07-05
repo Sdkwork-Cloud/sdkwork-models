@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google",
+  "regionCode": "global",
+  "voices": [
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Kore",
+      "displayName": "Kore",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Kore",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN", "hi-IN", "pt-BR"],
+      "gender": "female",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "vendorVoiceNamespace": "Kore",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Puck",
+      "displayName": "Puck",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Puck",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN", "hi-IN", "pt-BR"],
+      "gender": "male",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Charon",
+      "displayName": "Charon",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Charon",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Fenrir",
+      "displayName": "Fenrir",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Fenrir",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Aoede",
+      "displayName": "Aoede",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Aoede",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Leda",
+      "displayName": "Leda",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Leda",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "female",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Orus",
+      "displayName": "Orus",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Orus",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "male",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "Zephyr",
+      "displayName": "Zephyr",
+      "vendorCode": "google",
+      "regionCode": "global",
+      "catalogKey": "google/Zephyr",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "ja-JP", "ko-KR", "zh-CN"],
+      "gender": "neutral",
+      "voiceKind": "neural",
+      "provisioningMode": "static",
+      "wireParameter": "voice",
+      "lifecycle": "preview",
+      "releaseStage": "preview",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-03T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+      }
+    }
+  ]
+}

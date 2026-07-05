@@ -7,6 +7,30 @@
       "familyType": "llm",
       "primaryModality": "text",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "cogview-4-250304",
+      "displayName": "CogView",
+      "familyCode": "cogview",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "cogvideox-3",
+      "displayName": "CogVideo",
+      "familyCode": "cogvideo",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 30
+    },
+    {
+      "defaultModel": "embedding-3",
+      "displayName": "Zhipu Embedding",
+      "familyCode": "zhipu-embedding",
+      "familyType": "embedding",
+      "primaryModality": "embedding",
+      "sortOrder": 40
     }
   ],
   "regionCode": "cn",

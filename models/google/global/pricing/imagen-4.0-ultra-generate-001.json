@@ -1,0 +1,26 @@
+{
+  "catalogKey": "google/imagen-4.0-ultra-generate-001",
+  "currency": "USD",
+  "modelId": "imagen-4.0-ultra-generate-001",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "google-imagen-4.0-ultra-generate-001-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "0.060000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

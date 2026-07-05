@@ -64,6 +64,9 @@
   "modelFamilies": [
     "gpt-5",
     "gpt-image",
+    "sora",
+    "gpt-realtime",
+    "gpt-tts",
     "audio",
     "embedding-3"
   ],

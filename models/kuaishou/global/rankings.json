@@ -5,14 +5,38 @@
     {
       "items": [
         {
+          "catalogKey": "kuaishou/kling-v3-omni",
+          "modelId": "kling-v3-omni",
+          "pricingText": "USD 0.14 / output second",
+          "rankNo": 20
+        },
+        {
+          "catalogKey": "kuaishou/kling-v3",
+          "modelId": "kling-v3",
+          "pricingText": "USD 0.12 / output second",
+          "rankNo": 21
+        },
+        {
           "catalogKey": "kuaishou/kling-v3-0-preview",
           "modelId": "kling-v3-0-preview",
           "pricingText": "USD 0.80 / video result",
-          "rankNo": 22
+          "rankNo": 28
+        },
+        {
+          "catalogKey": "kuaishou/kling-sound-t2a",
+          "modelId": "kling-sound-t2a",
+          "pricingText": "USD 0.07 / sfx result",
+          "rankNo": 29
+        },
+        {
+          "catalogKey": "kuaishou/kling-sound-v2a",
+          "modelId": "kling-sound-v2a",
+          "pricingText": "USD 0.07 / sfx result",
+          "rankNo": 30
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-08",
+      "snapshotDate": "2026-07-03",
       "snapshotPeriod": "daily"
     }
   ],

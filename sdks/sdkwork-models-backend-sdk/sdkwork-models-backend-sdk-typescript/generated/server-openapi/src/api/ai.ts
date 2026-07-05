@@ -1,8 +1,114 @@
 import { backendApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { AiResourceGroupsCreateResult, AiResourceGroupsUpdateResult, AiResourcesCreateResult, AiResourcesUpdateResult, ModelMappingsCreateResult, ModelMappingsReplaceResult, ModelMappingsResolveCreateResult, ModelMappingsUpdateResult, ModelRankingsRefreshResult, ModelRankingsStatusRetrieveResult, ModelsCreateResult, ModelsRefreshResult, ModelsUpdateResult, ModelVendorsCreateResult, SdkWorkCommandData, SdkWorkPageData } from '../types';
+import type { AiResourceGroupsCreateResult, AiResourceGroupsUpdateResult, AiResourcesCreateResult, AiResourcesUpdateResult, ModelCatalogSyncResult, ModelMappingsCreateResult, ModelMappingsReplaceResult, ModelMappingsResolveCreateResult, ModelMappingsUpdateResult, ModelRankingsRefreshResult, ModelRankingsStatusRetrieveResult, ModelsCreateResult, ModelsUpdateResult, ModelVendorsCreateResult, SdkWorkCommandData, SdkWorkPageData } from '../types';
 
+
+export interface AiModelVideoProfilesListParams {
+  vendorCode?: string;
+}
+
+export class AiModelVideoProfilesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List model video generation profiles */
+  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
+  }
+}
+
+export interface AiVideoProfilesListParams {
+  vendorCode?: string;
+  regionCode?: string;
+  catalogKey?: string;
+  modelId?: string;
+  generationMode?: string;
+  durationTierCode?: string;
+  resolution?: string;
+}
+
+export class AiVideoProfilesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List video generation profiles */
+  async list(params?: AiVideoProfilesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'catalog_key', value: params?.catalogKey, style: 'form', explode: true, allowReserved: false },
+      { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
+      { name: 'generation_mode', value: params?.generationMode, style: 'form', explode: true, allowReserved: false },
+      { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/video_profiles`), query));
+  }
+}
+
+export interface AiModelVoicesListParams {
+  vendorCode?: string;
+}
+
+export class AiModelVoicesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List model TTS voices */
+  async list(modelId: string, params?: AiModelVoicesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
+  }
+}
+
+export interface AiVoicesListParams {
+  vendorCode?: string;
+  regionCode?: string;
+  locale?: string;
+  catalogKey?: string;
+  modelId?: string;
+  q?: string;
+}
+
+export class AiVoicesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List TTS voices */
+  async list(params?: AiVoicesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'locale', value: params?.locale, style: 'form', explode: true, allowReserved: false },
+      { name: 'catalog_key', value: params?.catalogKey, style: 'form', explode: true, allowReserved: false },
+      { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/voices`), query));
+  }
+}
 
 export class AiAiResourcesApi {
   private client: HttpClient;
@@ -99,8 +205,8 @@ export class AiModelsApi {
   }
 
 /** Refresh */
-  async refresh(): Promise<ModelsRefreshResult> {
-    return this.client.post<ModelsRefreshResult>(backendApiPath(`/ai/models/refresh`));
+  async refresh(): Promise<ModelCatalogSyncResult> {
+    return this.client.post<ModelCatalogSyncResult>(backendApiPath(`/ai/models/refresh`));
   }
 
 /** Delete */
@@ -242,6 +348,10 @@ export class AiApi {
   public readonly models: AiModelsApi;
   public readonly aiResourceGroups: AiAiResourceGroupsApi;
   public readonly aiResources: AiAiResourcesApi;
+  public readonly voices: AiVoicesApi;
+  public readonly modelVoices: AiModelVoicesApi;
+  public readonly videoProfiles: AiVideoProfilesApi;
+  public readonly modelVideoProfiles: AiModelVideoProfilesApi;
 
   constructor(client: HttpClient) {
     this.client = client;
@@ -251,6 +361,10 @@ export class AiApi {
     this.models = new AiModelsApi(client);
     this.aiResourceGroups = new AiAiResourceGroupsApi(client);
     this.aiResources = new AiAiResourcesApi(client);
+    this.voices = new AiVoicesApi(client);
+    this.modelVoices = new AiModelVoicesApi(client);
+    this.videoProfiles = new AiVideoProfilesApi(client);
+    this.modelVideoProfiles = new AiModelVideoProfilesApi(client);
   }
 
 }

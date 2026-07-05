@@ -1,0 +1,26 @@
+{
+  "catalogKey": "openai/tts-1-hd",
+  "currency": "USD",
+  "modelId": "tts-1-hd",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "tts_input_character",
+      "minimumQuantity": "0",
+      "priceId": "openai-tts-1-hd-character",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
+      },
+      "unitPrice": "0.030000",
+      "unitSize": "1000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

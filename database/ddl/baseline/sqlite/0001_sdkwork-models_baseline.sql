@@ -721,3 +721,128 @@ CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_tenant_rank ON ai_model_ra
 CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_vendor_region_rank ON ai_model_rank_snapshot (tenant_id, organization_id, snapshot_date, snapshot_period, vendor_code, region_code, rank_no);
 CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_latest_scope ON ai_model_rank_snapshot (tenant_id, organization_id, status, rank_scope, snapshot_date, snapshot_period, rank_no);
 CREATE INDEX IF NOT EXISTS idx_ai_model_rank_snapshot_filter_rank ON ai_model_rank_snapshot (tenant_id, organization_id, status, snapshot_date, snapshot_period, rank_scope, vendor_code, region_code, modality, rank_no);
+
+-- TTS voice catalog: first-class speakers and many-to-many model bindings.
+
+CREATE TABLE IF NOT EXISTS ai_model_voice (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TEXT,
+    deleted_by BIGINT,
+    metadata TEXT NOT NULL DEFAULT '{}',
+    catalog_key VARCHAR(256) NOT NULL,
+    voice_id VARCHAR(256) NOT NULL,
+    display_name VARCHAR(128),
+    vendor_code VARCHAR(64) NOT NULL,
+    region_code VARCHAR(64) NOT NULL,
+    primary_locale VARCHAR(32),
+    supported_locales TEXT,
+    gender INTEGER,
+    voice_kind VARCHAR(32),
+    provisioning_mode VARCHAR(32),
+    wire_parameter VARCHAR(64),
+    vendor_voice_namespace VARCHAR(256),
+    styles TEXT,
+    roles TEXT,
+    preview_audio_url VARCHAR(1024),
+    vendor_list_endpoint VARCHAR(1024),
+    lifecycle INTEGER,
+    release_stage INTEGER,
+    shelf_state INTEGER,
+    routing_state INTEGER,
+    source_url VARCHAR(1024),
+    observed_at TEXT,
+    description TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_voice_uuid ON ai_model_voice (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_voice_tenant_catalog_key ON ai_model_voice (tenant_id, organization_id, catalog_key);
+CREATE INDEX IF NOT EXISTS idx_ai_model_voice_vendor_region ON ai_model_voice (tenant_id, organization_id, vendor_code, region_code, status, voice_id, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_voice_locale ON ai_model_voice (tenant_id, organization_id, status, primary_locale, routing_state, shelf_state, id);
+
+CREATE TABLE IF NOT EXISTS ai_model_voice_binding (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TEXT,
+    deleted_by BIGINT,
+    metadata TEXT NOT NULL DEFAULT '{}',
+    model_id BIGINT,
+    voice_row_id BIGINT,
+    model_catalog_key VARCHAR(256) NOT NULL,
+    voice_catalog_key VARCHAR(256) NOT NULL,
+    model_wire_id VARCHAR(256) NOT NULL,
+    voice_wire_id VARCHAR(256) NOT NULL,
+    vendor_code VARCHAR(64) NOT NULL,
+    region_code VARCHAR(64) NOT NULL,
+    compatibility VARCHAR(32) NOT NULL,
+    is_default BOOLEAN NOT NULL DEFAULT 0,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    notes TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_voice_binding_uuid ON ai_model_voice_binding (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_voice_binding_model_voice ON ai_model_voice_binding (tenant_id, organization_id, model_catalog_key, voice_catalog_key);
+CREATE INDEX IF NOT EXISTS idx_ai_model_voice_binding_model ON ai_model_voice_binding (tenant_id, organization_id, model_catalog_key, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_voice_binding_voice ON ai_model_voice_binding (tenant_id, organization_id, voice_catalog_key, status, sort_order, id);
+
+-- Video generation profile catalog: executable generation configurations per video model.
+
+CREATE TABLE IF NOT EXISTS ai_model_video_profile (
+    id BIGINT NOT NULL PRIMARY KEY,
+    uuid VARCHAR(64) NOT NULL,
+    tenant_id BIGINT NOT NULL DEFAULT 0,
+    organization_id BIGINT NOT NULL DEFAULT 0,
+    data_scope INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    version BIGINT NOT NULL DEFAULT 0,
+    deleted_at TEXT,
+    deleted_by BIGINT,
+    metadata TEXT NOT NULL DEFAULT '{}',
+    catalog_key VARCHAR(256) NOT NULL,
+    model_id BIGINT,
+    model_catalog_key VARCHAR(256) NOT NULL,
+    profile_code VARCHAR(128) NOT NULL,
+    display_name VARCHAR(256),
+    vendor_code VARCHAR(64) NOT NULL,
+    region_code VARCHAR(64) NOT NULL,
+    generation_mode VARCHAR(64) NOT NULL,
+    duration_policy VARCHAR(32) NOT NULL,
+    duration_seconds INTEGER,
+    duration_options TEXT,
+    duration_tier_code VARCHAR(32),
+    duration_tier_codes TEXT,
+    min_duration_seconds INTEGER,
+    max_duration_seconds INTEGER,
+    duration_step_seconds INTEGER,
+    resolution VARCHAR(16) NOT NULL,
+    resolution_tier_code VARCHAR(32),
+    aspect_ratios TEXT,
+    output_audio INTEGER,
+    is_default INTEGER NOT NULL DEFAULT 0,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    pricing_tier_codes TEXT,
+    wire_parameters TEXT NOT NULL DEFAULT '{}',
+    source_url VARCHAR(1024),
+    observed_at TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_video_profile_uuid ON ai_model_video_profile (uuid);
+CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_video_profile_tenant_catalog_key ON ai_model_video_profile (tenant_id, organization_id, catalog_key);
+CREATE INDEX IF NOT EXISTS idx_ai_model_video_profile_model ON ai_model_video_profile (tenant_id, organization_id, model_catalog_key, status, sort_order, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_video_profile_vendor_region ON ai_model_video_profile (tenant_id, organization_id, vendor_code, region_code, status, generation_mode, id);

@@ -9,6 +9,7 @@
       "sortOrder": 10
     },
     {
+      "defaultModel": "doubao-seedream-4-0-250828",
       "displayName": "Seedream",
       "familyCode": "seedream",
       "familyType": "image",
@@ -16,11 +17,28 @@
       "sortOrder": 20
     },
     {
+      "defaultModel": "doubao-seedance-2-0-260128",
+      "displayName": "Seedance",
+      "familyCode": "seedance",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 30
+    },
+    {
+      "defaultModel": "seed-tts-2.0-standard",
       "displayName": "Volcengine Audio",
       "familyCode": "audio",
       "familyType": "audio",
       "primaryModality": "audio",
       "sortOrder": 40
+    },
+    {
+      "defaultModel": "seed-music-gensong-v4",
+      "displayName": "Seed Music",
+      "familyCode": "seed-music",
+      "familyType": "music",
+      "primaryModality": "music",
+      "sortOrder": 50
     }
   ],
   "regionCode": "cn",

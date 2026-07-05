@@ -40,7 +40,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "bbedf8beec4dcb60587f95753f6e65a605a41b6a56c5f94e1c5a1e81b8619278"
+      "sha256": "5bd03aed58f47f049f29242fc44339c2a7911e300527d2d1bc87778388f8c018"
     },
     {
       "path": "README.md",
@@ -48,11 +48,11 @@
     },
     {
       "path": "sdkwork-sdk.json",
-      "sha256": "9e442ca59cfc9b55770b5d9de535d495966406855f654bd562ecf67f92848dd0"
+      "sha256": "6b1fa8b26de56a3c6d4031ab34b5094f132fce4b55532e849fd656808b665a19"
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "18713519324e2c104ed4acb1a3163741123b557d8aa141901b4aa7b2f2c7bdcf"
+      "sha256": "10164a3120d2308df85cc0373d8883f6f293639fc882396f5467d6bbcf032f98"
     },
     {
       "path": "src/api/base.ts",
@@ -96,35 +96,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "f43668f1bf2f0fe54474f0d2444b05d52c8c4a3dbbb35ebbda780e70a6a4bfcf"
-    },
-    {
-      "path": "src/types/json-null.ts",
-      "sha256": "2ef891ef2a54f476c457aeca7ec7d3d5d2cbdca19343fdefd8dfcbcd2767d856"
-    },
-    {
-      "path": "src/types/json-object.ts",
-      "sha256": "04704abb01de7d5513b15123d50250ec48306f6ef07a2e239d83de3357642529"
-    },
-    {
-      "path": "src/types/json-value.ts",
-      "sha256": "22654cfefd5c2d5b7d4055c69738f83a6ec78e22cf28435ee38e04224788116d"
-    },
-    {
-      "path": "src/types/model-rankings-list-result.ts",
-      "sha256": "e1db4ee73e8e531ab591a1516a004f12274d3ef2f60d0f9777addcdf81b5ce4f"
-    },
-    {
-      "path": "src/types/model-vendors-list-result.ts",
-      "sha256": "db72d05066a7c938edc1e69e7cf2f4a9f4e7dccea27762c63e33baeb18f06177"
-    },
-    {
-      "path": "src/types/models-list-result.ts",
-      "sha256": "c3d9b3a5f64afb2d552c54547b356bdb5b1ce96ef4c97aa86a1407bad54a30cf"
-    },
-    {
-      "path": "src/types/no-data.ts",
-      "sha256": "85014112e547cd24ccb577486023c163abaf5e8c9b98dae6d6f1c1bb3dd25836"
+      "sha256": "e934477bc6b72e35cf45529015a9c8eba8f00a613e4cfc65935d00c0e4093233"
     },
     {
       "path": "src/types/page-info.ts",

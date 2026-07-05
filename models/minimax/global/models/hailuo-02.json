@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "minimax/hailuo-02",
+  "colorToken": "#7c3aed",
+  "description": "MiniMax Hailuo 02 video generation model with 768p and 1080p text-to-video and image-to-video.",
+  "displayName": "Hailuo 02",
+  "familyCode": "minimax-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "hailuo-02",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "830.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-video"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Physics simulation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.880000"
+}

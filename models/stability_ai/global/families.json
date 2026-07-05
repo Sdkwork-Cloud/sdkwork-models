@@ -7,6 +7,22 @@
       "familyType": "image",
       "primaryModality": "image",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "stable-audio-2.5",
+      "displayName": "Stable Audio",
+      "familyCode": "stable-audio",
+      "familyType": "music",
+      "primaryModality": "music",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "stable-audio-2.5-sfx",
+      "displayName": "Stable Audio SFX",
+      "familyCode": "stable-audio-sfx",
+      "familyType": "sfx",
+      "primaryModality": "sfx",
+      "sortOrder": 30
     }
   ],
   "regionCode": "global",

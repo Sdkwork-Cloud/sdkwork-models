@@ -18,4 +18,8 @@ export const operations = {
   "modelRankings.list": { method: "GET", path: "/app/v3/api/ai/model_rankings" },
   "models.list": { method: "GET", path: "/app/v3/api/ai/models" },
   "modelVendors.list": { method: "GET", path: "/app/v3/api/ai/model_vendors" },
+  "modelVideoProfiles.list": { method: "GET", path: "/app/v3/api/ai/models/{modelId}/video_profiles" },
+  "modelVoices.list": { method: "GET", path: "/app/v3/api/ai/models/{modelId}/voices" },
+  "videoProfiles.list": { method: "GET", path: "/app/v3/api/ai/video_profiles" },
+  "voices.list": { method: "GET", path: "/app/v3/api/ai/voices" },
 } as const;

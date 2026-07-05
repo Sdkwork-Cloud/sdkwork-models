@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "runway/gen4_turbo",
+  "colorToken": "#0f172a",
+  "description": "Runway Gen-4 Turbo video generation model for fast text-to-video and image-to-video at lower credit cost.",
+  "displayName": "Gen-4 Turbo",
+  "familyCode": "runway-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 45000,
+  "latencyP95Ms": 120000,
+  "lifecycle": "active",
+  "modelId": "gen4_turbo",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "820.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Cost efficient"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "runway",
+  "vendorName": "Runway",
+  "winRate": "0.860000"
+}

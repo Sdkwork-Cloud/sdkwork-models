@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai",
+  "regionCode": "global",
+  "modelId": "sora-2",
+  "catalogKey": "openai/sora-2",
+  "profiles": [
+    {
+      "profileCode": "t2v_continuous_720p",
+      "catalogKey": "openai/sora-2/t2v_continuous_720p",
+      "displayName": "Text to Video · 4–12s · 720p",
+      "generationMode": "text_to_video",
+      "durationPolicy": "continuous",
+      "minDurationSeconds": 4,
+      "maxDurationSeconds": 12,
+      "durationStepSeconds": 1,
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16"],
+      "outputAudio": false,
+      "isDefault": true,
+      "sortOrder": 10,
+      "wireParameters": {
+        "size": "1280x720",
+        "seconds": "4-12"
+      }
+    },
+    {
+      "profileCode": "i2v_continuous_720p",
+      "catalogKey": "openai/sora-2/i2v_continuous_720p",
+      "displayName": "Image to Video · 4–12s · 720p",
+      "generationMode": "image_to_video",
+      "durationPolicy": "continuous",
+      "minDurationSeconds": 4,
+      "maxDurationSeconds": 12,
+      "durationStepSeconds": 1,
+      "resolution": "720p",
+      "resolutionTierCode": "res_720p",
+      "aspectRatios": ["16:9", "9:16"],
+      "outputAudio": false,
+      "sortOrder": 20,
+      "wireParameters": {
+        "size": "1280x720",
+        "seconds": "4-12"
+      }
+    }
+  ],
+  "source": {
+    "observedAt": "2026-07-04T00:00:00Z",
+    "sourceUrl": "https://platform.openai.com/docs/models/sora-2"
+  }
+}

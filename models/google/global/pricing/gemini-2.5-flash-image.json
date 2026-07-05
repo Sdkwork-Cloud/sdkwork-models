@@ -1,0 +1,42 @@
+{
+  "catalogKey": "google/gemini-2.5-flash-image",
+  "currency": "USD",
+  "modelId": "gemini-2.5-flash-image",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-2.5-flash-image-text-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "0.300000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-2.5-flash-image-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "0.039000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

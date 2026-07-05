@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "mureka-v7.5",
+      "displayName": "Mureka",
+      "familyCode": "mureka",
+      "familyType": "music",
+      "primaryModality": "music",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "mureka"
+}

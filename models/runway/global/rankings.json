@@ -1,0 +1,38 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "runway/gen4.5",
+          "modelId": "gen4.5",
+          "pricingText": "USD 0.12 / output second",
+          "rankNo": 15
+        },
+        {
+          "catalogKey": "runway/gen4_turbo",
+          "modelId": "gen4_turbo",
+          "pricingText": "USD 0.05 / output second",
+          "rankNo": 22
+        },
+        {
+          "catalogKey": "runway/gen4_image",
+          "modelId": "gen4_image",
+          "pricingText": "USD 0.05 / image",
+          "rankNo": 30
+        },
+        {
+          "catalogKey": "runway/gen4_image_turbo",
+          "modelId": "gen4_image_turbo",
+          "pricingText": "USD 0.02 / image",
+          "rankNo": 35
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "runway"
+}

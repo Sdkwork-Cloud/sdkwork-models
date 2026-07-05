@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::types::{
     BillingMeter, ClientApiCompatibility, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity,
-    ProtocolStandard, VendorRegionRef,
+    ProtocolStandard, TtsVoice, VideoGenerationProfile, VendorRegionRef,
 };
 
 #[derive(Debug, Clone, Default)]
@@ -358,6 +358,193 @@ fn model_identity_score(has_region_pricing: bool, model: &ModelInfo) -> i32 {
         score += 1;
     }
     score
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct VoiceFilter<'a> {
+    pub vendor_code: Option<&'a str>,
+    pub region_code: Option<&'a str>,
+    pub locale: Option<&'a str>,
+    pub model_catalog_key: Option<&'a str>,
+    pub search_query: Option<&'a str>,
+}
+
+pub fn voice_catalog_key(vendor_code: &str, voice_id: &str) -> String {
+    format!("{vendor_code}/{voice_id}")
+}
+
+pub fn list_voices<'a>(catalog: &'a ModelCatalog, filter: VoiceFilter<'_>) -> Vec<&'a TtsVoice> {
+    catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.voices.iter())
+        .filter(|voice| {
+            filter
+                .vendor_code
+                .map(|code| voice.vendor_code == code)
+                .unwrap_or(true)
+        })
+        .filter(|voice| {
+            filter
+                .region_code
+                .map(|code| voice.region_code == code)
+                .unwrap_or(true)
+        })
+        .filter(|voice| match filter.locale {
+            Some(locale) => voice.primary_locale == locale
+                || voice
+                    .supported_locales
+                    .iter()
+                    .any(|entry| entry == locale),
+            None => true,
+        })
+        .filter(|voice| match filter.search_query {
+            Some(query) => {
+                let query = query.to_ascii_lowercase();
+                voice.display_name.to_ascii_lowercase().contains(&query)
+                    || voice.voice_id.to_ascii_lowercase().contains(&query)
+            }
+            None => true,
+        })
+        .filter(|voice| match filter.model_catalog_key {
+            Some(model_key) => catalog
+                .vendors
+                .iter()
+                .flat_map(|vendor| vendor.model_voice_bindings.iter())
+                .any(|binding| {
+                    binding.catalog_key == model_key
+                        && binding.bindings.iter().any(|entry| entry.voice_key == voice.catalog_key)
+                }),
+            None => true,
+        })
+        .collect()
+}
+
+pub fn list_voices_for_model<'a>(
+    catalog: &'a ModelCatalog,
+    model_catalog_key: &str,
+) -> Vec<&'a TtsVoice> {
+    list_voices(
+        catalog,
+        VoiceFilter {
+            model_catalog_key: Some(model_catalog_key),
+            ..VoiceFilter::default()
+        },
+    )
+}
+
+pub fn list_models_for_voice<'a>(
+    catalog: &'a ModelCatalog,
+    voice_catalog_key: &str,
+) -> Vec<&'a ModelInfo> {
+    let model_keys = catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.model_voice_bindings.iter())
+        .filter(|binding| {
+            binding
+                .bindings
+                .iter()
+                .any(|entry| entry.voice_key == voice_catalog_key)
+        })
+        .map(|binding| binding.catalog_key.as_str())
+        .collect::<BTreeSet<_>>();
+    catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.models.iter())
+        .filter(|model| model_keys.contains(model.catalog_key.as_str()))
+        .collect()
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct VideoProfileFilter<'a> {
+    pub vendor_code: Option<&'a str>,
+    pub region_code: Option<&'a str>,
+    pub model_catalog_key: Option<&'a str>,
+    pub generation_mode: Option<&'a str>,
+    pub duration_tier_code: Option<&'a str>,
+    pub resolution: Option<&'a str>,
+}
+
+pub fn video_profile_catalog_key(vendor_code: &str, model_id: &str, profile_code: &str) -> String {
+    format!("{vendor_code}/{model_id}/{profile_code}")
+}
+
+pub fn list_video_profiles<'a>(
+    catalog: &'a ModelCatalog,
+    filter: VideoProfileFilter<'_>,
+) -> Vec<&'a VideoGenerationProfile> {
+    let mut profiles = Vec::new();
+    for vendor in &catalog.vendors {
+        if filter
+            .vendor_code
+            .is_some_and(|code| vendor.vendor_code != code)
+        {
+            continue;
+        }
+        if filter
+            .region_code
+            .is_some_and(|code| vendor.region_code != code)
+        {
+            continue;
+        }
+        for file in &vendor.model_video_profiles {
+            if filter
+                .model_catalog_key
+                .is_some_and(|model_key| file.catalog_key != model_key)
+            {
+                continue;
+            }
+            for profile in &file.profiles {
+                if filter
+                    .generation_mode
+                    .is_some_and(|mode| profile.generation_mode != mode)
+                {
+                    continue;
+                }
+                if filter.duration_tier_code.is_some_and(|tier_code| {
+                    profile.duration_tier_code.as_deref() != Some(tier_code)
+                        && !profile.duration_tier_codes.iter().any(|entry| entry == tier_code)
+                }) {
+                    continue;
+                }
+                if filter
+                    .resolution
+                    .is_some_and(|resolution| profile.resolution != resolution)
+                {
+                    continue;
+                }
+                profiles.push(profile);
+            }
+        }
+    }
+    profiles
+}
+
+pub fn list_video_profiles_for_model<'a>(
+    catalog: &'a ModelCatalog,
+    model_catalog_key: &str,
+) -> Vec<&'a VideoGenerationProfile> {
+    list_video_profiles(
+        catalog,
+        VideoProfileFilter {
+            model_catalog_key: Some(model_catalog_key),
+            ..VideoProfileFilter::default()
+        },
+    )
+}
+
+pub fn find_video_profile<'a>(
+    catalog: &'a ModelCatalog,
+    profile_catalog_key: &str,
+) -> Option<&'a VideoGenerationProfile> {
+    catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.model_video_profiles.iter())
+        .flat_map(|file| file.profiles.iter())
+        .find(|profile| profile.catalog_key == profile_catalog_key)
 }
 
 fn split_catalog_key(catalog_key: &str) -> Option<(&str, &str)> {

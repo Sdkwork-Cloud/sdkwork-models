@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "kuaishou/kling-v3",
+  "colorToken": "#6d28d9",
+  "description": "Kling Video 3.0 cinematic video generation with native audio, multi-shot storyboarding, and up to 15 second output.",
+  "displayName": "Kling v3",
+  "familyCode": "kling",
+  "inputModalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "latencyP50Ms": 52000,
+  "latencyP95Ms": 155000,
+  "lifecycle": "active",
+  "modelId": "kling-v3",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "820.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"
+  },
+  "strengths": [
+    "Video generation",
+    "Native audio",
+    "Multi-shot storyboarding",
+    "Element consistency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.960000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.910000"
+}

@@ -71,10 +71,34 @@
           "rankNo": 40
         },
         {
+          "catalogKey": "openai/text-embedding-3-large",
+          "modelId": "text-embedding-3-large",
+          "pricingText": "$0.13 / 1M input",
+          "rankNo": 41
+        },
+        {
           "catalogKey": "openai/gpt-4o-transcribe",
           "modelId": "gpt-4o-transcribe",
           "pricingText": "$0.006 / audio minute",
           "rankNo": 50
+        },
+        {
+          "catalogKey": "openai/gpt-4o-mini-tts",
+          "modelId": "gpt-4o-mini-tts",
+          "pricingText": "$0.60 / 1M input; $12.00 / 1M audio output",
+          "rankNo": 51
+        },
+        {
+          "catalogKey": "openai/tts-1-hd",
+          "modelId": "tts-1-hd",
+          "pricingText": "$30.00 / 1M characters",
+          "rankNo": 52
+        },
+        {
+          "catalogKey": "openai/gpt-4o-transcribe-diarize",
+          "modelId": "gpt-4o-transcribe-diarize",
+          "pricingText": "$0.006 / audio minute",
+          "rankNo": 53
         }
       ],
       "rankScope": "commercial-default",

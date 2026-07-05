@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "pixverse/pixverse-v6-t2v",
+  "colorToken": "#ec4899",
+  "description": "PixVerse V6 text-to-video on Alibaba DashScope with multi-shot narrative and optional native audio.",
+  "displayName": "PixVerse V6 Text to Video",
+  "familyCode": "pixverse-video",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "pixverse-v6-t2v",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "850.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/pixverse-text-to-video-api-reference"
+  },
+  "strengths": [
+    "Text to video",
+    "Multi-shot narrative",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "pixverse",
+  "vendorName": "PixVerse",
+  "winRate": "0.900000"
+}

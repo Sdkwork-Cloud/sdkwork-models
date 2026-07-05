@@ -54,7 +54,8 @@
   "legalName": "xAI",
   "marketScope": "global",
   "modelFamilies": [
-    "grok"
+    "grok",
+    "grok-imagine"
   ],
   "openSource": false,
   "operatingRegions": [

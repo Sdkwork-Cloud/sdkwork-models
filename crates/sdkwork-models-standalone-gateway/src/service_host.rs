@@ -8,14 +8,17 @@ use sdkwork_models_database_host::ModelsDatabaseHost;
 use sqlx::{PgPool, SqlitePool};
 
 use crate::{
-    catalog_app_router_with_catalog_and_read_store, catalog_backend_router_with_postgres_pool,
-    catalog_backend_router_with_sqlite_pool, json_pricing_catalog::JsonPricingCatalog,
+    catalog_app_router_with_catalog_voice_and_read_store,
+    catalog_backend_router_with_postgres_pool_and_catalog,
+    catalog_backend_router_with_sqlite_pool_and_catalog, json_pricing_catalog::JsonPricingCatalog,
     models_health_router_with_readiness, ModelsReadinessProbe,
 };
+use sdkwork_models::{load_catalog, ModelCatalog};
 
 pub struct ModelsServiceHost {
     database: ModelsDatabaseHost,
     pricing_catalog: Arc<JsonPricingCatalog>,
+    voice_catalog: Arc<ModelCatalog>,
     models_catalog_root: Option<String>,
 }
 
@@ -24,10 +27,15 @@ impl ModelsServiceHost {
         let _ = dotenvy::dotenv();
         let database = sdkwork_models_database_host::bootstrap_models_database_from_env().await?;
         let models_catalog_root = resolve_models_catalog_root();
-        let pricing_catalog = JsonPricingCatalog::load_from_root(&models_catalog_root)?;
+        let voice_catalog = Arc::new(
+            load_catalog(&models_catalog_root)
+                .map_err(|error| format!("load catalog JSON failed: {error}"))?,
+        );
+        let pricing_catalog = Arc::new(JsonPricingCatalog::from_catalog(voice_catalog.as_ref()));
         Ok(Self {
             database,
             pricing_catalog,
+            voice_catalog,
             models_catalog_root: Some(
                 models_catalog_root
                     .to_string_lossy()
@@ -56,11 +64,14 @@ impl ModelsServiceHost {
     }
 
     pub fn backend_router(&self) -> Router {
+        let voice_catalog = Some(Arc::clone(&self.voice_catalog));
         match self.database.pool() {
             DatabasePool::Postgres(pool, _) => {
-                catalog_backend_router_with_postgres_pool(pool.clone())
+                catalog_backend_router_with_postgres_pool_and_catalog(pool.clone(), voice_catalog)
             }
-            DatabasePool::Sqlite(pool, _) => catalog_backend_router_with_sqlite_pool(pool.clone()),
+            DatabasePool::Sqlite(pool, _) => {
+                catalog_backend_router_with_sqlite_pool_and_catalog(pool.clone(), voice_catalog)
+            }
         }
     }
 
@@ -91,7 +102,11 @@ impl ModelsServiceHost {
 
         let read_store: Arc<dyn ModelRankingsReadModelStore + Send + Sync> =
             Arc::new(SqliteModelRankingsReadStore::new(pool));
-        catalog_app_router_with_catalog_and_read_store(self.pricing_catalog(), read_store)
+        catalog_app_router_with_catalog_voice_and_read_store(
+            self.pricing_catalog(),
+            Arc::clone(&self.voice_catalog),
+            read_store,
+        )
     }
 
     fn app_router_with_postgres_pool(&self, pool: PgPool) -> Router {
@@ -100,7 +115,11 @@ impl ModelsServiceHost {
 
         let read_store: Arc<dyn ModelRankingsReadModelStore + Send + Sync> =
             Arc::new(PostgresModelRankingsReadStore::new(pool));
-        catalog_app_router_with_catalog_and_read_store(self.pricing_catalog(), read_store)
+        catalog_app_router_with_catalog_voice_and_read_store(
+            self.pricing_catalog(),
+            Arc::clone(&self.voice_catalog),
+            read_store,
+        )
     }
 }
 

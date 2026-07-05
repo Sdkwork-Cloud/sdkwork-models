@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "black_forest_labs/flux-2-flex",
+  "colorToken": "#18181b",
+  "description": "FLUX.2 Flex image generation model with adjustable steps and guidance for typography and fine detail control.",
+  "displayName": "FLUX.2 Flex",
+  "familyCode": "flux",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 6000,
+  "latencyP95Ms": 20000,
+  "lifecycle": "active",
+  "modelId": "flux-2-flex",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+  },
+  "strengths": [
+    "Image generation",
+    "Typography",
+    "Fine detail control"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "black_forest_labs",
+  "vendorName": "Black Forest Labs",
+  "winRate": "0.870000"
+}

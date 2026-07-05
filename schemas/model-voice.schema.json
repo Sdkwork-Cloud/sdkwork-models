@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdkwork.cloud/schemas/sdkwork-models/model-voice.schema.json",
+  "title": "Sdkwork Model Voice Bindings",
+  "description": "Many-to-many bindings between TTS models and catalog voices.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "vendorCode",
+    "regionCode",
+    "modelId",
+    "catalogKey",
+    "bindings",
+    "source"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "vendorCode": {
+      "type": "string"
+    },
+    "regionCode": {
+      "type": "string"
+    },
+    "modelId": {
+      "type": "string"
+    },
+    "catalogKey": {
+      "type": "string"
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "voiceKey",
+          "voiceId",
+          "compatibility"
+        ],
+        "properties": {
+          "voiceKey": {
+            "type": "string"
+          },
+          "voiceId": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          },
+          "compatibility": {
+            "enum": [
+              "full",
+              "preview",
+              "legacy"
+            ]
+          },
+          "sortOrder": {
+            "type": "integer"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source": {
+      "$ref": "catalog.schema.json#/$defs/sourceEvidence"
+    }
+  }
+}

@@ -4,7 +4,8 @@
   "capabilities": [
     "chat",
     "image",
-    "video"
+    "video",
+    "embedding"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -54,7 +55,10 @@
   "legalName": "Alibaba Cloud",
   "marketScope": "china_mainland",
   "modelFamilies": [
-    "qwen"
+    "qwen",
+    "wanx",
+    "wanx-video",
+    "qwen-embedding"
   ],
   "openSource": false,
   "operatingRegions": [
@@ -68,7 +72,8 @@
     "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
   },
   "supportedProtocols": [
-    "openai_compatible"
+    "openai_compatible",
+    "vendor_native"
   ],
   "vendorCode": "alibaba",
   "vendorType": "commercial",

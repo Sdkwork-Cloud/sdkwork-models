@@ -5,14 +5,50 @@
     {
       "items": [
         {
+          "catalogKey": "elevenlabs/eleven_flash_v2_5",
+          "modelId": "eleven_flash_v2_5",
+          "pricingText": "$0.05 / 1K characters",
+          "rankNo": 27
+        },
+        {
+          "catalogKey": "elevenlabs/eleven_v3",
+          "modelId": "eleven_v3",
+          "pricingText": "$0.10 / 1K characters",
+          "rankNo": 28
+        },
+        {
+          "catalogKey": "elevenlabs/eleven_multilingual_v2",
+          "modelId": "eleven_multilingual_v2",
+          "pricingText": "$0.10 / 1K characters",
+          "rankNo": 29
+        },
+        {
+          "catalogKey": "elevenlabs/scribe_v2",
+          "modelId": "scribe_v2",
+          "pricingText": "$0.22 / audio hour",
+          "rankNo": 30
+        },
+        {
+          "catalogKey": "elevenlabs/scribe_v2_realtime",
+          "modelId": "scribe_v2_realtime",
+          "pricingText": "$0.39 / audio hour",
+          "rankNo": 31
+        },
+        {
+          "catalogKey": "elevenlabs/music_v2",
+          "modelId": "music_v2",
+          "pricingText": "$0.15 / output minute",
+          "rankNo": 32
+        },
+        {
           "catalogKey": "elevenlabs/eleven_text_to_sound_v2",
           "modelId": "eleven_text_to_sound_v2",
-          "pricingText": "$0.05 / sound effect result",
-          "rankNo": 31
+          "pricingText": "$0.12 / output minute",
+          "rankNo": 33
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-07",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

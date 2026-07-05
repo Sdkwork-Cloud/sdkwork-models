@@ -11,6 +11,10 @@
     "regionCount",
     "modelCount",
     "pricingFileCount",
+    "voiceCount",
+    "modelVoiceFileCount",
+    "videoProfileCount",
+    "modelVideoProfileFileCount",
     "vendors"
   ],
   "properties": {
@@ -42,6 +46,22 @@
       "type": "integer",
       "minimum": 0
     },
+    "voiceCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "modelVoiceFileCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "videoProfileCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "modelVideoProfileFileCount": {
+      "type": "integer",
+      "minimum": 0
+    },
     "vendors": {
       "type": "array",
       "items": {
@@ -70,6 +90,10 @@
         "modelCount",
         "familyCount",
         "pricingFileCount",
+        "voiceCount",
+        "modelVoiceFileCount",
+        "videoProfileCount",
+        "modelVideoProfileFileCount",
         "rankingSnapshotCount",
         "sha256"
       ],
@@ -133,6 +157,32 @@
             "pattern": "^[a-z0-9_]+/[a-z0-9_]+/pricing/[^\\\\]+\\.json$"
           }
         },
+        "voicesPath": {
+          "type": ["string", "null"],
+          "pattern": "^[a-z0-9_]+/[a-z0-9_]+/voices\\.json$"
+        },
+        "modelVoicesPath": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+/[a-z0-9_]+/model-voices$"
+        },
+        "modelVoiceFiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+/[a-z0-9_]+/model-voices/[^\\\\]+\\.json$"
+          }
+        },
+        "modelVideoProfilesPath": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+/[a-z0-9_]+/model-video-profiles$"
+        },
+        "modelVideoProfileFiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+/[a-z0-9_]+/model-video-profiles/[^\\\\]+\\.json$"
+          }
+        },
         "rankingsPath": {
           "type": "string",
           "pattern": "^[a-z0-9_]+/[a-z0-9_]+/rankings\\.json$"
@@ -146,6 +196,22 @@
           "minimum": 0
         },
         "pricingFileCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "voiceCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modelVoiceFileCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "videoProfileCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modelVideoProfileFileCount": {
           "type": "integer",
           "minimum": 0
         },

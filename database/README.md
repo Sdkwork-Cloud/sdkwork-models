@@ -15,6 +15,8 @@ Catalog dictionary and public model facts imported from the JSON catalog:
 - `ai_resource`, `ai_resource_group`, `ai_resource_group_item`
 - `ai_billing_meter`, `ai_model_pricing` (reference prices)
 - `ai_model_catalog_source`, `ai_model_catalog_sync_run`, `ai_model_rank_snapshot`
+- `ai_model_voice`, `ai_model_voice_binding` (TTS speaker catalog and model bindings)
+- `ai_model_video_profile` (video generation profile catalog per video model)
 
 Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway channels, and tenant pricing plans.
 

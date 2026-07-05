@@ -40,4 +40,8 @@ export const operations = {
   "models.update": { method: "PATCH", path: "/backend/v3/api/ai/models/{modelId}" },
   "modelVendors.create": { method: "POST", path: "/backend/v3/api/ai/model_vendors" },
   "modelVendors.list": { method: "GET", path: "/backend/v3/api/ai/model_vendors" },
+  "modelVideoProfiles.list": { method: "GET", path: "/backend/v3/api/ai/models/{modelId}/video_profiles" },
+  "modelVoices.list": { method: "GET", path: "/backend/v3/api/ai/models/{modelId}/voices" },
+  "videoProfiles.list": { method: "GET", path: "/backend/v3/api/ai/video_profiles" },
+  "voices.list": { method: "GET", path: "/backend/v3/api/ai/voices" },
 } as const;

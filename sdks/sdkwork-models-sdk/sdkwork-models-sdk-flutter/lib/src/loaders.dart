@@ -99,7 +99,22 @@ Future<Map<String, Object?>> loadVendorCatalog(
         pathOrUrl, _stringList(vendorIndex['modelFiles'])),
     'pricing': await _readJsonObjectsByRef(
         pathOrUrl, _stringList(vendorIndex['pricingFiles'])),
+    'voices': await _readVoices(pathOrUrl, vendorIndex),
+    'modelVoiceBindings': await _readJsonObjectsByRef(
+        pathOrUrl, _stringList(vendorIndex['modelVoiceFiles'])),
+    'modelVideoProfiles': await _readJsonObjectsByRef(
+        pathOrUrl, _stringList(vendorIndex['modelVideoProfileFiles'])),
   };
+}
+
+Future<List<JsonObject>> _readVoices(
+    String pathOrUrl, JsonObject vendorIndex) async {
+  final voicesPath = vendorIndex['voicesPath'];
+  if (voicesPath is! String || voicesPath.isEmpty) {
+    return const [];
+  }
+  final payload = await _readJsonObject(pathOrUrl, 'models/$voicesPath');
+  return _objectList(payload['voices']);
 }
 
 bool _isRemoteUrl(String value) {

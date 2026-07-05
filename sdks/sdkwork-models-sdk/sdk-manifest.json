@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "workspace": "sdkwork-models-sdk",
+  "title": "SDKWork Models Catalog SDK",
+  "languages": [
+    {
+      "language": "typescript",
+      "workspace": "sdkwork-models-sdk-typescript",
+      "publicPackage": "@sdkwork/models",
+      "maturityTier": "reference",
+      "consumerPackageName": "@sdkwork/models-sdk",
+      "transportPackageName": "sdkwork-models-sdk-generated-typescript"
+    },
+    {
+      "language": "python",
+      "workspace": "sdkwork-models-sdk-python",
+      "publicPackage": "sdkwork-models",
+      "maturityTier": "reference"
+    },
+    {
+      "language": "java",
+      "workspace": "sdkwork-models-sdk-java",
+      "publicPackage": "com.sdkwork.models:sdkwork-models",
+      "maturityTier": "reference"
+    },
+    {
+      "language": "rust",
+      "workspace": "sdkwork-models-sdk-rust",
+      "publicPackage": "sdkwork-models",
+      "maturityTier": "reference"
+    },
+    {
+      "language": "flutter",
+      "workspace": "sdkwork-models-sdk-flutter",
+      "publicPackage": "sdkwork_models",
+      "maturityTier": "reference"
+    }
+  ],
+  "sdkOwner": "sdkwork-models",
+  "apiAuthority": "sdkwork-models-api",
+  "sdkDependencies": [],
+  "sdkFamily": "sdkwork-models-sdk",
+  "sdkName": "sdkwork-models-sdk",
+  "packageName": "@sdkwork/models-sdk",
+  "transportPackageName": "sdkwork-models-sdk-generated-typescript",
+  "metadata": {
+    "providerStandard": {
+      "architecture": "file-catalog-provider-standard",
+      "catalogRootEnv": "SDKWORK_MODELS_CATALOG_ROOT",
+      "defaultBundledCatalogRoot": "data/sdkwork-models",
+      "publicTypeScriptPackage": "@sdkwork/models"
+    }
+  }
+}

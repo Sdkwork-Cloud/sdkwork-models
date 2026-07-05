@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "minimax/speech-2.8-hd",
+  "colorToken": "#1d4ed8",
+  "description": "MiniMax Speech 2.8 HD text-to-speech model with high-fidelity multilingual voice synthesis.",
+  "displayName": "MiniMax Speech 2.8 HD",
+  "familyCode": "minimax-speech",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 350,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "modelId": "speech-2.8-hd",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "770.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+  },
+  "strengths": [
+    "Text to speech",
+    "High fidelity",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.880000"
+}

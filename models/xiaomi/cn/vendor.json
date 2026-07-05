@@ -2,10 +2,7 @@
   "billingCurrency": "CNY",
   "billingJurisdiction": "CN",
   "capabilities": [
-    "chat",
-    "image",
-    "audio",
-    "video"
+    "chat"
   ],
   "clientApiCompatibility": {
     "claude_code": {

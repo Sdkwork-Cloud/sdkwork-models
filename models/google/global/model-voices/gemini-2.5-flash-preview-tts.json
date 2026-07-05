@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google",
+  "regionCode": "global",
+  "modelId": "gemini-2.5-flash-preview-tts",
+  "catalogKey": "google/gemini-2.5-flash-preview-tts",
+  "bindings": [
+    { "voiceKey": "google/Kore", "voiceId": "Kore", "isDefault": true, "compatibility": "full", "sortOrder": 10 },
+    { "voiceKey": "google/Puck", "voiceId": "Puck", "compatibility": "full", "sortOrder": 20 },
+    { "voiceKey": "google/Charon", "voiceId": "Charon", "compatibility": "full", "sortOrder": 30 },
+    { "voiceKey": "google/Fenrir", "voiceId": "Fenrir", "compatibility": "full", "sortOrder": 40 },
+    { "voiceKey": "google/Aoede", "voiceId": "Aoede", "compatibility": "full", "sortOrder": 50 },
+    { "voiceKey": "google/Leda", "voiceId": "Leda", "compatibility": "full", "sortOrder": 60 },
+    { "voiceKey": "google/Orus", "voiceId": "Orus", "compatibility": "full", "sortOrder": 70 },
+    { "voiceKey": "google/Zephyr", "voiceId": "Zephyr", "compatibility": "full", "sortOrder": 80 }
+  ],
+  "source": {
+    "observedAt": "2026-07-03T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/speech-generation"
+  }
+}

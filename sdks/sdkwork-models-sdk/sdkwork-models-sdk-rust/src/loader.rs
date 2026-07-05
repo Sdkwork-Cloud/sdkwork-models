@@ -6,7 +6,8 @@ use serde::Deserialize;
 
 use crate::types::{
     BillingMeter, CatalogIndex, CatalogIndexVendor, CatalogManifest, FamilyFile, ModelCatalog,
-    ModelInfo, ModelPricing, ModelVendor, ProtocolStandard, RankingFile, VendorCatalog,
+    ModelInfo, ModelPricing, ModelVendor, ModelVideoProfilesFile, ModelVoiceBindingsFile, ProtocolStandard, RankingFile,
+    TtsVoice, VendorCatalog,
 };
 use crate::CatalogError;
 
@@ -20,6 +21,34 @@ struct MeterFile {
 #[serde(rename_all = "camelCase")]
 struct ProtocolFile {
     protocols: Vec<ProtocolStandard>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct VoicesFile {
+    voices: Vec<TtsVoice>,
+}
+
+fn load_voices_file(path: &Path) -> Result<Vec<TtsVoice>, CatalogError> {
+    if !path.is_file() {
+        return Ok(Vec::new());
+    }
+    let file: VoicesFile = read_json(path)?;
+    Ok(file.voices)
+}
+
+fn load_model_voice_bindings(path: &Path) -> Result<Vec<ModelVoiceBindingsFile>, CatalogError> {
+    if !path.is_dir() {
+        return Ok(Vec::new());
+    }
+    read_json_dir::<ModelVoiceBindingsFile>(path)
+}
+
+fn load_model_video_profiles(path: &Path) -> Result<Vec<ModelVideoProfilesFile>, CatalogError> {
+    if !path.is_dir() {
+        return Ok(Vec::new());
+    }
+    read_json_dir::<ModelVideoProfilesFile>(path)
 }
 
 pub fn load_catalog(root: impl AsRef<Path>) -> Result<ModelCatalog, CatalogError> {
@@ -75,6 +104,9 @@ pub fn load_vendor_catalog(vendor_root: impl AsRef<Path>) -> Result<VendorCatalo
     let rankings_file: RankingFile = read_json(vendor_root.join("rankings.json"))?;
     let models = read_json_dir::<ModelInfo>(vendor_root.join("models"))?;
     let pricing = read_json_dir::<ModelPricing>(vendor_root.join("pricing"))?;
+    let voices = load_voices_file(&vendor_root.join("voices.json"))?;
+    let model_voice_bindings = load_model_voice_bindings(&vendor_root.join("model-voices"))?;
+    let model_video_profiles = load_model_video_profiles(&vendor_root.join("model-video-profiles"))?;
     Ok(VendorCatalog {
         vendor_code: vendor.vendor_code.clone(),
         region_code: vendor.region_code.clone(),
@@ -83,6 +115,9 @@ pub fn load_vendor_catalog(vendor_root: impl AsRef<Path>) -> Result<VendorCatalo
         models,
         pricing,
         rankings: rankings_file.snapshots,
+        voices,
+        model_voice_bindings,
+        model_video_profiles,
     })
 }
 
@@ -112,6 +147,38 @@ fn load_vendor_catalog_from_index(
         .iter()
         .map(|path| read_json::<ModelPricing>(models_root.join(path)))
         .collect::<Result<Vec<_>, _>>()?;
+    let voices = match &index.voices_path {
+        Some(path) => load_voices_file(&models_root.join(path))?,
+        None => Vec::new(),
+    };
+    let model_voice_bindings = match &index.model_voices_path {
+        Some(path) => {
+            if index.model_voice_files.is_empty() {
+                load_model_voice_bindings(&models_root.join(path))?
+            } else {
+                index
+                    .model_voice_files
+                    .iter()
+                    .map(|path| read_json::<ModelVoiceBindingsFile>(models_root.join(path)))
+                    .collect::<Result<Vec<_>, _>>()?
+            }
+        }
+        None => Vec::new(),
+    };
+    let model_video_profiles = match &index.model_video_profiles_path {
+        Some(path) => {
+            if index.model_video_profile_files.is_empty() {
+                load_model_video_profiles(&models_root.join(path))?
+            } else {
+                index
+                    .model_video_profile_files
+                    .iter()
+                    .map(|path| read_json::<ModelVideoProfilesFile>(models_root.join(path)))
+                    .collect::<Result<Vec<_>, _>>()?
+            }
+        }
+        None => Vec::new(),
+    };
     Ok(VendorCatalog {
         vendor_code: vendor.vendor_code.clone(),
         region_code: vendor.region_code.clone(),
@@ -120,6 +187,9 @@ fn load_vendor_catalog_from_index(
         models,
         pricing,
         rankings: rankings_file.snapshots,
+        voices,
+        model_voice_bindings,
+        model_video_profiles,
     })
 }
 

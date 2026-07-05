@@ -1,0 +1,26 @@
+{
+  "catalogKey": "alibaba/wan2.6-t2i",
+  "currency": "CNY",
+  "modelId": "wan2.6-t2i",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-cn-wan2-6-t2i-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing"
+      },
+      "unitPrice": "0.200000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

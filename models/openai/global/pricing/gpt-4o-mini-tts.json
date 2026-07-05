@@ -1,0 +1,42 @@
+{
+  "catalogKey": "openai/gpt-4o-mini-tts",
+  "currency": "USD",
+  "modelId": "gpt-4o-mini-tts",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-4o-mini-tts-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
+      },
+      "unitPrice": "0.600000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "audio_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-4o-mini-tts-audio-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
+      },
+      "unitPrice": "12.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

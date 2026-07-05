@@ -3,7 +3,8 @@
   "billingJurisdiction": "US",
   "capabilities": [
     "audio",
-    "music"
+    "music",
+    "sfx"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -53,7 +54,10 @@
   "legalName": "ElevenLabs",
   "marketScope": "global",
   "modelFamilies": [
-    "elevenlabs-audio"
+    "elevenlabs-tts",
+    "elevenlabs-stt",
+    "elevenlabs-music",
+    "elevenlabs-sfx"
   ],
   "openSource": false,
   "operatingRegions": [

@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "pixverse-v6-t2v",
+      "displayName": "PixVerse V6",
+      "familyCode": "pixverse-video",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "pixverse"
+}

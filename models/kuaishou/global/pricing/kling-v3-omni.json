@@ -1,0 +1,26 @@
+{
+  "catalogKey": "kuaishou/kling-v3-omni",
+  "currency": "USD",
+  "modelId": "kling-v3-omni",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "kuaishou-global-kling-v3-omni-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://app.klingai.com/global/dev/document-api"
+      },
+      "unitPrice": "0.140000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "kuaishou"
+}

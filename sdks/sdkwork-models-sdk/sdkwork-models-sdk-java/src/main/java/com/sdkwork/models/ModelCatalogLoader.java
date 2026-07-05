@@ -130,6 +130,9 @@ public final class ModelCatalogLoader {
             result.put("families", families);
             result.put("models", readJsonObjectsByRef(catalogRoot, mapListOfString(vendorIndex.get("modelFiles"))));
             result.put("pricing", readJsonObjectsByRef(catalogRoot, mapListOfString(vendorIndex.get("pricingFiles"))));
+            result.put("voices", readVoices(catalogRoot, vendorIndex));
+            result.put("modelVoiceBindings", readJsonObjectsByRef(catalogRoot, mapListOfString(vendorIndex.get("modelVoiceFiles"))));
+            result.put("modelVideoProfiles", readJsonObjectsByRef(catalogRoot, mapListOfString(vendorIndex.get("modelVideoProfileFiles"))));
             return result;
         } catch (IOException error) {
             throw new IllegalStateException(
@@ -155,6 +158,9 @@ public final class ModelCatalogLoader {
         result.put("families", readRemoteJsonObject(root, "models/" + stringValue(vendorIndex.get("familiesPath"), "familiesPath")));
         result.put("models", readRemoteJsonObjects(root, mapListOfString(vendorIndex.get("modelFiles"))));
         result.put("pricing", readRemoteJsonObjects(root, mapListOfString(vendorIndex.get("pricingFiles"))));
+        result.put("voices", readRemoteVoices(root, vendorIndex));
+        result.put("modelVoiceBindings", readRemoteJsonObjects(root, mapListOfString(vendorIndex.get("modelVoiceFiles"))));
+        result.put("modelVideoProfiles", readRemoteJsonObjects(root, mapListOfString(vendorIndex.get("modelVideoProfileFiles"))));
         return result;
     }
 

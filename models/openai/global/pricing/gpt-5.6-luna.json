@@ -1,0 +1,42 @@
+{
+  "catalogKey": "openai/gpt-5.6-luna",
+  "currency": "USD",
+  "modelId": "gpt-5.6-luna",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-5-6-luna-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+      },
+      "unitPrice": "1.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-5-6-luna-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+      },
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

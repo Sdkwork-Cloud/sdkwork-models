@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "elevenlabs/music_v2",
+  "colorToken": "#ca8a04",
+  "description": "ElevenLabs studio-grade music generation from text prompts and composition plans.",
+  "displayName": "Eleven Music v2",
+  "familyCode": "elevenlabs-music",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 45000,
+  "latencyP95Ms": 150000,
+  "lifecycle": "active",
+  "modelId": "music_v2",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "730.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/overview/models"
+  },
+  "strengths": [
+    "Music generation",
+    "Composition plans",
+    "Studio quality"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.860000"
+}

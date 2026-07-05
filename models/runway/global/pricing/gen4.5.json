@@ -1,0 +1,26 @@
+{
+  "catalogKey": "runway/gen4.5",
+  "currency": "USD",
+  "modelId": "gen4.5",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "runway-global-gen4-5-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+      },
+      "unitPrice": "0.120000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "runway"
+}

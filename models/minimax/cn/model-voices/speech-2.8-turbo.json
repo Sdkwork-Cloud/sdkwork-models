@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax",
+  "regionCode": "cn",
+  "modelId": "speech-2.8-turbo",
+  "catalogKey": "minimax/speech-2.8-turbo",
+  "bindings": [
+    {
+      "voiceKey": "minimax/_catalog_dynamic",
+      "voiceId": "_catalog_dynamic",
+      "isDefault": true,
+      "compatibility": "full",
+      "sortOrder": 10,
+      "notes": "Use any voice_id from the MiniMax voice library API."
+    }
+  ],
+  "source": {
+    "observedAt": "2026-07-04T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/api-reference/speech-t2a-voice"
+  }
+}

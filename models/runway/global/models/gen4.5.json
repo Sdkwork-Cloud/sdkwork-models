@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "runway/gen4.5",
+  "colorToken": "#0f172a",
+  "description": "Runway Gen-4.5 flagship video generation model with improved motion fidelity and prompt adherence.",
+  "displayName": "Gen-4.5",
+  "familyCode": "runway-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "gen4.5",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "860.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "High fidelity motion"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "runway",
+  "vendorName": "Runway",
+  "winRate": "0.900000"
+}

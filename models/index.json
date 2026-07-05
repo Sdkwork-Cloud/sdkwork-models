@@ -1,11 +1,13 @@
 {
-  "catalogVersion": "2026.06.24.4",
+  "catalogVersion": "2026.07.05.3",
   "generatedAt": "2026-06-24T00:00:00Z",
-  "modelCount": 109,
-  "pricingFileCount": 108,
-  "regionCount": 26,
+  "modelCount": 196,
+  "modelVideoProfileFileCount": 35,
+  "modelVoiceFileCount": 14,
+  "pricingFileCount": 196,
+  "regionCount": 34,
   "schemaVersion": "1.1.0",
-  "vendorCount": 19,
+  "vendorCount": 25,
   "vendors": [
     {
       "billingCurrency": "CNY",
@@ -13,26 +15,49 @@
       "catalogKeyPrefix": "alibaba/",
       "displayName": "Alibaba Cloud",
       "familiesPath": "alibaba/cn/families.json",
-      "familyCount": 1,
+      "familyCount": 4,
       "marketScope": "china_mainland",
-      "modelCount": 2,
+      "modelCount": 7,
       "modelFiles": [
         "alibaba/cn/models/qwen3.6-max-preview.json",
-        "alibaba/cn/models/qwen3.7-max.json"
+        "alibaba/cn/models/qwen3.7-max.json",
+        "alibaba/cn/models/text-embedding-v3.json",
+        "alibaba/cn/models/wan2.6-i2v.json",
+        "alibaba/cn/models/wan2.6-r2v.json",
+        "alibaba/cn/models/wan2.6-t2i.json",
+        "alibaba/cn/models/wan2.6-t2v.json"
       ],
+      "modelVideoProfileFileCount": 3,
+      "modelVideoProfileFiles": [
+        "alibaba/cn/model-video-profiles/wan2.6-i2v.json",
+        "alibaba/cn/model-video-profiles/wan2.6-r2v.json",
+        "alibaba/cn/model-video-profiles/wan2.6-t2v.json"
+      ],
+      "modelVideoProfilesPath": "alibaba/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "alibaba/cn/model-voices",
       "modelsPath": "alibaba/cn/models",
       "path": "alibaba/cn/vendor.json",
-      "pricingFileCount": 2,
+      "pricingFileCount": 7,
       "pricingFiles": [
         "alibaba/cn/pricing/qwen3.6-max-preview.json",
-        "alibaba/cn/pricing/qwen3.7-max.json"
+        "alibaba/cn/pricing/qwen3.7-max.json",
+        "alibaba/cn/pricing/text-embedding-v3.json",
+        "alibaba/cn/pricing/wan2.6-i2v.json",
+        "alibaba/cn/pricing/wan2.6-r2v.json",
+        "alibaba/cn/pricing/wan2.6-t2i.json",
+        "alibaba/cn/pricing/wan2.6-t2v.json"
       ],
       "pricingPath": "alibaba/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "50d1fb271ea9f3c98dc3060d68786fc51a6f2cb7f2b93af64f1f90bd233ffbd2",
-      "vendorCode": "alibaba"
+      "sha256": "2929960eaadce8b9d733be705c8933533fb9c94a4a77ccffecd07f5ccc36bb9d",
+      "vendorCode": "alibaba",
+      "videoProfileCount": 5,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -46,6 +71,12 @@
       "modelFiles": [
         "alibaba/global/models/qwen3.7-max.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "alibaba/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "alibaba/global/model-voices",
       "modelsPath": "alibaba/global/models",
       "path": "alibaba/global/vendor.json",
       "pricingFileCount": 1,
@@ -57,7 +88,10 @@
       "rankingsPath": "alibaba/global/rankings.json",
       "regionCode": "global",
       "sha256": "caf7c796f3818a38e8ff93f7eb407cc93a8128e4093fb25be408836dfc701a18",
-      "vendorCode": "alibaba"
+      "vendorCode": "alibaba",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -67,32 +101,43 @@
       "familiesPath": "anthropic/global/families.json",
       "familyCount": 1,
       "marketScope": "global",
-      "modelCount": 6,
+      "modelCount": 7,
       "modelFiles": [
         "anthropic/global/models/claude-fable-5.json",
         "anthropic/global/models/claude-haiku-4-5.json",
         "anthropic/global/models/claude-mythos-5.json",
         "anthropic/global/models/claude-opus-4-7.json",
         "anthropic/global/models/claude-opus-4-8.json",
-        "anthropic/global/models/claude-sonnet-4-6.json"
+        "anthropic/global/models/claude-sonnet-4-6.json",
+        "anthropic/global/models/claude-sonnet-5.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "anthropic/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "anthropic/global/model-voices",
       "modelsPath": "anthropic/global/models",
       "path": "anthropic/global/vendor.json",
-      "pricingFileCount": 6,
+      "pricingFileCount": 7,
       "pricingFiles": [
         "anthropic/global/pricing/claude-fable-5.json",
         "anthropic/global/pricing/claude-haiku-4-5.json",
         "anthropic/global/pricing/claude-mythos-5.json",
         "anthropic/global/pricing/claude-opus-4-7.json",
         "anthropic/global/pricing/claude-opus-4-8.json",
-        "anthropic/global/pricing/claude-sonnet-4-6.json"
+        "anthropic/global/pricing/claude-sonnet-4-6.json",
+        "anthropic/global/pricing/claude-sonnet-5.json"
       ],
       "pricingPath": "anthropic/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "anthropic/global/rankings.json",
       "regionCode": "global",
-      "sha256": "e3490b0231eccb511112a1e1e13b45326c02d9677dbf62e5d1862d6314d56d64",
-      "vendorCode": "anthropic"
+      "sha256": "12d79964a70e109cb8167c45c1dc15c15a9bdefe665f2f11133c6500840b8b4e",
+      "vendorCode": "anthropic",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -108,6 +153,12 @@
         "baidu/cn/models/ernie-5.0-thinking-preview.json",
         "baidu/cn/models/ernie-x1.1.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "baidu/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "baidu/cn/model-voices",
       "modelsPath": "baidu/cn/models",
       "path": "baidu/cn/vendor.json",
       "pricingFileCount": 3,
@@ -121,7 +172,10 @@
       "rankingsPath": "baidu/cn/rankings.json",
       "regionCode": "cn",
       "sha256": "f0718111931df13f58c993eb7f3ef30a4616acdf52542807a0d4972358d494a9",
-      "vendorCode": "baidu"
+      "vendorCode": "baidu",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -131,22 +185,33 @@
       "familiesPath": "black_forest_labs/global/families.json",
       "familyCount": 1,
       "marketScope": "global",
-      "modelCount": 1,
+      "modelCount": 2,
       "modelFiles": [
+        "black_forest_labs/global/models/flux-2-flex.json",
         "black_forest_labs/global/models/flux-2-pro.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "black_forest_labs/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "black_forest_labs/global/model-voices",
       "modelsPath": "black_forest_labs/global/models",
       "path": "black_forest_labs/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 2,
       "pricingFiles": [
+        "black_forest_labs/global/pricing/flux-2-flex.json",
         "black_forest_labs/global/pricing/flux-2-pro.json"
       ],
       "pricingPath": "black_forest_labs/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "black_forest_labs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "2bd6575bfcbd385b55d0809e6611a5196546b09b08f60661cc83cbc9145420a5",
-      "vendorCode": "black_forest_labs"
+      "sha256": "1e506def22ce9228fa82067b1727e874013e216a4000d4258e3f8e13a64dc45a",
+      "vendorCode": "black_forest_labs",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -154,34 +219,61 @@
       "catalogKeyPrefix": "bytedance/",
       "displayName": "ByteDance",
       "familiesPath": "bytedance/cn/families.json",
-      "familyCount": 3,
+      "familyCount": 5,
       "marketScope": "china_mainland",
-      "modelCount": 6,
+      "modelCount": 12,
       "modelFiles": [
         "bytedance/cn/models/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-lite-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-mini-260215.json",
         "bytedance/cn/models/doubao-seed-2-0-pro-260215.json",
         "bytedance/cn/models/doubao-seed-2-1-pro-260628.json",
-        "bytedance/cn/models/doubao-seed-2-1-turbo-260628.json"
+        "bytedance/cn/models/doubao-seed-2-1-turbo-260628.json",
+        "bytedance/cn/models/doubao-seedance-2-0-260128.json",
+        "bytedance/cn/models/doubao-seedance-2-0-fast-260128.json",
+        "bytedance/cn/models/doubao-seedream-4-0-250828.json",
+        "bytedance/cn/models/seed-music-gensong-v4.json",
+        "bytedance/cn/models/seed-tts-2.0-expressive.json",
+        "bytedance/cn/models/seed-tts-2.0-standard.json"
       ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "bytedance/cn/model-video-profiles/doubao-seedance-2-0-260128.json",
+        "bytedance/cn/model-video-profiles/doubao-seedance-2-0-fast-260128.json"
+      ],
+      "modelVideoProfilesPath": "bytedance/cn/model-video-profiles",
+      "modelVoiceFileCount": 2,
+      "modelVoiceFiles": [
+        "bytedance/cn/model-voices/seed-tts-2.0-expressive.json",
+        "bytedance/cn/model-voices/seed-tts-2.0-standard.json"
+      ],
+      "modelVoicesPath": "bytedance/cn/model-voices",
       "modelsPath": "bytedance/cn/models",
       "path": "bytedance/cn/vendor.json",
-      "pricingFileCount": 6,
+      "pricingFileCount": 12,
       "pricingFiles": [
         "bytedance/cn/pricing/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-lite-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-mini-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-0-pro-260215.json",
         "bytedance/cn/pricing/doubao-seed-2-1-pro-260628.json",
-        "bytedance/cn/pricing/doubao-seed-2-1-turbo-260628.json"
+        "bytedance/cn/pricing/doubao-seed-2-1-turbo-260628.json",
+        "bytedance/cn/pricing/doubao-seedance-2-0-260128.json",
+        "bytedance/cn/pricing/doubao-seedance-2-0-fast-260128.json",
+        "bytedance/cn/pricing/doubao-seedream-4-0-250828.json",
+        "bytedance/cn/pricing/seed-music-gensong-v4.json",
+        "bytedance/cn/pricing/seed-tts-2.0-expressive.json",
+        "bytedance/cn/pricing/seed-tts-2.0-standard.json"
       ],
       "pricingPath": "bytedance/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "56b4d5ea3db729dd2aab038eeb9f3dfdeff7cf3a401ceacbd8f8d96411510c30",
-      "vendorCode": "bytedance"
+      "sha256": "ebf967b4f016d19e398c8796c86f6d462c4a123e063510b14ed7023ccf715efa",
+      "vendorCode": "bytedance",
+      "videoProfileCount": 6,
+      "voiceCount": 1,
+      "voicesPath": "bytedance/cn/voices.json"
     },
     {
       "billingCurrency": "USD",
@@ -191,30 +283,48 @@
       "familiesPath": "bytedance/global/families.json",
       "familyCount": 2,
       "marketScope": "international",
-      "modelCount": 5,
+      "modelCount": 8,
       "modelFiles": [
         "bytedance/global/models/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/global/models/doubao-seed-2-0-lite-260215.json",
         "bytedance/global/models/doubao-seed-2-0-mini-260215.json",
         "bytedance/global/models/doubao-seed-2-0-pro-260215.json",
-        "bytedance/global/models/doubao-seedance-2-0-260128.json"
+        "bytedance/global/models/doubao-seed-2-1-pro-260628.json",
+        "bytedance/global/models/doubao-seed-2-1-turbo-260628.json",
+        "bytedance/global/models/doubao-seedance-2-0-260128.json",
+        "bytedance/global/models/doubao-seedance-2-0-fast-260128.json"
       ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "bytedance/global/model-video-profiles/doubao-seedance-2-0-260128.json",
+        "bytedance/global/model-video-profiles/doubao-seedance-2-0-fast-260128.json"
+      ],
+      "modelVideoProfilesPath": "bytedance/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "bytedance/global/model-voices",
       "modelsPath": "bytedance/global/models",
       "path": "bytedance/global/vendor.json",
-      "pricingFileCount": 5,
+      "pricingFileCount": 8,
       "pricingFiles": [
         "bytedance/global/pricing/doubao-seed-2-0-code-preview-260215.json",
         "bytedance/global/pricing/doubao-seed-2-0-lite-260215.json",
         "bytedance/global/pricing/doubao-seed-2-0-mini-260215.json",
         "bytedance/global/pricing/doubao-seed-2-0-pro-260215.json",
-        "bytedance/global/pricing/doubao-seedance-2-0-260128.json"
+        "bytedance/global/pricing/doubao-seed-2-1-pro-260628.json",
+        "bytedance/global/pricing/doubao-seed-2-1-turbo-260628.json",
+        "bytedance/global/pricing/doubao-seedance-2-0-260128.json",
+        "bytedance/global/pricing/doubao-seedance-2-0-fast-260128.json"
       ],
       "pricingPath": "bytedance/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "bytedance/global/rankings.json",
       "regionCode": "global",
-      "sha256": "014424af1309e2b6fb65ac9bbf664d15102052aaaeb21509f871fc7771c9b761",
-      "vendorCode": "bytedance"
+      "sha256": "faca2ba91ab228def4fcf21a18b10d03426c6c366a93bb383a4630129e4db4bf",
+      "vendorCode": "bytedance",
+      "videoProfileCount": 5,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -229,6 +339,12 @@
         "deepseek/cn/models/deepseek-v4-flash.json",
         "deepseek/cn/models/deepseek-v4-pro.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "deepseek/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "deepseek/cn/model-voices",
       "modelsPath": "deepseek/cn/models",
       "path": "deepseek/cn/vendor.json",
       "pricingFileCount": 2,
@@ -241,7 +357,10 @@
       "rankingsPath": "deepseek/cn/rankings.json",
       "regionCode": "cn",
       "sha256": "c5710f56ae8e899cda8b31898ac0b27297528393e51d4d4939258c33a167e34d",
-      "vendorCode": "deepseek"
+      "vendorCode": "deepseek",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -256,6 +375,12 @@
         "deepseek/global/models/deepseek-v4-flash.json",
         "deepseek/global/models/deepseek-v4-pro.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "deepseek/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "deepseek/global/model-voices",
       "modelsPath": "deepseek/global/models",
       "path": "deepseek/global/vendor.json",
       "pricingFileCount": 2,
@@ -268,7 +393,10 @@
       "rankingsPath": "deepseek/global/rankings.json",
       "regionCode": "global",
       "sha256": "9f7b2c0aeb29f608b1543af41c5428c9b2ca17018d8f86954f29e783ccacc8bb",
-      "vendorCode": "deepseek"
+      "vendorCode": "deepseek",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -276,24 +404,49 @@
       "catalogKeyPrefix": "elevenlabs/",
       "displayName": "ElevenLabs",
       "familiesPath": "elevenlabs/global/families.json",
-      "familyCount": 1,
+      "familyCount": 4,
       "marketScope": "global",
-      "modelCount": 1,
+      "modelCount": 7,
       "modelFiles": [
-        "elevenlabs/global/models/eleven_text_to_sound_v2.json"
+        "elevenlabs/global/models/eleven_flash_v2_5.json",
+        "elevenlabs/global/models/eleven_multilingual_v2.json",
+        "elevenlabs/global/models/eleven_text_to_sound_v2.json",
+        "elevenlabs/global/models/eleven_v3.json",
+        "elevenlabs/global/models/music_v2.json",
+        "elevenlabs/global/models/scribe_v2_realtime.json",
+        "elevenlabs/global/models/scribe_v2.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "elevenlabs/global/model-video-profiles",
+      "modelVoiceFileCount": 3,
+      "modelVoiceFiles": [
+        "elevenlabs/global/model-voices/eleven_flash_v2_5.json",
+        "elevenlabs/global/model-voices/eleven_multilingual_v2.json",
+        "elevenlabs/global/model-voices/eleven_v3.json"
+      ],
+      "modelVoicesPath": "elevenlabs/global/model-voices",
       "modelsPath": "elevenlabs/global/models",
       "path": "elevenlabs/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 7,
       "pricingFiles": [
-        "elevenlabs/global/pricing/eleven_text_to_sound_v2.json"
+        "elevenlabs/global/pricing/eleven_flash_v2_5.json",
+        "elevenlabs/global/pricing/eleven_multilingual_v2.json",
+        "elevenlabs/global/pricing/eleven_text_to_sound_v2.json",
+        "elevenlabs/global/pricing/eleven_v3.json",
+        "elevenlabs/global/pricing/music_v2.json",
+        "elevenlabs/global/pricing/scribe_v2_realtime.json",
+        "elevenlabs/global/pricing/scribe_v2.json"
       ],
       "pricingPath": "elevenlabs/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "elevenlabs/global/rankings.json",
       "regionCode": "global",
-      "sha256": "b8d456dfa2ac719623048a872639ca79d9f9d60135b3f16bcad6bab4f19e3dfe",
-      "vendorCode": "elevenlabs"
+      "sha256": "2c246ce69a7cfb4d9292b722da7eda18b9fb5723cadde9534c22e4159ff4770c",
+      "vendorCode": "elevenlabs",
+      "videoProfileCount": 0,
+      "voiceCount": 1,
+      "voicesPath": "elevenlabs/global/voices.json"
     },
     {
       "billingCurrency": "USD",
@@ -301,10 +454,13 @@
       "catalogKeyPrefix": "google/",
       "displayName": "Google",
       "familiesPath": "google/global/families.json",
-      "familyCount": 5,
+      "familyCount": 7,
       "marketScope": "global",
-      "modelCount": 18,
+      "modelCount": 23,
       "modelFiles": [
+        "google/global/models/gemini-2.5-flash-image.json",
+        "google/global/models/gemini-2.5-flash-preview-tts.json",
+        "google/global/models/gemini-2.5-pro-preview-tts.json",
         "google/global/models/gemini-3-flash-preview.json",
         "google/global/models/gemini-3-pro-image.json",
         "google/global/models/gemini-3.1-flash-image-preview.json",
@@ -317,17 +473,36 @@
         "google/global/models/gemini-3.1-pro.json",
         "google/global/models/gemini-3.5-flash.json",
         "google/global/models/gemini-embedding-2.json",
+        "google/global/models/imagen-4.0-fast-generate-001.json",
         "google/global/models/imagen-4.0-generate-001.json",
+        "google/global/models/imagen-4.0-ultra-generate-001.json",
         "google/global/models/lyria-2.json",
         "google/global/models/lyria-3.json",
         "google/global/models/veo-3.1-fast-generate-preview.json",
         "google/global/models/veo-3.1-generate-preview.json",
         "google/global/models/veo-3.1-lite-generate-preview.json"
       ],
+      "modelVideoProfileFileCount": 3,
+      "modelVideoProfileFiles": [
+        "google/global/model-video-profiles/veo-3.1-fast-generate-preview.json",
+        "google/global/model-video-profiles/veo-3.1-generate-preview.json",
+        "google/global/model-video-profiles/veo-3.1-lite-generate-preview.json"
+      ],
+      "modelVideoProfilesPath": "google/global/model-video-profiles",
+      "modelVoiceFileCount": 3,
+      "modelVoiceFiles": [
+        "google/global/model-voices/gemini-2.5-flash-preview-tts.json",
+        "google/global/model-voices/gemini-2.5-pro-preview-tts.json",
+        "google/global/model-voices/gemini-3.1-flash-tts-preview.json"
+      ],
+      "modelVoicesPath": "google/global/model-voices",
       "modelsPath": "google/global/models",
       "path": "google/global/vendor.json",
-      "pricingFileCount": 18,
+      "pricingFileCount": 23,
       "pricingFiles": [
+        "google/global/pricing/gemini-2.5-flash-image.json",
+        "google/global/pricing/gemini-2.5-flash-preview-tts.json",
+        "google/global/pricing/gemini-2.5-pro-preview-tts.json",
         "google/global/pricing/gemini-3-flash-preview.json",
         "google/global/pricing/gemini-3-pro-image.json",
         "google/global/pricing/gemini-3.1-flash-image-preview.json",
@@ -340,7 +515,9 @@
         "google/global/pricing/gemini-3.1-pro.json",
         "google/global/pricing/gemini-3.5-flash.json",
         "google/global/pricing/gemini-embedding-2.json",
+        "google/global/pricing/imagen-4.0-fast-generate-001.json",
         "google/global/pricing/imagen-4.0-generate-001.json",
+        "google/global/pricing/imagen-4.0-ultra-generate-001.json",
         "google/global/pricing/lyria-2.json",
         "google/global/pricing/lyria-3.json",
         "google/global/pricing/veo-3.1-fast-generate-preview.json",
@@ -351,8 +528,11 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "google/global/rankings.json",
       "regionCode": "global",
-      "sha256": "750eb1e0b18b35f3857da82a3f37451c2dcd52526910ae5ada3a95ed66e600e6",
-      "vendorCode": "google"
+      "sha256": "df1cf1ae82e8f53306ca1a36e86373f2e60e21d5a89478c88f5b1ded9a4e1122",
+      "vendorCode": "google",
+      "videoProfileCount": 7,
+      "voiceCount": 8,
+      "voicesPath": "google/global/voices.json"
     },
     {
       "billingCurrency": "CNY",
@@ -360,22 +540,45 @@
       "catalogKeyPrefix": "kuaishou/",
       "displayName": "Kuaishou",
       "familiesPath": "kuaishou/cn/families.json",
-      "familyCount": 1,
+      "familyCount": 2,
       "marketScope": "china_mainland",
-      "modelCount": 1,
+      "modelCount": 5,
       "modelFiles": [
-        "kuaishou/cn/models/kling-v3-0-preview.json"
+        "kuaishou/cn/models/kling-sound-t2a.json",
+        "kuaishou/cn/models/kling-sound-v2a.json",
+        "kuaishou/cn/models/kling-v3-0-preview.json",
+        "kuaishou/cn/models/kling-v3-omni.json",
+        "kuaishou/cn/models/kling-v3.json"
       ],
+      "modelVideoProfileFileCount": 3,
+      "modelVideoProfileFiles": [
+        "kuaishou/cn/model-video-profiles/kling-v3-0-preview.json",
+        "kuaishou/cn/model-video-profiles/kling-v3-omni.json",
+        "kuaishou/cn/model-video-profiles/kling-v3.json"
+      ],
+      "modelVideoProfilesPath": "kuaishou/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "kuaishou/cn/model-voices",
       "modelsPath": "kuaishou/cn/models",
       "path": "kuaishou/cn/vendor.json",
-      "pricingFileCount": 0,
-      "pricingFiles": [],
+      "pricingFileCount": 5,
+      "pricingFiles": [
+        "kuaishou/cn/pricing/kling-sound-t2a.json",
+        "kuaishou/cn/pricing/kling-sound-v2a.json",
+        "kuaishou/cn/pricing/kling-v3-0-preview.json",
+        "kuaishou/cn/pricing/kling-v3-omni.json",
+        "kuaishou/cn/pricing/kling-v3.json"
+      ],
       "pricingPath": "kuaishou/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "ddad6aa0245d6a7906ba36586511140b7c27d2a0529ced5ea450a7da210fe22b",
-      "vendorCode": "kuaishou"
+      "sha256": "2f9bb3f07abe9648d32a94ef5c25a960f3b2c4ac2708cf3f98e8cec51cff9da4",
+      "vendorCode": "kuaishou",
+      "videoProfileCount": 12,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -383,24 +586,118 @@
       "catalogKeyPrefix": "kuaishou/",
       "displayName": "Kuaishou",
       "familiesPath": "kuaishou/global/families.json",
-      "familyCount": 1,
+      "familyCount": 2,
       "marketScope": "international",
-      "modelCount": 1,
+      "modelCount": 5,
       "modelFiles": [
-        "kuaishou/global/models/kling-v3-0-preview.json"
+        "kuaishou/global/models/kling-sound-t2a.json",
+        "kuaishou/global/models/kling-sound-v2a.json",
+        "kuaishou/global/models/kling-v3-0-preview.json",
+        "kuaishou/global/models/kling-v3-omni.json",
+        "kuaishou/global/models/kling-v3.json"
       ],
+      "modelVideoProfileFileCount": 3,
+      "modelVideoProfileFiles": [
+        "kuaishou/global/model-video-profiles/kling-v3-0-preview.json",
+        "kuaishou/global/model-video-profiles/kling-v3-omni.json",
+        "kuaishou/global/model-video-profiles/kling-v3.json"
+      ],
+      "modelVideoProfilesPath": "kuaishou/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "kuaishou/global/model-voices",
       "modelsPath": "kuaishou/global/models",
       "path": "kuaishou/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 5,
       "pricingFiles": [
-        "kuaishou/global/pricing/kling-v3-0-preview.json"
+        "kuaishou/global/pricing/kling-sound-t2a.json",
+        "kuaishou/global/pricing/kling-sound-v2a.json",
+        "kuaishou/global/pricing/kling-v3-0-preview.json",
+        "kuaishou/global/pricing/kling-v3-omni.json",
+        "kuaishou/global/pricing/kling-v3.json"
       ],
       "pricingPath": "kuaishou/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "kuaishou/global/rankings.json",
       "regionCode": "global",
-      "sha256": "3e1e12072b4302caa86d2e491768e48fe5a9a11b7ef6998f8e44fbda06b56bbc",
-      "vendorCode": "kuaishou"
+      "sha256": "ecb8dde5bc81233bc8e403a4cfafd58f28d47916940aec7036277ea390ef8599",
+      "vendorCode": "kuaishou",
+      "videoProfileCount": 11,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "US",
+      "catalogKeyPrefix": "luma_ai/",
+      "displayName": "Luma AI",
+      "familiesPath": "luma_ai/global/families.json",
+      "familyCount": 1,
+      "marketScope": "global",
+      "modelCount": 2,
+      "modelFiles": [
+        "luma_ai/global/models/ray-2.json",
+        "luma_ai/global/models/ray-flash-2.json"
+      ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "luma_ai/global/model-video-profiles/ray-2.json",
+        "luma_ai/global/model-video-profiles/ray-flash-2.json"
+      ],
+      "modelVideoProfilesPath": "luma_ai/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "luma_ai/global/model-voices",
+      "modelsPath": "luma_ai/global/models",
+      "path": "luma_ai/global/vendor.json",
+      "pricingFileCount": 2,
+      "pricingFiles": [
+        "luma_ai/global/pricing/ray-2.json",
+        "luma_ai/global/pricing/ray-flash-2.json"
+      ],
+      "pricingPath": "luma_ai/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "luma_ai/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "1e4c7cfad64c99fbffb278b29da66f106c4399decbd7b3830391e48ab9b600f4",
+      "vendorCode": "luma_ai",
+      "videoProfileCount": 4,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "CNY",
+      "billingJurisdiction": "CN",
+      "catalogKeyPrefix": "meituan/",
+      "displayName": "Meituan",
+      "familiesPath": "meituan/cn/families.json",
+      "familyCount": 1,
+      "marketScope": "china_mainland",
+      "modelCount": 1,
+      "modelFiles": [
+        "meituan/cn/models/longcat-1.0.json"
+      ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "meituan/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "meituan/cn/model-voices",
+      "modelsPath": "meituan/cn/models",
+      "path": "meituan/cn/vendor.json",
+      "pricingFileCount": 1,
+      "pricingFiles": [
+        "meituan/cn/pricing/longcat-1.0.json"
+      ],
+      "pricingPath": "meituan/cn/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "meituan/cn/rankings.json",
+      "regionCode": "cn",
+      "sha256": "bb6b68c6bb3abfa9be26e51ce869d1d6c82dda74b2a2e30b0fedf800c3c8274a",
+      "vendorCode": "meituan",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -408,34 +705,54 @@
       "catalogKeyPrefix": "minimax/",
       "displayName": "MiniMax",
       "familiesPath": "minimax/cn/families.json",
-      "familyCount": 1,
+      "familyCount": 4,
       "marketScope": "china_mainland",
-      "modelCount": 6,
+      "modelCount": 10,
       "modelFiles": [
+        "minimax/cn/models/image-01.json",
         "minimax/cn/models/M2-her.json",
         "minimax/cn/models/MiniMax-M2.5-highspeed.json",
         "minimax/cn/models/MiniMax-M2.5.json",
         "minimax/cn/models/MiniMax-M2.7-highspeed.json",
         "minimax/cn/models/MiniMax-M2.7.json",
-        "minimax/cn/models/MiniMax-M3.json"
+        "minimax/cn/models/MiniMax-M3.json",
+        "minimax/cn/models/music-2.6.json",
+        "minimax/cn/models/speech-2.8-hd.json",
+        "minimax/cn/models/speech-2.8-turbo.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "minimax/cn/model-video-profiles",
+      "modelVoiceFileCount": 2,
+      "modelVoiceFiles": [
+        "minimax/cn/model-voices/speech-2.8-hd.json",
+        "minimax/cn/model-voices/speech-2.8-turbo.json"
+      ],
+      "modelVoicesPath": "minimax/cn/model-voices",
       "modelsPath": "minimax/cn/models",
       "path": "minimax/cn/vendor.json",
-      "pricingFileCount": 6,
+      "pricingFileCount": 10,
       "pricingFiles": [
+        "minimax/cn/pricing/image-01.json",
         "minimax/cn/pricing/M2-her.json",
         "minimax/cn/pricing/MiniMax-M2.5-highspeed.json",
         "minimax/cn/pricing/MiniMax-M2.5.json",
         "minimax/cn/pricing/MiniMax-M2.7-highspeed.json",
         "minimax/cn/pricing/MiniMax-M2.7.json",
-        "minimax/cn/pricing/MiniMax-M3.json"
+        "minimax/cn/pricing/MiniMax-M3.json",
+        "minimax/cn/pricing/music-2.6.json",
+        "minimax/cn/pricing/speech-2.8-hd.json",
+        "minimax/cn/pricing/speech-2.8-turbo.json"
       ],
       "pricingPath": "minimax/cn/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "1aa254680782ea86348d47b93500ad61eafa0e73c428346e0b9fa7fe7a6c2a8a",
-      "vendorCode": "minimax"
+      "sha256": "7ecafc7c9b6b3325ef207e90c4f2508ad8387077735c1c307e64d73b222f5351",
+      "vendorCode": "minimax",
+      "videoProfileCount": 0,
+      "voiceCount": 1,
+      "voicesPath": "minimax/cn/voices.json"
     },
     {
       "billingCurrency": "USD",
@@ -443,34 +760,66 @@
       "catalogKeyPrefix": "minimax/",
       "displayName": "MiniMax",
       "familiesPath": "minimax/global/families.json",
-      "familyCount": 1,
+      "familyCount": 5,
       "marketScope": "international",
-      "modelCount": 6,
+      "modelCount": 14,
       "modelFiles": [
+        "minimax/global/models/hailuo-02.json",
+        "minimax/global/models/hailuo-2.3-fast.json",
+        "minimax/global/models/hailuo-2.3.json",
+        "minimax/global/models/image-01.json",
         "minimax/global/models/M2-her.json",
         "minimax/global/models/MiniMax-M2.5-highspeed.json",
         "minimax/global/models/MiniMax-M2.5.json",
         "minimax/global/models/MiniMax-M2.7-highspeed.json",
         "minimax/global/models/MiniMax-M2.7.json",
-        "minimax/global/models/MiniMax-M3.json"
+        "minimax/global/models/MiniMax-M3.json",
+        "minimax/global/models/music-2.6.json",
+        "minimax/global/models/music-cover.json",
+        "minimax/global/models/speech-2.8-hd.json",
+        "minimax/global/models/speech-2.8-turbo.json"
       ],
+      "modelVideoProfileFileCount": 3,
+      "modelVideoProfileFiles": [
+        "minimax/global/model-video-profiles/hailuo-02.json",
+        "minimax/global/model-video-profiles/hailuo-2.3-fast.json",
+        "minimax/global/model-video-profiles/hailuo-2.3.json"
+      ],
+      "modelVideoProfilesPath": "minimax/global/model-video-profiles",
+      "modelVoiceFileCount": 2,
+      "modelVoiceFiles": [
+        "minimax/global/model-voices/speech-2.8-hd.json",
+        "minimax/global/model-voices/speech-2.8-turbo.json"
+      ],
+      "modelVoicesPath": "minimax/global/model-voices",
       "modelsPath": "minimax/global/models",
       "path": "minimax/global/vendor.json",
-      "pricingFileCount": 6,
+      "pricingFileCount": 14,
       "pricingFiles": [
+        "minimax/global/pricing/hailuo-02.json",
+        "minimax/global/pricing/hailuo-2.3-fast.json",
+        "minimax/global/pricing/hailuo-2.3.json",
+        "minimax/global/pricing/image-01.json",
         "minimax/global/pricing/M2-her.json",
         "minimax/global/pricing/MiniMax-M2.5-highspeed.json",
         "minimax/global/pricing/MiniMax-M2.5.json",
         "minimax/global/pricing/MiniMax-M2.7-highspeed.json",
         "minimax/global/pricing/MiniMax-M2.7.json",
-        "minimax/global/pricing/MiniMax-M3.json"
+        "minimax/global/pricing/MiniMax-M3.json",
+        "minimax/global/pricing/music-2.6.json",
+        "minimax/global/pricing/music-cover.json",
+        "minimax/global/pricing/speech-2.8-hd.json",
+        "minimax/global/pricing/speech-2.8-turbo.json"
       ],
       "pricingPath": "minimax/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "minimax/global/rankings.json",
       "regionCode": "global",
-      "sha256": "51ea7c4ee12f5f540cad2e8945825587f4431bef15230277e6a03982b77236ef",
-      "vendorCode": "minimax"
+      "sha256": "0c843a23143d6f6d4d9f7b43b0fee6612de3acc3d48159efd6dd59fb983c58bb",
+      "vendorCode": "minimax",
+      "videoProfileCount": 6,
+      "voiceCount": 1,
+      "voicesPath": "minimax/global/voices.json"
     },
     {
       "billingCurrency": "CNY",
@@ -487,6 +836,12 @@
         "moonshot/cn/models/kimi-k2.7-code-01hw.json",
         "moonshot/cn/models/kimi-k2.7-code.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "moonshot/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "moonshot/cn/model-voices",
       "modelsPath": "moonshot/cn/models",
       "path": "moonshot/cn/vendor.json",
       "pricingFileCount": 4,
@@ -501,7 +856,10 @@
       "rankingsPath": "moonshot/cn/rankings.json",
       "regionCode": "cn",
       "sha256": "724a80b8e298e2400af3b3156fb977b43e00729420c753c0a9d49c9da61074cb",
-      "vendorCode": "moonshot"
+      "vendorCode": "moonshot",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -518,6 +876,12 @@
         "moonshot/global/models/kimi-k2.7-code-01hw.json",
         "moonshot/global/models/kimi-k2.7-code.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "moonshot/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "moonshot/global/model-voices",
       "modelsPath": "moonshot/global/models",
       "path": "moonshot/global/vendor.json",
       "pricingFileCount": 4,
@@ -532,7 +896,46 @@
       "rankingsPath": "moonshot/global/rankings.json",
       "regionCode": "global",
       "sha256": "733091646b7e7d11d3d0632f87f5ec4b5f805111173f0535de2d38a4596469cc",
-      "vendorCode": "moonshot"
+      "vendorCode": "moonshot",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "GLOBAL",
+      "catalogKeyPrefix": "mureka/",
+      "displayName": "Mureka",
+      "familiesPath": "mureka/global/families.json",
+      "familyCount": 1,
+      "marketScope": "global",
+      "modelCount": 2,
+      "modelFiles": [
+        "mureka/global/models/mureka-o1.json",
+        "mureka/global/models/mureka-v7.5.json"
+      ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "mureka/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "mureka/global/model-voices",
+      "modelsPath": "mureka/global/models",
+      "path": "mureka/global/vendor.json",
+      "pricingFileCount": 2,
+      "pricingFiles": [
+        "mureka/global/pricing/mureka-o1.json",
+        "mureka/global/pricing/mureka-v7.5.json"
+      ],
+      "pricingPath": "mureka/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "mureka/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "364d7a49d6a14b5622384d38712f651aea3f0bf200a585880740cfe695be4c5a",
+      "vendorCode": "mureka",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -540,11 +943,13 @@
       "catalogKeyPrefix": "openai/",
       "displayName": "OpenAI",
       "familiesPath": "openai/global/families.json",
-      "familyCount": 5,
+      "familyCount": 7,
       "marketScope": "global",
-      "modelCount": 17,
+      "modelCount": 27,
       "modelFiles": [
         "openai/global/models/gpt-4o-mini-transcribe.json",
+        "openai/global/models/gpt-4o-mini-tts.json",
+        "openai/global/models/gpt-4o-transcribe-diarize.json",
         "openai/global/models/gpt-4o-transcribe.json",
         "openai/global/models/gpt-5.2.json",
         "openai/global/models/gpt-5.4-mini.json",
@@ -553,6 +958,9 @@
         "openai/global/models/gpt-5.4.json",
         "openai/global/models/gpt-5.5-pro.json",
         "openai/global/models/gpt-5.5.json",
+        "openai/global/models/gpt-5.6-luna.json",
+        "openai/global/models/gpt-5.6-sol.json",
+        "openai/global/models/gpt-5.6-terra.json",
         "openai/global/models/gpt-image-1.5.json",
         "openai/global/models/gpt-image-2.json",
         "openai/global/models/gpt-realtime-1.5.json",
@@ -560,13 +968,32 @@
         "openai/global/models/gpt-realtime-mini.json",
         "openai/global/models/gpt-realtime-translate.json",
         "openai/global/models/gpt-realtime-whisper.json",
-        "openai/global/models/text-embedding-3-small.json"
+        "openai/global/models/sora-2-pro.json",
+        "openai/global/models/sora-2.json",
+        "openai/global/models/text-embedding-3-large.json",
+        "openai/global/models/text-embedding-3-small.json",
+        "openai/global/models/tts-1-hd.json",
+        "openai/global/models/whisper-1.json"
       ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "openai/global/model-video-profiles/sora-2-pro.json",
+        "openai/global/model-video-profiles/sora-2.json"
+      ],
+      "modelVideoProfilesPath": "openai/global/model-video-profiles",
+      "modelVoiceFileCount": 2,
+      "modelVoiceFiles": [
+        "openai/global/model-voices/gpt-4o-mini-tts.json",
+        "openai/global/model-voices/tts-1-hd.json"
+      ],
+      "modelVoicesPath": "openai/global/model-voices",
       "modelsPath": "openai/global/models",
       "path": "openai/global/vendor.json",
-      "pricingFileCount": 17,
+      "pricingFileCount": 27,
       "pricingFiles": [
         "openai/global/pricing/gpt-4o-mini-transcribe.json",
+        "openai/global/pricing/gpt-4o-mini-tts.json",
+        "openai/global/pricing/gpt-4o-transcribe-diarize.json",
         "openai/global/pricing/gpt-4o-transcribe.json",
         "openai/global/pricing/gpt-5.2.json",
         "openai/global/pricing/gpt-5.4-mini.json",
@@ -575,6 +1002,9 @@
         "openai/global/pricing/gpt-5.4.json",
         "openai/global/pricing/gpt-5.5-pro.json",
         "openai/global/pricing/gpt-5.5.json",
+        "openai/global/pricing/gpt-5.6-luna.json",
+        "openai/global/pricing/gpt-5.6-sol.json",
+        "openai/global/pricing/gpt-5.6-terra.json",
         "openai/global/pricing/gpt-image-1.5.json",
         "openai/global/pricing/gpt-image-2.json",
         "openai/global/pricing/gpt-realtime-1.5.json",
@@ -582,14 +1012,140 @@
         "openai/global/pricing/gpt-realtime-mini.json",
         "openai/global/pricing/gpt-realtime-translate.json",
         "openai/global/pricing/gpt-realtime-whisper.json",
-        "openai/global/pricing/text-embedding-3-small.json"
+        "openai/global/pricing/sora-2-pro.json",
+        "openai/global/pricing/sora-2.json",
+        "openai/global/pricing/text-embedding-3-large.json",
+        "openai/global/pricing/text-embedding-3-small.json",
+        "openai/global/pricing/tts-1-hd.json",
+        "openai/global/pricing/whisper-1.json"
       ],
       "pricingPath": "openai/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "openai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "781f2bf43228c0706cc0c7e1dd8f637b63911c46c08f773905076aea5a597f07",
-      "vendorCode": "openai"
+      "sha256": "57fa28ba4b2dedd8518a57960ac330c99e2801685e80b879fe46d45837e668bd",
+      "vendorCode": "openai",
+      "videoProfileCount": 4,
+      "voiceCount": 11,
+      "voicesPath": "openai/global/voices.json"
+    },
+    {
+      "billingCurrency": "CNY",
+      "billingJurisdiction": "CN",
+      "catalogKeyPrefix": "pixverse/",
+      "displayName": "PixVerse",
+      "familiesPath": "pixverse/cn/families.json",
+      "familyCount": 1,
+      "marketScope": "china_mainland",
+      "modelCount": 2,
+      "modelFiles": [
+        "pixverse/cn/models/pixverse-c1-t2v.json",
+        "pixverse/cn/models/pixverse-v6-t2v.json"
+      ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "pixverse/cn/model-video-profiles/pixverse-c1-t2v.json",
+        "pixverse/cn/model-video-profiles/pixverse-v6-t2v.json"
+      ],
+      "modelVideoProfilesPath": "pixverse/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "pixverse/cn/model-voices",
+      "modelsPath": "pixverse/cn/models",
+      "path": "pixverse/cn/vendor.json",
+      "pricingFileCount": 2,
+      "pricingFiles": [
+        "pixverse/cn/pricing/pixverse-c1-t2v.json",
+        "pixverse/cn/pricing/pixverse-v6-t2v.json"
+      ],
+      "pricingPath": "pixverse/cn/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "pixverse/cn/rankings.json",
+      "regionCode": "cn",
+      "sha256": "b644d4dea610754371bccc8cda18149741af1259436093ca48d52b017353d640",
+      "vendorCode": "pixverse",
+      "videoProfileCount": 2,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "GLOBAL",
+      "catalogKeyPrefix": "pixverse/",
+      "displayName": "PixVerse",
+      "familiesPath": "pixverse/global/families.json",
+      "familyCount": 1,
+      "marketScope": "global",
+      "modelCount": 1,
+      "modelFiles": [
+        "pixverse/global/models/pixverse-v6.json"
+      ],
+      "modelVideoProfileFileCount": 1,
+      "modelVideoProfileFiles": [
+        "pixverse/global/model-video-profiles/pixverse-v6.json"
+      ],
+      "modelVideoProfilesPath": "pixverse/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "pixverse/global/model-voices",
+      "modelsPath": "pixverse/global/models",
+      "path": "pixverse/global/vendor.json",
+      "pricingFileCount": 1,
+      "pricingFiles": [
+        "pixverse/global/pricing/pixverse-v6.json"
+      ],
+      "pricingPath": "pixverse/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "pixverse/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "80787d33a7299a418f23a6b861ecfd915a2a8f30bf5415f89131552614ce1453",
+      "vendorCode": "pixverse",
+      "videoProfileCount": 3,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "US",
+      "catalogKeyPrefix": "runway/",
+      "displayName": "Runway",
+      "familiesPath": "runway/global/families.json",
+      "familyCount": 2,
+      "marketScope": "global",
+      "modelCount": 4,
+      "modelFiles": [
+        "runway/global/models/gen4_image_turbo.json",
+        "runway/global/models/gen4_image.json",
+        "runway/global/models/gen4_turbo.json",
+        "runway/global/models/gen4.5.json"
+      ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "runway/global/model-video-profiles/gen4_turbo.json",
+        "runway/global/model-video-profiles/gen4.5.json"
+      ],
+      "modelVideoProfilesPath": "runway/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "runway/global/model-voices",
+      "modelsPath": "runway/global/models",
+      "path": "runway/global/vendor.json",
+      "pricingFileCount": 4,
+      "pricingFiles": [
+        "runway/global/pricing/gen4_image_turbo.json",
+        "runway/global/pricing/gen4_image.json",
+        "runway/global/pricing/gen4_turbo.json",
+        "runway/global/pricing/gen4.5.json"
+      ],
+      "pricingPath": "runway/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "runway/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "562089990abc2103ae3212be7dbf867f1a688a05c64ae0cd6f811c86e1662ba0",
+      "vendorCode": "runway",
+      "videoProfileCount": 4,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -597,24 +1153,39 @@
       "catalogKeyPrefix": "stability_ai/",
       "displayName": "Stability AI",
       "familiesPath": "stability_ai/global/families.json",
-      "familyCount": 1,
+      "familyCount": 3,
       "marketScope": "global",
-      "modelCount": 1,
+      "modelCount": 4,
       "modelFiles": [
+        "stability_ai/global/models/stable-audio-2.5-sfx.json",
+        "stability_ai/global/models/stable-audio-2.5.json",
+        "stability_ai/global/models/stable-image-core.json",
         "stability_ai/global/models/stable-image-ultra.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "stability_ai/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "stability_ai/global/model-voices",
       "modelsPath": "stability_ai/global/models",
       "path": "stability_ai/global/vendor.json",
-      "pricingFileCount": 1,
+      "pricingFileCount": 4,
       "pricingFiles": [
+        "stability_ai/global/pricing/stable-audio-2.5-sfx.json",
+        "stability_ai/global/pricing/stable-audio-2.5.json",
+        "stability_ai/global/pricing/stable-image-core.json",
         "stability_ai/global/pricing/stable-image-ultra.json"
       ],
       "pricingPath": "stability_ai/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "stability_ai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "747fcbe54732b6eef5ce58f5f5424de6a4a42f3bc9fd5da6fd9553d16652c498",
-      "vendorCode": "stability_ai"
+      "sha256": "c153b7f83d23a6793db63bc62dc74a691291db827ced393363212cbd7079fda8",
+      "vendorCode": "stability_ai",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -630,6 +1201,12 @@
         "stepfun/cn/models/step-3.5-flash.json",
         "stepfun/cn/models/step-3.7-flash.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "stepfun/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "stepfun/cn/model-voices",
       "modelsPath": "stepfun/cn/models",
       "path": "stepfun/cn/vendor.json",
       "pricingFileCount": 3,
@@ -643,7 +1220,10 @@
       "rankingsPath": "stepfun/cn/rankings.json",
       "regionCode": "cn",
       "sha256": "32410a92230b6c4ae4c185ff875e876698eec9baed686c090a7c5903f2aab392",
-      "vendorCode": "stepfun"
+      "vendorCode": "stepfun",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -657,6 +1237,12 @@
       "modelFiles": [
         "suno/global/models/suno-v5.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "suno/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "suno/global/model-voices",
       "modelsPath": "suno/global/models",
       "path": "suno/global/vendor.json",
       "pricingFileCount": 1,
@@ -668,7 +1254,10 @@
       "rankingsPath": "suno/global/rankings.json",
       "regionCode": "global",
       "sha256": "82ff8c7911c4f9fa2911956ac56113861b34ea78a0cff351160db935895eb878",
-      "vendorCode": "suno"
+      "vendorCode": "suno",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -684,6 +1273,12 @@
         "tencent/cn/models/hunyuan-2.0-thinking-20251109.json",
         "tencent/cn/models/hunyuan-turbos-latest.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "tencent/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "tencent/cn/model-voices",
       "modelsPath": "tencent/cn/models",
       "path": "tencent/cn/vendor.json",
       "pricingFileCount": 3,
@@ -697,7 +1292,96 @@
       "rankingsPath": "tencent/cn/rankings.json",
       "regionCode": "cn",
       "sha256": "05dd5ecf1a9db5c9466d61b6c443eadc72b6ea776b2db3059a9a2c25c7f0bca0",
-      "vendorCode": "tencent"
+      "vendorCode": "tencent",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "CNY",
+      "billingJurisdiction": "CN",
+      "catalogKeyPrefix": "vidu/",
+      "displayName": "Vidu",
+      "familiesPath": "vidu/cn/families.json",
+      "familyCount": 2,
+      "marketScope": "china_mainland",
+      "modelCount": 4,
+      "modelFiles": [
+        "vidu/cn/models/audio1.0-text2audio.json",
+        "vidu/cn/models/audio1.0-timing2audio.json",
+        "vidu/cn/models/viduq3-pro.json",
+        "vidu/cn/models/viduq3-turbo.json"
+      ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "vidu/cn/model-video-profiles/viduq3-pro.json",
+        "vidu/cn/model-video-profiles/viduq3-turbo.json"
+      ],
+      "modelVideoProfilesPath": "vidu/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "vidu/cn/model-voices",
+      "modelsPath": "vidu/cn/models",
+      "path": "vidu/cn/vendor.json",
+      "pricingFileCount": 4,
+      "pricingFiles": [
+        "vidu/cn/pricing/audio1.0-text2audio.json",
+        "vidu/cn/pricing/audio1.0-timing2audio.json",
+        "vidu/cn/pricing/viduq3-pro.json",
+        "vidu/cn/pricing/viduq3-turbo.json"
+      ],
+      "pricingPath": "vidu/cn/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "vidu/cn/rankings.json",
+      "regionCode": "cn",
+      "sha256": "4815f9f9c2f848c6c68e88fad74077fa8b7f297f9b4b63a0704835d179907929",
+      "vendorCode": "vidu",
+      "videoProfileCount": 4,
+      "voiceCount": 0,
+      "voicesPath": null
+    },
+    {
+      "billingCurrency": "USD",
+      "billingJurisdiction": "GLOBAL",
+      "catalogKeyPrefix": "vidu/",
+      "displayName": "Vidu",
+      "familiesPath": "vidu/global/families.json",
+      "familyCount": 2,
+      "marketScope": "global",
+      "modelCount": 4,
+      "modelFiles": [
+        "vidu/global/models/audio1.0-text2audio.json",
+        "vidu/global/models/audio1.0-timing2audio.json",
+        "vidu/global/models/viduq3-pro.json",
+        "vidu/global/models/viduq3-turbo.json"
+      ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "vidu/global/model-video-profiles/viduq3-pro.json",
+        "vidu/global/model-video-profiles/viduq3-turbo.json"
+      ],
+      "modelVideoProfilesPath": "vidu/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "vidu/global/model-voices",
+      "modelsPath": "vidu/global/models",
+      "path": "vidu/global/vendor.json",
+      "pricingFileCount": 4,
+      "pricingFiles": [
+        "vidu/global/pricing/audio1.0-text2audio.json",
+        "vidu/global/pricing/audio1.0-timing2audio.json",
+        "vidu/global/pricing/viduq3-pro.json",
+        "vidu/global/pricing/viduq3-turbo.json"
+      ],
+      "pricingPath": "vidu/global/pricing",
+      "rankingSnapshotCount": 1,
+      "rankingsPath": "vidu/global/rankings.json",
+      "regionCode": "global",
+      "sha256": "b9eb9700c12da5e836e133f9976377d4215cb96cd092ef98e045417901e793ac",
+      "vendorCode": "vidu",
+      "videoProfileCount": 6,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -705,32 +1389,52 @@
       "catalogKeyPrefix": "xai/",
       "displayName": "xAI",
       "familiesPath": "xai/global/families.json",
-      "familyCount": 1,
+      "familyCount": 2,
       "marketScope": "global",
-      "modelCount": 5,
+      "modelCount": 9,
       "modelFiles": [
         "xai/global/models/grok-4.20-0309-non-reasoning.json",
         "xai/global/models/grok-4.20-0309-reasoning.json",
         "xai/global/models/grok-4.20-multi-agent-0309.json",
         "xai/global/models/grok-4.3.json",
-        "xai/global/models/grok-build-0.1.json"
+        "xai/global/models/grok-build-0.1.json",
+        "xai/global/models/grok-imagine-image-quality.json",
+        "xai/global/models/grok-imagine-image.json",
+        "xai/global/models/grok-imagine-video-1.5.json",
+        "xai/global/models/grok-imagine-video.json"
       ],
+      "modelVideoProfileFileCount": 2,
+      "modelVideoProfileFiles": [
+        "xai/global/model-video-profiles/grok-imagine-video-1.5.json",
+        "xai/global/model-video-profiles/grok-imagine-video.json"
+      ],
+      "modelVideoProfilesPath": "xai/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "xai/global/model-voices",
       "modelsPath": "xai/global/models",
       "path": "xai/global/vendor.json",
-      "pricingFileCount": 5,
+      "pricingFileCount": 9,
       "pricingFiles": [
         "xai/global/pricing/grok-4.20-0309-non-reasoning.json",
         "xai/global/pricing/grok-4.20-0309-reasoning.json",
         "xai/global/pricing/grok-4.20-multi-agent-0309.json",
         "xai/global/pricing/grok-4.3.json",
-        "xai/global/pricing/grok-build-0.1.json"
+        "xai/global/pricing/grok-build-0.1.json",
+        "xai/global/pricing/grok-imagine-image-quality.json",
+        "xai/global/pricing/grok-imagine-image.json",
+        "xai/global/pricing/grok-imagine-video-1.5.json",
+        "xai/global/pricing/grok-imagine-video.json"
       ],
       "pricingPath": "xai/global/pricing",
       "rankingSnapshotCount": 1,
       "rankingsPath": "xai/global/rankings.json",
       "regionCode": "global",
-      "sha256": "01b4ee77babaed729c0779b4a0dfa8bd09fceaa832fc6ed9a79f93a02d799cff",
-      "vendorCode": "xai"
+      "sha256": "9166c3feeb96ea17827abf6cd294b34f3994423c5d63a98dd2e4f71c04fe02a3",
+      "vendorCode": "xai",
+      "videoProfileCount": 6,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -747,6 +1451,12 @@
         "xiaomi/cn/models/mimo-v2.5-pro.json",
         "xiaomi/cn/models/mimo-v2.5.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "xiaomi/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "xiaomi/cn/model-voices",
       "modelsPath": "xiaomi/cn/models",
       "path": "xiaomi/cn/vendor.json",
       "pricingFileCount": 4,
@@ -760,8 +1470,11 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xiaomi/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "cfb91b212854c240e023fbf55e343193f7b4741ea1a17ec749a4f5fa320c9b0b",
-      "vendorCode": "xiaomi"
+      "sha256": "78dc4bf09940e970dc17dc30a8081ad869c9364974ee38cd629c4aba6ea0d1b6",
+      "vendorCode": "xiaomi",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "USD",
@@ -778,6 +1491,12 @@
         "xiaomi/global/models/mimo-v2.5-pro.json",
         "xiaomi/global/models/mimo-v2.5.json"
       ],
+      "modelVideoProfileFileCount": 0,
+      "modelVideoProfileFiles": [],
+      "modelVideoProfilesPath": "xiaomi/global/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "xiaomi/global/model-voices",
       "modelsPath": "xiaomi/global/models",
       "path": "xiaomi/global/vendor.json",
       "pricingFileCount": 4,
@@ -791,8 +1510,11 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "xiaomi/global/rankings.json",
       "regionCode": "global",
-      "sha256": "00b273ebec48addee4c2cc25b0f807aa1dfc095c5d345e421ee37cacda82f906",
-      "vendorCode": "xiaomi"
+      "sha256": "23c939852a2288974932102c638dd880a0e0842391f722c8e9d9f9048afdf8f2",
+      "vendorCode": "xiaomi",
+      "videoProfileCount": 0,
+      "voiceCount": 0,
+      "voicesPath": null
     },
     {
       "billingCurrency": "CNY",
@@ -800,17 +1522,31 @@
       "catalogKeyPrefix": "zhipu/",
       "displayName": "Zhipu AI",
       "familiesPath": "zhipu/cn/families.json",
-      "familyCount": 1,
+      "familyCount": 4,
       "marketScope": "china_mainland",
-      "modelCount": 2,
+      "modelCount": 5,
       "modelFiles": [
+        "zhipu/cn/models/cogvideox-3.json",
+        "zhipu/cn/models/cogview-4-250304.json",
+        "zhipu/cn/models/embedding-3.json",
         "zhipu/cn/models/glm-5.1.json",
         "zhipu/cn/models/glm-5.2.json"
       ],
+      "modelVideoProfileFileCount": 1,
+      "modelVideoProfileFiles": [
+        "zhipu/cn/model-video-profiles/cogvideox-3.json"
+      ],
+      "modelVideoProfilesPath": "zhipu/cn/model-video-profiles",
+      "modelVoiceFileCount": 0,
+      "modelVoiceFiles": [],
+      "modelVoicesPath": "zhipu/cn/model-voices",
       "modelsPath": "zhipu/cn/models",
       "path": "zhipu/cn/vendor.json",
-      "pricingFileCount": 2,
+      "pricingFileCount": 5,
       "pricingFiles": [
+        "zhipu/cn/pricing/cogvideox-3.json",
+        "zhipu/cn/pricing/cogview-4-250304.json",
+        "zhipu/cn/pricing/embedding-3.json",
         "zhipu/cn/pricing/glm-5.1.json",
         "zhipu/cn/pricing/glm-5.2.json"
       ],
@@ -818,8 +1554,13 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "zhipu/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "feed565bf6e2f066920259907c80fd2452e31f2ed1d0943137617b2106775cbf",
-      "vendorCode": "zhipu"
+      "sha256": "944e21ad986c7f59ede04500ec85ffbdb26beab5a21f523c63f19bb2be042ed0",
+      "vendorCode": "zhipu",
+      "videoProfileCount": 2,
+      "voiceCount": 0,
+      "voicesPath": null
     }
-  ]
+  ],
+  "videoProfileCount": 87,
+  "voiceCount": 23
 }

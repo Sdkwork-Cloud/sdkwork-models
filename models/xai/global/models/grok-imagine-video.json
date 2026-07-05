@@ -1,0 +1,46 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "xai/grok-imagine-video",
+  "colorToken": "#111827",
+  "description": "Grok Imagine video generation model supporting text, image, and video inputs.",
+  "displayName": "Grok Imagine Video",
+  "familyCode": "grok-imagine",
+  "inputModalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "latencyP50Ms": 48000,
+  "latencyP95Ms": 150000,
+  "lifecycle": "active",
+  "modelId": "grok-imagine-video",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "800.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/developers/models/grok-imagine-video"
+  },
+  "strengths": [
+    "Video generation",
+    "Image to video",
+    "Video to video"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.880000"
+}

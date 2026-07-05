@@ -9,7 +9,7 @@
   "contextTokens": 32768,
   "description": "Gemini 3.1 Flash preview model for image generation and multimodal image editing.",
   "displayName": "Gemini 3.1 Flash Image Preview",
-  "familyCode": "gemini",
+  "familyCode": "gemini-image",
   "inputModalities": [
     "text",
     "image"

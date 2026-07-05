@@ -112,12 +112,104 @@ export interface ModelPricing {
   prices: ModelPrice[];
 }
 
+export interface TtsVoice {
+  schemaVersion: string;
+  voiceId: string;
+  displayName: string;
+  vendorCode: string;
+  regionCode: string;
+  catalogKey: string;
+  primaryLocale: string;
+  supportedLocales?: string[];
+  gender: string;
+  voiceKind: string;
+  provisioningMode: "static" | "vendor_api";
+  wireParameter: string;
+  vendorVoiceNamespace?: string;
+  styles?: string[];
+  roles?: string[];
+  previewAudioUrl?: string;
+  vendorListEndpoint?: string;
+  description?: string;
+  lifecycle: string;
+  releaseStage: string;
+  shelfState: string;
+  routingState: string;
+  source: SourceEvidence;
+}
+
+export interface ModelVoiceBinding {
+  voiceKey: string;
+  voiceId: string;
+  isDefault?: boolean;
+  compatibility: "full" | "preview" | "legacy";
+  sortOrder?: number;
+  notes?: string;
+}
+
+export interface ModelVoiceBindingsFile {
+  schemaVersion: string;
+  vendorCode: string;
+  regionCode: string;
+  modelId: string;
+  catalogKey: string;
+  bindings: ModelVoiceBinding[];
+  source: SourceEvidence;
+}
+
+export type VideoGenerationMode =
+  | "text_to_video"
+  | "image_to_video"
+  | "reference_to_video"
+  | "start_end_frame"
+  | "video_extension"
+  | "video_edit"
+  | "multi_shot";
+
+export type VideoDurationPolicy = "fixed" | "discrete" | "range" | "continuous";
+
+export interface VideoGenerationProfile {
+  profileCode: string;
+  catalogKey: string;
+  displayName: string;
+  generationMode: VideoGenerationMode;
+  durationPolicy: VideoDurationPolicy;
+  durationSeconds?: number;
+  durationOptions?: number[];
+  durationTierCode?: string;
+  durationTierCodes?: string[];
+  minDurationSeconds?: number;
+  maxDurationSeconds?: number;
+  durationStepSeconds?: number;
+  resolution: string;
+  resolutionTierCode?: string;
+  aspectRatios?: string[];
+  outputAudio?: boolean;
+  isDefault?: boolean;
+  sortOrder?: number;
+  pricingTierCodes?: string[];
+  wireParameters: Record<string, string>;
+}
+
+export interface ModelVideoProfilesFile {
+  schemaVersion: string;
+  vendorCode: string;
+  regionCode: string;
+  modelId: string;
+  catalogKey: string;
+  profiles: VideoGenerationProfile[];
+  source: SourceEvidence;
+}
+
 export interface VendorCatalog {
   vendorCode: string;
   regionCode: string;
   vendor: ModelVendor;
   models: ModelInfo[];
   pricing: ModelPricing[];
+  voices?: TtsVoice[];
+  modelVoiceBindings?: ModelVoiceBindingsFile[];
+  modelVideoProfiles?: ModelVideoProfilesFile[];
 }
 
 export interface VendorRegionRef {

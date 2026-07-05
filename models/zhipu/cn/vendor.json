@@ -2,7 +2,10 @@
   "billingCurrency": "CNY",
   "billingJurisdiction": "CN",
   "capabilities": [
-    "chat"
+    "chat",
+    "image",
+    "video",
+    "embedding"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -52,7 +55,10 @@
   "legalName": "Zhipu AI",
   "marketScope": "china_mainland",
   "modelFamilies": [
-    "glm"
+    "glm",
+    "cogview",
+    "cogvideo",
+    "zhipu-embedding"
   ],
   "openSource": false,
   "operatingRegions": [
@@ -67,7 +73,8 @@
   },
   "supportedProtocols": [
     "openai_compatible",
-    "anthropic_messages"
+    "anthropic_messages",
+    "vendor_native"
   ],
   "vendorCode": "zhipu",
   "vendorType": "commercial",

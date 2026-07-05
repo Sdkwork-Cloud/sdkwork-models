@@ -1,0 +1,26 @@
+{
+  "catalogKey": "vidu/viduq3-turbo",
+  "currency": "USD",
+  "modelId": "viduq3-turbo",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "vidu-global-viduq3-turbo-second-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "unitPrice": "0.055000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu"
+}

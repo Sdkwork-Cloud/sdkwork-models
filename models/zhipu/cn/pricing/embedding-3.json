@@ -1,0 +1,26 @@
+{
+  "catalogKey": "zhipu/embedding-3",
+  "currency": "CNY",
+  "modelId": "embedding-3",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "embedding_input_token",
+      "minimumQuantity": "0",
+      "priceId": "zhipu-cn-embedding-3-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-3"
+      },
+      "unitPrice": "0.500000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "zhipu"
+}

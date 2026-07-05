@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "doubao-seed-2-0-pro-260215",
+      "defaultModel": "doubao-seed-2-1-pro-260628",
       "displayName": "Doubao Seed (豆包)",
       "familyCode": "doubao-seed",
       "familyType": "llm",

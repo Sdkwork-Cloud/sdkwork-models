@@ -57,7 +57,11 @@
   "legalName": "MiniMax",
   "marketScope": "international",
   "modelFamilies": [
-    "minimax"
+    "minimax",
+    "minimax-music",
+    "minimax-speech",
+    "minimax-image",
+    "minimax-video"
   ],
   "openSource": false,
   "operatingRegions": [
@@ -71,7 +75,8 @@
     "sourceUrl": "https://platform.minimax.io/docs/guides/models-intro"
   },
   "supportedProtocols": [
-    "openai_compatible"
+    "openai_compatible",
+    "vendor_native"
   ],
   "vendorCode": "minimax",
   "vendorType": "commercial",

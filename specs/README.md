@@ -9,18 +9,20 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 | Field | Value |
 | --- | --- |
 | Name | `@sdkwork/models-catalog` |
-| Type | `node-package` |
+| Type | `composed-product-module` |
 | Root | `.` |
 | Domain | `intelligence` |
-| Capability | `model` |
+| Capability | `catalog` |
 | Languages | `javascript`, `typescript`, `python`, `java`, `rust`, `dart` |
-| Status | `standardizing` |
+| Status | `ready` |
 
 ## Contract Manifest
 
 - [component.spec.json](./component.spec.json) is the machine-readable component contract.
-- Consumers integrate through `@sdkwork/models` language SDKs, immutable catalog JSON releases, or the documented catalog tools.
-- Generated SDK language outputs live under `sdkwork-models-<language>/` and must preserve the cross-language catalog query contract.
+- [voice-catalog.spec.json](./voice-catalog.spec.json) defines the TTS speaker catalog contract (`voices.json`, `model-voices/`, app/backend read APIs, SDK helpers).
+- [video-generation-profile.spec.json](./video-generation-profile.spec.json) defines video generation mode, duration tier, and wire-parameter profiles per model (`model-video-profiles/`).
+- Consumers integrate through `@sdkwork/models` language SDKs, generated HTTP SDK families (`@sdkwork/models-{app,backend}-sdk`), immutable catalog JSON releases, or the documented catalog tools.
+- Generated SDK language outputs live under `sdks/sdkwork-models-sdk/` and `sdks/sdkwork-models-{app,backend}-sdk/` and must preserve the cross-language catalog query contract.
 
 ## Canonical Specs
 
@@ -45,11 +47,15 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 
 - `@sdkwork/models` (TypeScript package in `sdks/sdkwork-models-sdk/sdkwork-models-sdk-typescript/`)
 - Equivalent packages in `sdks/sdkwork-models-sdk/sdkwork-models-sdk-python/`, `sdkwork-models-sdk-java/`, `sdkwork-models-sdk-rust/`, and `sdkwork-models-sdk-flutter/`
+- HTTP SDK families: `@sdkwork/models-app-sdk`, `@sdkwork/models-backend-sdk`
 - PC application packages under `apps/sdkwork-models-pc/`
 
 ## SDK Clients
 
-- No generated HTTP/RPC SDK client is declared at this component boundary.
+- `@sdkwork/models-app-sdk` — app catalog read API (`/app/v3/api/ai/*`, including voice list routes)
+- `@sdkwork/models-backend-sdk` — backend admin catalog API (`/backend/v3/api/ai/*`, including voice list and catalog sync)
+
+Materialize generated OpenAPI authorities with `pnpm run openapi:materialize` after `pnpm run openapi:export`. Drift is gated in `pnpm run check`.
 
 ## Local Extension Specs
 
@@ -59,3 +65,4 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 
 - `pnpm run check`
 - `pnpm run verify`
+- `pnpm run openapi:export && pnpm run openapi:materialize && pnpm run sdk:generate`

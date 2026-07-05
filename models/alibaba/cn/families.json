@@ -4,9 +4,33 @@
       "defaultModel": "qwen3.7-max",
       "displayName": "Qwen",
       "familyCode": "qwen",
-      "familyType": "multimodal",
+      "familyType": "llm",
       "primaryModality": "text",
       "sortOrder": 10
+    },
+    {
+      "defaultModel": "wan2.6-t2i",
+      "displayName": "Wanxiang Image",
+      "familyCode": "wanx",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    },
+    {
+      "defaultModel": "wan2.6-t2v",
+      "displayName": "Wanxiang Video",
+      "familyCode": "wanx-video",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 30
+    },
+    {
+      "defaultModel": "text-embedding-v3",
+      "displayName": "Qwen Embedding",
+      "familyCode": "qwen-embedding",
+      "familyType": "embedding",
+      "primaryModality": "embedding",
+      "sortOrder": 40
     }
   ],
   "regionCode": "cn",

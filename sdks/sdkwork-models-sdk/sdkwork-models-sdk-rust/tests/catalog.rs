@@ -4,8 +4,10 @@ use sdkwork_models::{
     get_model_prices, get_model_region_prices, list_available_models,
     list_client_api_compatibility_by_vendor, list_meters, list_models, list_models_by_capability,
     list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
-    list_vendor_regions, list_vendors, load_bundled_catalog, load_catalog, load_vendor_catalog,
-    validate_catalog, ModelCatalog, ModelFilter,
+    list_vendor_regions, list_video_profiles, list_video_profiles_for_model, find_video_profile,
+    list_voices, list_voices_for_model, list_vendors, load_bundled_catalog,
+    load_catalog, load_vendor_catalog, validate_catalog, ModelCatalog, ModelFilter,
+    VideoProfileFilter, VoiceFilter,
 };
 use std::collections::BTreeSet;
 use std::fs;
@@ -180,6 +182,68 @@ fn bundled_catalog_loads_and_queries_models() {
         get_best_reference_price(&catalog, "openai/global/gpt-5.5", "llm_input_token").is_none()
     );
     assert!(validate_catalog(&catalog).is_empty());
+}
+
+#[test]
+fn bundled_catalog_loads_tts_voices() {
+    let catalog = load_bundled_catalog().expect("bundled catalog");
+
+    let openai_voices = list_voices(
+        &catalog,
+        VoiceFilter {
+            vendor_code: Some("openai"),
+            region_code: Some("global"),
+            ..VoiceFilter::default()
+        },
+    );
+    assert!(
+        openai_voices.len() >= 11,
+        "expected OpenAI global TTS voices, got {}",
+        openai_voices.len()
+    );
+
+    let gpt4o_voices = list_voices_for_model(&catalog, "openai/gpt-4o-mini-tts");
+    assert!(
+        !gpt4o_voices.is_empty(),
+        "expected model voice bindings for gpt-4o-mini-tts"
+    );
+
+    let all_voices = list_voices(&catalog, VoiceFilter::default());
+    assert!(
+        all_voices.len() >= 23,
+        "expected bundled TTS voice catalog entries, got {}",
+        all_voices.len()
+    );
+}
+
+#[test]
+fn bundled_catalog_loads_video_generation_profiles() {
+    let catalog = load_bundled_catalog().expect("bundled catalog");
+    let kling_profiles = list_video_profiles(
+        &catalog,
+        VideoProfileFilter {
+            vendor_code: Some("kuaishou"),
+            region_code: Some("global"),
+            ..VideoProfileFilter::default()
+        },
+    );
+    assert!(
+        kling_profiles.len() >= 3,
+        "expected Kling v3 video profiles, got {}",
+        kling_profiles.len()
+    );
+    assert!(
+        !list_video_profiles_for_model(&catalog, "openai/sora-2").is_empty(),
+        "expected Sora 2 video profiles"
+    );
+    assert!(
+        find_video_profile(&catalog, "vidu/viduq3-pro/t2v_5s_720p").is_some(),
+        "expected Vidu Q3 Pro 5s profile"
+    );
+    assert!(
+        list_video_profiles(&catalog, VideoProfileFilter::default()).len() >= 80,
+        "expected full bundled video profile catalog"
+    );
 }
 
 #[test]

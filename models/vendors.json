@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "2026.06.24.4",
+  "catalogVersion": "2026.07.05.3",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -121,13 +121,13 @@
           "displayName": "OpenAI",
           "legalName": "OpenAI, Inc.",
           "marketScope": "global",
-          "modelCount": 17,
+          "modelCount": 27,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "openai/global/vendor.json",
-          "pricingFileCount": 17,
+          "pricingFileCount": 27,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 10,
@@ -256,13 +256,13 @@
           "displayName": "Anthropic",
           "legalName": "Anthropic, PBC",
           "marketScope": "global",
-          "modelCount": 6,
+          "modelCount": 7,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "anthropic/global/vendor.json",
-          "pricingFileCount": 6,
+          "pricingFileCount": 7,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 20,
@@ -280,8 +280,10 @@
     },
     {
       "capabilities": [
+        "audio",
         "chat",
         "image",
+        "music",
         "video"
       ],
       "clientApiCompatibility": {
@@ -341,7 +343,9 @@
           "capabilities": [
             "chat",
             "image",
-            "video"
+            "video",
+            "audio",
+            "music"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -393,13 +397,13 @@
           "displayName": "Google",
           "legalName": "Google LLC",
           "marketScope": "global",
-          "modelCount": 18,
+          "modelCount": 23,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "google/global/vendor.json",
-          "pricingFileCount": 18,
+          "pricingFileCount": 23,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 30,
@@ -520,13 +524,13 @@
           "displayName": "xAI",
           "legalName": "xAI",
           "marketScope": "global",
-          "modelCount": 5,
+          "modelCount": 9,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "xai/global/vendor.json",
-          "pricingFileCount": 5,
+          "pricingFileCount": 9,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 40,
@@ -545,6 +549,7 @@
     {
       "capabilities": [
         "chat",
+        "embedding",
         "image",
         "tool",
         "video"
@@ -744,7 +749,8 @@
           "capabilities": [
             "chat",
             "image",
-            "video"
+            "video",
+            "embedding"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -790,18 +796,19 @@
           "displayName": "Alibaba Cloud",
           "legalName": "Alibaba Cloud",
           "marketScope": "china_mainland",
-          "modelCount": 2,
+          "modelCount": 7,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "alibaba/cn/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 7,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 50,
           "supportedProtocols": [
-            "openai_compatible"
+            "openai_compatible",
+            "vendor_native"
           ]
         },
         {
@@ -1018,7 +1025,8 @@
       "sortOrder": 50,
       "supportedProtocols": [
         "anthropic_messages",
-        "openai_compatible"
+        "openai_compatible",
+        "vendor_native"
       ],
       "vendorCode": "alibaba",
       "vendorType": "commercial"
@@ -1674,7 +1682,10 @@
     },
     {
       "capabilities": [
-        "chat"
+        "chat",
+        "embedding",
+        "image",
+        "video"
       ],
       "clientApiCompatibility": {
         "claude_code": {
@@ -1725,7 +1736,10 @@
           "billingCurrency": "CNY",
           "billingJurisdiction": "CN",
           "capabilities": [
-            "chat"
+            "chat",
+            "image",
+            "video",
+            "embedding"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -1771,28 +1785,153 @@
           "displayName": "Zhipu AI",
           "legalName": "Zhipu AI",
           "marketScope": "china_mainland",
-          "modelCount": 2,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "zhipu/cn/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 80,
           "supportedProtocols": [
             "openai_compatible",
-            "anthropic_messages"
+            "anthropic_messages",
+            "vendor_native"
           ]
         }
       ],
       "sortOrder": 80,
       "supportedProtocols": [
         "anthropic_messages",
-        "openai_compatible"
+        "openai_compatible",
+        "vendor_native"
       ],
       "vendorCode": "zhipu",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "image",
+        "video"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "Runway does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "Runway does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "Runway does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "Runway",
+      "legalName": "Runway AI, Inc.",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "video",
+            "image"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Runway does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Runway does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Runway does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Runway",
+          "legalName": "Runway AI, Inc.",
+          "marketScope": "global",
+          "modelCount": 4,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "runway/global/vendor.json",
+          "pricingFileCount": 4,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 85,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        }
+      ],
+      "sortOrder": 85,
+      "supportedProtocols": [
+        "vendor_native"
+      ],
+      "vendorCode": "runway",
       "vendorType": "commercial"
     },
     {
@@ -1914,6 +2053,500 @@
         "vendor_native"
       ],
       "vendorCode": "baidu",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "video"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "Luma AI does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "Luma AI does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "Luma AI does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "Luma AI",
+      "legalName": "Luma AI, Inc.",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "US",
+          "capabilities": [
+            "video"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Luma AI does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Luma AI does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Luma AI does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Luma AI",
+          "legalName": "Luma AI, Inc.",
+          "marketScope": "global",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "luma_ai/global/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 90,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        }
+      ],
+      "sortOrder": 90,
+      "supportedProtocols": [
+        "vendor_native"
+      ],
+      "vendorCode": "luma_ai",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "sfx",
+        "video"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "Vidu does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "Vidu does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "Vidu does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "Vidu",
+      "legalName": "ShengShu Technology",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "video",
+            "sfx"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Vidu does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Vidu does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Vidu does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Vidu",
+          "legalName": "ShengShu Technology",
+          "marketScope": "china_mainland",
+          "modelCount": 4,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "vidu/cn/vendor.json",
+          "pricingFileCount": 4,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 95,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "video",
+            "sfx"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Vidu does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Vidu does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Vidu does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Vidu",
+          "legalName": "ShengShu Technology",
+          "marketScope": "global",
+          "modelCount": 4,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "vidu/global/vendor.json",
+          "pricingFileCount": 4,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 96,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        }
+      ],
+      "sortOrder": 95,
+      "supportedProtocols": [
+        "vendor_native"
+      ],
+      "vendorCode": "vidu",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "video"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "PixVerse does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "PixVerse does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "PixVerse does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "PixVerse",
+      "legalName": "Beijing Aisy Technology",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "video"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "PixVerse does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "PixVerse does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "PixVerse does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "PixVerse",
+          "legalName": "Beijing Aisy Technology",
+          "marketScope": "china_mainland",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "pixverse/cn/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 100,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        },
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "video"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "PixVerse does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "PixVerse does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "PixVerse does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "PixVerse",
+          "legalName": "Beijing Aisy Technology",
+          "marketScope": "global",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "pixverse/global/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 101,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        }
+      ],
+      "sortOrder": 100,
+      "supportedProtocols": [
+        "vendor_native"
+      ],
+      "vendorCode": "pixverse",
       "vendorType": "commercial"
     },
     {
@@ -2042,6 +2675,7 @@
         "audio",
         "chat",
         "image",
+        "music",
         "video"
       ],
       "clientApiCompatibility": {
@@ -2095,7 +2729,9 @@
           "capabilities": [
             "chat",
             "image",
-            "audio"
+            "audio",
+            "video",
+            "music"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -2141,13 +2777,13 @@
           "displayName": "ByteDance",
           "legalName": "ByteDance",
           "marketScope": "china_mainland",
-          "modelCount": 6,
+          "modelCount": 12,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "bytedance/cn/vendor.json",
-          "pricingFileCount": 6,
+          "pricingFileCount": 12,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 110,
@@ -2160,6 +2796,7 @@
           "billingCurrency": "USD",
           "billingJurisdiction": "GLOBAL",
           "capabilities": [
+            "chat",
             "video"
           ],
           "clientApiCompatibility": {
@@ -2206,13 +2843,13 @@
           "displayName": "ByteDance",
           "legalName": "ByteDance",
           "marketScope": "international",
-          "modelCount": 5,
+          "modelCount": 8,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "bytedance/global/vendor.json",
-          "pricingFileCount": 5,
+          "pricingFileCount": 8,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 111,
@@ -2290,7 +2927,6 @@
           "capabilities": [
             "chat",
             "audio",
-            "video",
             "music",
             "image",
             "tool"
@@ -2339,18 +2975,19 @@
           "displayName": "MiniMax",
           "legalName": "MiniMax",
           "marketScope": "china_mainland",
-          "modelCount": 6,
+          "modelCount": 10,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "minimax/cn/vendor.json",
-          "pricingFileCount": 6,
+          "pricingFileCount": 10,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 121,
           "supportedProtocols": [
-            "openai_compatible"
+            "openai_compatible",
+            "vendor_native"
           ]
         },
         {
@@ -2408,24 +3045,26 @@
           "displayName": "MiniMax",
           "legalName": "MiniMax",
           "marketScope": "international",
-          "modelCount": 6,
+          "modelCount": 14,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "minimax/global/vendor.json",
-          "pricingFileCount": 6,
+          "pricingFileCount": 14,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 120,
           "supportedProtocols": [
-            "openai_compatible"
+            "openai_compatible",
+            "vendor_native"
           ]
         }
       ],
       "sortOrder": 120,
       "supportedProtocols": [
-        "openai_compatible"
+        "openai_compatible",
+        "vendor_native"
       ],
       "vendorCode": "minimax",
       "vendorType": "commercial"
@@ -2555,7 +3194,7 @@
     },
     {
       "capabilities": [
-        "image",
+        "sfx",
         "video"
       ],
       "clientApiCompatibility": {
@@ -2608,7 +3247,7 @@
           "billingJurisdiction": "CN",
           "capabilities": [
             "video",
-            "image"
+            "sfx"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -2654,13 +3293,13 @@
           "displayName": "Kuaishou",
           "legalName": "Kuaishou",
           "marketScope": "china_mainland",
-          "modelCount": 1,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "kuaishou/cn/vendor.json",
-          "pricingFileCount": 0,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 130,
@@ -2673,7 +3312,7 @@
           "billingJurisdiction": "GLOBAL",
           "capabilities": [
             "video",
-            "image"
+            "sfx"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -2719,13 +3358,13 @@
           "displayName": "Kuaishou",
           "legalName": "Kuaishou",
           "marketScope": "international",
-          "modelCount": 1,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "kuaishou/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 130,
@@ -2743,7 +3382,130 @@
     },
     {
       "capabilities": [
-        "image"
+        "chat"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "Meituan LongCat does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "Meituan LongCat does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "Meituan LongCat does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "Meituan",
+      "legalName": "Meituan",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "CNY",
+          "billingJurisdiction": "CN",
+          "capabilities": [
+            "chat"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Meituan LongCat does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Meituan LongCat does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Meituan LongCat does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Meituan",
+          "legalName": "Meituan",
+          "marketScope": "china_mainland",
+          "modelCount": 1,
+          "openSource": false,
+          "operatingRegions": [
+            "CN"
+          ],
+          "path": "meituan/cn/vendor.json",
+          "pricingFileCount": 1,
+          "rankingSnapshotCount": 1,
+          "regionCode": "cn",
+          "sortOrder": 130,
+          "supportedProtocols": [
+            "openai_compatible"
+          ]
+        }
+      ],
+      "sortOrder": 130,
+      "supportedProtocols": [
+        "openai_compatible"
+      ],
+      "vendorCode": "meituan",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "image",
+        "music",
+        "sfx"
       ],
       "clientApiCompatibility": {
         "claude_code": {
@@ -2794,7 +3556,9 @@
           "billingCurrency": "USD",
           "billingJurisdiction": "GLOBAL",
           "capabilities": [
-            "image"
+            "image",
+            "music",
+            "sfx"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -2840,13 +3604,13 @@
           "displayName": "Stability AI",
           "legalName": "Stability AI Ltd.",
           "marketScope": "global",
-          "modelCount": 1,
+          "modelCount": 4,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "stability_ai/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 4,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 140,
@@ -2961,13 +3725,13 @@
           "displayName": "Black Forest Labs",
           "legalName": "Black Forest Labs",
           "marketScope": "global",
-          "modelCount": 1,
+          "modelCount": 2,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "black_forest_labs/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 2,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 150,
@@ -3106,8 +3870,130 @@
     },
     {
       "capabilities": [
-        "audio",
         "music"
+      ],
+      "clientApiCompatibility": {
+        "claude_code": {
+          "apiCodes": [],
+          "clientApiCode": "claude_code",
+          "displayName": "Claude Code",
+          "notes": "Mureka does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "codex": {
+          "apiCodes": [],
+          "clientApiCode": "codex",
+          "displayName": "Codex",
+          "notes": "Mureka does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        },
+        "gemini_cli": {
+          "apiCodes": [],
+          "clientApiCode": "gemini_cli",
+          "displayName": "Gemini CLI",
+          "notes": "Mureka does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+          "protocolCodes": [],
+          "resourceCodes": [],
+          "source": {
+            "observedAt": "2026-06-24T00:00:00Z",
+            "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+          },
+          "supportStatus": "unsupported"
+        }
+      },
+      "displayName": "Mureka",
+      "legalName": "Kunlun Tech",
+      "openSource": false,
+      "regions": [
+        {
+          "billingCurrency": "USD",
+          "billingJurisdiction": "GLOBAL",
+          "capabilities": [
+            "music"
+          ],
+          "clientApiCompatibility": {
+            "claude_code": {
+              "apiCodes": [],
+              "clientApiCode": "claude_code",
+              "displayName": "Claude Code",
+              "notes": "Mureka does not expose the Claude Code client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "codex": {
+              "apiCodes": [],
+              "clientApiCode": "codex",
+              "displayName": "Codex",
+              "notes": "Mureka does not expose the Codex client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            },
+            "gemini_cli": {
+              "apiCodes": [],
+              "clientApiCode": "gemini_cli",
+              "displayName": "Gemini CLI",
+              "notes": "Mureka does not expose the Gemini CLI client API surface directly; use its declared standard protocols instead.",
+              "protocolCodes": [],
+              "resourceCodes": [],
+              "source": {
+                "observedAt": "2026-06-24T00:00:00Z",
+                "sourceUrl": "https://sdkwork.cloud/standards/sdkwork-models/client-api-compatibility"
+              },
+              "supportStatus": "unsupported"
+            }
+          },
+          "displayName": "Mureka",
+          "legalName": "Kunlun Tech",
+          "marketScope": "global",
+          "modelCount": 2,
+          "openSource": false,
+          "operatingRegions": [
+            "GLOBAL"
+          ],
+          "path": "mureka/global/vendor.json",
+          "pricingFileCount": 2,
+          "rankingSnapshotCount": 1,
+          "regionCode": "global",
+          "sortOrder": 165,
+          "supportedProtocols": [
+            "vendor_native"
+          ]
+        }
+      ],
+      "sortOrder": 165,
+      "supportedProtocols": [
+        "vendor_native"
+      ],
+      "vendorCode": "mureka",
+      "vendorType": "commercial"
+    },
+    {
+      "capabilities": [
+        "audio",
+        "music",
+        "sfx"
       ],
       "clientApiCompatibility": {
         "claude_code": {
@@ -3159,7 +4045,8 @@
           "billingJurisdiction": "US",
           "capabilities": [
             "audio",
-            "music"
+            "music",
+            "sfx"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -3205,13 +4092,13 @@
           "displayName": "ElevenLabs",
           "legalName": "ElevenLabs",
           "marketScope": "global",
-          "modelCount": 1,
+          "modelCount": 7,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "elevenlabs/global/vendor.json",
-          "pricingFileCount": 1,
+          "pricingFileCount": 7,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 170,
@@ -3229,10 +4116,7 @@
     },
     {
       "capabilities": [
-        "audio",
-        "chat",
-        "image",
-        "video"
+        "chat"
       ],
       "clientApiCompatibility": {
         "claude_code": {
@@ -3421,10 +4305,7 @@
           "billingCurrency": "CNY",
           "billingJurisdiction": "CN",
           "capabilities": [
-            "chat",
-            "image",
-            "audio",
-            "video"
+            "chat"
           ],
           "clientApiCompatibility": {
             "claude_code": {
@@ -3488,10 +4369,7 @@
           "billingCurrency": "USD",
           "billingJurisdiction": "GLOBAL",
           "capabilities": [
-            "chat",
-            "image",
-            "audio",
-            "video"
+            "chat"
           ],
           "clientApiCompatibility": {
             "claude_code": {

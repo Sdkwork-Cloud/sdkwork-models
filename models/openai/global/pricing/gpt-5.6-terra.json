@@ -1,0 +1,42 @@
+{
+  "catalogKey": "openai/gpt-5.6-terra",
+  "currency": "USD",
+  "modelId": "gpt-5.6-terra",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-5-6-terra-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+      },
+      "unitPrice": "2.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-5-6-terra-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+      },
+      "unitPrice": "15.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "openai"
+}

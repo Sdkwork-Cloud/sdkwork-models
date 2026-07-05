@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "openai/sora-2-pro",
+  "colorToken": "#0d9488",
+  "description": "OpenAI Sora 2 Pro high-fidelity video generation model up to 1080p resolution. OpenAI scheduled API shutdown on 2026-09-24; plan migration before that date.",
+  "displayName": "Sora 2 Pro",
+  "familyCode": "sora",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "sora-2-pro",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "870.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/deprecations"
+  },
+  "strengths": [
+    "Video generation",
+    "High fidelity",
+    "1080p output"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.900000"
+}

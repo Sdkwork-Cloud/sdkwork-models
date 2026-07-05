@@ -77,6 +77,16 @@ def load_vendor_catalog(path_or_url: str | Path, vendor_code: str, region_code: 
     )
     if vendor_index is None:
         raise ValueError(f"vendor region {vendor_code}/{region_code} is not indexed")
+    voices_path = vendor_index.get("voicesPath")
+    voices: list[dict] = []
+    if isinstance(voices_path, str) and voices_path:
+        voices = _read_json(path_or_url, f"models/{voices_path}").get("voices", [])
+    model_voice_bindings = [
+        _read_json(path_or_url, f"models/{path}") for path in vendor_index.get("modelVoiceFiles", [])
+    ]
+    model_video_profiles = [
+        _read_json(path_or_url, f"models/{path}") for path in vendor_index.get("modelVideoProfileFiles", [])
+    ]
     return {
         "vendorCode": vendor_code,
         "regionCode": region_code,
@@ -84,6 +94,9 @@ def load_vendor_catalog(path_or_url: str | Path, vendor_code: str, region_code: 
         "families": _read_json(path_or_url, f"models/{vendor_index['familiesPath']}"),
         "models": [_read_json(path_or_url, f"models/{path}") for path in vendor_index.get("modelFiles", [])],
         "pricing": [_read_json(path_or_url, f"models/{path}") for path in vendor_index.get("pricingFiles", [])],
+        "voices": voices,
+        "modelVoiceBindings": model_voice_bindings,
+        "modelVideoProfiles": model_video_profiles,
     }
 
 

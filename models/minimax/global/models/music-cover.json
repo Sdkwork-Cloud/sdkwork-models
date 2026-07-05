@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "minimax/music-cover",
+  "colorToken": "#1d4ed8",
+  "description": "MiniMax Music Cover generates cover versions from reference audio with style prompts and optional lyric edits.",
+  "displayName": "MiniMax Music Cover",
+  "familyCode": "minimax-music",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 30000,
+  "latencyP95Ms": 100000,
+  "lifecycle": "active",
+  "modelId": "music-cover",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.minimax.io/docs/api-reference/music-generation"
+  },
+  "strengths": [
+    "Cover generation",
+    "Reference audio",
+    "Style transfer"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.860000"
+}

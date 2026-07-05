@@ -1,0 +1,26 @@
+{
+  "catalogKey": "elevenlabs/scribe_v2",
+  "currency": "USD",
+  "modelId": "scribe_v2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "stt_audio_minute",
+      "minimumQuantity": "0",
+      "priceId": "elevenlabs-scribe-v2-minute",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://elevenlabs.io/pricing/api"
+      },
+      "unitPrice": "0.003667",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "elevenlabs"
+}

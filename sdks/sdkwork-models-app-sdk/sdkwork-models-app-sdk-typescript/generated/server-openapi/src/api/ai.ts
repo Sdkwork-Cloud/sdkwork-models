@@ -4,6 +4,112 @@ import type { HttpClient } from '../http/client';
 import type { SdkWorkPageData } from '../types';
 
 
+export interface AiModelVideoProfilesListParams {
+  vendorCode?: string;
+}
+
+export class AiModelVideoProfilesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List model video generation profiles */
+  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
+  }
+}
+
+export interface AiVideoProfilesListParams {
+  vendorCode?: string;
+  regionCode?: string;
+  catalogKey?: string;
+  modelId?: string;
+  generationMode?: string;
+  durationTierCode?: string;
+  resolution?: string;
+}
+
+export class AiVideoProfilesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List video generation profiles */
+  async list(params?: AiVideoProfilesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'catalog_key', value: params?.catalogKey, style: 'form', explode: true, allowReserved: false },
+      { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
+      { name: 'generation_mode', value: params?.generationMode, style: 'form', explode: true, allowReserved: false },
+      { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(appApiPath(`/ai/video_profiles`), query));
+  }
+}
+
+export interface AiModelVoicesListParams {
+  vendorCode?: string;
+}
+
+export class AiModelVoicesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List model TTS voices */
+  async list(modelId: string, params?: AiModelVoicesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
+  }
+}
+
+export interface AiVoicesListParams {
+  vendorCode?: string;
+  regionCode?: string;
+  locale?: string;
+  catalogKey?: string;
+  modelId?: string;
+  q?: string;
+}
+
+export class AiVoicesApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List TTS voices */
+  async list(params?: AiVoicesListParams): Promise<SdkWorkPageData> {
+    const query = buildQueryString([
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'locale', value: params?.locale, style: 'form', explode: true, allowReserved: false },
+      { name: 'catalog_key', value: params?.catalogKey, style: 'form', explode: true, allowReserved: false },
+      { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<SdkWorkPageData>(appendQueryString(appApiPath(`/ai/voices`), query));
+  }
+}
+
 export interface AiModelsListParams {
   modelTypes?: string;
 }
@@ -58,12 +164,20 @@ export class AiApi {
   public readonly modelRankings: AiModelRankingsApi;
   public readonly modelVendors: AiModelVendorsApi;
   public readonly models: AiModelsApi;
+  public readonly voices: AiVoicesApi;
+  public readonly modelVoices: AiModelVoicesApi;
+  public readonly videoProfiles: AiVideoProfilesApi;
+  public readonly modelVideoProfiles: AiModelVideoProfilesApi;
 
   constructor(client: HttpClient) {
     this.client = client;
     this.modelRankings = new AiModelRankingsApi(client);
     this.modelVendors = new AiModelVendorsApi(client);
     this.models = new AiModelsApi(client);
+    this.voices = new AiVoicesApi(client);
+    this.modelVoices = new AiModelVoicesApi(client);
+    this.videoProfiles = new AiVideoProfilesApi(client);
+    this.modelVideoProfiles = new AiModelVideoProfilesApi(client);
   }
 
 }
@@ -80,7 +194,77 @@ function appendQueryString(path: string, rawQueryString: string): string {
   return path.includes('?') ? `${path}&${query}` : `${path}?${query}`;
 }
 
+interface PathParameterSpec {
+  name: string;
+  style: string;
+  explode: boolean;
+}
 
+function serializePathParameter(value: unknown, spec: PathParameterSpec): string {
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  const style = spec.style || 'simple';
+  if (Array.isArray(value)) {
+    return serializePathArray(spec.name, value, style, spec.explode);
+  }
+  if (typeof value === 'object') {
+    return serializePathObject(spec.name, value as Record<string, unknown>, style, spec.explode);
+  }
+  return pathPrefix(spec.name, style, false) + encodePathValue(serializePathPrimitive(value));
+}
+
+function serializePathArray(name: string, values: unknown[], style: string, explode: boolean): string {
+  const serialized = values
+    .filter((item) => item !== undefined && item !== null)
+    .map((item) => encodePathValue(serializePathPrimitive(item)));
+  if (serialized.length === 0) {
+    return pathPrefix(name, style, false);
+  }
+  if (style === 'matrix') {
+    return explode
+      ? serialized.map((item) => `;${name}=${item}`).join('')
+      : `;${name}=${serialized.join(',')}`;
+  }
+  return pathPrefix(name, style, false) + serialized.join(explode ? '.' : ',');
+}
+
+function serializePathObject(name: string, value: Record<string, unknown>, style: string, explode: boolean): string {
+  const entries = Object.entries(value).filter(([, entryValue]) => entryValue !== undefined && entryValue !== null);
+  if (entries.length === 0) {
+    return pathPrefix(name, style, true);
+  }
+  if (style === 'matrix') {
+    return explode
+      ? entries.map(([key, entryValue]) => `;${encodePathValue(key)}=${encodePathValue(serializePathPrimitive(entryValue))}`).join('')
+      : `;${name}=${entries.flatMap(([key, entryValue]) => [encodePathValue(key), encodePathValue(serializePathPrimitive(entryValue))]).join(',')}`;
+  }
+  const serialized = explode
+    ? entries.map(([key, entryValue]) => `${encodePathValue(key)}=${encodePathValue(serializePathPrimitive(entryValue))}`).join(style === 'label' ? '.' : ',')
+    : entries.flatMap(([key, entryValue]) => [encodePathValue(key), encodePathValue(serializePathPrimitive(entryValue))]).join(',');
+  return pathPrefix(name, style, true) + serialized;
+}
+
+function pathPrefix(name: string, style: string, _objectValue: boolean): string {
+  if (style === 'label') return '.';
+  if (style === 'matrix') return `;${name}`;
+  return '';
+}
+
+function encodePathValue(value: string): string {
+  return encodeURIComponent(value);
+}
+
+function serializePathPrimitive(value: unknown): string {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+  return String(value);
+}
 interface QueryParameterSpec {
   name: string;
   value: unknown;

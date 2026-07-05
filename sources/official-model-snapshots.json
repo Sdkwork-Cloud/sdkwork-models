@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "2026.06.24.4",
+  "catalogVersion": "2026.07.05.3",
   "observedAt": "2026-06-24T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
@@ -56,6 +56,18 @@
         },
         {
           "modelId": "M2-her"
+        },
+        {
+          "modelId": "image-01"
+        },
+        {
+          "modelId": "music-2.6"
+        },
+        {
+          "modelId": "speech-2.8-hd"
+        },
+        {
+          "modelId": "speech-2.8-turbo"
         }
       ],
       "observedAt": "2026-06-24T00:00:00Z",
@@ -66,7 +78,7 @@
         "https://platform.minimaxi.com/docs/guides/text-chat"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "427d7af5fd7fa771137833200a2b3a72f8bdb4231da1ae0c9cfde830eb314280",
+      "sourceSnapshotHash": "9abe6b50e508e8230193a781ccbc9682c41fb6aad25e24a9f70b1cfa197981ec",
       "vendorCode": "minimax"
     },
     {
@@ -88,6 +100,30 @@
         },
         {
           "modelId": "M2-her"
+        },
+        {
+          "modelId": "hailuo-02"
+        },
+        {
+          "modelId": "hailuo-2.3"
+        },
+        {
+          "modelId": "hailuo-2.3-fast"
+        },
+        {
+          "modelId": "image-01"
+        },
+        {
+          "modelId": "music-2.6"
+        },
+        {
+          "modelId": "music-cover"
+        },
+        {
+          "modelId": "speech-2.8-hd"
+        },
+        {
+          "modelId": "speech-2.8-turbo"
         }
       ],
       "observedAt": "2026-06-24T00:00:00Z",
@@ -96,10 +132,13 @@
         "https://platform.minimax.io/docs/guides/pricing-paygo",
         "https://platform.minimax.io/docs/guides/text-generation",
         "https://platform.minimax.io/docs/guides/text-chat",
-        "https://www.minimax.io/blog/minimax-m3"
+        "https://www.minimax.io/blog/minimax-m3",
+        "https://platform.minimax.io/docs/guides/pricing-video",
+        "https://platform.minimax.io/docs/guides/image-generation",
+        "https://platform.minimax.io/docs/api-reference/music-generation"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "1e415390a0b9449bf869e8161f34dd8b753baa79859d24580368de7c370799b1",
+      "sourceSnapshotHash": "8180b6930b116d59fdb96173a09c41475e198a326e0d8ad482dc84626efdb8c1",
       "vendorCode": "minimax"
     },
     {

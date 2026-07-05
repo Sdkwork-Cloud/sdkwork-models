@@ -35,5 +35,8 @@ pub fn models_catalog_module_table_names() -> Vec<&'static str> {
         "ai_billing_meter",
         "ai_model_pricing",
         "ai_model_rank_snapshot",
+        "ai_model_voice",
+        "ai_model_voice_binding",
+        "ai_model_video_profile",
     ]
 }

@@ -50,6 +50,9 @@ async fn import_sqlite_model_catalog_connection(
     .await?;
     import_pricing(conn, catalog, &model_ids).await?;
     import_rankings(conn, catalog, &model_ids).await?;
+    let voice_ids = import_voices(conn, catalog).await?;
+    import_voice_bindings(conn, catalog, &model_ids, &voice_ids).await?;
+    import_video_profiles(conn, catalog, &model_ids).await?;
     update_family_defaults(conn, catalog, &model_ids).await?;
     Ok(())
 }
@@ -63,6 +66,30 @@ async fn deactivate_removed_catalog_rows(
         return Ok(());
     }
 
+    deactivate_sqlite_rows_not_in(
+        conn,
+        "ai_model_video_profile",
+        &keys.vendor_codes,
+        "uuid",
+        &keys.video_profile_uuids,
+    )
+    .await?;
+    deactivate_sqlite_rows_not_in(
+        conn,
+        "ai_model_voice_binding",
+        &keys.vendor_codes,
+        "uuid",
+        &keys.voice_binding_uuids,
+    )
+    .await?;
+    deactivate_sqlite_rows_not_in(
+        conn,
+        "ai_model_voice",
+        &keys.vendor_codes,
+        "uuid",
+        &keys.voice_uuids,
+    )
+    .await?;
     deactivate_sqlite_rows_not_in(
         conn,
         "ai_model_rank_snapshot",
@@ -1308,6 +1335,286 @@ async fn import_rankings(
                 .bind(model.win_rate.as_deref().unwrap_or("0"))
                 .bind(model.trend_score.as_deref().unwrap_or("0"))
                 .bind(serde_json::json!({ "modelId": item.model_id, "rankNo": item.rank_no }).to_string())
+                .bind(row_id)
+                .execute(&mut *conn)
+                .await?;
+            }
+        }
+    }
+    Ok(())
+}
+
+async fn import_voices(
+    conn: &mut SqliteConnection,
+    catalog: &ModelCatalog,
+) -> Result<BTreeMap<String, i64>, sqlx::Error> {
+    for vendor in &catalog.vendors {
+        for voice in &vendor.voices {
+            let catalog_key = voice_catalog_key(&voice.vendor_code, &voice.voice_id);
+            let row_id = stable_catalog_id("sdk-voice", &[&voice.vendor_code, &voice.voice_id]);
+            sqlx::query(
+                r#"
+                INSERT INTO ai_model_voice
+                    (uuid, tenant_id, organization_id, data_scope, status, metadata, catalog_key, voice_id, display_name, vendor_code, region_code, primary_locale, supported_locales, gender, voice_kind, provisioning_mode, wire_parameter, vendor_voice_namespace, styles, roles, preview_audio_url, vendor_list_endpoint, lifecycle, release_stage, shelf_state, routing_state, source_url, observed_at, description, id)
+                VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(tenant_id, organization_id, catalog_key) DO UPDATE SET
+                    voice_id = excluded.voice_id,
+                    display_name = excluded.display_name,
+                    vendor_code = excluded.vendor_code,
+                    region_code = excluded.region_code,
+                    primary_locale = excluded.primary_locale,
+                    supported_locales = excluded.supported_locales,
+                    gender = excluded.gender,
+                    voice_kind = excluded.voice_kind,
+                    provisioning_mode = excluded.provisioning_mode,
+                    wire_parameter = excluded.wire_parameter,
+                    vendor_voice_namespace = excluded.vendor_voice_namespace,
+                    styles = excluded.styles,
+                    roles = excluded.roles,
+                    preview_audio_url = excluded.preview_audio_url,
+                    vendor_list_endpoint = excluded.vendor_list_endpoint,
+                    lifecycle = excluded.lifecycle,
+                    release_stage = excluded.release_stage,
+                    shelf_state = excluded.shelf_state,
+                    routing_state = excluded.routing_state,
+                    source_url = excluded.source_url,
+                    observed_at = excluded.observed_at,
+                    description = excluded.description,
+                    metadata = excluded.metadata,
+                    deleted_at = NULL,
+                    deleted_by = NULL,
+                    status = excluded.status
+                "#,
+            )
+            .bind(stable_uuid("sdk-voice", &[&voice.vendor_code, &voice.voice_id]))
+            .bind(SYSTEM_TENANT_ID)
+            .bind(SYSTEM_ORGANIZATION_ID)
+            .bind(SYSTEM_DATA_SCOPE)
+            .bind(voice_catalog_status(voice))
+            .bind(metadata_json(
+                catalog,
+                "sdkwork_models_voice",
+                serde_json::json!({
+                    "sourceUrl": voice.source.source_url,
+                    "lifecycle": voice.lifecycle
+                }),
+            ))
+            .bind(&catalog_key)
+            .bind(&voice.voice_id)
+            .bind(&voice.display_name)
+            .bind(&voice.vendor_code)
+            .bind(&voice.region_code)
+            .bind(&voice.primary_locale)
+            .bind(json_array(&voice.supported_locales))
+            .bind(voice_gender_code(&voice.gender))
+            .bind(&voice.voice_kind)
+            .bind(&voice.provisioning_mode)
+            .bind(&voice.wire_parameter)
+            .bind(voice.vendor_voice_namespace.as_deref())
+            .bind(json_array(&voice.styles))
+            .bind(json_array(&voice.roles))
+            .bind(voice.preview_audio_url.as_deref())
+            .bind(voice.vendor_list_endpoint.as_deref())
+            .bind(lifecycle_code(&voice.lifecycle))
+            .bind(release_stage_code(&voice.release_stage))
+            .bind(shelf_state_code(&voice.shelf_state))
+            .bind(routing_state_code(&voice.routing_state))
+            .bind(&voice.source.source_url)
+            .bind(&voice.source.observed_at)
+            .bind(voice.description.as_deref())
+            .bind(row_id)
+            .execute(&mut *conn)
+            .await?;
+        }
+    }
+    load_voice_ids(conn).await
+}
+
+async fn load_voice_ids(
+    conn: &mut SqliteConnection,
+) -> Result<BTreeMap<String, i64>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, catalog_key FROM ai_model_voice WHERE tenant_id = 0 AND organization_id = 0",
+    )
+    .fetch_all(&mut *conn)
+    .await?;
+    Ok(rows
+        .into_iter()
+        .map(|row| (row.get::<String, _>("catalog_key"), row.get::<i64, _>("id")))
+        .collect())
+}
+
+async fn import_voice_bindings(
+    conn: &mut SqliteConnection,
+    catalog: &ModelCatalog,
+    model_ids: &BTreeMap<String, i64>,
+    voice_ids: &BTreeMap<String, i64>,
+) -> Result<(), sqlx::Error> {
+    for vendor in &catalog.vendors {
+        for binding_file in &vendor.model_voice_bindings {
+            let model_id = model_ids.get(&binding_file.catalog_key).copied();
+            for (index, binding) in binding_file.bindings.iter().enumerate() {
+                let voice_row_id = voice_ids.get(&binding.voice_key).copied();
+                let row_id = stable_catalog_id(
+                    "sdk-voice-bind",
+                    &[&binding_file.catalog_key, &binding.voice_key],
+                );
+                sqlx::query(
+                    r#"
+                    INSERT INTO ai_model_voice_binding
+                        (uuid, tenant_id, organization_id, data_scope, status, metadata, model_id, voice_row_id, model_catalog_key, voice_catalog_key, model_wire_id, voice_wire_id, vendor_code, region_code, compatibility, is_default, sort_order, notes, id)
+                    VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(tenant_id, organization_id, model_catalog_key, voice_catalog_key) DO UPDATE SET
+                        model_id = excluded.model_id,
+                        voice_row_id = excluded.voice_row_id,
+                        model_wire_id = excluded.model_wire_id,
+                        voice_wire_id = excluded.voice_wire_id,
+                        vendor_code = excluded.vendor_code,
+                        region_code = excluded.region_code,
+                        compatibility = excluded.compatibility,
+                        is_default = excluded.is_default,
+                        sort_order = excluded.sort_order,
+                        notes = excluded.notes,
+                        metadata = excluded.metadata,
+                        deleted_at = NULL,
+                        deleted_by = NULL,
+                        status = excluded.status
+                    "#,
+                )
+                .bind(stable_uuid(
+                    "sdk-voice-bind",
+                    &[&binding_file.catalog_key, &binding.voice_key],
+                ))
+                .bind(SYSTEM_TENANT_ID)
+                .bind(SYSTEM_ORGANIZATION_ID)
+                .bind(SYSTEM_DATA_SCOPE)
+                .bind(ACTIVE_STATUS)
+                .bind(metadata_json(
+                    catalog,
+                    "sdkwork_models_voice_binding",
+                    serde_json::json!({
+                        "modelCatalogKey": binding_file.catalog_key,
+                        "voiceCatalogKey": binding.voice_key,
+                        "sourceUrl": binding_file.source.source_url
+                    }),
+                ))
+                .bind(model_id)
+                .bind(voice_row_id)
+                .bind(&binding_file.catalog_key)
+                .bind(&binding.voice_key)
+                .bind(&binding_file.model_id)
+                .bind(&binding.voice_id)
+                .bind(&binding_file.vendor_code)
+                .bind(&binding_file.region_code)
+                .bind(&binding.compatibility)
+                .bind(binding.is_default)
+                .bind(binding.sort_order.unwrap_or(((index as i32) + 1) * 10))
+                .bind(binding.notes.as_deref())
+                .bind(row_id)
+                .execute(&mut *conn)
+                .await?;
+            }
+        }
+    }
+    Ok(())
+}
+
+async fn import_video_profiles(
+    conn: &mut SqliteConnection,
+    catalog: &ModelCatalog,
+    model_ids: &BTreeMap<String, i64>,
+) -> Result<(), sqlx::Error> {
+    for vendor in &catalog.vendors {
+        for profile_file in &vendor.model_video_profiles {
+            let model_row_id = model_ids.get(&profile_file.catalog_key).copied();
+            for profile in &profile_file.profiles {
+                let row_id = stable_catalog_id(
+                    "sdk-video-profile",
+                    &[&profile_file.catalog_key, &profile.profile_code],
+                );
+                sqlx::query(
+                    r#"
+                    INSERT INTO ai_model_video_profile
+                        (uuid, tenant_id, organization_id, data_scope, status, metadata, catalog_key, model_id, model_catalog_key, profile_code, display_name, vendor_code, region_code, generation_mode, duration_policy, duration_seconds, duration_options, duration_tier_code, duration_tier_codes, min_duration_seconds, max_duration_seconds, duration_step_seconds, resolution, resolution_tier_code, aspect_ratios, output_audio, is_default, sort_order, pricing_tier_codes, wire_parameters, source_url, observed_at, id)
+                    VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(tenant_id, organization_id, catalog_key) DO UPDATE SET
+                        model_id = excluded.model_id,
+                        model_catalog_key = excluded.model_catalog_key,
+                        profile_code = excluded.profile_code,
+                        display_name = excluded.display_name,
+                        vendor_code = excluded.vendor_code,
+                        region_code = excluded.region_code,
+                        generation_mode = excluded.generation_mode,
+                        duration_policy = excluded.duration_policy,
+                        duration_seconds = excluded.duration_seconds,
+                        duration_options = excluded.duration_options,
+                        duration_tier_code = excluded.duration_tier_code,
+                        duration_tier_codes = excluded.duration_tier_codes,
+                        min_duration_seconds = excluded.min_duration_seconds,
+                        max_duration_seconds = excluded.max_duration_seconds,
+                        duration_step_seconds = excluded.duration_step_seconds,
+                        resolution = excluded.resolution,
+                        resolution_tier_code = excluded.resolution_tier_code,
+                        aspect_ratios = excluded.aspect_ratios,
+                        output_audio = excluded.output_audio,
+                        is_default = excluded.is_default,
+                        sort_order = excluded.sort_order,
+                        pricing_tier_codes = excluded.pricing_tier_codes,
+                        wire_parameters = excluded.wire_parameters,
+                        source_url = excluded.source_url,
+                        observed_at = excluded.observed_at,
+                        metadata = excluded.metadata,
+                        deleted_at = NULL,
+                        deleted_by = NULL,
+                        status = excluded.status
+                    "#,
+                )
+                .bind(stable_uuid(
+                    "sdk-video-profile",
+                    &[&profile_file.catalog_key, &profile.profile_code],
+                ))
+                .bind(SYSTEM_TENANT_ID)
+                .bind(SYSTEM_ORGANIZATION_ID)
+                .bind(SYSTEM_DATA_SCOPE)
+                .bind(ACTIVE_STATUS)
+                .bind(metadata_json(
+                    catalog,
+                    "sdkwork_models_video_profile",
+                    serde_json::json!({
+                        "modelCatalogKey": profile_file.catalog_key,
+                        "profileCode": profile.profile_code,
+                        "sourceUrl": profile_file.source.source_url
+                    }),
+                ))
+                .bind(&profile.catalog_key)
+                .bind(model_row_id)
+                .bind(&profile_file.catalog_key)
+                .bind(&profile.profile_code)
+                .bind(&profile.display_name)
+                .bind(&profile_file.vendor_code)
+                .bind(&profile_file.region_code)
+                .bind(&profile.generation_mode)
+                .bind(&profile.duration_policy)
+                .bind(profile.duration_seconds)
+                .bind(serde_json::to_string(&profile.duration_options).unwrap_or_else(|_| "[]".to_string()))
+                .bind(profile.duration_tier_code.as_deref())
+                .bind(serde_json::to_string(&profile.duration_tier_codes).unwrap_or_else(|_| "[]".to_string()))
+                .bind(profile.min_duration_seconds)
+                .bind(profile.max_duration_seconds)
+                .bind(profile.duration_step_seconds)
+                .bind(&profile.resolution)
+                .bind(profile.resolution_tier_code.as_deref())
+                .bind(serde_json::to_string(&profile.aspect_ratios).unwrap_or_else(|_| "[]".to_string()))
+                .bind(profile.output_audio.map(|value| if value { 1 } else { 0 }))
+                .bind(if profile.is_default { 1 } else { 0 })
+                .bind(profile.sort_order.unwrap_or(10))
+                .bind(serde_json::to_string(&profile.pricing_tier_codes).unwrap_or_else(|_| "[]".to_string()))
+                .bind(serde_json::to_string(&profile.wire_parameters).unwrap_or_else(|_| "{}".to_string()))
+                .bind(&profile_file.source.source_url)
+                .bind(&profile_file.source.observed_at)
                 .bind(row_id)
                 .execute(&mut *conn)
                 .await?;

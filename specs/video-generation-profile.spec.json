@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.video-generation-profile.spec",
+  "displayName": "Video Generation Profile Catalog Contract",
+  "description": "Structured generation modes, duration tiers, and wire mappings for video models with pricing cross-references via tierCode.",
+  "designReferences": [
+    "OpenAI Video API duration and resolution parameters",
+    "Kling API mode and duration fields",
+    "Vidu Q3 generation mode and duration buckets",
+    "Runway Gen-4 duration and ratio parameters"
+  ],
+  "entities": {
+    "videoGenerationProfile": {
+      "schema": "schemas/model-video-profiles.schema.json",
+      "catalogKeyPattern": "{vendorCode}/{modelId}/{profileCode}",
+      "identityFields": [
+        "profileCode",
+        "generationMode",
+        "durationPolicy",
+        "durationTierCode",
+        "resolution",
+        "wireParameters"
+      ]
+    },
+    "modelVideoProfilesFile": {
+      "schema": "schemas/model-video-profiles.schema.json",
+      "storagePath": "models/{vendorCode}/{regionCode}/model-video-profiles/{modelId}.json",
+      "relationship": "one file per video model with ordered profile list"
+    }
+  },
+  "storageLayout": {
+    "modelVideoProfiles": "models/{vendorCode}/{regionCode}/model-video-profiles/*.json"
+  },
+  "vocabulary": {
+    "generationModes": [
+      "text_to_video",
+      "image_to_video",
+      "reference_to_video",
+      "start_end_frame",
+      "video_extension",
+      "video_edit",
+      "multi_shot"
+    ],
+    "durationPolicies": [
+      "fixed",
+      "discrete",
+      "range",
+      "continuous"
+    ],
+    "durationTierCodes": [
+      "dur_5s",
+      "dur_6s",
+      "dur_8s",
+      "dur_10s",
+      "dur_15s",
+      "dur_30s",
+      "dur_60s"
+    ],
+    "resolutionTierCodes": [
+      "res_512p",
+      "res_720p",
+      "res_768p",
+      "res_1080p",
+      "res_4k"
+    ]
+  },
+  "pricingAlignment": {
+    "perSecond": {
+      "meterCode": "video_output_second",
+      "profilePolicies": ["range", "continuous"]
+    },
+    "perResultBucket": {
+      "meterCode": "video_result",
+      "profilePolicies": ["fixed", "discrete"],
+      "requiresTierCode": true
+    }
+  },
+  "databaseTables": [
+    "ai_model_video_profile"
+  ],
+  "sdkHelpers": [
+    "listVideoProfiles",
+    "listVideoProfilesForModel",
+    "findVideoProfile"
+  ],
+  "apiSurfaces": {
+    "app": [
+      "GET /app/v3/api/ai/video_profiles",
+      "GET /app/v3/api/ai/models/{modelId}/video_profiles"
+    ],
+    "backend": [
+      "GET /backend/v3/api/ai/video_profiles",
+      "GET /backend/v3/api/ai/models/{modelId}/video_profiles"
+    ]
+  },
+  "queryParameters": {
+    "vendor_code": "Vendor filter",
+    "region_code": "Region filter",
+    "model_id": "Model id or catalog key filter",
+    "generation_mode": "Generation mode filter",
+    "duration_tier_code": "Canonical duration tier filter (dur_5s, ...)",
+    "resolution": "Resolution label filter (720p, 1080p, ...)"
+  }
+}

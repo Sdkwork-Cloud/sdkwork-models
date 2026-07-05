@@ -1,0 +1,50 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "bytedance/doubao-seed-2-1-pro-260628",
+  "colorToken": "#b91c1c",
+  "contextTokens": 256000,
+  "description": "Doubao Seed 2.1 Pro deep-thinking flagship for complex coding, long-horizon agents, and multimodal understanding on the international Seed API.",
+  "displayName": "Doubao Seed 2.1 Pro",
+  "familyCode": "doubao-seed",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 820,
+  "latencyP95Ms": 2800,
+  "lifecycle": "active",
+  "maxInputTokens": 256000,
+  "maxOutputTokens": 32768,
+  "modelId": "doubao-seed-2-1-pro-260628",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "930.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://seed.bytedance.com/en/seed2"
+  },
+  "strengths": [
+    "Coding",
+    "Agents",
+    "Reasoning",
+    "Multimodal"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.980000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.920000"
+}

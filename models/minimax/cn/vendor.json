@@ -4,7 +4,6 @@
   "capabilities": [
     "chat",
     "audio",
-    "video",
     "music",
     "image",
     "tool"
@@ -57,7 +56,10 @@
   "legalName": "MiniMax",
   "marketScope": "china_mainland",
   "modelFamilies": [
-    "minimax"
+    "minimax",
+    "minimax-music",
+    "minimax-speech",
+    "minimax-image"
   ],
   "openSource": false,
   "operatingRegions": [
@@ -71,7 +73,8 @@
     "sourceUrl": "https://platform.minimaxi.com/docs/guides/models-intro"
   },
   "supportedProtocols": [
-    "openai_compatible"
+    "openai_compatible",
+    "vendor_native"
   ],
   "vendorCode": "minimax",
   "vendorType": "commercial",

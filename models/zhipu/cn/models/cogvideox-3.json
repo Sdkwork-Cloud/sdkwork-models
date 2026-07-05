@@ -1,0 +1,47 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "zhipu/cogvideox-3",
+  "colorToken": "#1a56db",
+  "description": "Zhipu CogVideoX-3 video generation model with text-to-video, image-to-video, and first-last-frame generation up to 4K.",
+  "displayName": "CogVideoX-3",
+  "familyCode": "cogvideo",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "cogvideox-3",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "810.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/video-generation/cogvideox-3"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "First-last frame",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.910000",
+  "vendorCode": "zhipu",
+  "vendorName": "Zhipu AI",
+  "winRate": "0.870000"
+}

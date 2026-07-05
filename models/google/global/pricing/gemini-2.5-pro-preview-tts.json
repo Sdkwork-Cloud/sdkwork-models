@@ -1,0 +1,42 @@
+{
+  "catalogKey": "google/gemini-2.5-pro-preview-tts",
+  "currency": "USD",
+  "modelId": "gemini-2.5-pro-preview-tts",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-2.5-pro-preview-tts-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "1.250000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "audio_output_token",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-2.5-pro-preview-tts-audio-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
+      },
+      "unitPrice": "20.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "google"
+}

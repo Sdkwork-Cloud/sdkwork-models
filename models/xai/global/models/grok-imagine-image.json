@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "xai/grok-imagine-image",
+  "colorToken": "#111827",
+  "description": "Grok Imagine image generation model for fast text-to-image and image editing workflows.",
+  "displayName": "Grok Imagine Image",
+  "familyCode": "grok-imagine",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 3500,
+  "latencyP95Ms": 12000,
+  "lifecycle": "active",
+  "modelId": "grok-imagine-image",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "800.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.x.ai/developers/models/grok-imagine-image"
+  },
+  "strengths": [
+    "Image generation",
+    "Image editing",
+    "Fast turnaround"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.870000"
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "bytedance",
+  "regionCode": "cn",
+  "voices": [
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "_catalog_dynamic",
+      "displayName": "Seed TTS Voice Library",
+      "vendorCode": "bytedance",
+      "regionCode": "cn",
+      "catalogKey": "bytedance/_catalog_dynamic",
+      "primaryLocale": "zh-CN",
+      "supportedLocales": ["zh-CN", "en-US"],
+      "gender": "unspecified",
+      "voiceKind": "neural",
+      "provisioningMode": "vendor_api",
+      "wireParameter": "voice_type",
+      "vendorListEndpoint": "https://openspeech.bytedance.com/api/v1/voices",
+      "description": "Volcengine Seed TTS voices resolved at runtime from the vendor voice catalog API.",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-04T00:00:00Z",
+        "sourceUrl": "https://www.volcengine.com/docs/6561/132950"
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-4o-transcribe-diarize",
+  "colorToken": "#6366f1",
+  "description": "Speech-to-text model with speaker diarization for multi-speaker transcription.",
+  "displayName": "GPT-4o transcribe diarize",
+  "familyCode": "audio",
+  "inputModalities": [
+    "audio"
+  ],
+  "latencyP50Ms": 900,
+  "latencyP95Ms": 3000,
+  "lifecycle": "active",
+  "modelId": "gpt-4o-transcribe-diarize",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "540.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize"
+  },
+  "strengths": [
+    "STT",
+    "Speaker diarization",
+    "Meeting transcription"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.870000"
+}

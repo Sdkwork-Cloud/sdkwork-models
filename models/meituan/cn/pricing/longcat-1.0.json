@@ -1,0 +1,58 @@
+{
+  "catalogKey": "meituan/longcat-1.0",
+  "currency": "CNY",
+  "modelId": "longcat-1.0",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "meituan-cn-longcat-1.0-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.meituan.com"
+      },
+      "unitPrice": "4.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "meituan-cn-longcat-1.0-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.meituan.com"
+      },
+      "unitPrice": "1.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "meituan-cn-longcat-1.0-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://www.meituan.com"
+      },
+      "unitPrice": "16.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "meituan"
+}

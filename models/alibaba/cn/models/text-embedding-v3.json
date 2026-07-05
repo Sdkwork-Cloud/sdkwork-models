@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "embedding"
+  ],
+  "catalogKey": "alibaba/text-embedding-v3",
+  "colorToken": "#64748b",
+  "description": "Qwen text embedding model for retrieval, semantic search, and RAG pipelines on Alibaba Model Studio.",
+  "displayName": "Text Embedding V3",
+  "familyCode": "qwen-embedding",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 180,
+  "latencyP95Ms": 600,
+  "lifecycle": "active",
+  "modelId": "text-embedding-v3",
+  "outputModalities": [
+    "embedding"
+  ],
+  "primaryCapability": "embedding",
+  "rankScore": "720.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/embedding"
+  },
+  "strengths": [
+    "Embedding",
+    "Retrieval",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.820000",
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.850000"
+}

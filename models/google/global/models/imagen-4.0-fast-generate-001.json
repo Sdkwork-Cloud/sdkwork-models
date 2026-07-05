@@ -1,0 +1,43 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "google/imagen-4.0-fast-generate-001",
+  "colorToken": "#0891b2",
+  "description": "Fast Imagen 4 image generation model optimized for low-latency workflows.",
+  "displayName": "Imagen 4.0 Fast",
+  "familyCode": "imagen",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 2800,
+  "latencyP95Ms": 10000,
+  "lifecycle": "active",
+  "modelId": "imagen-4.0-fast-generate-001",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "740.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/imagen"
+  },
+  "strengths": [
+    "Fast image generation",
+    "Cost efficiency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.820000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.860000"
+}

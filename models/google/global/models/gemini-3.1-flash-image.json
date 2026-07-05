@@ -8,10 +8,13 @@
   "contextTokens": 32768,
   "description": "Gemini 3.1 Flash Image provides fast image generation from text prompts.",
   "displayName": "Gemini 3.1 Flash Image",
-  "familyCode": "imagen",
+  "familyCode": "gemini-image",
   "inputModalities": [
-    "text"
+    "text",
+    "image"
   ],
+  "latencyP50Ms": 2500,
+  "latencyP95Ms": 9000,
   "lifecycle": "active",
   "maxInputTokens": 32768,
   "modelId": "gemini-3.1-flash-image",
@@ -19,6 +22,7 @@
     "image"
   ],
   "primaryCapability": "image",
+  "rankScore": "860.000000",
   "regionCode": "global",
   "releaseStage": "active",
   "routingState": "enabled",
@@ -30,8 +34,14 @@
   },
   "strengths": [
     "Fast image generation",
-    "Cost efficiency"
+    "Cost efficiency",
+    "Image editing"
   ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.920000",
   "vendorCode": "google",
-  "vendorName": "Google"
+  "vendorName": "Google",
+  "winRate": "0.880000"
 }

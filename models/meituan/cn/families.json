@@ -1,0 +1,15 @@
+{
+  "families": [
+    {
+      "defaultModel": "longcat-1.0",
+      "displayName": "LongCat",
+      "familyCode": "longcat",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 10
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "meituan"
+}

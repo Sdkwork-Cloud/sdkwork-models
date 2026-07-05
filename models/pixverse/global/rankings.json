@@ -1,0 +1,20 @@
+{
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "pixverse/pixverse-v6",
+          "modelId": "pixverse-v6",
+          "pricingText": "USD 0.10 / output second (720p)",
+          "rankNo": 17
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "pixverse"
+}

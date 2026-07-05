@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "bytedance/doubao-seedance-2-0-fast-260128",
+  "colorToken": "#dc2626",
+  "description": "ByteDance Seedance 2.0 fast video generation model for lower-latency iteration.",
+  "displayName": "Doubao Seedance 2.0 Fast",
+  "familyCode": "seedance",
+  "inputModalities": [
+    "text",
+    "image",
+    "video",
+    "audio"
+  ],
+  "latencyP50Ms": 35000,
+  "latencyP95Ms": 110000,
+  "lifecycle": "active",
+  "modelId": "doubao-seedance-2-0-fast-260128",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/82379"
+  },
+  "strengths": [
+    "Fast video generation",
+    "Multimodal references",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.840000"
+}

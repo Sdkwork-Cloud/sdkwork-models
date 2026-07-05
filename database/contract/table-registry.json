@@ -1,26 +1,138 @@
 {
   "schemaVersion": 1,
   "kind": "sdkwork.database.table-registry",
-  "moduleId": "sdkwork-models",
   "tables": [
-    { "table": "ai_model_vendor", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_modality", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_api_endpoint", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_vendor_modality", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_vendor_api_endpoint", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_modality_api_endpoint", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_modality", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_api_endpoint", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_resource", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_resource_group", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_resource_group_item", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_family", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_capability", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_catalog_source", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_catalog_sync_run", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_billing_meter", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_pricing", "writeOwner": "sdkwork-models-platform" },
-    { "table": "ai_model_rank_snapshot", "writeOwner": "sdkwork-models-platform" }
+    {
+      "table_name": "ai_model_vendor",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_modality",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_api_endpoint",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_vendor_modality",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_vendor_api_endpoint",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_modality_api_endpoint",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_modality",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_api_endpoint",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_resource",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_resource_group",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_resource_group_item",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_family",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_capability",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_catalog_source",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_catalog_sync_run",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_billing_meter",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_pricing",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_rank_snapshot",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_voice",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_voice_binding",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    },
+    {
+      "table_name": "ai_model_video_profile",
+      "owner": "sdkwork-models-platform",
+      "compliance_level": "L2",
+      "lifecycle_status": "active"
+    }
   ]
 }

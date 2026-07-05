@@ -1,0 +1,26 @@
+{
+  "catalogKey": "minimax/music-cover",
+  "currency": "USD",
+  "modelId": "music-cover",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "api_result",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-music-cover-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "unitPrice": "0.150000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

@@ -4,7 +4,7 @@ Specs: REQUIREMENTS_SPEC.md, DOCUMENTATION_SPEC.md
 Status: active  
 Owner: SDKWork maintainers  
 Application: sdkwork-models  
-Updated: 2026-06-24
+Updated: 2026-07-05
 
 ## 1. Background
 
@@ -19,8 +19,10 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 ## 3. Goals
 
 - Authoritative catalog JSON with verification gates
+- TTS voice (speaker) catalog with many-to-many model bindings and multi-language SDK query helpers
+- Video generation profile catalog (modes, duration tiers, wire mappings) for all video models with DB import sync
 - Multi-tenant admin HTTP API with IAM enforcement
-- App read API for authenticated catalog consumers
+- App read API for catalog consumers (models, vendors, rankings, voices, video profiles)
 - Standalone deployable `sdkwork-models-standalone-gateway` binary
 - Generated TypeScript/Rust/Java/Python/Dart SDK families
 

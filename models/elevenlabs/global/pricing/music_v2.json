@@ -1,0 +1,26 @@
+{
+  "catalogKey": "elevenlabs/music_v2",
+  "currency": "USD",
+  "modelId": "music_v2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "music_output_second",
+      "minimumQuantity": "0",
+      "priceId": "elevenlabs-music-v2-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://elevenlabs.io/pricing/api"
+      },
+      "unitPrice": "0.002500",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "elevenlabs"
+}

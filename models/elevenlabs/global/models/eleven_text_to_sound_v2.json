@@ -1,13 +1,13 @@
 {
   "apiFormat": "vendor_native",
   "capabilities": [
-    "audio"
+    "sfx"
   ],
   "catalogKey": "elevenlabs/eleven_text_to_sound_v2",
   "colorToken": "#7c2d12",
-  "description": "Sound effect generation model.",
+  "description": "ElevenLabs Text to Sound v2 for cinematic sound-effect generation from text prompts with up to 30 seconds output.",
   "displayName": "Eleven Text to Sound v2",
-  "familyCode": "elevenlabs-audio",
+  "familyCode": "elevenlabs-sfx",
   "inputModalities": [
     "text"
   ],
@@ -18,7 +18,7 @@
   "outputModalities": [
     "audio"
   ],
-  "primaryCapability": "audio",
+  "primaryCapability": "sfx",
   "rankScore": "700.000000",
   "regionCode": "global",
   "releaseStage": "active",
@@ -31,7 +31,9 @@
   },
   "strengths": [
     "Sound effects",
-    "Audio generation"
+    "Foley",
+    "Ambient audio",
+    "Prompt-driven SFX"
   ],
   "supportsJsonSchema": false,
   "supportsStreaming": false,

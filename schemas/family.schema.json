@@ -43,6 +43,7 @@
               "image",
               "audio",
               "music",
+              "sfx",
               "video",
               "rerank",
               "multimodal"

@@ -13,7 +13,7 @@ import {
   readString,
   readStringArray,
   type ApiRecord,
-} from '@sdkwork/clawrouter-pc-commons/runtime';
+} from '@sdkwork/clawroutes-pc-commons/runtime';
 import type {
   AdminAiModelCreateRequest,
   AdminAiModelUpdateRequest,
@@ -86,6 +86,9 @@ export type ModelCatalogSyncReport = {
   modelCount: number;
   priceCount: number;
   rankingCount: number;
+  voiceCount: number;
+  voiceBindingCount: number;
+  videoProfileCount: number;
   requestedCatalogVersion: string | null;
   snapshotId: string | null;
   source: string;
@@ -299,6 +302,12 @@ export const KNOWN_VENDORS = [
   { id: 'v_openai', name: 'OpenAI', desc: 'Industry leading LLMs inclusive of GPT-4 and DALL-E.' },
   { id: 'v_anthropic', name: 'Anthropic', desc: 'Claude models focused on safety and high context windows.' },
   { id: 'v_google', name: 'Google', desc: 'Gemini models with native multimodal capabilities.' },
+  { id: 'v_meituan', name: 'Meituan', desc: 'LongCat (Longmao) models focused on Chinese reasoning and enterprise workflows.' },
+  { id: 'v_mureka', name: 'Mureka', desc: 'Kunlun Tech Mureka music generation models for song and instrumental creation.' },
+  { id: 'v_runway', name: 'Runway', desc: 'Runway Gen-4 video generation models for text-to-video and image-to-video.' },
+  { id: 'v_luma_ai', name: 'Luma AI', desc: 'Luma Dream Machine Ray video generation models.' },
+  { id: 'v_vidu', name: 'Vidu', desc: 'ShengShu Technology Vidu Q3 video generation models.' },
+  { id: 'v_pixverse', name: 'PixVerse', desc: 'AIsphere PixVerse V6/C1 video generation (拍我AI).' },
   { id: 'v_meta', name: 'Meta', desc: 'Llama series open source models.' },
   { id: 'v_deepseek', name: 'DeepSeek', desc: 'DeepSeek models focus on reasoning and coding.' },
   { id: 'v_mistral', name: 'Mistral AI', desc: 'High-performance open-weight models from Europe.' },
@@ -493,6 +502,17 @@ export class ModelService {
       capabilityCount: readRequiredNonNegativeInteger(data, 'capabilityCount', 'Model catalog sync response capability count'),
       priceCount: readRequiredNonNegativeInteger(data, 'priceCount', 'Model catalog sync response price count'),
       rankingCount: readRequiredNonNegativeInteger(data, 'rankingCount', 'Model catalog sync response ranking count'),
+      voiceCount: readRequiredNonNegativeInteger(data, 'voiceCount', 'Model catalog sync response voice count'),
+      voiceBindingCount: readRequiredNonNegativeInteger(
+        data,
+        'voiceBindingCount',
+        'Model catalog sync response voice binding count',
+      ),
+      videoProfileCount: readRequiredNonNegativeInteger(
+        data,
+        'videoProfileCount',
+        'Model catalog sync response video profile count',
+      ),
       acceptedCount: readRequiredNonNegativeInteger(data, 'acceptedCount', 'Model catalog sync response accepted count'),
       snapshotId: readNullableString(data, 'snapshotId'),
       syncRunId: readNullableString(data, 'syncRunId'),

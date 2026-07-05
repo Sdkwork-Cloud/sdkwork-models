@@ -1,0 +1,38 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "vidu/viduq3-pro",
+          "modelId": "viduq3-pro",
+          "pricingText": "CNY 0.625 / output second (720p)",
+          "rankNo": 12
+        },
+        {
+          "catalogKey": "vidu/viduq3-turbo",
+          "modelId": "viduq3-turbo",
+          "pricingText": "CNY 0.344 / output second (720p)",
+          "rankNo": 20
+        },
+        {
+          "catalogKey": "vidu/audio1.0-text2audio",
+          "modelId": "audio1.0-text2audio",
+          "pricingText": "CNY 0.3125–0.625 / sfx result",
+          "rankNo": 21
+        },
+        {
+          "catalogKey": "vidu/audio1.0-timing2audio",
+          "modelId": "audio1.0-timing2audio",
+          "pricingText": "CNY 0.3125–0.625 / sfx result",
+          "rankNo": 22
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-03",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "vidu"
+}

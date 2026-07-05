@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "stability_ai/stable-audio-2.5",
+  "colorToken": "#0f766e",
+  "description": "Stability AI Stable Audio 2.5 enterprise music and sound generation with multi-part composition and audio inpainting.",
+  "displayName": "Stable Audio 2.5",
+  "familyCode": "stable-audio",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 2000,
+  "latencyP95Ms": 8000,
+  "lifecycle": "active",
+  "modelId": "stable-audio-2.5",
+  "outputModalities": [
+    "music",
+    "audio"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "740.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.stability.ai/docs"
+  },
+  "strengths": [
+    "Music generation",
+    "Audio inpainting",
+    "Enterprise sound production"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.880000",
+  "vendorCode": "stability_ai",
+  "vendorName": "Stability AI",
+  "winRate": "0.850000"
+}

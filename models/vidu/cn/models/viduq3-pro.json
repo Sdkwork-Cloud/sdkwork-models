@@ -1,0 +1,47 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "vidu/viduq3-pro",
+  "colorToken": "#7c3aed",
+  "description": "Vidu Q3 Pro flagship model for text-to-video, image-to-video, and start-end frame generation with native audio up to 1080p.",
+  "displayName": "Vidu Q3 Pro",
+  "familyCode": "vidu-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "viduq3-pro",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "870.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://platform.vidu.cn/docs/text-to-video"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Start-end frame",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "vidu",
+  "vendorName": "Vidu",
+  "winRate": "0.910000"
+}

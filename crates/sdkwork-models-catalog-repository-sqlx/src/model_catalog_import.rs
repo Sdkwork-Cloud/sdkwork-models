@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 
 use sha2::{Digest, Sha256};
 
-use sdkwork_models::{ClientApiCompatibility, ModelCatalog, ModelInfo, VendorCatalog};
+use sdkwork_models::{ClientApiCompatibility, ModelCatalog, ModelInfo, TtsVoice, VendorCatalog};
 
 use sdkwork_models_contract_service::{
     AdminAiModelItem, AdminAiModelRegionPriceCommand, AdminModelSubject, AdminModelVendorItem,
@@ -24,6 +24,10 @@ pub(crate) fn pricing_catalog_key(vendor_code: &str, model_id: &str) -> String {
 
 pub(crate) fn model_catalog_key(vendor_code: &str, model_id: &str) -> String {
     format!("{vendor_code}/{model_id}")
+}
+
+pub(crate) fn voice_catalog_key(vendor_code: &str, voice_id: &str) -> String {
+    format!("{vendor_code}/{voice_id}")
 }
 
 pub(crate) fn catalog_identity_models(
@@ -92,6 +96,24 @@ pub(crate) fn sdkwork_model_is_publicly_active(model: &ModelInfo) -> bool {
             model.lifecycle.as_str(),
             "deprecated" | "catalog_only" | "retired"
         )
+}
+
+pub(crate) fn sdkwork_voice_is_publicly_active(voice: &TtsVoice) -> bool {
+    matches!(voice.release_stage.as_str(), "active" | "preview")
+        && voice.shelf_state == "listed"
+        && voice.routing_state == "enabled"
+        && !matches!(
+            voice.lifecycle.as_str(),
+            "deprecated" | "catalog_only" | "retired"
+        )
+}
+
+pub(crate) fn voice_catalog_status(voice: &TtsVoice) -> i32 {
+    if sdkwork_voice_is_publicly_active(voice) {
+        ACTIVE_STATUS
+    } else {
+        INACTIVE_STATUS
+    }
 }
 
 pub(crate) fn catalog_model_status(model: &ModelInfo) -> i32 {
@@ -295,6 +317,9 @@ pub(crate) struct CatalogScopeCounts {
     pub capability_count: usize,
     pub price_count: usize,
     pub ranking_count: usize,
+    pub voice_count: usize,
+    pub voice_binding_count: usize,
+    pub video_profile_count: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -305,6 +330,9 @@ pub(crate) struct CatalogAuthorityKeys {
     pub capability_uuids: Vec<String>,
     pub price_uuids: Vec<String>,
     pub ranking_uuids: Vec<String>,
+    pub voice_uuids: Vec<String>,
+    pub voice_binding_uuids: Vec<String>,
+    pub video_profile_uuids: Vec<String>,
     pub vendor_modality_uuids: Vec<String>,
     pub vendor_api_endpoint_uuids: Vec<String>,
     pub model_modality_uuids: Vec<String>,
@@ -320,7 +348,10 @@ impl CatalogScopeCounts {
             + self.model_count
             + self.capability_count
             + self.price_count
-            + self.ranking_count) as i64
+            + self.ranking_count
+            + self.voice_count
+            + self.voice_binding_count
+            + self.video_profile_count) as i64
     }
 }
 
@@ -370,6 +401,17 @@ pub(crate) fn catalog_scope_counts(catalog: &ModelCatalog) -> CatalogScopeCounts
         })
         .filter(|(model_catalog_key, _)| model_catalog_keys.contains(model_catalog_key))
         .count();
+    let voice_count = catalog
+        .vendors
+        .iter()
+        .map(|vendor| vendor.voices.len())
+        .sum();
+    let voice_binding_count = catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| vendor.model_voice_bindings.iter())
+        .map(|binding| binding.bindings.len())
+        .sum();
     CatalogScopeCounts {
         meter_count: catalog.meters.len(),
         vendor_count: catalog_scope_vendor_codes(catalog).len(),
@@ -390,6 +432,14 @@ pub(crate) fn catalog_scope_counts(catalog: &ModelCatalog) -> CatalogScopeCounts
         capability_count,
         price_count,
         ranking_count,
+        voice_count,
+        voice_binding_count,
+        video_profile_count: catalog
+            .vendors
+            .iter()
+            .flat_map(|vendor| vendor.model_video_profiles.iter())
+            .map(|file| file.profiles.len())
+            .sum(),
     }
 }
 
@@ -509,6 +559,55 @@ pub(crate) fn catalog_authority_keys(catalog: &ModelCatalog) -> CatalogAuthority
         .into_iter()
         .collect::<Vec<_>>();
 
+    let voice_uuids = catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| {
+            vendor.voices.iter().map(|voice| {
+                stable_uuid(
+                    "sdk-voice",
+                    &[&voice.vendor_code, &voice.voice_id],
+                )
+            })
+        })
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+
+    let voice_binding_uuids = catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| {
+            vendor.model_voice_bindings.iter().flat_map(|binding_file| {
+                binding_file.bindings.iter().map(|binding| {
+                    stable_uuid(
+                        "sdk-voice-bind",
+                        &[&binding_file.catalog_key, &binding.voice_key],
+                    )
+                })
+            })
+        })
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+
+    let video_profile_uuids = catalog
+        .vendors
+        .iter()
+        .flat_map(|vendor| {
+            vendor.model_video_profiles.iter().flat_map(|profile_file| {
+                profile_file.profiles.iter().map(|profile| {
+                    stable_uuid(
+                        "sdk-video-profile",
+                        &[&profile_file.catalog_key, &profile.profile_code],
+                    )
+                })
+            })
+        })
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+
     CatalogAuthorityKeys {
         vendor_codes,
         catalog_keys,
@@ -516,6 +615,9 @@ pub(crate) fn catalog_authority_keys(catalog: &ModelCatalog) -> CatalogAuthority
         capability_uuids,
         price_uuids,
         ranking_uuids,
+        voice_uuids,
+        voice_binding_uuids,
+        video_profile_uuids,
         vendor_modality_uuids: catalog_vendor_modality_projections(catalog)
             .into_iter()
             .map(|item| item.uuid)
@@ -1615,6 +1717,25 @@ pub(crate) fn shelf_state_code(value: &str) -> i32 {
 pub(crate) fn routing_state_code(value: &str) -> i32 {
     match value {
         "enabled" => 1,
+        _ => 0,
+    }
+}
+
+pub(crate) fn lifecycle_code(value: &str) -> i32 {
+    match value {
+        "preview" => 2,
+        "deprecated" => 3,
+        "catalog_only" => 4,
+        "retired" => 5,
+        _ => 1,
+    }
+}
+
+pub(crate) fn voice_gender_code(value: &str) -> i32 {
+    match value {
+        "male" => 1,
+        "female" => 2,
+        "neutral" => 3,
         _ => 0,
     }
 }

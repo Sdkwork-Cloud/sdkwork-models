@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "sfx"
+  ],
+  "catalogKey": "kuaishou/kling-sound-t2a",
+  "colorToken": "#6d28d9",
+  "description": "Kling 可灵文生音效 API，通过文本提示生成 3 至 10 秒独立音效 MP3 变体。",
+  "displayName": "Kling Sound Text to Audio",
+  "familyCode": "kling-sfx",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 8000,
+  "latencyP95Ms": 30000,
+  "lifecycle": "active",
+  "modelId": "kling-sound-t2a",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "sfx",
+  "rankScore": "780.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/cn/dev/document-api/apiReference/model/textToAudio"
+  },
+  "strengths": [
+    "文生音效",
+    "环境音",
+    "拟音",
+    "3-10秒时长"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "kuaishou",
+  "vendorName": "Kuaishou",
+  "winRate": "0.900000"
+}

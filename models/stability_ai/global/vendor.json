@@ -2,7 +2,9 @@
   "billingCurrency": "USD",
   "billingJurisdiction": "GLOBAL",
   "capabilities": [
-    "image"
+    "image",
+    "music",
+    "sfx"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -52,7 +54,9 @@
   "legalName": "Stability AI Ltd.",
   "marketScope": "global",
   "modelFamilies": [
-    "stable-image"
+    "stable-image",
+    "stable-audio",
+    "stable-audio-sfx"
   ],
   "openSource": false,
   "operatingRegions": [

@@ -2,6 +2,7 @@
   "billingCurrency": "USD",
   "billingJurisdiction": "GLOBAL",
   "capabilities": [
+    "chat",
     "video"
   ],
   "clientApiCompatibility": {
@@ -46,12 +47,13 @@
     }
   },
   "countryRegion": "GLOBAL",
-  "description": "ByteDance international model operation billed in USD. Seedance is modeled as a model family.",
+  "description": "ByteDance international model operation billed in USD with Doubao Seed LLM and Seedance video families.",
   "displayName": "ByteDance",
   "docsUrl": "https://seed.bytedance.com/en/seed2",
   "legalName": "ByteDance",
   "marketScope": "international",
   "modelFamilies": [
+    "doubao-seed",
     "seedance"
   ],
   "openSource": false,

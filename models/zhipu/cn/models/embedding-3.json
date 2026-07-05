@@ -1,0 +1,44 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "embedding"
+  ],
+  "catalogKey": "zhipu/embedding-3",
+  "colorToken": "#64748b",
+  "description": "Zhipu Embedding-3 text vectorization model with configurable dimensions for retrieval and semantic search.",
+  "displayName": "Embedding 3",
+  "familyCode": "zhipu-embedding",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 200,
+  "latencyP95Ms": 700,
+  "lifecycle": "active",
+  "modelId": "embedding-3",
+  "outputModalities": [
+    "embedding"
+  ],
+  "primaryCapability": "embedding",
+  "rankScore": "710.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-3"
+  },
+  "strengths": [
+    "Embedding",
+    "Retrieval",
+    "Configurable dimensions"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.800000",
+  "vendorCode": "zhipu",
+  "vendorName": "Zhipu AI",
+  "winRate": "0.840000"
+}

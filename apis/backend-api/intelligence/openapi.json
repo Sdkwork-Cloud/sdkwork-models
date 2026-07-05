@@ -107,23 +107,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelMappingsCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -213,23 +213,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelMappingsReplaceResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -321,23 +321,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelMappingsResolveCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -532,23 +532,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelMappingsUpdateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -806,23 +806,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelRankingsRefreshResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -914,23 +914,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelRankingsStatusRetrieveResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -1101,23 +1101,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelVendorsCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -1300,23 +1300,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelsCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -1408,23 +1408,19 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/ModelCatalogSyncResult"
+                            }
+                          ]
+                        }
+                      },
                       "required": [
                         "data"
                       ],
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
-                          "properties": {
-                            "item": {
-                              "$ref": "#/components/schemas/ModelsRefreshResult"
-                            }
-                          }
-                        }
-                      }
+                      "type": "object"
                     }
                   ]
                 }
@@ -1619,23 +1615,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/ModelsUpdateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -1808,23 +1804,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/AiResourceGroupsCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -2112,23 +2108,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/AiResourceGroupsUpdateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -2301,23 +2297,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/AiResourcesCreateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -2419,23 +2415,23 @@
                       "$ref": "#/components/schemas/SdkWorkApiResponse"
                     },
                     {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
                           "properties": {
                             "item": {
                               "$ref": "#/components/schemas/AiResourcesUpdateResult"
                             }
-                          }
+                          },
+                          "required": [
+                            "item"
+                          ],
+                          "type": "object"
                         }
-                      }
+                      },
+                      "required": [
+                        "data"
+                      ],
+                      "type": "object"
                     }
                   ]
                 }
@@ -2511,6 +2507,495 @@
           "ops_audit_log"
         ]
       }
+    },
+    "/backend/v3/api/ai/voices": {
+      "get": {
+        "description": "List catalog TTS voices with optional vendor, locale, and model filters.",
+        "operationId": "voices.list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by vendor code."
+          },
+          {
+            "in": "query",
+            "name": "region_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by vendor region code."
+          },
+          {
+            "in": "query",
+            "name": "locale",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "BCP-47 locale filter."
+          },
+          {
+            "in": "query",
+            "name": "catalog_key",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by model catalog key vendor/modelId."
+          },
+          {
+            "in": "query",
+            "name": "model_id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by model id when combined with vendor_code."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text search on displayName and voiceId."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkListResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List TTS voices",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "voices",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
+        "x-write-tables": []
+      }
+    },
+    "/backend/v3/api/ai/models/{modelId}/voices": {
+      "get": {
+        "description": "List TTS voices bound to a model catalog key.",
+        "operationId": "modelVoices.list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Model id or catalog key vendor/modelId."
+          },
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required when model id is not a catalog key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkListResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List model TTS voices",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "modelVoices",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
+        "x-write-tables": []
+      }
+    },
+    "/backend/v3/api/ai/video_profiles": {
+      "get": {
+        "description": "List catalog video generation profiles with optional vendor, mode, duration, and resolution filters.",
+        "operationId": "videoProfiles.list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by vendor code."
+          },
+          {
+            "in": "query",
+            "name": "region_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by vendor region code."
+          },
+          {
+            "in": "query",
+            "name": "catalog_key",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by model catalog key vendor/modelId."
+          },
+          {
+            "in": "query",
+            "name": "model_id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by model id when combined with vendor_code."
+          },
+          {
+            "in": "query",
+            "name": "generation_mode",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by generation mode (text_to_video, image_to_video, ...)."
+          },
+          {
+            "in": "query",
+            "name": "duration_tier_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by canonical duration tier (dur_5s, dur_10s, ...)."
+          },
+          {
+            "in": "query",
+            "name": "resolution",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by output resolution (720p, 1080p, ...)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkListResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List video generation profiles",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "videoProfiles",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
+        "x-write-tables": []
+      }
+    },
+    "/backend/v3/api/ai/models/{modelId}/video_profiles": {
+      "get": {
+        "description": "List video generation profiles bound to a model catalog key.",
+        "operationId": "modelVideoProfiles.list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Model id or catalog key vendor/modelId."
+          },
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required when model id is not a catalog key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkListResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List model video generation profiles",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "modelVideoProfiles",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
+        "x-write-tables": []
+      }
     }
   },
   "components": {
@@ -2553,87 +3038,6 @@
         ],
         "type": "object",
         "x-operation-id": "aiResourceGroups.create"
-      },
-      "AiResourceGroupsDeleteResult": {
-        "additionalProperties": false,
-        "description": "Ai resource groups delete result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "aiResourceGroups.delete"
-      },
-      "AiResourceGroupsListResult": {
-        "additionalProperties": false,
-        "description": "Ai resource groups list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "aiResourceGroups.list"
-      },
-      "AiResourceGroupsResourcesListResult": {
-        "additionalProperties": false,
-        "description": "Ai resource groups resources list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "aiResourceGroups.resources.list"
       },
       "AiResourceGroupsUpdateResult": {
         "additionalProperties": false,
@@ -2689,33 +3093,6 @@
         "type": "object",
         "x-operation-id": "aiResources.create"
       },
-      "AiResourcesListResult": {
-        "additionalProperties": false,
-        "description": "Ai resources list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "aiResources.list"
-      },
       "AiResourcesUpdateResult": {
         "additionalProperties": false,
         "description": "Ai resources update result schema exposed by Claw Router.",
@@ -2765,66 +3142,6 @@
           }
         }
       },
-      "JsonNull": {
-        "description": "JSON null value.",
-        "type": "null"
-      },
-      "JsonObject": {
-        "additionalProperties": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/JsonValue"
-            }
-          ],
-          "description": "Schema fragment used by json object."
-        },
-        "description": "JSON object with typed JSON values.",
-        "type": "object"
-      },
-      "JsonValue": {
-        "description": "JSON value accepted by flexible Claw Router metadata and extension maps.",
-        "oneOf": [
-          {
-            "description": "String JSON value.",
-            "type": "string"
-          },
-          {
-            "description": "Number JSON value.",
-            "type": "number"
-          },
-          {
-            "description": "Integer JSON value.",
-            "type": "integer"
-          },
-          {
-            "description": "Boolean JSON value.",
-            "type": "boolean"
-          },
-          {
-            "description": "Array JSON value.",
-            "items": {
-              "$ref": "#/components/schemas/JsonValue"
-            },
-            "type": "array"
-          },
-          {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonObject"
-              }
-            ],
-            "description": "Object JSON value."
-          },
-          {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonNull"
-              }
-            ],
-            "description": "Null JSON value."
-          }
-        ]
-      },
       "ModelMappingsCreateResult": {
         "additionalProperties": false,
         "description": "Model mappings create result schema exposed by Claw Router.",
@@ -2851,60 +3168,6 @@
         ],
         "type": "object",
         "x-operation-id": "modelMappings.create"
-      },
-      "ModelMappingsDeleteResult": {
-        "additionalProperties": false,
-        "description": "Model mappings delete result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "modelMappings.delete"
-      },
-      "ModelMappingsListResult": {
-        "additionalProperties": false,
-        "description": "Model mappings list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "modelMappings.list"
       },
       "ModelMappingsReplaceResult": {
         "additionalProperties": false,
@@ -2987,60 +3250,6 @@
         "type": "object",
         "x-operation-id": "modelMappings.update"
       },
-      "ModelRankingsJobsListResult": {
-        "additionalProperties": false,
-        "description": "Model rankings jobs list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "modelRankings.jobs.list"
-      },
-      "ModelRankingsListResult": {
-        "additionalProperties": false,
-        "description": "Model rankings list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "modelRankings.list"
-      },
       "ModelRankingsRefreshResult": {
         "additionalProperties": false,
         "description": "Model rankings refresh result schema exposed by Claw Router.",
@@ -3122,33 +3331,6 @@
         "type": "object",
         "x-operation-id": "modelVendors.create"
       },
-      "ModelVendorsListResult": {
-        "additionalProperties": false,
-        "description": "Model vendors list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "modelVendors.list"
-      },
       "ModelsCreateResult": {
         "additionalProperties": false,
         "description": "Models create result schema exposed by Claw Router.",
@@ -3175,87 +3357,6 @@
         ],
         "type": "object",
         "x-operation-id": "models.create"
-      },
-      "ModelsDeleteResult": {
-        "additionalProperties": false,
-        "description": "Models delete result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "models.delete"
-      },
-      "ModelsListResult": {
-        "additionalProperties": false,
-        "description": "Models list result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "models.list"
-      },
-      "ModelsRefreshResult": {
-        "additionalProperties": false,
-        "description": "Models refresh result schema exposed by Claw Router.",
-        "properties": {
-          "code": {
-            "description": "Business response code.",
-            "type": "string"
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NoData"
-              }
-            ],
-            "description": "No business data returned by this operation."
-          },
-          "msg": {
-            "description": "Human-readable response message.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "x-operation-id": "models.refresh"
       },
       "ModelsUpdateResult": {
         "additionalProperties": false,
@@ -3289,6 +3390,48 @@
         "description": "Closed empty payload for operations that complete without business data.",
         "properties": {},
         "type": "object"
+      },
+      "PageInfo": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode"
+        ],
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "offset",
+              "cursor"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "totalItems": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        }
       },
       "ProblemDetail": {
         "type": "object",
@@ -3364,40 +3507,6 @@
           }
         }
       },
-      "SdkWorkResourceData": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "item"
-        ],
-        "properties": {
-          "item": {
-            "type": "object",
-            "additionalProperties": true,
-            "description": "Typed domain resource for the operation."
-          }
-        }
-      },
-      "SdkWorkPageData": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "items",
-          "pageInfo"
-        ],
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          },
-          "pageInfo": {
-            "$ref": "#/components/schemas/PageInfo"
-          }
-        }
-      },
       "SdkWorkCommandData": {
         "type": "object",
         "additionalProperties": false,
@@ -3417,56 +3526,7 @@
           }
         }
       },
-      "PageInfo": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "mode"
-        ],
-        "properties": {
-          "mode": {
-            "type": "string",
-            "enum": [
-              "offset",
-              "cursor"
-            ]
-          },
-          "page": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "pageSize": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 200
-          },
-          "totalItems": {
-            "type": "string",
-            "pattern": "^[0-9]+$"
-          },
-          "totalPages": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "nextCursor": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "hasMore": {
-            "type": "boolean"
-          }
-        }
-      },
-      "SdkWorkPlatformErrorCode": {
-        "type": "integer",
-        "format": "int32",
-        "minimum": 40001,
-        "maximum": 79999,
-        "description": "Platform or domain error code per API_SPEC.md §15.3."
-      },
-      "SdkWorkResourceResponse": {
+      "SdkWorkCommandResponse": {
         "allOf": [
           {
             "$ref": "#/components/schemas/SdkWorkApiResponse"
@@ -3478,7 +3538,7 @@
             ],
             "properties": {
               "data": {
-                "$ref": "#/components/schemas/SdkWorkResourceData"
+                "$ref": "#/components/schemas/SdkWorkCommandData"
               }
             }
           }
@@ -3502,7 +3562,183 @@
           }
         ]
       },
-      "SdkWorkCommandResponse": {
+      "SdkWorkPageData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "pageInfo"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "SdkWorkPlatformErrorCode": {
+        "type": "integer",
+        "format": "int32",
+        "minimum": 40001,
+        "maximum": 79999,
+        "description": "Platform or domain error code per API_SPEC.md §15.3."
+      },
+      "ModelCatalogSyncResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Catalog sync result returned by models.refresh.",
+        "properties": {
+          "synced": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "dryRun": {
+            "type": "boolean"
+          },
+          "catalogVersion": {
+            "type": "string"
+          },
+          "requestedCatalogVersion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "catalogRoot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "meterCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "vendorCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "familyCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "modelCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "capabilityCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "priceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rankingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceBindingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "videoProfileCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "acceptedCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshotId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "syncRunId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "synced",
+          "source",
+          "mode",
+          "dryRun",
+          "catalogVersion",
+          "vendorCodes",
+          "sourceHash",
+          "meterCount",
+          "vendorCount",
+          "familyCount",
+          "modelCount",
+          "capabilityCount",
+          "priceCount",
+          "rankingCount",
+          "voiceCount",
+          "voiceBindingCount",
+          "videoProfileCount",
+          "acceptedCount",
+          "vendors",
+          "models"
+        ]
+      },
+      "SdkWorkResourceData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item"
+        ],
+        "properties": {
+          "item": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Typed domain resource for the operation."
+          }
+        }
+      },
+      "SdkWorkResourceResponse": {
         "allOf": [
           {
             "$ref": "#/components/schemas/SdkWorkApiResponse"
@@ -3514,7 +3750,7 @@
             ],
             "properties": {
               "data": {
-                "$ref": "#/components/schemas/SdkWorkCommandData"
+                "$ref": "#/components/schemas/SdkWorkResourceData"
               }
             }
           }

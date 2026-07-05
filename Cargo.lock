@@ -2293,6 +2293,7 @@ dependencies = [
  "bytes",
  "chrono",
  "sdkwork-claw-http",
+ "sdkwork-models",
  "sdkwork-models-catalog-repository-sqlx",
  "sdkwork-models-contract-service",
  "sdkwork-utils-rust",

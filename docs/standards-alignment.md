@@ -1,7 +1,7 @@
 # SDKWork Models — Standards Alignment
 
 Status: active  
-Updated: 2026-06-29  
+Updated: 2026-07-05  
 Authority: `../sdkwork-specs/README.md`
 
 This document records the **verified** alignment posture for `sdkwork-models`. It must match evidence from `pnpm run verify`, `cargo test --workspace`, and topology validation.
@@ -45,10 +45,15 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Catalog JSON authority | Aligned | `pnpm run check` validates index, schema, freshness, audit, release gate |
+| Catalog JSON authority | Aligned | Catalog version 2026.07.05.3; voice + video generation profile catalogs validated |
+| TTS voice catalog | Aligned | `specs/voice-catalog.spec.json`; DB import sync; app + backend read APIs (`voices.list`, `modelVoices.list`) with `intelligence.models.read` on backend |
+| Video generation profiles | Aligned | `specs/video-generation-profile.spec.json`; full coverage for all `primaryCapability: video` models; DB import sync (`ai_model_video_profile`); SDK helpers all languages; app + backend read APIs |
+| Voice SDK parity | Aligned | `listVoices`, `listVoicesForModel`, `listModelsForVoice` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled voice catalog |
+| Video profile SDK parity | Aligned | `listVideoProfiles`, `listVideoProfilesForModel`, `findVideoProfile` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled video profiles |
+| Catalog sync observability | Aligned | `models.refresh` returns `voiceCount`, `voiceBindingCount`, and `videoProfileCount` in `ModelCatalogSyncResult` |
 | Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
-| App read API | Aligned | App catalog list routes are public (`RouteAuth::Public`) |
-| Standalone runtime | Aligned | `sdkwork-models-standalone-gateway` binary; topology `applicationServer.binary` matches |
+| App read API | Aligned | App catalog list routes are public (`RouteAuth::Public`); voice list uses `SdkWorkPageData` list envelope |
+| Database module | Aligned | Baseline DDL includes voice and video profile tables; contract materialized; `pnpm run db:validate` and `db:drift:check` pass |
 | Readiness probe | Aligned | `/healthz` and `/readyz` are infra probes (not business API envelope); `/readyz` probes DB |
 | Gateway production template | Aligned | Restricted CORS via `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS`; cloud gateway configs validated |
 | CI dependency closure | Aligned | `.github/workflows/verify.yml` checks out platform crates |

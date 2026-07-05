@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax",
+  "regionCode": "global",
+  "voices": [
+    {
+      "schemaVersion": "1.0.0",
+      "voiceId": "_catalog_dynamic",
+      "displayName": "MiniMax Voice Library",
+      "vendorCode": "minimax",
+      "regionCode": "global",
+      "catalogKey": "minimax/_catalog_dynamic",
+      "primaryLocale": "en-US",
+      "supportedLocales": ["en-US", "zh-CN"],
+      "gender": "unspecified",
+      "voiceKind": "neural",
+      "provisioningMode": "vendor_api",
+      "wireParameter": "voice_id",
+      "vendorListEndpoint": "https://api.minimax.chat/v1/voices",
+      "description": "MiniMax system and cloned voices resolved at runtime via the vendor voice list API.",
+      "lifecycle": "active",
+      "releaseStage": "active",
+      "shelfState": "listed",
+      "routingState": "enabled",
+      "source": {
+        "observedAt": "2026-07-04T00:00:00Z",
+        "sourceUrl": "https://platform.minimaxi.com/docs/api-reference/speech-t2a-voice"
+      }
+    }
+  ]
+}

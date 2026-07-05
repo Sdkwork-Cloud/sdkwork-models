@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "alibaba/wan2.6-t2v",
+  "colorToken": "#ff6a00",
+  "description": "Tongyi Wanxiang 2.6 text-to-video model with multi-shot narrative and native audio generation.",
+  "displayName": "Wan 2.6 Text to Video",
+  "familyCode": "wanx-video",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 90000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "modelId": "wan2.6-t2v",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "800.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
+  },
+  "strengths": [
+    "Text to video",
+    "Multi-shot narrative",
+    "Native audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.870000"
+}

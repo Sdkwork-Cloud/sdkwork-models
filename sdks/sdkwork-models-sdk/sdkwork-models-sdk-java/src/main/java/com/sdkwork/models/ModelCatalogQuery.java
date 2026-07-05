@@ -207,6 +207,181 @@ public final class ModelCatalogQuery {
         return listModels(catalog, Map.of("apiFormat", protocolCode));
     }
 
+    public static String voiceCatalogKey(String vendorCode, String voiceId) {
+        return vendorCode + "/" + voiceId;
+    }
+
+    public static List<Map<String, Object>> listVoices(ModelCatalog catalog) {
+        return listVoices(catalog, Map.of());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Map<String, Object>> listVoices(ModelCatalog catalog, Map<String, String> filter) {
+        return regionalVoices(catalog).stream()
+                .filter(voice -> matchesScalar(voice, "vendorCode", filter.get("vendorCode")))
+                .filter(voice -> matchesScalar(voice, "regionCode", filter.get("regionCode")))
+                .filter(voice -> matchesVoiceLocale(voice, filter.get("locale")))
+                .filter(voice -> matchesVoiceSearch(voice, filter.get("q")))
+                .filter(voice -> matchesVoiceModel(catalog, voice, filter.get("modelCatalogKey")))
+                .toList();
+    }
+
+    public static List<Map<String, Object>> listVoicesForModel(ModelCatalog catalog, String modelCatalogKey) {
+        return listVoices(catalog, Map.of("modelCatalogKey", modelCatalogKey));
+    }
+
+    public static List<Map<String, Object>> listModelsForVoice(ModelCatalog catalog, String voiceCatalogKey) {
+        Set<String> modelKeys = new LinkedHashSet<>();
+        for (Map<String, Object> vendorCatalog : catalog.vendorCatalogs()) {
+            for (Map<String, Object> binding : mapList(vendorCatalog.get("modelVoiceBindings"))) {
+                if (!(binding.get("catalogKey") instanceof String catalogKey)) {
+                    continue;
+                }
+                for (Map<String, Object> entry : mapList(binding.get("bindings"))) {
+                    if (Objects.equals(entry.get("voiceKey"), voiceCatalogKey)) {
+                        modelKeys.add(catalogKey);
+                    }
+                }
+            }
+        }
+        return listModels(catalog).stream()
+                .filter(model -> model.get("catalogKey") instanceof String key && modelKeys.contains(key))
+                .toList();
+    }
+
+    public static String videoProfileCatalogKey(String vendorCode, String modelId, String profileCode) {
+        return vendorCode + "/" + modelId + "/" + profileCode;
+    }
+
+    public static List<Map<String, Object>> listVideoProfiles(ModelCatalog catalog) {
+        return listVideoProfiles(catalog, Map.of());
+    }
+
+    public static List<Map<String, Object>> listVideoProfiles(ModelCatalog catalog, Map<String, String> filter) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        String vendorCode = filter.get("vendorCode");
+        if (vendorCode == null) {
+            vendorCode = filter.get("vendor_code");
+        }
+        String regionCode = filter.get("regionCode");
+        if (regionCode == null) {
+            regionCode = filter.get("region_code");
+        }
+        String modelCatalogKey = filter.get("modelCatalogKey");
+        if (modelCatalogKey == null) {
+            modelCatalogKey = filter.get("model_catalog_key");
+        }
+        String generationMode = filter.get("generationMode");
+        if (generationMode == null) {
+            generationMode = filter.get("generation_mode");
+        }
+        String durationTierCode = filter.get("durationTierCode");
+        if (durationTierCode == null) {
+            durationTierCode = filter.get("duration_tier_code");
+        }
+        String resolution = filter.get("resolution");
+        for (Map<String, Object> vendorCatalog : catalog.vendorCatalogs()) {
+            if (vendorCode != null && !Objects.equals(vendorCatalog.get("vendorCode"), vendorCode)) {
+                continue;
+            }
+            if (regionCode != null && !Objects.equals(vendorCatalog.get("regionCode"), regionCode)) {
+                continue;
+            }
+            for (Map<String, Object> profileFile : mapList(vendorCatalog.get("modelVideoProfiles"))) {
+                if (modelCatalogKey != null && !Objects.equals(profileFile.get("catalogKey"), modelCatalogKey)) {
+                    continue;
+                }
+                for (Map<String, Object> profile : mapList(profileFile.get("profiles"))) {
+                    if (generationMode != null && !Objects.equals(profile.get("generationMode"), generationMode)) {
+                        continue;
+                    }
+                    if (durationTierCode != null && !matchesDurationTier(profile, durationTierCode)) {
+                        continue;
+                    }
+                    if (resolution != null && !Objects.equals(profile.get("resolution"), resolution)) {
+                        continue;
+                    }
+                    result.add(profile);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<Map<String, Object>> listVideoProfilesForModel(ModelCatalog catalog, String modelCatalogKey) {
+        return listVideoProfiles(catalog, Map.of("modelCatalogKey", modelCatalogKey));
+    }
+
+    public static Map<String, Object> findVideoProfile(ModelCatalog catalog, String profileCatalogKey) {
+        for (Map<String, Object> profile : listVideoProfiles(catalog)) {
+            if (Objects.equals(profile.get("catalogKey"), profileCatalogKey)) {
+                return profile;
+            }
+        }
+        return null;
+    }
+
+    private static boolean matchesDurationTier(Map<String, Object> profile, String durationTierCode) {
+        if (Objects.equals(profile.get("durationTierCode"), durationTierCode)) {
+            return true;
+        }
+        return mapList(profile.get("durationTierCodes")).stream().anyMatch(entry -> Objects.equals(entry, durationTierCode));
+    }
+
+    private static List<Map<String, Object>> regionalVoices(ModelCatalog catalog) {
+        if (catalog.vendorCatalogs().isEmpty()) {
+            return List.of();
+        }
+        return catalog.vendorCatalogs().stream()
+                .flatMap(vendorCatalog -> mapList(vendorCatalog.get("voices")).stream())
+                .toList();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static boolean matchesVoiceLocale(Map<String, Object> voice, String locale) {
+        if (locale == null) {
+            return true;
+        }
+        if (Objects.equals(voice.get("primaryLocale"), locale)) {
+            return true;
+        }
+        return mapList(voice.get("supportedLocales")).stream().anyMatch(entry -> Objects.equals(entry, locale));
+    }
+
+    private static boolean matchesVoiceSearch(Map<String, Object> voice, String query) {
+        if (query == null) {
+            return true;
+        }
+        String normalized = query.toLowerCase();
+        Object displayName = voice.get("displayName");
+        Object voiceId = voice.get("voiceId");
+        return (displayName instanceof String name && name.toLowerCase().contains(normalized))
+                || (voiceId instanceof String id && id.toLowerCase().contains(normalized));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static boolean matchesVoiceModel(ModelCatalog catalog, Map<String, Object> voice, String modelCatalogKey) {
+        if (modelCatalogKey == null) {
+            return true;
+        }
+        if (!(voice.get("catalogKey") instanceof String voiceKey)) {
+            return false;
+        }
+        for (Map<String, Object> vendorCatalog : catalog.vendorCatalogs()) {
+            for (Map<String, Object> binding : mapList(vendorCatalog.get("modelVoiceBindings"))) {
+                if (!Objects.equals(binding.get("catalogKey"), modelCatalogKey)) {
+                    continue;
+                }
+                for (Map<String, Object> entry : mapList(binding.get("bindings"))) {
+                    if (Objects.equals(entry.get("voiceKey"), voiceKey)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private static CatalogKeyParts splitCatalogKey(String catalogKey) {
         int separatorIndex = catalogKey.indexOf('/');
         if (separatorIndex <= 0 || separatorIndex == catalogKey.length() - 1) return null;

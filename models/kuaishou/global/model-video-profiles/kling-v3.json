@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "vendorCode": "kuaishou",
+  "regionCode": "global",
+  "modelId": "kling-v3",
+  "catalogKey": "kuaishou/kling-v3",
+  "profiles": [
+    {
+      "profileCode": "t2v_range_1080p",
+      "catalogKey": "kuaishou/kling-v3/t2v_range_1080p",
+      "displayName": "Text to Video · 3–15s · 1080p",
+      "generationMode": "text_to_video",
+      "durationPolicy": "range",
+      "minDurationSeconds": 3,
+      "maxDurationSeconds": 15,
+      "durationStepSeconds": 1,
+      "resolution": "1080p",
+      "resolutionTierCode": "res_1080p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "isDefault": true,
+      "sortOrder": 10,
+      "wireParameters": {
+        "mode": "std",
+        "duration": "3-15",
+        "resolution": "1080p"
+      }
+    },
+    {
+      "profileCode": "i2v_range_1080p",
+      "catalogKey": "kuaishou/kling-v3/i2v_range_1080p",
+      "displayName": "Image to Video · 3–15s · 1080p",
+      "generationMode": "image_to_video",
+      "durationPolicy": "range",
+      "minDurationSeconds": 3,
+      "maxDurationSeconds": 15,
+      "durationStepSeconds": 1,
+      "resolution": "1080p",
+      "resolutionTierCode": "res_1080p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "sortOrder": 20,
+      "wireParameters": {
+        "mode": "pro",
+        "duration": "3-15",
+        "resolution": "1080p"
+      }
+    },
+    {
+      "profileCode": "multi_shot_range_1080p",
+      "catalogKey": "kuaishou/kling-v3/multi_shot_range_1080p",
+      "displayName": "Multi-shot · 3–15s · 1080p",
+      "generationMode": "multi_shot",
+      "durationPolicy": "range",
+      "minDurationSeconds": 3,
+      "maxDurationSeconds": 15,
+      "durationStepSeconds": 1,
+      "resolution": "1080p",
+      "resolutionTierCode": "res_1080p",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "outputAudio": true,
+      "sortOrder": 30,
+      "wireParameters": {
+        "mode": "multi_shot",
+        "duration": "3-15",
+        "resolution": "1080p"
+      }
+    }
+  ],
+  "source": {
+    "observedAt": "2026-07-04T00:00:00Z",
+    "sourceUrl": "https://app.klingai.com/global/dev/document-api"
+  }
+}

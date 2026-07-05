@@ -31,7 +31,16 @@ export async function loadVendorCatalog(root: string, vendorCode: string, region
   const vendor = await readJson(source, `models/${vendorIndex.path}`);
   const models = await Promise.all((vendorIndex.modelFiles ?? []).map((path: string) => readJson(source, `models/${path}`)));
   const pricing = await Promise.all((vendorIndex.pricingFiles ?? []).map((path: string) => readJson(source, `models/${path}`)));
-  return { vendorCode, regionCode, vendor, models, pricing };
+  const voices = vendorIndex.voicesPath
+    ? ((await readJson(source, `models/${vendorIndex.voicesPath}`)).voices ?? [])
+    : [];
+  const modelVoiceBindings = vendorIndex.modelVoiceFiles?.length
+    ? await Promise.all((vendorIndex.modelVoiceFiles ?? []).map((path: string) => readJson(source, `models/${path}`)))
+    : [];
+  const modelVideoProfiles = vendorIndex.modelVideoProfileFiles?.length
+    ? await Promise.all((vendorIndex.modelVideoProfileFiles ?? []).map((path: string) => readJson(source, `models/${path}`)))
+    : [];
+  return { vendorCode, regionCode, vendor, models, pricing, voices, modelVoiceBindings, modelVideoProfiles };
 }
 
 export async function loadBundledCatalog(): Promise<ModelCatalog> {

@@ -5,26 +5,44 @@
     {
       "items": [
         {
-          "catalogKey": "bytedance/doubao-seed-2-1-pro-260628",
-          "modelId": "doubao-seed-2-1-pro-260628",
-          "pricingText": "CNY 6.00 / 1M input; CNY 1.20 / 1M cache read; CNY 30.00 / 1M output",
-          "rankNo": 8
+          "catalogKey": "bytedance/doubao-seedream-4-0-250828",
+          "modelId": "doubao-seedream-4-0-250828",
+          "pricingText": "CNY 0.20 / image",
+          "rankNo": 18
         },
         {
-          "catalogKey": "bytedance/doubao-seed-2-1-turbo-260628",
-          "modelId": "doubao-seed-2-1-turbo-260628",
-          "pricingText": "CNY 3.00 / 1M input; CNY 0.60 / 1M cache read; CNY 15.00 / 1M output",
-          "rankNo": 11
+          "catalogKey": "bytedance/doubao-seedance-2-0-260128",
+          "modelId": "doubao-seedance-2-0-260128",
+          "pricingText": "CNY 0.86 / output second",
+          "rankNo": 20
         },
         {
-          "catalogKey": "bytedance/doubao-seed-2-0-pro-260215",
-          "modelId": "doubao-seed-2-0-pro-260215",
-          "pricingText": "CNY 3.20 / 1M input; CNY 16.00 / 1M output",
-          "rankNo": 16
+          "catalogKey": "bytedance/doubao-seedance-2-0-fast-260128",
+          "modelId": "doubao-seedance-2-0-fast-260128",
+          "pricingText": "CNY 0.58 / output second",
+          "rankNo": 22
+        },
+        {
+          "catalogKey": "bytedance/seed-tts-2.0-standard",
+          "modelId": "seed-tts-2.0-standard",
+          "pricingText": "CNY 2.8 / 10K characters",
+          "rankNo": 24
+        },
+        {
+          "catalogKey": "bytedance/seed-tts-2.0-expressive",
+          "modelId": "seed-tts-2.0-expressive",
+          "pricingText": "CNY 2.8 / 10K characters",
+          "rankNo": 25
+        },
+        {
+          "catalogKey": "bytedance/seed-music-gensong-v4",
+          "modelId": "seed-music-gensong-v4",
+          "pricingText": "CNY pricing pending official confirmation",
+          "rankNo": 26
         }
       ],
-      "rankScope": "china-mainland-default",
-      "snapshotDate": "2026-06-24",
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

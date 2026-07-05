@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "luma_ai/ray-2",
+  "colorToken": "#6366f1",
+  "description": "Luma Ray 2 Dream Machine model for high-quality text-to-video and image-to-video generation.",
+  "displayName": "Ray 2",
+  "familyCode": "luma-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "ray-2",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "840.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://docs.lumalabs.ai/docs/video-generation"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Cinematic motion"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "luma_ai",
+  "vendorName": "Luma AI",
+  "winRate": "0.880000"
+}

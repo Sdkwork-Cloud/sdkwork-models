@@ -1,0 +1,26 @@
+{
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "snapshots": [
+    {
+      "items": [
+        {
+          "catalogKey": "pixverse/pixverse-c1-t2v",
+          "modelId": "pixverse-c1-t2v",
+          "pricingText": "CNY 0.36 / output second (720p)",
+          "rankNo": 13
+        },
+        {
+          "catalogKey": "pixverse/pixverse-v6-t2v",
+          "modelId": "pixverse-v6-t2v",
+          "pricingText": "CNY 0.27 / output second (720p)",
+          "rankNo": 19
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-02",
+      "snapshotPeriod": "daily"
+    }
+  ],
+  "vendorCode": "pixverse"
+}

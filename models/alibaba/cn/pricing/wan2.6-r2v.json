@@ -1,0 +1,27 @@
+{
+  "catalogKey": "alibaba/wan2.6-r2v",
+  "currency": "CNY",
+  "modelId": "wan2.6-r2v",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "notes": "Combined input and output reference video seconds at 720p (0.6 CNY/s each per official billing).",
+      "priceId": "alibaba-cn-wan2-6-r2v-second-720p-combined",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
+      },
+      "unitPrice": "1.200000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

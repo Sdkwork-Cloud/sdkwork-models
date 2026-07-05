@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "google/imagen-4.0-ultra-generate-001",
+  "colorToken": "#0e7490",
+  "description": "Ultra-quality Imagen 4 image generation model for highest fidelity outputs.",
+  "displayName": "Imagen 4.0 Ultra",
+  "familyCode": "imagen",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 6500,
+  "latencyP95Ms": 22000,
+  "lifecycle": "active",
+  "modelId": "imagen-4.0-ultra-generate-001",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "780.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://ai.google.dev/gemini-api/docs/imagen"
+  },
+  "strengths": [
+    "Image generation",
+    "High fidelity",
+    "Product imagery"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.850000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.900000"
+}

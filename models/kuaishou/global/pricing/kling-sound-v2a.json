@@ -1,0 +1,27 @@
+{
+  "catalogKey": "kuaishou/kling-sound-v2a",
+  "currency": "USD",
+  "modelId": "kling-sound-v2a",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "notes": "Per video-to-sound generation task on the Kling Open Platform API.",
+      "priceId": "kuaishou-global-kling-sound-v2a-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://app.klingai.com/global/dev/document-api/productBilling/consumptionTable"
+      },
+      "unitPrice": "0.070000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "kuaishou"
+}

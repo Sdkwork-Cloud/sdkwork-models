@@ -5,14 +5,32 @@
     {
       "items": [
         {
+          "catalogKey": "stability_ai/stable-audio-2.5",
+          "modelId": "stable-audio-2.5",
+          "pricingText": "$0.20 / generation",
+          "rankNo": 26
+        },
+        {
+          "catalogKey": "stability_ai/stable-audio-2.5-sfx",
+          "modelId": "stable-audio-2.5-sfx",
+          "pricingText": "$0.20 / sfx result",
+          "rankNo": 27
+        },
+        {
+          "catalogKey": "stability_ai/stable-image-core",
+          "modelId": "stable-image-core",
+          "pricingText": "$0.03 / image",
+          "rankNo": 28
+        },
+        {
           "catalogKey": "stability_ai/stable-image-ultra",
           "modelId": "stable-image-ultra",
-          "pricingText": "$0.08 / image result",
-          "rankNo": 26
+          "pricingText": "$0.08 / image",
+          "rankNo": 30
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-07",
+      "snapshotDate": "2026-07-03",
       "snapshotPeriod": "daily"
     }
   ],

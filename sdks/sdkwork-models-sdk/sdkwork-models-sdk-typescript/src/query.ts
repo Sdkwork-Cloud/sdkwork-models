@@ -6,6 +6,8 @@ import type {
   ModelPrice,
   ModelVendorIdentity,
   ProtocolStandard,
+  TtsVoice,
+  VideoGenerationProfile,
   VendorRegionRef,
 } from "./types.js";
 
@@ -189,6 +191,110 @@ export function listClientApiCompatibilityByVendor(catalog: ModelCatalog, vendor
 
 export function listModelsByProtocol(catalog: ModelCatalog, protocolCode: string): ModelInfo[] {
   return listModels(catalog, { apiFormat: protocolCode });
+}
+
+export interface VoiceFilter {
+  vendorCode?: string;
+  regionCode?: string;
+  locale?: string;
+  modelCatalogKey?: string;
+  q?: string;
+}
+
+export function voiceCatalogKey(vendorCode: string, voiceId: string): string {
+  return `${vendorCode}/${voiceId}`;
+}
+
+export function listVoices(catalog: ModelCatalog, filter: VoiceFilter = {}): TtsVoice[] {
+  return catalog.vendors
+    .flatMap((vendor) => vendor.voices ?? [])
+    .filter((voice) => !filter.vendorCode || voice.vendorCode === filter.vendorCode)
+    .filter((voice) => !filter.regionCode || voice.regionCode === filter.regionCode)
+    .filter((voice) => {
+      if (!filter.locale) return true;
+      return voice.primaryLocale === filter.locale || (voice.supportedLocales ?? []).includes(filter.locale);
+    })
+    .filter((voice) => {
+      if (!filter.q) return true;
+      const query = filter.q.toLowerCase();
+      return voice.displayName.toLowerCase().includes(query) || voice.voiceId.toLowerCase().includes(query);
+    })
+    .filter((voice) => {
+      if (!filter.modelCatalogKey) return true;
+      return catalog.vendors.some((vendor) =>
+        (vendor.modelVoiceBindings ?? []).some(
+          (binding) =>
+            binding.catalogKey === filter.modelCatalogKey &&
+            binding.bindings.some((entry) => entry.voiceKey === voice.catalogKey),
+        ),
+      );
+    });
+}
+
+export function listVoicesForModel(catalog: ModelCatalog, modelCatalogKey: string): TtsVoice[] {
+  return listVoices(catalog, { modelCatalogKey });
+}
+
+export function listModelsForVoice(catalog: ModelCatalog, voiceCatalogKeyValue: string): ModelInfo[] {
+  const modelKeys = new Set(
+    catalog.vendors.flatMap((vendor) =>
+      (vendor.modelVoiceBindings ?? [])
+        .filter((binding) => binding.bindings.some((entry) => entry.voiceKey === voiceCatalogKeyValue))
+        .map((binding) => binding.catalogKey),
+    ),
+  );
+  return listModels(catalog).filter((model) => modelKeys.has(model.catalogKey));
+}
+
+export interface VideoProfileFilter {
+  vendorCode?: string;
+  regionCode?: string;
+  modelCatalogKey?: string;
+  generationMode?: VideoGenerationProfile["generationMode"];
+  durationTierCode?: string;
+  resolution?: string;
+}
+
+export function videoProfileCatalogKey(vendorCode: string, modelId: string, profileCode: string): string {
+  return `${vendorCode}/${modelId}/${profileCode}`;
+}
+
+export function listVideoProfiles(catalog: ModelCatalog, filter: VideoProfileFilter = {}): VideoGenerationProfile[] {
+  const profiles: VideoGenerationProfile[] = [];
+  for (const vendor of catalog.vendors) {
+    if (filter.vendorCode && vendor.vendorCode !== filter.vendorCode) continue;
+    if (filter.regionCode && vendor.regionCode !== filter.regionCode) continue;
+    for (const file of vendor.modelVideoProfiles ?? []) {
+      if (filter.modelCatalogKey && file.catalogKey !== filter.modelCatalogKey) continue;
+      for (const profile of file.profiles ?? []) {
+        if (filter.generationMode && profile.generationMode !== filter.generationMode) continue;
+        if (
+          filter.durationTierCode
+          && profile.durationTierCode !== filter.durationTierCode
+          && !(profile.durationTierCodes ?? []).includes(filter.durationTierCode)
+        ) {
+          continue;
+        }
+        if (filter.resolution && profile.resolution !== filter.resolution) continue;
+        profiles.push(profile);
+      }
+    }
+  }
+  return profiles;
+}
+
+export function listVideoProfilesForModel(catalog: ModelCatalog, modelCatalogKey: string): VideoGenerationProfile[] {
+  return listVideoProfiles(catalog, { modelCatalogKey });
+}
+
+export function findVideoProfile(catalog: ModelCatalog, profileCatalogKey: string): VideoGenerationProfile | undefined {
+  for (const vendor of catalog.vendors) {
+    for (const file of vendor.modelVideoProfiles ?? []) {
+      const profile = (file.profiles ?? []).find((entry) => entry.catalogKey === profileCatalogKey);
+      if (profile) return profile;
+    }
+  }
+  return undefined;
 }
 
 function splitCatalogKey(value: string): [string | undefined, string | undefined] {

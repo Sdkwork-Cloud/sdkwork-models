@@ -1,0 +1,26 @@
+{
+  "catalogKey": "stability_ai/stable-image-core",
+  "currency": "USD",
+  "modelId": "stable-image-core",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "image_result",
+      "minimumQuantity": "0",
+      "priceId": "stability-ai-stable-image-core-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.stability.ai/pricing"
+      },
+      "unitPrice": "0.030000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "stability_ai"
+}

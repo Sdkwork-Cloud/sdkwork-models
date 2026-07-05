@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "sfx"
+  ],
+  "catalogKey": "stability_ai/stable-audio-2.5-sfx",
+  "colorToken": "#0f766e",
+  "description": "Stability AI Stable Audio 2.5 text-to-audio mode for professional sound-effect and foley generation up to 190 seconds.",
+  "displayName": "Stable Audio 2.5 SFX",
+  "familyCode": "stable-audio-sfx",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 2000,
+  "latencyP95Ms": 8000,
+  "lifecycle": "active",
+  "modelId": "stable-audio-2.5-sfx",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "sfx",
+  "rankScore": "750.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://stability.ai/api-pricing-update-25"
+  },
+  "strengths": [
+    "Text to SFX",
+    "Foley",
+    "Sound design",
+    "Enterprise audio"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.890000",
+  "vendorCode": "stability_ai",
+  "vendorName": "Stability AI",
+  "winRate": "0.860000"
+}

@@ -41,44 +41,80 @@
           "rankNo": 6
         },
         {
+          "catalogKey": "google/gemini-3.1-flash-image",
+          "modelId": "gemini-3.1-flash-image",
+          "pricingText": "$0.50 / 1M text input; $60.00 / 1M image output",
+          "rankNo": 7
+        },
+        {
+          "catalogKey": "google/gemini-3-pro-image",
+          "modelId": "gemini-3-pro-image",
+          "pricingText": "$2.00 / 1M text input; $120.00 / 1M image output",
+          "rankNo": 8
+        },
+        {
           "catalogKey": "google/gemini-3.1-flash-image-preview",
           "modelId": "gemini-3.1-flash-image-preview",
           "pricingText": "$0.30 / 1M text input; $30.00 / 1M image output",
-          "rankNo": 7
+          "rankNo": 9
         },
         {
           "catalogKey": "google/gemini-3.1-flash-tts-preview",
           "modelId": "gemini-3.1-flash-tts-preview",
           "pricingText": "$0.50 / 1M text input; $10.00 / 1M audio output",
-          "rankNo": 8
+          "rankNo": 10
+        },
+        {
+          "catalogKey": "google/gemini-2.5-flash-preview-tts",
+          "modelId": "gemini-2.5-flash-preview-tts",
+          "pricingText": "$0.50 / 1M text input; $10.00 / 1M audio output",
+          "rankNo": 11
+        },
+        {
+          "catalogKey": "google/gemini-2.5-pro-preview-tts",
+          "modelId": "gemini-2.5-pro-preview-tts",
+          "pricingText": "$1.00 / 1M text input; $20.00 / 1M audio output",
+          "rankNo": 12
         },
         {
           "catalogKey": "google/veo-3.1-generate-preview",
           "modelId": "veo-3.1-generate-preview",
           "pricingText": "$0.40 / output second",
-          "rankNo": 9
+          "rankNo": 13
         },
         {
           "catalogKey": "google/veo-3.1-fast-generate-preview",
           "modelId": "veo-3.1-fast-generate-preview",
           "pricingText": "$0.15 / output second",
-          "rankNo": 10
+          "rankNo": 14
         },
         {
           "catalogKey": "google/veo-3.1-lite-generate-preview",
           "modelId": "veo-3.1-lite-generate-preview",
           "pricingText": "$0.10 / output second",
-          "rankNo": 11
+          "rankNo": 15
         },
         {
           "catalogKey": "google/imagen-4.0-generate-001",
           "modelId": "imagen-4.0-generate-001",
           "pricingText": "$0.04 / image result",
-          "rankNo": 12
+          "rankNo": 16
+        },
+        {
+          "catalogKey": "google/imagen-4.0-fast-generate-001",
+          "modelId": "imagen-4.0-fast-generate-001",
+          "pricingText": "$0.02 / image result",
+          "rankNo": 17
+        },
+        {
+          "catalogKey": "google/imagen-4.0-ultra-generate-001",
+          "modelId": "imagen-4.0-ultra-generate-001",
+          "pricingText": "$0.06 / image result",
+          "rankNo": 18
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-05-07",
+      "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
     }
   ],

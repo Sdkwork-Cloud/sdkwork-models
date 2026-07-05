@@ -4,7 +4,9 @@
   "capabilities": [
     "chat",
     "image",
-    "audio"
+    "audio",
+    "video",
+    "music"
   ],
   "clientApiCompatibility": {
     "claude_code": {
@@ -57,7 +59,8 @@
     "doubao-seed",
     "seedream",
     "seedance",
-    "audio"
+    "audio",
+    "seed-music"
   ],
   "openSource": false,
   "operatingRegions": [

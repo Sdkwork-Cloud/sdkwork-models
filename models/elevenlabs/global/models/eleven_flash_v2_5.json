@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "elevenlabs/eleven_flash_v2_5",
+  "colorToken": "#7c2d12",
+  "description": "ElevenLabs Flash v2.5 ultra-low latency text-to-speech model.",
+  "displayName": "Eleven Flash v2.5",
+  "familyCode": "elevenlabs-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 120,
+  "latencyP95Ms": 400,
+  "lifecycle": "active",
+  "modelId": "eleven_flash_v2_5",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "780.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-06-24T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/overview/models"
+  },
+  "strengths": [
+    "Text to speech",
+    "Ultra low latency",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.890000"
+}

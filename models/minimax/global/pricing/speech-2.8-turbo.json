@@ -1,0 +1,26 @@
+{
+  "catalogKey": "minimax/speech-2.8-turbo",
+  "currency": "USD",
+  "modelId": "speech-2.8-turbo",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "tts_input_character",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-speech-2-8-turbo-character",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "unitPrice": "0.060000",
+      "unitSize": "1000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

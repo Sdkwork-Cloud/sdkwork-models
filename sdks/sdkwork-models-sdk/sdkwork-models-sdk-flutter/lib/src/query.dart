@@ -421,6 +421,156 @@ int _modelIdentityScore(JsonObject item) {
   return score;
 }
 
+String voiceCatalogKey(String vendorCode, String voiceId) => '$vendorCode/$voiceId';
+
+List<JsonObject> listVoices(
+  ModelCatalog catalog, {
+  String? vendorCode,
+  String? regionCode,
+  String? locale,
+  String? modelCatalogKey,
+  String? q,
+}) {
+  return _regionalVoices(catalog)
+      .where((voice) => vendorCode == null || voice['vendorCode'] == vendorCode)
+      .where((voice) => regionCode == null || voice['regionCode'] == regionCode)
+      .where((voice) {
+        if (locale == null) {
+          return true;
+        }
+        return voice['primaryLocale'] == locale ||
+            _objectList(voice['supportedLocales']).any((entry) => entry == locale);
+      })
+      .where((voice) {
+        if (q == null) {
+          return true;
+        }
+        final query = q.toLowerCase();
+        final displayName = voice['displayName'];
+        final voiceId = voice['voiceId'];
+        return (displayName is String && displayName.toLowerCase().contains(query)) ||
+            (voiceId is String && voiceId.toLowerCase().contains(query));
+      })
+      .where((voice) {
+        if (modelCatalogKey == null) {
+          return true;
+        }
+        final voiceKey = voice['catalogKey'];
+        if (voiceKey is! String) {
+          return false;
+        }
+        for (final vendorCatalog in catalog.vendorCatalogs) {
+          for (final binding in _objectList(vendorCatalog['modelVoiceBindings'])) {
+            if (binding['catalogKey'] != modelCatalogKey) {
+              continue;
+            }
+            for (final entry in _objectList(binding['bindings'])) {
+              if (entry['voiceKey'] == voiceKey) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      })
+      .toList();
+}
+
+List<JsonObject> listVoicesForModel(ModelCatalog catalog, String modelCatalogKey) {
+  return listVoices(catalog, modelCatalogKey: modelCatalogKey);
+}
+
+List<JsonObject> listModelsForVoice(ModelCatalog catalog, String voiceCatalogKey) {
+  final modelKeys = <String>{};
+  for (final vendorCatalog in catalog.vendorCatalogs) {
+    for (final binding in _objectList(vendorCatalog['modelVoiceBindings'])) {
+      final catalogKey = binding['catalogKey'];
+      if (catalogKey is! String) {
+        continue;
+      }
+      for (final entry in _objectList(binding['bindings'])) {
+        if (entry['voiceKey'] == voiceCatalogKey) {
+          modelKeys.add(catalogKey);
+        }
+      }
+    }
+  }
+  return listModels(catalog).where((model) {
+    final catalogKey = model['catalogKey'];
+    return catalogKey is String && modelKeys.contains(catalogKey);
+  }).toList();
+}
+
+String videoProfileCatalogKey(
+    String vendorCode, String modelId, String profileCode) {
+  return '$vendorCode/$modelId/$profileCode';
+}
+
+List<JsonObject> listVideoProfiles(
+  ModelCatalog catalog, {
+  String? vendorCode,
+  String? regionCode,
+  String? modelCatalogKey,
+  String? generationMode,
+  String? durationTierCode,
+  String? resolution,
+}) {
+  final result = <JsonObject>[];
+  for (final vendorCatalog in catalog.vendorCatalogs) {
+    if (vendorCode != null && vendorCatalog['vendorCode'] != vendorCode) {
+      continue;
+    }
+    if (regionCode != null && vendorCatalog['regionCode'] != regionCode) {
+      continue;
+    }
+    for (final profileFile in _objectList(vendorCatalog['modelVideoProfiles'])) {
+      if (modelCatalogKey != null && profileFile['catalogKey'] != modelCatalogKey) {
+        continue;
+      }
+      for (final profile in _objectList(profileFile['profiles'])) {
+        if (generationMode != null && profile['generationMode'] != generationMode) {
+          continue;
+        }
+        if (durationTierCode != null &&
+            profile['durationTierCode'] != durationTierCode &&
+            !_objectList(profile['durationTierCodes'])
+                .any((entry) => entry == durationTierCode)) {
+          continue;
+        }
+        if (resolution != null && profile['resolution'] != resolution) {
+          continue;
+        }
+        result.add(profile);
+      }
+    }
+  }
+  return result;
+}
+
+List<JsonObject> listVideoProfilesForModel(
+    ModelCatalog catalog, String modelCatalogKey) {
+  return listVideoProfiles(catalog, modelCatalogKey: modelCatalogKey);
+}
+
+JsonObject? findVideoProfile(ModelCatalog catalog, String profileCatalogKey) {
+  for (final profile in listVideoProfiles(catalog)) {
+    if (profile['catalogKey'] == profileCatalogKey) {
+      return profile;
+    }
+  }
+  return null;
+}
+
+List<JsonObject> _regionalVoices(ModelCatalog catalog) {
+  if (catalog.vendorCatalogs.isEmpty) {
+    return const [];
+  }
+  return [
+    for (final vendorCatalog in catalog.vendorCatalogs)
+      ..._objectList(vendorCatalog['voices'])
+  ];
+}
+
 List<JsonObject> _objectList(Object? value) {
   if (value is! List) {
     return const [];

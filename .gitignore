@@ -17,6 +17,7 @@ sdks/**/generated/**/dist/
 sdks/**/generated/**/package-lock.json
 
 *.log
+.catalog-audit.json
 __pycache__/
 *.py[cod]
 .DS_Store

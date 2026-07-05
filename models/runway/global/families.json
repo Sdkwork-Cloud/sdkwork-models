@@ -1,0 +1,23 @@
+{
+  "families": [
+    {
+      "defaultModel": "gen4.5",
+      "displayName": "Runway Gen-4 Video",
+      "familyCode": "runway-video",
+      "familyType": "video",
+      "primaryModality": "video",
+      "sortOrder": 10
+    },
+    {
+      "defaultModel": "gen4_image",
+      "displayName": "Runway Gen-4 Image",
+      "familyCode": "runway-image",
+      "familyType": "image",
+      "primaryModality": "image",
+      "sortOrder": 20
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "runway"
+}

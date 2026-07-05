@@ -1,0 +1,46 @@
+{
+  "catalogKey": "vidu/audio1.0-text2audio",
+  "currency": "CNY",
+  "modelId": "audio1.0-text2audio",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "notes": "Official bucket for audio1.0 text2audio output shorter than 5 seconds (10 credits at 0.03125 CNY/credit).",
+      "priceId": "vidu-cn-audio1-0-text2audio-under-5s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.cn/docs/pricing"
+      },
+      "tierCode": "under_5s",
+      "unitPrice": "0.312500",
+      "unitSize": "1"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "notes": "Official bucket for audio1.0 text2audio output shorter than 10 seconds (20 credits at 0.03125 CNY/credit).",
+      "priceId": "vidu-cn-audio1-0-text2audio-under-10s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.cn/docs/pricing"
+      },
+      "tierCode": "under_10s",
+      "unitPrice": "0.625000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu"
+}

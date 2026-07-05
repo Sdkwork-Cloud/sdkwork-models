@@ -1,0 +1,46 @@
+{
+  "catalogKey": "vidu/audio1.0-timing2audio",
+  "currency": "USD",
+  "modelId": "audio1.0-timing2audio",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "notes": "Official bucket for audio1.0 timing2audio output shorter than 5 seconds (10 credits).",
+      "priceId": "vidu-global-audio1-0-timing2audio-under-5s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "tierCode": "under_5s",
+      "unitPrice": "0.050000",
+      "unitSize": "1"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-03T00:00:00Z",
+      "meterCode": "sfx_result",
+      "minimumQuantity": "0",
+      "notes": "Official bucket for audio1.0 timing2audio output shorter than 10 seconds (20 credits).",
+      "priceId": "vidu-global-audio1-0-timing2audio-under-10s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-06-24T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "tierCode": "under_10s",
+      "unitPrice": "0.100000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "vidu"
+}
