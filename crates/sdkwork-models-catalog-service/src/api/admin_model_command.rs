@@ -12,11 +12,11 @@ use sdkwork_utils_rust::slugify;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
 use crate::api::response::{finish_success, problem_for};
-use sdkwork_web_core::WebRequestContext;
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -31,6 +31,7 @@ use crate::ports::{
     SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
 };
 use sdkwork_models_catalog_repository_sqlx::DEFAULT_CATALOG_REFRESH_SOURCE;
+use sdkwork_web_core::WebRequestContext;
 
 const MAX_VENDOR_CODE_LEN: usize = 64;
 const MAX_NAME_LEN: usize = 128;
@@ -88,6 +89,8 @@ const MAPPING_BINDING_TYPES: &[&str] = &[
 ];
 const MAPPING_MODES: &[&str] = &["alias"];
 const MAPPING_MATCH_TYPES: &[&str] = &["exact"];
+const DEFAULT_LIST_PAGE_SIZE: i64 = 20;
+const MAX_LIST_PAGE_SIZE: i64 = 200;
 
 #[derive(Clone)]
 struct AdminModelCommandState {
@@ -203,8 +206,8 @@ struct AdminModelsListQuery {
     vendor_code: Option<String>,
     q: Option<String>,
     model_types: Option<String>,
-    limit: Option<i64>,
-    offset: Option<i64>,
+    page: Option<i64>,
+    page_size: Option<i64>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -340,8 +343,13 @@ struct NormalizedModelUpdateRequest {
 #[serde(rename_all = "camelCase")]
 struct AdminModelListResponse<T> {
     items: Vec<T>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    total_count: Option<i64>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct AdminModelPageResponse<T> {
+    items: Vec<T>,
+    page_info: ApiPageInfo,
 }
 
 #[derive(Debug, Serialize)]
@@ -553,11 +561,15 @@ async fn fetch_vendors(
         .list_vendors(ListAdminModelVendorsQuery { subject })
         .await
     {
-        Ok(items) => finish_success(&ctx, AdminModelListResponse {
-            items: items.into_iter().map(to_vendor_response).collect(),
-            total_count: None,
-        }),
-        Err(error) => admin_model_system_response(&ctx, "model vendor read model is unavailable", error),
+        Ok(items) => finish_success(
+            &ctx,
+            AdminModelListResponse {
+                items: items.into_iter().map(to_vendor_response).collect(),
+            },
+        ),
+        Err(error) => {
+            admin_model_system_response(&ctx, "model vendor read model is unavailable", error)
+        }
     }
 }
 
@@ -569,7 +581,10 @@ async fn fetch_models(
     _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
-    let list_query = build_list_models_query(subject, query);
+    let list_query = match build_list_models_query(subject, query) {
+        Ok(query) => query,
+        Err(message) => return bad_request(&ctx, message),
+    };
     tracing::info!(
         operation = "models.list",
         tenant_id = list_query.subject.tenant_id,
@@ -581,6 +596,8 @@ async fn fetch_models(
         offset = list_query.normalized_offset(),
         "listing admin ai models"
     );
+    let page_size = list_query.normalized_limit();
+    let page_no = (list_query.normalized_offset() / page_size) + 1;
     match state.store.list_models(list_query).await {
         Ok(page) => {
             tracing::debug!(
@@ -589,12 +606,17 @@ async fn fetch_models(
                 total_count = page.total_count,
                 "listed admin ai models"
             );
-            finish_success(&ctx, AdminModelListResponse {
-                items: page.items.into_iter().map(to_model_response).collect(),
-                total_count: Some(page.total_count),
-            })
+            finish_success(
+                &ctx,
+                AdminModelPageResponse {
+                    items: page.items.into_iter().map(to_model_response).collect(),
+                    page_info: offset_page_info(page_no, page_size, page.total_count),
+                },
+            )
         }
-        Err(error) => admin_model_system_response(&ctx, "ai model read model is unavailable", error),
+        Err(error) => {
+            admin_model_system_response(&ctx, "ai model read model is unavailable", error)
+        }
     }
 }
 
@@ -611,11 +633,15 @@ async fn fetch_model_mappings(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.list_model_mappings(query).await {
-        Ok(items) => finish_success(&ctx, AdminModelListResponse {
-            items: items.into_iter().map(to_mapping_response).collect(),
-            total_count: None,
-        }),
-        Err(error) => admin_model_system_response(&ctx, "model mapping read model is unavailable", error),
+        Ok(items) => finish_success(
+            &ctx,
+            AdminModelListResponse {
+                items: items.into_iter().map(to_mapping_response).collect(),
+            },
+        ),
+        Err(error) => {
+            admin_model_system_response(&ctx, "model mapping read model is unavailable", error)
+        }
     }
 }
 
@@ -636,9 +662,12 @@ async fn create_vendor(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_vendor(command).await {
-        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
-            item: to_vendor_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminModelItemEnvelope {
+                item: to_vendor_response(item),
+            },
+        ),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
             admin_model_system_response(&ctx, "model vendor command store is unavailable", error)
@@ -663,12 +692,17 @@ async fn create_model(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_model(command).await {
-        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
-            item: to_model_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminModelItemEnvelope {
+                item: to_model_response(item),
+            },
+        ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
-        Err(error) => admin_model_system_response(&ctx, "ai model command store is unavailable", error),
+        Err(error) => {
+            admin_model_system_response(&ctx, "ai model command store is unavailable", error)
+        }
     }
 }
 
@@ -690,9 +724,12 @@ async fn create_model_mapping(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.create_model_mapping(command).await {
-        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
-            item: to_mapping_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminModelItemEnvelope {
+                item: to_mapping_response(item),
+            },
+        ),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
             admin_model_system_response(&ctx, "model mapping command store is unavailable", error)
@@ -719,12 +756,17 @@ async fn update_model(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.update_model(command).await {
-        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
-            item: to_model_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminModelItemEnvelope {
+                item: to_model_response(item),
+            },
+        ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
-        Err(error) => admin_model_system_response(&ctx, "ai model update store is unavailable", error),
+        Err(error) => {
+            admin_model_system_response(&ctx, "ai model update store is unavailable", error)
+        }
     }
 }
 
@@ -753,9 +795,12 @@ async fn update_model_mapping(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.update_model_mapping(command).await {
-        Ok(item) => finish_success(&ctx, AdminModelItemEnvelope {
-            item: to_mapping_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminModelItemEnvelope {
+                item: to_mapping_response(item),
+            },
+        ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
@@ -777,11 +822,11 @@ async fn delete_model(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.delete_model(command).await {
-        Ok(()) => finish_success(&ctx, 
-            serde_json::json!({ "deleted": true }),
-        ),
+        Ok(()) => finish_success(&ctx, serde_json::json!({ "deleted": true })),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
-        Err(error) => admin_model_system_response(&ctx, "ai model delete store is unavailable", error),
+        Err(error) => {
+            admin_model_system_response(&ctx, "ai model delete store is unavailable", error)
+        }
     }
 }
 
@@ -799,9 +844,7 @@ async fn delete_model_mapping(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.delete_model_mapping(command).await {
-        Ok(()) => finish_success(&ctx, 
-            serde_json::json!({ "deleted": true }),
-        ),
+        Ok(()) => finish_success(&ctx, serde_json::json!({ "deleted": true })),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
             admin_model_system_response(&ctx, "model mapping delete store is unavailable", error)
@@ -827,9 +870,7 @@ async fn resolve_model_mapping(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.resolve_model_mapping(query).await {
-        Ok(result) => {
-            finish_success(&ctx, to_mapping_resolve_response(result))
-        }
+        Ok(result) => finish_success(&ctx, to_mapping_resolve_response(result)),
         Err(error) => {
             admin_model_system_response(&ctx, "model mapping resolve store is unavailable", error)
         }
@@ -856,7 +897,9 @@ async fn sync_catalog(
     };
     match state.store.sync_catalog(command).await {
         Ok(item) => finish_success(&ctx, to_sync_response(item)),
-        Err(error) => admin_model_system_response(&ctx, "model catalog sync store is unavailable", error),
+        Err(error) => {
+            admin_model_system_response(&ctx, "model catalog sync store is unavailable", error)
+        }
     }
 }
 
@@ -1034,16 +1077,26 @@ fn build_sync_catalog_command(
 fn build_list_models_query(
     subject: AdminModelSubject,
     query: AdminModelsListQuery,
-) -> ListAdminAiModelsQuery {
-    ListAdminAiModelsQuery {
+) -> Result<ListAdminAiModelsQuery, String> {
+    let page = query.page.unwrap_or(1);
+    if page < 1 {
+        return Err("page must be greater than or equal to 1".to_owned());
+    }
+    let page_size = query.page_size.unwrap_or(DEFAULT_LIST_PAGE_SIZE);
+    if !(1..=MAX_LIST_PAGE_SIZE).contains(&page_size) {
+        return Err(format!(
+            "page_size must be between 1 and {MAX_LIST_PAGE_SIZE}"
+        ));
+    }
+    Ok(ListAdminAiModelsQuery {
         subject,
         vendor_id: query.vendor_id,
         vendor_code: query.vendor_code,
         q: query.q,
         model_types: query.model_types,
-        limit: query.limit,
-        offset: query.offset,
-    }
+        limit: Some(page_size),
+        offset: Some((page - 1) * page_size),
+    })
 }
 
 fn build_list_model_mappings_query(
@@ -2786,7 +2839,10 @@ fn conflict_response(ctx: &WebRequestContext, error: DomainError) -> Response {
     problem_for(ctx, SdkWorkResultCode::Conflict, error.to_string())
 }
 
-fn command_build_error_response(ctx: &WebRequestContext, error: AdminModelCommandBuildError) -> Response {
+fn command_build_error_response(
+    ctx: &WebRequestContext,
+    error: AdminModelCommandBuildError,
+) -> Response {
     match error {
         AdminModelCommandBuildError::BadRequest(message) => bad_request(&ctx, message),
         AdminModelCommandBuildError::System(error) => {
@@ -2795,7 +2851,11 @@ fn command_build_error_response(ctx: &WebRequestContext, error: AdminModelComman
     }
 }
 
-fn admin_model_system_response(ctx: &WebRequestContext, context: &str, error: DomainError) -> Response {
+fn admin_model_system_response(
+    ctx: &WebRequestContext,
+    context: &str,
+    error: DomainError,
+) -> Response {
     problem_for(
         ctx,
         SdkWorkResultCode::InternalError,

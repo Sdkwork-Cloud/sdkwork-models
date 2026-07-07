@@ -563,12 +563,10 @@ pub(crate) fn catalog_authority_keys(catalog: &ModelCatalog) -> CatalogAuthority
         .vendors
         .iter()
         .flat_map(|vendor| {
-            vendor.voices.iter().map(|voice| {
-                stable_uuid(
-                    "sdk-voice",
-                    &[&voice.vendor_code, &voice.voice_id],
-                )
-            })
+            vendor
+                .voices
+                .iter()
+                .map(|voice| stable_uuid("sdk-voice", &[&voice.vendor_code, &voice.voice_id]))
         })
         .collect::<BTreeSet<_>>()
         .into_iter()
@@ -1810,10 +1808,7 @@ mod tests {
 
     #[test]
     fn catalog_sync_run_uuid_fits_varchar_64_for_installer_style_snapshot_uuid() {
-        let snapshot_uuid = format!(
-            "catalog-refresh-{}",
-            "11111111-1111-4111-8111-111111111111"
-        );
+        let snapshot_uuid = format!("catalog-refresh-{}", "11111111-1111-4111-8111-111111111111");
         let sync_run_uuid = catalog_sync_run_uuid(&snapshot_uuid);
         assert!(
             sync_run_uuid.len() <= 64,

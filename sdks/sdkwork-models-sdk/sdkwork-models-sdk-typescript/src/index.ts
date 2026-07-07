@@ -15,6 +15,7 @@ export {
   listModelsByCapability,
   listModelsByModality,
   listModelsByProtocol,
+  listModelsWithFeature,
   listModelsForVoice,
   listProtocols,
   listProtocolsByVendor,
@@ -28,5 +29,30 @@ export {
   videoProfileCatalogKey,
   voiceCatalogKey,
 } from "./query.js";
+export {
+  MODEL_FEATURES,
+  MODEL_INPUT_MODALITIES,
+  MODEL_OUTPUT_MODALITIES,
+  getModelCapabilityProfile,
+  listModelFeatures,
+  modelSupportsAudioInput,
+  modelSupportsAudioOutput,
+  modelSupportsFeature,
+  modelSupportsImageInput,
+  modelSupportsImageOutput,
+  modelSupportsInputModality,
+  modelSupportsOutputModality,
+  modelSupportsSpeechInput,
+  modelSupportsSpeechOutput,
+  modelSupportsStreaming,
+  modelSupportsStructuredOutput,
+  modelSupportsTextInput,
+  modelSupportsTextOutput,
+  modelSupportsToolCall,
+  modelSupportsVideoInput,
+  modelSupportsVideoOutput,
+  modelSupportsVision,
+} from "./model-capabilities.js";
 export { validateCatalog } from "./validation.js";
 export type * from "./types.js";
+export type { ModelCapabilityProfile, ModelCapabilitySubject, ModelFeature } from "./model-capabilities.js";

@@ -60,6 +60,9 @@ impl ListModelCatalogQuery {
 pub struct ModelCatalogPage {
     pub items: Vec<ModelCatalogItem>,
     pub groups: Vec<ModelCatalogGroup>,
+    pub limit: usize,
+    pub offset: usize,
+    pub total_items: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -230,7 +233,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
             })
             .collect::<Vec<_>>();
         let group_catalog = configured_model_group_catalog(self.catalog, &all_items);
-        let models = all_items
+        let filtered_models = all_items
             .into_iter()
             .filter(|item| {
                 model_matches_filter(
@@ -243,6 +246,10 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                     search_query.as_deref(),
                 )
             })
+            .collect::<Vec<_>>();
+        let total_items = filtered_models.len();
+        let models = filtered_models
+            .into_iter()
             .skip(offset)
             .take(limit)
             .collect();
@@ -250,6 +257,9 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         Ok(ModelCatalogPage {
             items: models,
             groups: group_catalog,
+            limit,
+            offset,
+            total_items,
         })
     }
 

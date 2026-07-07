@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use axum::Router;
-use sdkwork_models_standalone_gateway::ModelsServiceHost;
 use sdkwork_models_standalone_gateway::application_cors_layer;
+use sdkwork_models_standalone_gateway::ModelsServiceHost;
 use tracing::info;
 
 #[tokio::main]

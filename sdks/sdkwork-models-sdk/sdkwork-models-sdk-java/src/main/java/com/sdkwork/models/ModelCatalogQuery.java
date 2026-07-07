@@ -162,6 +162,12 @@ public final class ModelCatalogQuery {
         return listModels(catalog, Map.of("inputModality", inputModality, "outputModality", outputModality));
     }
 
+    public static List<Map<String, Object>> listModelsWithFeature(ModelCatalog catalog, String feature) {
+        return listModels(catalog).stream()
+                .filter(model -> ModelCapabilities.modelSupportsFeature(model, feature))
+                .toList();
+    }
+
     public static List<Map<String, Object>> listProtocols(ModelCatalog catalog) {
         return catalog.protocols();
     }

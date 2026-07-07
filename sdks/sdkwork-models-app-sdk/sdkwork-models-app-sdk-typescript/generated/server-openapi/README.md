@@ -27,7 +27,7 @@ client.setAuthToken('your-auth-token');
 client.setAccessToken('your-access-token');
 
 // Use the SDK
-const result = await client.ai.modelRankings.list();
+const result = await client.ai.modelVendors.list();
 ```
 
 ## Authentication
@@ -62,7 +62,7 @@ const client = new SdkworkAppClient({
 
 ```typescript
 // List
-const result = await client.ai.modelRankings.list();
+const result = await client.ai.modelVendors.list();
 ```
 
 ## Error Handling
@@ -71,7 +71,7 @@ const result = await client.ai.modelRankings.list();
 import { SdkworkAppClient, NetworkError, TimeoutError, AuthenticationError } from 'sdkwork-models-app-sdk-generated-typescript';
 
 try {
-  const result = await client.ai.modelRankings.list();
+  const result = await client.ai.modelVendors.list();
 } catch (error) {
   if (error instanceof AuthenticationError) {
     console.error('Authentication failed:', error.message);

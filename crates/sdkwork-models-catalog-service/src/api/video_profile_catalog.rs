@@ -60,7 +60,9 @@ struct VideoProfileCatalogQuery {
     resolution: Option<String>,
 }
 
-fn video_profile_list_page(items: Vec<VideoGenerationProfile>) -> SdkWorkPageData<VideoGenerationProfile> {
+fn video_profile_list_page(
+    items: Vec<VideoGenerationProfile>,
+) -> SdkWorkPageData<VideoGenerationProfile> {
     let total = items.len();
     SdkWorkPageData {
         items,
@@ -109,10 +111,16 @@ struct ModelVideoProfilePath {
     modelId: String,
 }
 
-fn video_profile_catalog_router(catalog: Arc<ModelCatalog>, surface: VideoProfileRouteSurface) -> Router {
+fn video_profile_catalog_router(
+    catalog: Arc<ModelCatalog>,
+    surface: VideoProfileRouteSurface,
+) -> Router {
     let state = VideoProfileCatalogState { catalog };
     Router::new()
-        .route(surface.list_profiles_path(), get(list_video_profiles_handler))
+        .route(
+            surface.list_profiles_path(),
+            get(list_video_profiles_handler),
+        )
         .route(
             surface.list_model_profiles_path(),
             get(list_model_video_profiles_handler),

@@ -260,4 +260,27 @@ class ModelCatalogTest {
         assertEquals(null, SdkworkModels.findModel(catalog, "openrouter/global/anthropic/claude-3-opus"));
         assertEquals(0, ModelCatalogQuery.getModelPrices(catalog, "openrouter/global/anthropic/claude-3-opus").size());
     }
+
+    @Test
+    void testModelCapabilities() {
+        Map<String, Object> model = Map.ofEntries(
+                entry("catalogKey", "anthropic/claude-opus-4-8"),
+                entry("primaryCapability", "chat"),
+                entry("capabilities", List.of("chat")),
+                entry("inputModalities", List.of("text", "image")),
+                entry("outputModalities", List.of("text")),
+                entry("supportsStreaming", true),
+                entry("supportsTools", true),
+                entry("supportsJsonSchema", true)
+        );
+
+        assertEquals(true, ModelCapabilities.modelSupportsVision(model));
+        assertEquals(true, ModelCapabilities.modelSupportsToolCall(model));
+        assertEquals(false, ModelCapabilities.modelSupportsAudioInput(model));
+        assertEquals(true, ModelCapabilities.modelSupportsFeature(model, "structured_output"));
+
+        Map<String, Object> profile = ModelCapabilities.getModelCapabilityProfile(model);
+        assertEquals("anthropic/claude-opus-4-8", profile.get("catalogKey"));
+        assertEquals(true, ((List<?>) profile.get("features")).contains("tool_call"));
+    }
 }

@@ -205,6 +205,23 @@ export function validateCatalog(root) {
       if (!model.source?.sourceUrl || !model.source?.observedAt) {
         issues.push(issue("model.source.missing", `${modelPath}#/source`, "model sourceUrl and observedAt are required"));
       }
+      for (const capabilityField of ["supportsStreaming", "supportsTools", "supportsJsonSchema"]) {
+        if (typeof model[capabilityField] !== "boolean") {
+          issues.push(
+            issue(
+              "model.capability_flag.missing",
+              `${modelPath}#/${capabilityField}`,
+              `${capabilityField} must be a boolean; run node tools/align-model-capabilities.mjs to backfill`,
+            ),
+          );
+        }
+      }
+      if (!Array.isArray(model.inputModalities) || model.inputModalities.length === 0) {
+        issues.push(issue("model.input_modalities.missing", `${modelPath}#/inputModalities`, "inputModalities must declare at least one modality"));
+      }
+      if (!Array.isArray(model.outputModalities) || model.outputModalities.length === 0) {
+        issues.push(issue("model.output_modalities.missing", `${modelPath}#/outputModalities`, "outputModalities must declare at least one modality"));
+      }
       if (!protocolCodes.has(model.apiFormat)) {
         issues.push(issue("model.protocol.unknown", `${modelPath}#/apiFormat`, `${model.apiFormat} is not defined in models/protocols.json`));
       } else if (!supportedProtocols.has(model.apiFormat)) {

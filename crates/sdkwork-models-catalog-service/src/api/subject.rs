@@ -82,9 +82,7 @@ mod tests {
     use axum::body::to_bytes;
     use axum::http::StatusCode;
     use sdkwork_claw_http::TrustedRequestSubject;
-    use sdkwork_web_core::{
-        ServerRequestId, WebApiSurface, WebAuthMode, WebTransportFacts,
-    };
+    use sdkwork_web_core::{ServerRequestId, WebApiSurface, WebAuthMode, WebTransportFacts};
 
     fn test_context() -> WebRequestContext {
         WebRequestContext {
@@ -135,10 +133,7 @@ mod tests {
             .expect("body");
         let payload: serde_json::Value = serde_json::from_slice(&body).expect("json");
         assert_eq!(payload["code"], 40101);
-        assert_eq!(
-            payload["traceId"].as_str(),
-            Some("trace-from-context-abc")
-        );
+        assert_eq!(payload["traceId"].as_str(), Some("trace-from-context-abc"));
     }
 
     #[test]

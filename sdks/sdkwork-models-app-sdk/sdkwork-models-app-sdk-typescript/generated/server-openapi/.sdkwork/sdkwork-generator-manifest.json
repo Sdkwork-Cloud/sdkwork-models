@@ -44,7 +44,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "6334f7ac348a33052505685ab7da7c9aea9120d580f76c939231ec3edab7ca4a"
+      "sha256": "1656c2d0e1a86c909e5d2320f5baa97a23c89bb3ebf378bf19e872895e320662"
     },
     {
       "path": "sdkwork-sdk.json",
@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "10164a3120d2308df85cc0373d8883f6f293639fc882396f5467d6bbcf032f98"
+      "sha256": "45271bc0e760e729ac13c1c946e8303ad1dd42dbb09a22413e1c695aaddf6327"
     },
     {
       "path": "src/api/base.ts",
@@ -92,11 +92,47 @@
     },
     {
       "path": "src/types/field-error.ts",
-      "sha256": "df70e331e6bff0817bc35428286fa8de5d7274ab83a6c60d7184759bf680a088"
+      "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "e934477bc6b72e35cf45529015a9c8eba8f00a613e4cfc65935d00c0e4093233"
+      "sha256": "b46e2fd0da8bc719f09a0640980ba534908faf322666e10a820b981ca65dd893"
+    },
+    {
+      "path": "src/types/json-null.ts",
+      "sha256": "2ef891ef2a54f476c457aeca7ec7d3d5d2cbdca19343fdefd8dfcbcd2767d856"
+    },
+    {
+      "path": "src/types/json-object.ts",
+      "sha256": "04704abb01de7d5513b15123d50250ec48306f6ef07a2e239d83de3357642529"
+    },
+    {
+      "path": "src/types/json-value.ts",
+      "sha256": "22654cfefd5c2d5b7d4055c69738f83a6ec78e22cf28435ee38e04224788116d"
+    },
+    {
+      "path": "src/types/model-catalog-page.ts",
+      "sha256": "4826ed773da6b331cac3244aa931cbe48f5f3be7ba983dc88843efcc16b0ce6e"
+    },
+    {
+      "path": "src/types/model-rankings-list-result.ts",
+      "sha256": "81c21e1699f2ed045d7e94723cdfc58ed251497167327072a271da49f368179a"
+    },
+    {
+      "path": "src/types/model-rankings-page.ts",
+      "sha256": "a38c85802c55fabe906e386422733a3025d9d364c72b1de4043776906474f97f"
+    },
+    {
+      "path": "src/types/model-vendors-list-result.ts",
+      "sha256": "17548b3d0304001e0c55616b683b2541d98bb34dabfdac8a7d108e132c9fe39f"
+    },
+    {
+      "path": "src/types/models-list-result.ts",
+      "sha256": "e106597630f8aee81d9505a5907bf005302ccccab1ba6674e050964486e7ff56"
+    },
+    {
+      "path": "src/types/no-data.ts",
+      "sha256": "85014112e547cd24ccb577486023c163abaf5e8c9b98dae6d6f1c1bb3dd25836"
     },
     {
       "path": "src/types/page-info.ts",
@@ -104,7 +140,7 @@
     },
     {
       "path": "src/types/problem-detail.ts",
-      "sha256": "deca621176487754cbfa2012aa3eab046131ced5829ddf7cff64de692f8bcb0e"
+      "sha256": "c41fdf6433e1167d2fb1f3ac38fd13eb77178f4c0633c9e27824f1e1687ee4f6"
     },
     {
       "path": "src/types/sdk-work-api-response.ts",

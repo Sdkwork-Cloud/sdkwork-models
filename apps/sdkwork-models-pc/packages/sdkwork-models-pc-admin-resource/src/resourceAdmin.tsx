@@ -11,6 +11,7 @@ import {
   ResourceGroupService,
   type ResourceGroupCreateInput,
   type ResourceGroupItem,
+  type ResourcePageInfo,
   type ResourceGroupResourceItem,
   type ResourceGroupUpdateInput,
 } from './resourceGroupService';
@@ -35,6 +36,14 @@ const emptyForm = (): GroupFormState => ({
   memberCodes: [],
 });
 
+const emptyPageInfo = (pageSize: number): ResourcePageInfo => ({
+  page: 1,
+  pageSize,
+  totalItems: 0,
+  totalPages: 0,
+  hasMore: false,
+});
+
 export function ResourceAdmin() {
   const { t } = useTranslation();
   const [groups, setGroups] = useState<ResourceGroupItem[]>([]);
@@ -44,6 +53,7 @@ export function ResourceAdmin() {
   const [resourceSearch, setResourceSearch] = useState('');
   const [resourcePage, setResourcePage] = useState(1);
   const [resourcePageSize, setResourcePageSize] = useState(20);
+  const [resourcePageInfo, setResourcePageInfo] = useState<ResourcePageInfo>(() => emptyPageInfo(20));
   const [loadingGroups, setLoadingGroups] = useState(true);
   const [loadingResources, setLoadingResources] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -65,23 +75,6 @@ export function ResourceAdmin() {
     [allResourceOptions],
   );
 
-  const filteredResources = useMemo(() => {
-    const query = resourceSearch.trim().toLowerCase();
-    if (!query) {
-      return groupResources;
-    }
-    return groupResources.filter((resource) =>
-      [resource.displayName, resource.resourceCode, resource.vendorCode, resource.modalityCode, resource.resourceType]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(query)),
-    );
-  }, [groupResources, resourceSearch]);
-
-  const paginatedResources = useMemo(() => {
-    const start = (resourcePage - 1) * resourcePageSize;
-    return filteredResources.slice(start, start + resourcePageSize);
-  }, [filteredResources, resourcePage, resourcePageSize]);
-
   const loadGroups = async () => {
     setLoadingGroups(true);
     setLoadError(null);
@@ -89,6 +82,7 @@ export function ResourceAdmin() {
       const nextGroups = await ResourceGroupService.fetchResourceGroups();
       setGroups(nextGroups);
       setSelectedGroupCode(nextGroups.find(group => group.groupCode === 'api.all')?.groupCode ?? nextGroups[0]?.groupCode ?? null);
+      setResourcePage(1);
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadGroups'));
     } finally {
@@ -98,7 +92,6 @@ export function ResourceAdmin() {
 
   const loadAllResources = async () => {
     try {
-      await ResourceGroupService.fetchResourceGroupResources('api.all');
       const items = await ResourceGroupService.fetchAssignableResources();
       setAllResources(
         items.map((item) => ({
@@ -120,20 +113,29 @@ export function ResourceAdmin() {
     }
   };
 
-  const loadSelectedGroupResources = async (group: ResourceGroupItem | null) => {
+  const loadSelectedGroupResources = async (
+    group: ResourceGroupItem | null,
+    query = {
+      page: resourcePage,
+      pageSize: resourcePageSize,
+      q: resourceSearch,
+    },
+  ) => {
     if (!group) {
       setGroupResources([]);
+      setResourcePageInfo(emptyPageInfo(resourcePageSize));
       return;
     }
     setLoadingResources(true);
     setLoadError(null);
     try {
-      const resources = await ResourceGroupService.fetchResourceGroupResources(group.groupCode);
-      setGroupResources(resources);
-      setResourcePage(1);
+      const resources = await ResourceGroupService.fetchResourceGroupResourcesPage(group.groupCode, query);
+      setGroupResources(resources.items);
+      setResourcePageInfo(resources.pageInfo);
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
       setGroupResources([]);
+      setResourcePageInfo(emptyPageInfo(resourcePageSize));
     } finally {
       setLoadingResources(false);
     }
@@ -147,23 +149,15 @@ export function ResourceAdmin() {
   useEffect(() => {
     if (!selectedGroup) {
       setGroupResources([]);
+      setResourcePageInfo(emptyPageInfo(resourcePageSize));
       return;
     }
-    void (async () => {
-      setLoadingResources(true);
-      setLoadError(null);
-      try {
-        const resources = await ResourceGroupService.fetchResourceGroupResources(selectedGroup.groupCode);
-        setGroupResources(resources);
-        setResourcePage(1);
-      } catch (error) {
-        setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
-        setGroupResources([]);
-      } finally {
-        setLoadingResources(false);
-      }
-    })();
-  }, [selectedGroup?.id, selectedGroup?.groupCode, t]);
+    void loadSelectedGroupResources(selectedGroup, {
+      page: resourcePage,
+      pageSize: resourcePageSize,
+      q: resourceSearch,
+    });
+  }, [selectedGroup?.id, selectedGroup?.groupCode, resourcePage, resourcePageSize, resourceSearch, t]);
 
   const startCreate = () => {
     setForm(emptyForm());
@@ -174,7 +168,7 @@ export function ResourceAdmin() {
     void (async () => {
       setLoadError(null);
       try {
-        const resources = await ResourceGroupService.fetchResourceGroupResources(group.groupCode);
+        const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(group.groupCode);
         setForm({
           id: group.id,
           groupCode: group.groupCode,
@@ -282,7 +276,8 @@ export function ResourceAdmin() {
     setSaving(true);
     setLoadError(null);
     try {
-      const memberCodes = groupResources
+      const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(selectedGroup.groupCode);
+      const memberCodes = resources
         .map((resource) => resource.resourceCode)
         .filter((code) => code !== resourceCode);
       await ResourceGroupService.updateResourceGroup(selectedGroup.id, {
@@ -302,9 +297,22 @@ export function ResourceAdmin() {
   };
 
   const openResourceAssignmentSelector = () => {
-    const resources = groupResources;
-    setResourceAssignmentDraftCodes(resources.map(resource => resource.resourceCode));
-    setResourceAssignmentSelectorOpen(true);
+    if (!selectedGroup) {
+      return;
+    }
+    void (async () => {
+      setLoadingResources(true);
+      setLoadError(null);
+      try {
+        const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(selectedGroup.groupCode);
+        setResourceAssignmentDraftCodes(resources.map(resource => resource.resourceCode));
+        setResourceAssignmentSelectorOpen(true);
+      } catch (error) {
+        setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
+      } finally {
+        setLoadingResources(false);
+      }
+    })();
   };
 
   const formSelectedResources = form.memberCodes
@@ -358,7 +366,10 @@ export function ResourceAdmin() {
                 <button
                   key={group.id}
                   type="button"
-                  onClick={() => setSelectedGroupCode(group.groupCode)}
+                  onClick={() => {
+                    setSelectedGroupCode(group.groupCode);
+                    setResourcePage(1);
+                  }}
                   className={`mb-1 flex w-full flex-col rounded-lg px-3 py-2 text-left transition ${
                     selectedGroupCode === group.groupCode
                       ? 'bg-indigo-50 text-indigo-900 dark:bg-indigo-500/10 dark:text-indigo-100'
@@ -447,7 +458,7 @@ export function ResourceAdmin() {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('admin.model.resources.loading')}
                   </div>
-                ) : filteredResources.length === 0 ? (
+                ) : groupResources.length === 0 ? (
                   <div className="flex items-center justify-center py-12 text-sm text-slate-500">{t('admin.model.resources.emptyResources')}</div>
                 ) : (
                   <table data-admin-model-resource-table className="w-full min-w-[860px] text-left text-sm">
@@ -463,7 +474,7 @@ export function ResourceAdmin() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 dark:divide-white/5">
-                      {paginatedResources.map((resource) => (
+                      {groupResources.map((resource) => (
                         <tr key={resource.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.03]">
                           <td className="px-5 py-3">
                             <div className="font-medium text-slate-900 dark:text-white">{resource.displayName}</div>
@@ -496,8 +507,8 @@ export function ResourceAdmin() {
                 <BottomPagination
                   page={resourcePage}
                   pageSize={resourcePageSize}
-                  itemCount={paginatedResources.length}
-                  hasNextPage={resourcePage * resourcePageSize < filteredResources.length}
+                  itemCount={groupResources.length}
+                  hasNextPage={resourcePageInfo.hasMore}
                   showingLabel={t('admin.model.resources.pagination.showing')}
                   pageLabel={t('admin.model.resources.pagination.page', { page: resourcePage })}
                   pageSizeLabel={t('admin.model.resources.pagination.pageSize')}

@@ -19,6 +19,9 @@
     "releaseStage",
     "shelfState",
     "routingState",
+    "supportsStreaming",
+    "supportsTools",
+    "supportsJsonSchema",
     "source"
   ],
   "properties": {
@@ -100,11 +103,34 @@
         "catalog_only"
       ]
     },
+    "supportsStreaming": {
+      "description": "Whether the model supports streamed (SSE/chunked) response delivery. Aligns with OpenAI stream=true and Gemini streamGenerateContent.",
+      "type": "boolean",
+      "default": false
+    },
+    "supportsTools": {
+      "description": "Whether the model supports tool/function calling (OpenAI tools, Anthropic tools, Gemini function calling).",
+      "type": "boolean",
+      "default": false
+    },
+    "supportsJsonSchema": {
+      "description": "Whether the model supports structured output constrained by JSON Schema (OpenAI response_format json_schema, Gemini responseSchema).",
+      "type": "boolean",
+      "default": false
+    },
     "source": {
       "$ref": "#/$defs/sourceEvidence"
     }
   },
   "$defs": {
+    "modelFeature": {
+      "description": "Protocol interaction feature derived from supports* flags. Use SDK modelSupportsFeature() for runtime checks.",
+      "enum": [
+        "streaming",
+        "tool_call",
+        "structured_output"
+      ]
+    },
     "capability": {
       "enum": [
         "chat",

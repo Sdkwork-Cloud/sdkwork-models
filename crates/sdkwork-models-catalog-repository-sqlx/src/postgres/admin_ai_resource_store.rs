@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
 use sdkwork_models_contract_service::{
-    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceItem,
-    AdminAiResourceMemberCommand, AdminAiResourceMemberItem, AdminAiResourceReadFuture,
-    AdminAiResourceStore, CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
+    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceGroupResourcesPage,
+    AdminAiResourceItem, AdminAiResourceListPage, AdminAiResourceMemberCommand,
+    AdminAiResourceMemberItem, AdminAiResourceReadFuture, AdminAiResourceStore,
+    CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
     DeleteAdminAiResourceGroupCommand, DomainError, DomainResult,
     ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
     ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
@@ -39,7 +40,7 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
     fn list_ai_resources<'a>(
         &'a self,
         query: ListAdminAiResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceListPage> {
         Box::pin(async move { list_ai_resources(&self.pool, query).await })
     }
 
@@ -232,7 +233,7 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
     fn list_ai_resource_group_resources<'a>(
         &'a self,
         query: ListAdminAiResourceGroupResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupResourceItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupResourcesPage> {
         Box::pin(async move { list_ai_resource_group_resources(&self.pool, query).await })
     }
 
@@ -261,9 +262,48 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
 async fn list_ai_resources(
     pool: &PgPool,
     query: ListAdminAiResourcesQuery,
-) -> DomainResult<Vec<AdminAiResourceItem>> {
+) -> DomainResult<AdminAiResourceListPage> {
     let members =
         load_members(pool, query.subject.tenant_id, query.subject.organization_id).await?;
+    let search = resource_search_pattern(query.q.as_deref());
+    let total_count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(1)
+        FROM ai_resource
+        WHERE (
+                (tenant_id = $1 AND organization_id = $2)
+                OR (tenant_id = 0 AND organization_id = 0)
+              )
+          AND deleted_at IS NULL
+          AND NOT (
+              tenant_id = 0
+              AND organization_id = 0
+              AND ($1 <> 0 OR $2 <> 0)
+              AND EXISTS (
+                  SELECT 1
+                  FROM ai_resource tenant_resource
+                  WHERE tenant_resource.tenant_id = $1
+                    AND tenant_resource.organization_id = $2
+                    AND tenant_resource.resource_code = ai_resource.resource_code
+                    AND tenant_resource.deleted_at IS NULL
+              )
+          )
+          AND (
+              $3::text IS NULL
+              OR resource_code ILIKE $3
+              OR COALESCE(NULLIF(display_name, ''), resource_code) ILIKE $3
+              OR COALESCE(resource_type, '') ILIKE $3
+              OR COALESCE(vendor_code, '') ILIKE $3
+              OR COALESCE(modality_code, '') ILIKE $3
+          )
+        "#,
+    )
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count AI resources", error))?;
     let rows = sqlx::query(
         r#"
         SELECT
@@ -313,19 +353,32 @@ async fn list_ai_resources(
                     AND tenant_resource.deleted_at IS NULL
               )
           )
+          AND (
+              $3::text IS NULL
+              OR resource_code ILIKE $3
+              OR COALESCE(NULLIF(display_name, ''), resource_code) ILIKE $3
+              OR COALESCE(resource_type, '') ILIKE $3
+              OR COALESCE(vendor_code, '') ILIKE $3
+              OR COALESCE(modality_code, '') ILIKE $3
+          )
         ORDER BY COALESCE(sort_order, 100000) ASC, id ASC
-        LIMIT 1000
+        LIMIT $4 OFFSET $5
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .bind(query.normalized_limit())
+    .bind(query.normalized_offset())
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list AI resources", error))?;
 
-    rows.into_iter()
+    let items = rows
+        .into_iter()
         .map(|row| item_from_row(row, &members))
-        .collect()
+        .collect::<DomainResult<Vec<_>>>()?;
+    Ok(AdminAiResourceListPage { items, total_count })
 }
 
 async fn list_ai_resource_groups(
@@ -448,7 +501,7 @@ async fn list_ai_resource_groups(
 async fn list_ai_resource_group_resources(
     pool: &PgPool,
     query: ListAdminAiResourceGroupResourcesQuery,
-) -> DomainResult<Vec<AdminAiResourceGroupResourceItem>> {
+) -> DomainResult<AdminAiResourceGroupResourcesPage> {
     let group = load_group_header(
         pool,
         query.subject.tenant_id,
@@ -458,8 +511,51 @@ async fn list_ai_resource_group_resources(
     .await?
     .ok_or_else(|| DomainError::not_found("AI resource group was not found"))?;
     let dynamic = is_dynamic_group(group.group_code.as_str(), group.selection_mode.as_str());
-    let rows = if dynamic {
-        sqlx::query(
+    let search = resource_search_pattern(query.q.as_deref());
+    let limit = query.normalized_limit();
+    let offset = query.normalized_offset();
+
+    let (total_count, rows) = if dynamic {
+        let total_count: i64 = sqlx::query_scalar(
+            r#"
+            SELECT COUNT(1)
+            FROM ai_resource r
+            WHERE (
+                    (r.tenant_id = $1 AND r.organization_id = $2)
+                    OR (r.tenant_id = 0 AND r.organization_id = 0)
+                  )
+              AND r.resource_type = 'api_endpoint'
+              AND r.deleted_at IS NULL
+              AND NOT (
+                  r.tenant_id = 0
+                  AND r.organization_id = 0
+                  AND ($1 <> 0 OR $2 <> 0)
+                  AND EXISTS (
+                      SELECT 1
+                      FROM ai_resource tenant_resource
+                      WHERE tenant_resource.tenant_id = $1
+                        AND tenant_resource.organization_id = $2
+                        AND tenant_resource.resource_code = r.resource_code
+                        AND tenant_resource.deleted_at IS NULL
+                  )
+              )
+              AND (
+                  $3::text IS NULL
+                  OR r.resource_code ILIKE $3
+                  OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) ILIKE $3
+                  OR COALESCE(r.resource_type, '') ILIKE $3
+                  OR COALESCE(r.vendor_code, '') ILIKE $3
+                  OR COALESCE(r.modality_code, '') ILIKE $3
+              )
+            "#,
+        )
+        .bind(group.tenant_id)
+        .bind(group.organization_id)
+        .bind(search.as_deref())
+        .fetch_one(pool)
+        .await
+        .map_err(|error| store_error("failed to count AI resource group resources", error))?;
+        let rows = sqlx::query(
             r#"
             SELECT
                 r.id,
@@ -495,16 +591,76 @@ async fn list_ai_resource_group_resources(
                         AND tenant_resource.deleted_at IS NULL
                   )
               )
+              AND (
+                  $3::text IS NULL
+                  OR r.resource_code ILIKE $3
+                  OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) ILIKE $3
+                  OR COALESCE(r.resource_type, '') ILIKE $3
+                  OR COALESCE(r.vendor_code, '') ILIKE $3
+                  OR COALESCE(r.modality_code, '') ILIKE $3
+              )
             ORDER BY COALESCE(r.sort_order, 100000) ASC, r.id ASC
-            LIMIT 2000
+            LIMIT $4 OFFSET $5
             "#,
         )
         .bind(group.tenant_id)
         .bind(group.organization_id)
+        .bind(search.as_deref())
+        .bind(limit)
+        .bind(offset)
         .fetch_all(pool)
         .await
+        .map_err(|error| store_error("failed to list AI resource group resources", error))?;
+        (total_count, rows)
     } else {
-        sqlx::query(
+        let total_count: i64 = sqlx::query_scalar(
+            r#"
+            SELECT COUNT(1)
+            FROM ai_resource_group_item item
+            JOIN ai_resource r
+              ON r.resource_code = item.resource_code
+             AND r.deleted_at IS NULL
+             AND (
+                  (r.tenant_id = item.tenant_id AND r.organization_id = item.organization_id)
+                  OR (r.tenant_id = 0 AND r.organization_id = 0)
+             )
+             AND NOT (
+                  r.tenant_id = 0
+                  AND r.organization_id = 0
+                  AND (item.tenant_id <> 0 OR item.organization_id <> 0)
+                  AND EXISTS (
+                      SELECT 1
+                      FROM ai_resource tenant_resource
+                      WHERE tenant_resource.tenant_id = item.tenant_id
+                        AND tenant_resource.organization_id = item.organization_id
+                        AND tenant_resource.resource_code = item.resource_code
+                        AND tenant_resource.deleted_at IS NULL
+                  )
+             )
+            WHERE item.tenant_id = $1
+              AND item.organization_id = $2
+              AND item.resource_group_id = $3
+              AND item.item_type = 'resource'
+              AND item.deleted_at IS NULL
+              AND item.status = 1
+              AND (
+                  $4::text IS NULL
+                  OR r.resource_code ILIKE $4
+                  OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) ILIKE $4
+                  OR COALESCE(r.resource_type, '') ILIKE $4
+                  OR COALESCE(r.vendor_code, '') ILIKE $4
+                  OR COALESCE(r.modality_code, '') ILIKE $4
+              )
+            "#,
+        )
+        .bind(group.tenant_id)
+        .bind(group.organization_id)
+        .bind(group.id)
+        .bind(search.as_deref())
+        .fetch_one(pool)
+        .await
+        .map_err(|error| store_error("failed to count AI resource group resources", error))?;
+        let rows = sqlx::query(
             r#"
             SELECT
                 r.id,
@@ -547,19 +703,35 @@ async fn list_ai_resource_group_resources(
               AND item.item_type = 'resource'
               AND item.deleted_at IS NULL
               AND item.status = 1
+              AND (
+                  $4::text IS NULL
+                  OR r.resource_code ILIKE $4
+                  OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) ILIKE $4
+                  OR COALESCE(r.resource_type, '') ILIKE $4
+                  OR COALESCE(r.vendor_code, '') ILIKE $4
+                  OR COALESCE(r.modality_code, '') ILIKE $4
+              )
             ORDER BY COALESCE(item.sort_order, r.sort_order, 100000) ASC, item.id ASC
-            LIMIT 2000
+            LIMIT $5 OFFSET $6
             "#,
         )
         .bind(group.tenant_id)
         .bind(group.organization_id)
         .bind(group.id)
+        .bind(search.as_deref())
+        .bind(limit)
+        .bind(offset)
         .fetch_all(pool)
         .await
-    }
-    .map_err(|error| store_error("failed to list AI resource group resources", error))?;
+        .map_err(|error| store_error("failed to list AI resource group resources", error))?;
+        (total_count, rows)
+    };
 
-    rows.into_iter().map(group_resource_from_row).collect()
+    let items = rows
+        .into_iter()
+        .map(group_resource_from_row)
+        .collect::<DomainResult<Vec<_>>>()?;
+    Ok(AdminAiResourceGroupResourcesPage { items, total_count })
 }
 
 async fn create_ai_resource_group(
@@ -1915,6 +2087,13 @@ fn members_from_rows(
             });
     }
     Ok(members)
+}
+
+fn resource_search_pattern(value: Option<&str>) -> Option<String> {
+    value
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| format!("%{value}%"))
 }
 
 fn item_from_row(

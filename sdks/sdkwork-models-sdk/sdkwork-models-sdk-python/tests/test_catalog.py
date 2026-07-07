@@ -232,3 +232,27 @@ def test_catalog_key_parser_keeps_slash_delimited_provider_model_ids_intact() ->
     assert len(get_model_region_prices(catalog, "openrouter/anthropic/claude-3-opus", "global")) == 1
     assert find_model(catalog, "openrouter/global/anthropic/claude-3-opus") is None
     assert get_model_prices(catalog, "openrouter/global/anthropic/claude-3-opus") == []
+
+
+def test_model_capability_predicates() -> None:
+    from sdkwork_models import (
+        get_model_capability_profile,
+        list_models_with_feature,
+        model_supports_audio_input,
+        model_supports_feature,
+        model_supports_tool_call,
+        model_supports_vision,
+    )
+
+    catalog = load_catalog(Path(__file__).resolve().parents[4])
+    claude = find_model(catalog, "anthropic/claude-opus-4-8")
+    assert claude is not None
+    assert model_supports_vision(claude)
+    assert model_supports_tool_call(claude)
+    assert not model_supports_audio_input(claude)
+    assert model_supports_feature(claude, "tool_call")
+
+    profile = get_model_capability_profile(claude)
+    assert profile["catalogKey"] == "anthropic/claude-opus-4-8"
+    assert "tool_call" in profile["features"]
+    assert len(list_models_with_feature(catalog, "tool_call")) > 0

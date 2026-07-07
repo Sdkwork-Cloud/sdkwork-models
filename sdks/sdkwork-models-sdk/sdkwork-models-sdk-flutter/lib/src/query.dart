@@ -1,3 +1,4 @@
+import 'capabilities.dart';
 import 'types.dart';
 
 List<JsonObject> listVendors(ModelCatalog catalog) {
@@ -310,6 +311,12 @@ List<JsonObject> listModelsByModality(
     ModelCatalog catalog, String inputModality, String outputModality) {
   return listModelsWhere(catalog,
       inputModality: inputModality, outputModality: outputModality);
+}
+
+List<JsonObject> listModelsWithFeature(ModelCatalog catalog, String feature) {
+  return listModels(catalog)
+      .where((model) => modelSupportsFeature(model, feature))
+      .toList();
 }
 
 List<JsonObject> listProtocols(ModelCatalog catalog) {

@@ -38,5 +38,7 @@
   ],
   "supportsStreaming": true,
   "vendorCode": "baidu",
-  "vendorName": "Baidu AI Cloud"
+  "vendorName": "Baidu AI Cloud",
+  "supportsTools": true,
+  "supportsJsonSchema": true
 }

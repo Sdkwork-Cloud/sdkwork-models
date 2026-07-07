@@ -6,8 +6,8 @@ use serde::Deserialize;
 
 use crate::types::{
     BillingMeter, CatalogIndex, CatalogIndexVendor, CatalogManifest, FamilyFile, ModelCatalog,
-    ModelInfo, ModelPricing, ModelVendor, ModelVideoProfilesFile, ModelVoiceBindingsFile, ProtocolStandard, RankingFile,
-    TtsVoice, VendorCatalog,
+    ModelInfo, ModelPricing, ModelVendor, ModelVideoProfilesFile, ModelVoiceBindingsFile,
+    ProtocolStandard, RankingFile, TtsVoice, VendorCatalog,
 };
 use crate::CatalogError;
 
@@ -106,7 +106,8 @@ pub fn load_vendor_catalog(vendor_root: impl AsRef<Path>) -> Result<VendorCatalo
     let pricing = read_json_dir::<ModelPricing>(vendor_root.join("pricing"))?;
     let voices = load_voices_file(&vendor_root.join("voices.json"))?;
     let model_voice_bindings = load_model_voice_bindings(&vendor_root.join("model-voices"))?;
-    let model_video_profiles = load_model_video_profiles(&vendor_root.join("model-video-profiles"))?;
+    let model_video_profiles =
+        load_model_video_profiles(&vendor_root.join("model-video-profiles"))?;
     Ok(VendorCatalog {
         vendor_code: vendor.vendor_code.clone(),
         region_code: vendor.region_code.clone(),

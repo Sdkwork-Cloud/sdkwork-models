@@ -17,6 +17,7 @@ use crate::ports::{
 };
 
 const JOB_NAME: &str = "model_ranking_refresh";
+const DEFAULT_TENANT_ID: i64 = 100_001;
 const DEFAULT_RANK_SCOPE: &str = DEFAULT_MODEL_RANKING_RANK_SCOPE;
 const DEFAULT_SNAPSHOT_PERIOD: &str = DEFAULT_MODEL_RANKING_SNAPSHOT_PERIOD;
 const MIN_LIMIT: i64 = 1;
@@ -106,7 +107,7 @@ impl Default for ModelRankingRefreshWorkerConfig {
     fn default() -> Self {
         Self {
             enabled: true,
-            tenant_id: 0,
+            tenant_id: DEFAULT_TENANT_ID,
             organization_id: 0,
             rank_scope: DEFAULT_RANK_SCOPE.to_owned(),
             snapshot_period: DEFAULT_SNAPSHOT_PERIOD.to_owned(),

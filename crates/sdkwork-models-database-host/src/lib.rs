@@ -40,9 +40,15 @@ pub async fn bootstrap_models_database_from_env() -> Result<ModelsDatabaseHost, 
     let options = lifecycle_options_from_env("MODELS", &manifest);
     let orchestrator =
         LifecycleOrchestrator::new(pool.clone(), module.clone()).with_applied_by("sdkwork-models");
-    orchestrator.init().await.map_err(|error| format!("{error}"))?;
+    orchestrator
+        .init()
+        .await
+        .map_err(|error| format!("{error}"))?;
     if options.auto_migrate {
-        orchestrator.migrate().await.map_err(|error| format!("{error}"))?;
+        orchestrator
+            .migrate()
+            .await
+            .map_err(|error| format!("{error}"))?;
     }
     Ok(ModelsDatabaseHost { pool, module })
 }

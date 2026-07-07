@@ -10,6 +10,7 @@ use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
+use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::response::{finish_success, problem_for};
 use crate::api::subject::map_optional_app_user_subject;
 use crate::application::{
@@ -18,19 +19,20 @@ use crate::application::{
 };
 use crate::domain::DomainError;
 use crate::ports::{
-    normalize_model_ranking_filter_value, normalize_rank_scope, ModelRankingRefreshJobHistoryQuery,
-    ModelRankingRefreshJobHistoryReadFuture, ModelRankingRefreshJobHistoryReadStore,
-    ModelRankingRefreshOutcome, ModelRankingRefreshStatusQuery,
-    ModelRankingRefreshStatusReadFuture, ModelRankingRefreshStatusReadStore,
-    ModelRankingRefreshStore, ModelRankingsCacheInvalidation, ModelRankingsCacheInvalidator,
-    ModelRankingsQuery, ModelRankingsReadFuture, ModelRankingsReadModelStore,
-    ModelRankingsReadStore, ModelRankingsSubject,
+    normalize_model_ranking_filter_value, normalize_rank_scope, ModelRankingHistoryPoint,
+    ModelRankingItem, ModelRankingRefreshJobHistoryQuery, ModelRankingRefreshJobHistoryReadFuture,
+    ModelRankingRefreshJobHistoryReadStore, ModelRankingRefreshJobItem, ModelRankingRefreshOutcome,
+    ModelRankingRefreshStatusQuery, ModelRankingRefreshStatusReadFuture,
+    ModelRankingRefreshStatusReadStore, ModelRankingRefreshStore, ModelRankingsCacheInvalidation,
+    ModelRankingsCacheInvalidator, ModelRankingsQuery, ModelRankingsReadFuture,
+    ModelRankingsReadModelStore, ModelRankingsReadStore, ModelRankingsSnapshot,
+    ModelRankingsSource, ModelRankingsSubject,
 };
 
-const DEFAULT_RANKING_LIMIT: i64 = 50;
+const DEFAULT_RANKING_LIMIT: i64 = 200;
 const MAX_RANKING_LIMIT: i64 = 200;
 const DEFAULT_JOB_HISTORY_LIMIT: i64 = 20;
-const MAX_JOB_HISTORY_LIMIT: i64 = 100;
+const MAX_JOB_HISTORY_LIMIT: i64 = 200;
 
 #[derive(Clone)]
 struct ModelRankingsState {
@@ -46,7 +48,7 @@ struct ModelRankingsHttpQuery {
     vendor_code: Option<String>,
     modality: Option<String>,
     q: Option<String>,
-    limit: Option<i64>,
+    page_size: Option<i64>,
 }
 
 struct UnconfiguredModelRankingsReadStore;
@@ -249,13 +251,13 @@ async fn fetch_model_ranking_jobs(
         Err(response) => return response,
     };
 
-    let limit = query.limit.unwrap_or(DEFAULT_JOB_HISTORY_LIMIT);
+    let limit = query.page_size.unwrap_or(DEFAULT_JOB_HISTORY_LIMIT);
     if !(1..=MAX_JOB_HISTORY_LIMIT).contains(&limit) {
         return problem_for(
             &ctx,
             SdkWorkResultCode::ValidationError,
             format!(
-                "model ranking refresh job history limit must be between 1 and {MAX_JOB_HISTORY_LIMIT}"
+                "model ranking refresh job history page_size must be between 1 and {MAX_JOB_HISTORY_LIMIT}"
             ),
         );
     }
@@ -270,7 +272,7 @@ async fn fetch_model_ranking_jobs(
         .load_model_ranking_refresh_jobs(query, subject)
         .await
     {
-        Ok(page) => finish_success(&ctx, page),
+        Ok(page) => finish_success(&ctx, to_job_history_page_response(page.items, limit)),
         Err(error) => problem_for(
             &ctx,
             SdkWorkResultCode::ServiceUnavailable,
@@ -325,9 +327,10 @@ async fn fetch_model_rankings(
             return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
         }
     };
+    let page_size = query.limit;
 
     match state.read_store.load_model_rankings(query, subject).await {
-        Ok(snapshot) => finish_success(&ctx, snapshot),
+        Ok(snapshot) => finish_success(&ctx, to_rankings_page_response(snapshot, page_size)),
         Err(error) => problem_for(
             &ctx,
             SdkWorkResultCode::ServiceUnavailable,
@@ -344,7 +347,7 @@ struct ModelRankingStatusHttpQuery {
 #[derive(Debug, Deserialize)]
 struct ModelRankingJobsHttpQuery {
     rank_scope: Option<String>,
-    limit: Option<i64>,
+    page_size: Option<i64>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -377,6 +380,22 @@ struct ModelRankingRefreshTriggerResponse {
     next_refresh_at: String,
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ModelRankingsPageResponse {
+    source: ModelRankingsSource,
+    items: Vec<ModelRankingItem>,
+    history: Vec<ModelRankingHistoryPoint>,
+    page_info: ApiPageInfo,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ModelRankingRefreshJobHistoryPageResponse {
+    items: Vec<ModelRankingRefreshJobItem>,
+    page_info: ApiPageInfo,
+}
+
 fn map_rankings_subject(trusted: TrustedRequestSubject) -> ModelRankingsSubject {
     ModelRankingsSubject {
         tenant_id: trusted.tenant_id,
@@ -394,10 +413,10 @@ fn optional_rankings_subject(
 }
 
 fn validate_query(query: ModelRankingsHttpQuery) -> Result<ModelRankingsQuery, String> {
-    let limit = query.limit.unwrap_or(DEFAULT_RANKING_LIMIT);
+    let limit = query.page_size.unwrap_or(DEFAULT_RANKING_LIMIT);
     if !(1..=MAX_RANKING_LIMIT).contains(&limit) {
         return Err(format!(
-            "model rankings limit must be between 1 and {MAX_RANKING_LIMIT}"
+            "model rankings page_size must be between 1 and {MAX_RANKING_LIMIT}"
         ));
     }
     Ok(ModelRankingsQuery {
@@ -407,6 +426,30 @@ fn validate_query(query: ModelRankingsHttpQuery) -> Result<ModelRankingsQuery, S
         search_query: normalize_model_ranking_filter_value(query.q.as_deref()),
         limit,
     })
+}
+
+fn to_rankings_page_response(
+    snapshot: ModelRankingsSnapshot,
+    page_size: i64,
+) -> ModelRankingsPageResponse {
+    let total_items = snapshot.items.len() as i64;
+    ModelRankingsPageResponse {
+        source: snapshot.source,
+        items: snapshot.items,
+        history: snapshot.history,
+        page_info: offset_page_info(1, page_size, total_items),
+    }
+}
+
+fn to_job_history_page_response(
+    items: Vec<ModelRankingRefreshJobItem>,
+    page_size: i64,
+) -> ModelRankingRefreshJobHistoryPageResponse {
+    let total_items = items.len() as i64;
+    ModelRankingRefreshJobHistoryPageResponse {
+        items,
+        page_info: offset_page_info(1, page_size, total_items),
+    }
 }
 
 fn normalize_query_string(value: Option<String>) -> Option<String> {

@@ -10,6 +10,8 @@ import type {
   VideoGenerationProfile,
   VendorRegionRef,
 } from "./types.js";
+import type { ModelFeature } from "./model-capabilities.js";
+import { modelSupportsFeature } from "./model-capabilities.js";
 
 export interface ModelFilter {
   vendorCode?: string;
@@ -158,6 +160,10 @@ export function listModelsByModality(
   outputModality: string,
 ): ModelInfo[] {
   return listModels(catalog, { inputModality, outputModality });
+}
+
+export function listModelsWithFeature(catalog: ModelCatalog, feature: ModelFeature): ModelInfo[] {
+  return listModels(catalog).filter((model) => modelSupportsFeature(model, feature));
 }
 
 export function listProtocols(catalog: ModelCatalog): ProtocolStandard[] {

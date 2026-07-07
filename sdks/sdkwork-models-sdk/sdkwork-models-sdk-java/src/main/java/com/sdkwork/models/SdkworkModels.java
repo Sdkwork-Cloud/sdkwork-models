@@ -105,6 +105,26 @@ public final class SdkworkModels {
         return ModelCatalogQuery.listModelsByModality(catalog, inputModality, outputModality);
     }
 
+    public static List<Map<String, Object>> listModelsWithFeature(ModelCatalog catalog, String feature) {
+        return ModelCatalogQuery.listModelsWithFeature(catalog, feature);
+    }
+
+    public static Map<String, Object> getModelCapabilityProfile(Map<String, Object> model) {
+        return ModelCapabilities.getModelCapabilityProfile(model);
+    }
+
+    public static boolean modelSupportsFeature(Map<String, Object> model, String feature) {
+        return ModelCapabilities.modelSupportsFeature(model, feature);
+    }
+
+    public static boolean modelSupportsToolCall(Map<String, Object> model) {
+        return ModelCapabilities.modelSupportsToolCall(model);
+    }
+
+    public static boolean modelSupportsVision(Map<String, Object> model) {
+        return ModelCapabilities.modelSupportsVision(model);
+    }
+
     public static List<Map<String, Object>> listProtocols(ModelCatalog catalog) {
         return ModelCatalogQuery.listProtocols(catalog);
     }

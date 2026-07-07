@@ -9,13 +9,25 @@
     "protocol": "http",
     "packageName": "sdkwork-models-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "9397fe447099d2768b0da0e453f77747aff0f6625a966d737f4e334eaf109db1",
+  "changeFingerprint": "000db371eae338a8c0f88824e365bcfa5f20f14171b9acf18ecea189b2db1fb7",
   "changes": {
-    "createdGeneratedFiles": [],
+    "createdGeneratedFiles": [
+      "src/types/json-null.ts",
+      "src/types/json-object.ts",
+      "src/types/json-value.ts",
+      "src/types/model-catalog-page.ts",
+      "src/types/model-rankings-list-result.ts",
+      "src/types/model-rankings-page.ts",
+      "src/types/model-vendors-list-result.ts",
+      "src/types/models-list-result.ts",
+      "src/types/no-data.ts"
+    ],
     "updatedGeneratedFiles": [
-      "package.json",
-      "sdkwork-sdk.json",
-      "src/api/ai.ts"
+      "README.md",
+      "src/api/ai.ts",
+      "src/types/field-error.ts",
+      "src/types/index.ts",
+      "src/types/problem-detail.ts"
     ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
@@ -25,7 +37,8 @@
       "bin/sdk-gen.sh",
       "CHANGELOG.md",
       "LICENSE",
-      "README.md",
+      "package.json",
+      "sdkwork-sdk.json",
       "src/api/base.ts",
       "src/api/index.ts",
       "src/api/paths.ts",
@@ -35,10 +48,7 @@
       "src/index.ts",
       "src/sdk.ts",
       "src/types/common.ts",
-      "src/types/field-error.ts",
-      "src/types/index.ts",
       "src/types/page-info.ts",
-      "src/types/problem-detail.ts",
       "src/types/sdk-work-api-response.ts",
       "src/types/sdk-work-command-data.ts",
       "src/types/sdk-work-command-response.ts",
@@ -55,16 +65,14 @@
       "custom/build-runtime.mjs",
       "custom/README.md"
     ],
-    "backedUpFiles": [
-      "package.json",
-      "sdkwork-sdk.json"
-    ]
+    "backedUpFiles": []
   },
   "impact": {
     "schemaVersion": 1,
     "areas": [
       "api-surface",
-      "build-metadata"
+      "models",
+      "documentation"
     ],
     "details": [
       {
@@ -74,26 +82,42 @@
         ]
       },
       {
-        "area": "build-metadata",
+        "area": "models",
         "paths": [
-          "package.json",
-          "sdkwork-sdk.json"
+          "src/types/field-error.ts",
+          "src/types/index.ts",
+          "src/types/json-null.ts",
+          "src/types/json-object.ts",
+          "src/types/json-value.ts",
+          "src/types/model-catalog-page.ts",
+          "src/types/model-rankings-list-result.ts",
+          "src/types/model-rankings-page.ts",
+          "src/types/model-vendors-list-result.ts",
+          "src/types/models-list-result.ts",
+          "src/types/no-data.ts",
+          "src/types/problem-detail.ts"
+        ]
+      },
+      {
+        "area": "documentation",
+        "paths": [
+          "README.md"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface, build-metadata. Verification is required."
+    "summary": "Detected impact areas: api-surface, models, documentation. Verification is required."
   },
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface, build-metadata. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: api-surface, models, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, build-metadata.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -111,7 +135,7 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, build-metadata.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -129,14 +153,12 @@
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "high",
+    "riskLevel": "medium",
     "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
     "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "backed-up-generated-files",
-      "manual-review-required",
       "verification-required"
     ]
   },

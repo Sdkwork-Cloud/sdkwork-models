@@ -36,11 +36,7 @@ impl ModelsServiceHost {
             database,
             pricing_catalog,
             voice_catalog,
-            models_catalog_root: Some(
-                models_catalog_root
-                    .to_string_lossy()
-                    .into_owned(),
-            ),
+            models_catalog_root: Some(models_catalog_root.to_string_lossy().into_owned()),
         })
     }
 
@@ -54,12 +50,12 @@ impl ModelsServiceHost {
 
     pub fn health_router(&self) -> Router {
         match self.database.pool() {
-            DatabasePool::Postgres(pool, _) => models_health_router_with_readiness(
-                ModelsReadinessProbe::Postgres(pool.clone()),
-            ),
-            DatabasePool::Sqlite(pool, _) => models_health_router_with_readiness(
-                ModelsReadinessProbe::Sqlite(pool.clone()),
-            ),
+            DatabasePool::Postgres(pool, _) => {
+                models_health_router_with_readiness(ModelsReadinessProbe::Postgres(pool.clone()))
+            }
+            DatabasePool::Sqlite(pool, _) => {
+                models_health_router_with_readiness(ModelsReadinessProbe::Sqlite(pool.clone()))
+            }
         }
     }
 
@@ -77,9 +73,7 @@ impl ModelsServiceHost {
 
     pub fn app_router(&self) -> Router {
         match self.database.pool() {
-            DatabasePool::Postgres(pool, _) => {
-                self.app_router_with_postgres_pool(pool.clone())
-            }
+            DatabasePool::Postgres(pool, _) => self.app_router_with_postgres_pool(pool.clone()),
             DatabasePool::Sqlite(pool, _) => self.app_router_with_sqlite_pool(pool.clone()),
         }
     }
@@ -92,8 +86,10 @@ impl ModelsServiceHost {
     }
 
     pub async fn app_router_with_framework(self: Arc<Self>) -> Router {
-        sdkwork_routes_models_catalog_app_api::wrap_router_with_web_framework_from_env(self.app_router())
-            .await
+        sdkwork_routes_models_catalog_app_api::wrap_router_with_web_framework_from_env(
+            self.app_router(),
+        )
+        .await
     }
 
     fn app_router_with_sqlite_pool(&self, pool: SqlitePool) -> Router {

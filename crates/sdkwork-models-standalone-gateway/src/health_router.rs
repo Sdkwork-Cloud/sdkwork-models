@@ -52,10 +52,7 @@ async fn ready_check(State(probe): State<ModelsReadinessProbe>) -> Response {
             })),
         )
             .into_response(),
-        ModelsReadinessProbe::Sqlite(pool) => match sqlx::query("SELECT 1")
-            .execute(&pool)
-            .await
-        {
+        ModelsReadinessProbe::Sqlite(pool) => match sqlx::query("SELECT 1").execute(&pool).await {
             Ok(_) => (
                 StatusCode::OK,
                 Json(json!({
@@ -78,31 +75,30 @@ async fn ready_check(State(probe): State<ModelsReadinessProbe>) -> Response {
                     .into_response()
             }
         },
-        ModelsReadinessProbe::Postgres(pool) => match sqlx::query("SELECT 1")
-            .execute(&pool)
-            .await
-        {
-            Ok(_) => (
-                StatusCode::OK,
-                Json(json!({
-                    "status": "ready",
-                    "service": "sdkwork-models",
-                    "database": "postgres"
-                })),
-            )
-                .into_response(),
-            Err(error) => {
-                warn!(service = "sdkwork-models", database = "postgres", %error, "readiness probe failed");
-                (
-                    StatusCode::SERVICE_UNAVAILABLE,
+        ModelsReadinessProbe::Postgres(pool) => {
+            match sqlx::query("SELECT 1").execute(&pool).await {
+                Ok(_) => (
+                    StatusCode::OK,
                     Json(json!({
-                        "status": "not_ready",
+                        "status": "ready",
                         "service": "sdkwork-models",
                         "database": "postgres"
                     })),
                 )
-                    .into_response()
+                    .into_response(),
+                Err(error) => {
+                    warn!(service = "sdkwork-models", database = "postgres", %error, "readiness probe failed");
+                    (
+                        StatusCode::SERVICE_UNAVAILABLE,
+                        Json(json!({
+                            "status": "not_ready",
+                            "service": "sdkwork-models",
+                            "database": "postgres"
+                        })),
+                    )
+                        .into_response()
+                }
             }
-        },
+        }
     }
 }

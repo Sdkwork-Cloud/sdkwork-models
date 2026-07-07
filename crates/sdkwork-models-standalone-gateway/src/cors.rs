@@ -1,10 +1,8 @@
 use axum::http::{HeaderValue, Method};
 use tower_http::cors::{AllowOrigin, CorsLayer};
 
-const PRODUCTION_DEFAULT_ORIGINS: &[&str] = &[
-    "https://models.sdkwork.com",
-    "https://admin.sdkwork.com",
-];
+const PRODUCTION_DEFAULT_ORIGINS: &[&str] =
+    &["https://models.sdkwork.com", "https://admin.sdkwork.com"];
 
 const DEVELOPMENT_DEFAULT_ORIGINS: &[&str] = &[
     "http://localhost:5173",

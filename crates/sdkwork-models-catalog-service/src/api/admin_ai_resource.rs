@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
-use axum::extract::{Path, State};
+use axum::extract::{Path, Query, State};
 use axum::http::HeaderMap;
 use axum::response::Response;
 use axum::routing::{get, patch, put};
@@ -10,11 +10,11 @@ use axum::Router;
 use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
 
+use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
 use crate::api::response::{finish_success, problem_for};
-use sdkwork_web_core::WebRequestContext;
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -25,6 +25,7 @@ use crate::ports::{
     ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
     ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
 };
+use sdkwork_web_core::WebRequestContext;
 
 const MAX_RESOURCE_CODE_LEN: usize = 192;
 const MAX_RESOURCE_TYPE_LEN: usize = 64;
@@ -42,6 +43,8 @@ const MAX_GROUP_TYPE_LEN: usize = 64;
 const MAX_SELECTION_MODE_LEN: usize = 32;
 const MAX_DESCRIPTION_LEN: usize = 512;
 const MAX_MEMBERS: usize = 512;
+const DEFAULT_LIST_PAGE_SIZE: i64 = 20;
+const MAX_LIST_PAGE_SIZE: i64 = 200;
 
 #[derive(Clone)]
 struct AdminAiResourceState {
@@ -53,6 +56,7 @@ struct AdminAiResourceState {
 #[serde(rename_all = "camelCase")]
 struct AdminAiResourcesResponse {
     items: Vec<AdminAiResourceItemResponse>,
+    page_info: ApiPageInfo,
 }
 
 #[derive(Debug, Serialize)]
@@ -144,6 +148,14 @@ struct AdminAiResourceGroupItemResponse {
 #[serde(rename_all = "camelCase")]
 struct AdminAiResourceGroupResourcesResponse {
     items: Vec<AdminAiResourceGroupResourceItemResponse>,
+    page_info: ApiPageInfo,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct AiResourceListQuery {
+    q: Option<String>,
+    page: Option<i64>,
+    page_size: Option<i64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -289,20 +301,36 @@ pub fn admin_ai_resource_router_with_store(
 async fn fetch_ai_resources(
     ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
+    Query(query): Query<AiResourceListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
+    let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
 
     match state
         .store
-        .list_ai_resources(ListAdminAiResourcesQuery { subject })
+        .list_ai_resources(ListAdminAiResourcesQuery {
+            subject,
+            q: query.q,
+            limit: Some(page_size),
+            offset: Some(offset),
+        })
         .await
     {
-        Ok(items) => finish_success(&ctx, AdminAiResourcesResponse {
-            items: items.into_iter().map(to_item_response).collect(),
-        }),
-        Err(error) => ai_resource_system_response(&ctx, "AI resource read model is unavailable", error),
+        Ok(items) => finish_success(
+            &ctx,
+            AdminAiResourcesResponse {
+                items: items.items.into_iter().map(to_item_response).collect(),
+                page_info: offset_page_info(page_no, page_size, items.total_count),
+            },
+        ),
+        Err(error) => {
+            ai_resource_system_response(&ctx, "AI resource read model is unavailable", error)
+        }
     }
 }
 
@@ -319,9 +347,12 @@ async fn fetch_ai_resource_groups(
         .list_ai_resource_groups(ListAdminAiResourceGroupsQuery { subject })
         .await
     {
-        Ok(items) => finish_success(&ctx, AdminAiResourceGroupsResponse {
-            items: items.into_iter().map(to_group_response).collect(),
-        }),
+        Ok(items) => finish_success(
+            &ctx,
+            AdminAiResourceGroupsResponse {
+                items: items.into_iter().map(to_group_response).collect(),
+            },
+        ),
         Err(error) => {
             ai_resource_system_response(&ctx, "AI resource group read model is unavailable", error)
         }
@@ -332,6 +363,7 @@ async fn fetch_ai_resource_group_resources(
     ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(group_id_or_code): Path<String>,
+    Query(query): Query<AiResourceListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
@@ -340,22 +372,36 @@ async fn fetch_ai_resource_group_resources(
     if group_id_or_code.is_empty() {
         return bad_request(&ctx, "AI resource group id or code is required".to_owned());
     }
+    let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
 
     match state
         .store
         .list_ai_resource_group_resources(ListAdminAiResourceGroupResourcesQuery {
             subject,
             group_id_or_code,
+            q: query.q,
+            limit: Some(page_size),
+            offset: Some(offset),
         })
         .await
     {
-        Ok(items) => finish_success(&ctx, 
+        Ok(items) => finish_success(
+            &ctx,
             AdminAiResourceGroupResourcesResponse {
-                items: items.into_iter().map(to_group_resource_response).collect(),
+                page_info: offset_page_info(page_no, page_size, items.total_count),
+                items: items
+                    .items
+                    .into_iter()
+                    .map(to_group_resource_response)
+                    .collect(),
             },
         ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
-        Err(error) => ai_resource_system_response(&ctx, 
+        Err(error) => ai_resource_system_response(
+            &ctx,
             "AI resource group resource read model is unavailable",
             error,
         ),
@@ -380,9 +426,12 @@ async fn create_ai_resource(
     };
 
     match state.store.create_ai_resource(command).await {
-        Ok(item) => finish_success(&ctx, AdminAiResourceItemEnvelope {
-            item: to_item_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminAiResourceItemEnvelope {
+                item: to_item_response(item),
+            },
+        ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => {
@@ -410,14 +459,19 @@ async fn create_ai_resource_group(
     };
 
     match state.store.create_ai_resource_group(command).await {
-        Ok(item) => finish_success(&ctx, AdminAiResourceGroupItemEnvelope {
-            item: to_group_response(item),
-        }),
+        Ok(item) => finish_success(
+            &ctx,
+            AdminAiResourceGroupItemEnvelope {
+                item: to_group_response(item),
+            },
+        ),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
-        Err(error) => {
-            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
-        }
+        Err(error) => ai_resource_system_response(
+            &ctx,
+            "AI resource group command store is unavailable",
+            error,
+        ),
     }
 }
 
@@ -445,15 +499,20 @@ async fn update_ai_resource_group(
     };
 
     match state.store.update_ai_resource_group(command).await {
-        Ok(Some(item)) => finish_success(&ctx, AdminAiResourceGroupItemEnvelope {
-            item: to_group_response(item),
-        }),
+        Ok(Some(item)) => finish_success(
+            &ctx,
+            AdminAiResourceGroupItemEnvelope {
+                item: to_group_response(item),
+            },
+        ),
         Ok(None) => not_found_response(&ctx, "AI resource group was not found"),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
-        Err(error) => {
-            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
-        }
+        Err(error) => ai_resource_system_response(
+            &ctx,
+            "AI resource group command store is unavailable",
+            error,
+        ),
     }
 }
 
@@ -475,14 +534,14 @@ async fn delete_ai_resource_group(
     };
 
     match state.store.delete_ai_resource_group(command).await {
-        Ok(deleted) => finish_success(&ctx, AdminAiResourceGroupDeleteResponse {
-            deleted,
-        }),
+        Ok(deleted) => finish_success(&ctx, AdminAiResourceGroupDeleteResponse { deleted }),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
-        Err(error) => {
-            ai_resource_system_response(&ctx, "AI resource group command store is unavailable", error)
-        }
+        Err(error) => ai_resource_system_response(
+            &ctx,
+            "AI resource group command store is unavailable",
+            error,
+        ),
     }
 }
 
@@ -509,9 +568,12 @@ async fn update_ai_resource(
     };
 
     match state.store.update_ai_resource(command).await {
-        Ok(Some(item)) => finish_success(&ctx, AdminAiResourceItemEnvelope {
-            item: to_item_response(item),
-        }),
+        Ok(Some(item)) => finish_success(
+            &ctx,
+            AdminAiResourceItemEnvelope {
+                item: to_item_response(item),
+            },
+        ),
         Ok(None) => not_found_response(&ctx, "AI resource was not found"),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
@@ -1034,6 +1096,23 @@ fn optional_visible_text(
     Ok(value)
 }
 
+fn validate_page_query(
+    page: Option<i64>,
+    page_size: Option<i64>,
+) -> Result<(i64, i64, i64), String> {
+    let page = page.unwrap_or(1);
+    if page < 1 {
+        return Err("page must be greater than or equal to 1".to_owned());
+    }
+    let page_size = page_size.unwrap_or(DEFAULT_LIST_PAGE_SIZE);
+    if !(1..=MAX_LIST_PAGE_SIZE).contains(&page_size) {
+        return Err(format!(
+            "page_size must be between 1 and {MAX_LIST_PAGE_SIZE}"
+        ));
+    }
+    Ok((page, page_size, (page - 1) * page_size))
+}
+
 fn normalize_resource_type(value: String) -> Result<String, AiResourceCommandBuildError> {
     match value.trim().to_ascii_lowercase().as_str() {
         "vendor" | "modality" | "api_endpoint" | "model_api" | "bundle" => {
@@ -1152,7 +1231,10 @@ fn request_id_error(error: RequestIdError) -> AiResourceCommandBuildError {
     }
 }
 
-fn command_build_error_response(ctx: &WebRequestContext, error: AiResourceCommandBuildError) -> Response {
+fn command_build_error_response(
+    ctx: &WebRequestContext,
+    error: AiResourceCommandBuildError,
+) -> Response {
     match error {
         AiResourceCommandBuildError::BadRequest(message) => bad_request(&ctx, message),
         AiResourceCommandBuildError::System(error) => {
@@ -1206,7 +1288,11 @@ fn civil_from_days(days: i64) -> (i64, i64, i64) {
     (year, month, day)
 }
 
-fn ai_resource_system_response(ctx: &WebRequestContext, context: &str, error: DomainError) -> Response {
+fn ai_resource_system_response(
+    ctx: &WebRequestContext,
+    context: &str,
+    error: DomainError,
+) -> Response {
     problem_for(
         ctx,
         SdkWorkResultCode::InternalError,

@@ -1,4 +1,4 @@
-tables:
+﻿tables:
 - table: ai_api_endpoint
   domain: ai
   profile: dictionary_entity
@@ -1016,9 +1016,10 @@ tables:
   common_columns: projection
   source_tables:
   - ai_model
-  - ai_usage_fact
-  - ai_request_trace
   - ai_model_pricing
+  source_refs:
+  - sdkwork-clawrouter.ai_usage
+  - sdkwork-clawrouter.ai_request_trace
   frontend_routes:
   - /rankings
   - /console/dashboard
@@ -1113,7 +1114,7 @@ tables:
         - cacheMaxAgeSeconds
         - sourceTables
         source_tables:
-        - ai_usage_fact
+        - ai_usage
         - ai_model
         - ai_model_rank_snapshot
       rank_payload_contract:
@@ -1127,7 +1128,7 @@ tables:
         - cost
         - currency
         source_tables:
-        - ai_usage_fact
+        - ai_usage
         - ai_model
         - ai_model_rank_snapshot
   indexes:
@@ -1534,3 +1535,4 @@ tables:
     - sort_order
     - id
   generated_by_this_project: true
+

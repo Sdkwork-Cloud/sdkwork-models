@@ -9,6 +9,7 @@ use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
+use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::response::{finish_success, problem_for};
 use crate::application::{
     ListModelCatalogQuery, ModelCatalogGroup, ModelCatalogItem, ModelCatalogPage,
@@ -40,8 +41,8 @@ struct AppModelCatalogQuery {
     categories: Option<String>,
     groups: Option<String>,
     q: Option<String>,
-    limit: Option<usize>,
-    offset: Option<usize>,
+    page: Option<usize>,
+    page_size: Option<usize>,
 }
 
 #[derive(Debug, Serialize)]
@@ -49,6 +50,7 @@ struct AppModelCatalogQuery {
 struct AppModelCatalogResponse {
     items: Vec<AppModelCatalogItemResponse>,
     groups: Vec<AppModelCatalogGroupResponse>,
+    page_info: ApiPageInfo,
 }
 
 #[derive(Debug, Serialize)]
@@ -165,6 +167,11 @@ where
         .as_deref()
         .map(BillingMeter::from_code)
         .unwrap_or(BillingMeter::LlmInputToken);
+    let (page, page_size) = match validate_page_query(query.page, query.page_size) {
+        Ok(value) => value,
+        Err(message) => return problem_for(&ctx, SdkWorkResultCode::ValidationError, message),
+    };
+    let offset = (page - 1) * page_size;
     let service = ModelCatalogQueryService::new(state.catalog.as_ref());
 
     match service.list_models(ListModelCatalogQuery {
@@ -177,8 +184,8 @@ where
         categories: comma_separated_query_values(query.categories.as_deref()),
         groups: comma_separated_query_values(query.groups.as_deref()),
         search_query: query.q,
-        limit: query.limit,
-        offset: query.offset,
+        limit: Some(page_size),
+        offset: Some(offset),
     }) {
         Ok(page) => finish_success(&ctx, to_response(page)),
         Err(error) => problem_for(&ctx, SdkWorkResultCode::ValidationError, error.to_string()),
@@ -189,7 +196,27 @@ fn to_response(page: ModelCatalogPage) -> AppModelCatalogResponse {
     AppModelCatalogResponse {
         items: page.items.into_iter().map(to_item_response).collect(),
         groups: page.groups.into_iter().map(to_group_response).collect(),
+        page_info: offset_page_info(
+            ((page.offset / page.limit) + 1) as i64,
+            page.limit as i64,
+            page.total_items as i64,
+        ),
     }
+}
+
+fn validate_page_query(
+    page: Option<usize>,
+    page_size: Option<usize>,
+) -> Result<(usize, usize), String> {
+    let page = page.unwrap_or(1);
+    if page == 0 {
+        return Err("page must be greater than or equal to 1".to_owned());
+    }
+    let page_size = page_size.unwrap_or(20);
+    if !(1..=200).contains(&page_size) {
+        return Err("page_size must be between 1 and 200".to_owned());
+    }
+    Ok((page, page_size))
 }
 
 fn to_group_response(group: ModelCatalogGroup) -> AppModelCatalogGroupResponse {

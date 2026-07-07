@@ -61,6 +61,25 @@ export interface ResourceGroupAssignableResourceItem {
   status: 'active' | 'disabled' | 'inactive';
 }
 
+export interface ResourcePageInfo {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+export interface ResourceListPage<T> {
+  items: T[];
+  pageInfo: ResourcePageInfo;
+}
+
+export interface ResourceListQuery {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+}
+
 export interface ResourceGroupMemberInput {
   resourceCode: string;
   itemRole?: 'included' | 'optional' | 'fallback';
@@ -96,16 +115,51 @@ export class ResourceGroupService {
     return readRequiredApiItems(result, 'Failed to fetch resource groups').map(normalizeResourceGroupItem);
   }
 
-  static async fetchResourceGroupResources(groupCode: string): Promise<ResourceGroupResourceItem[]> {
+  static async fetchResourceGroupResourcesPage(
+    groupCode: string,
+    query: ResourceListQuery = {},
+  ): Promise<ResourceListPage<ResourceGroupResourceItem>> {
     const result = await getModelsBackendSdkClient().ai.aiResourceGroups.resources.list(
       requiredSafePathSegment(normalizeCatalogCode(groupCode), 'groupCode'),
+      toSdkListParams(query),
     );
     ensureSdkworkApiSuccess(result, 'Failed to fetch group resources');
-    return readRequiredApiItems(result, 'Failed to fetch group resources').map(normalizeResourceGroupResourceItem);
+    const record = readApiRecord(result);
+    return {
+      items: readRequiredApiItems(result, 'Failed to fetch group resources').map(normalizeResourceGroupResourceItem),
+      pageInfo: readPageInfo(record),
+    };
+  }
+
+  static async fetchResourceGroupResources(groupCode: string): Promise<ResourceGroupResourceItem[]> {
+    const page = await ResourceGroupService.fetchResourceGroupResourcesPage(groupCode, {
+      page: 1,
+      pageSize: 200,
+    });
+    return page.items;
+  }
+
+  static async fetchResourceGroupResourcesForUpdate(groupCode: string): Promise<ResourceGroupResourceItem[]> {
+    const items: ResourceGroupResourceItem[] = [];
+    let page = 1;
+    let hasMore = true;
+    while (hasMore) {
+      const result = await ResourceGroupService.fetchResourceGroupResourcesPage(groupCode, {
+        page,
+        pageSize: 200,
+      });
+      items.push(...result.items);
+      hasMore = result.pageInfo.hasMore;
+      page += 1;
+    }
+    return items;
   }
 
   static async fetchAssignableResources(): Promise<ResourceGroupAssignableResourceItem[]> {
-    const result = await getModelsBackendSdkClient().ai.aiResources.list();
+    const result = await getModelsBackendSdkClient().ai.aiResources.list({
+      page: '1',
+      pageSize: '200',
+    });
     ensureSdkworkApiSuccess(result, 'Failed to fetch assignable resources');
     return readRequiredApiItems(result, 'Failed to fetch assignable resources').map(normalizeAssignableResourceItem);
   }
@@ -138,6 +192,14 @@ export class ResourceGroupService {
     ensureSdkworkApiSuccess(result, 'Failed to delete resource group');
     return readBoolean(readApiRecord(result), 'deleted', false);
   }
+}
+
+function toSdkListParams(query: ResourceListQuery): { page?: string; pageSize?: string; q?: string } {
+  return {
+    page: query.page === undefined ? undefined : String(query.page),
+    pageSize: query.pageSize === undefined ? undefined : String(query.pageSize),
+    q: query.q?.trim() ? query.q.trim() : undefined,
+  };
 }
 
 function normalizeCatalogCode(value: string): string {
@@ -211,6 +273,17 @@ function readRequiredRecord(value: unknown, message: string): ApiRecord {
     throw new Error(message);
   }
   return value;
+}
+
+function readPageInfo(item: ApiRecord): ResourcePageInfo {
+  const pageInfo = readRequiredRecord(item.pageInfo, 'Page info must be an object');
+  return {
+    page: readPositiveInteger(pageInfo, 'page', 1),
+    pageSize: readPositiveInteger(pageInfo, 'pageSize', 20),
+    totalItems: readNonNegativeInteger(pageInfo, 'totalItems', 0),
+    totalPages: readNonNegativeInteger(pageInfo, 'totalPages', 0),
+    hasMore: readBoolean(pageInfo, 'hasMore', false),
+  };
 }
 
 function normalizeResourceGroupItem(value: unknown): ResourceGroupItem {
@@ -340,6 +413,11 @@ function readNonNegativeInteger(item: ApiRecord, key: string, fallback: number):
     }
   }
   return fallback;
+}
+
+function readPositiveInteger(item: ApiRecord, key: string, fallback: number): number {
+  const value = readNonNegativeInteger(item, key, fallback);
+  return value > 0 ? value : fallback;
 }
 
 function readOptionalNonNegativeInteger(item: ApiRecord, key: string): number | null {

@@ -77,9 +77,12 @@ pub struct AdminAiResourceGroupResourceItem {
     pub member_role: String,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ListAdminAiResourcesQuery {
     pub subject: AdminAiResourceSubject,
+    pub q: Option<String>,
+    pub limit: Option<i64>,
+    pub offset: Option<i64>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -91,6 +94,51 @@ pub struct ListAdminAiResourceGroupsQuery {
 pub struct ListAdminAiResourceGroupResourcesQuery {
     pub subject: AdminAiResourceSubject,
     pub group_id_or_code: String,
+    pub q: Option<String>,
+    pub limit: Option<i64>,
+    pub offset: Option<i64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AdminAiResourceListPage {
+    pub items: Vec<AdminAiResourceItem>,
+    pub total_count: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AdminAiResourceGroupResourcesPage {
+    pub items: Vec<AdminAiResourceGroupResourceItem>,
+    pub total_count: i64,
+}
+
+impl ListAdminAiResourcesQuery {
+    pub const DEFAULT_LIMIT: i64 = 20;
+    pub const MAX_LIMIT: i64 = 200;
+
+    pub fn normalized_limit(&self) -> i64 {
+        self.limit
+            .unwrap_or(Self::DEFAULT_LIMIT)
+            .clamp(1, Self::MAX_LIMIT)
+    }
+
+    pub fn normalized_offset(&self) -> i64 {
+        self.offset.unwrap_or(0).max(0)
+    }
+}
+
+impl ListAdminAiResourceGroupResourcesQuery {
+    pub const DEFAULT_LIMIT: i64 = 20;
+    pub const MAX_LIMIT: i64 = 200;
+
+    pub fn normalized_limit(&self) -> i64 {
+        self.limit
+            .unwrap_or(Self::DEFAULT_LIMIT)
+            .clamp(1, Self::MAX_LIMIT)
+    }
+
+    pub fn normalized_offset(&self) -> i64 {
+        self.offset.unwrap_or(0).max(0)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -203,7 +251,7 @@ pub trait AdminAiResourceStore {
     fn list_ai_resources<'a>(
         &'a self,
         query: ListAdminAiResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceItem>>;
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceListPage>;
 
     fn create_ai_resource<'a>(
         &'a self,
@@ -223,7 +271,7 @@ pub trait AdminAiResourceStore {
     fn list_ai_resource_group_resources<'a>(
         &'a self,
         query: ListAdminAiResourceGroupResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupResourceItem>>;
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupResourcesPage>;
 
     fn create_ai_resource_group<'a>(
         &'a self,

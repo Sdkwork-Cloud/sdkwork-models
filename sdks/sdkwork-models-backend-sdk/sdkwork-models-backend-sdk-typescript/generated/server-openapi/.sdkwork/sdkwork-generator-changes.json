@@ -9,14 +9,12 @@
     "protocol": "http",
     "packageName": "sdkwork-models-backend-sdk-generated-typescript"
   },
-  "changeFingerprint": "0eaf147ea8d2ca6fcbca5aff925f5aaffa1bb2862246effdcd26d6dbd3fade92",
+  "changeFingerprint": "2d5bc888b6cf0ed6740aae951bf7936e0037ef64dc33ccbd84f91ed099fe7adc",
   "changes": {
     "createdGeneratedFiles": [],
     "updatedGeneratedFiles": [
-      "package.json",
-      "sdkwork-sdk.json",
-      "src/api/ai.ts",
-      "src/types/model-catalog-sync-result.ts"
+      "src/types/field-error.ts",
+      "src/types/problem-detail.ts"
     ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
@@ -26,7 +24,10 @@
       "bin/sdk-gen.sh",
       "CHANGELOG.md",
       "LICENSE",
+      "package.json",
       "README.md",
+      "sdkwork-sdk.json",
+      "src/api/ai.ts",
       "src/api/base.ts",
       "src/api/index.ts",
       "src/api/paths.ts",
@@ -35,39 +36,44 @@
       "src/http/index.ts",
       "src/index.ts",
       "src/sdk.ts",
-      "src/types/ai-resource-groups-create-response.ts",
+      "src/types/ai-resource-group-resources-page.ts",
       "src/types/ai-resource-groups-create-result.ts",
-      "src/types/ai-resource-groups-update-response.ts",
+      "src/types/ai-resource-groups-delete-result.ts",
+      "src/types/ai-resource-groups-list-result.ts",
+      "src/types/ai-resource-groups-resources-list-result.ts",
       "src/types/ai-resource-groups-update-result.ts",
-      "src/types/ai-resources-create-response.ts",
       "src/types/ai-resources-create-result.ts",
-      "src/types/ai-resources-update-response.ts",
+      "src/types/ai-resources-list-result.ts",
+      "src/types/ai-resources-page.ts",
       "src/types/ai-resources-update-result.ts",
       "src/types/common.ts",
-      "src/types/field-error.ts",
       "src/types/index.ts",
-      "src/types/model-mappings-create-response.ts",
+      "src/types/json-null.ts",
+      "src/types/json-object.ts",
+      "src/types/json-value.ts",
+      "src/types/model-catalog-page.ts",
+      "src/types/model-catalog-sync-result.ts",
       "src/types/model-mappings-create-result.ts",
-      "src/types/model-mappings-replace-response.ts",
+      "src/types/model-mappings-delete-result.ts",
+      "src/types/model-mappings-list-result.ts",
       "src/types/model-mappings-replace-result.ts",
-      "src/types/model-mappings-resolve-create-response.ts",
       "src/types/model-mappings-resolve-create-result.ts",
-      "src/types/model-mappings-update-response.ts",
       "src/types/model-mappings-update-result.ts",
-      "src/types/model-rankings-refresh-response.ts",
+      "src/types/model-ranking-refresh-job-history-page.ts",
+      "src/types/model-rankings-jobs-list-result.ts",
+      "src/types/model-rankings-list-result.ts",
+      "src/types/model-rankings-page.ts",
       "src/types/model-rankings-refresh-result.ts",
-      "src/types/model-rankings-status-retrieve-response.ts",
       "src/types/model-rankings-status-retrieve-result.ts",
-      "src/types/model-vendors-create-response.ts",
       "src/types/model-vendors-create-result.ts",
-      "src/types/models-create-response.ts",
+      "src/types/model-vendors-list-result.ts",
       "src/types/models-create-result.ts",
+      "src/types/models-delete-result.ts",
+      "src/types/models-list-result.ts",
       "src/types/models-refresh-response.ts",
-      "src/types/models-update-response.ts",
       "src/types/models-update-result.ts",
       "src/types/no-data.ts",
       "src/types/page-info.ts",
-      "src/types/problem-detail.ts",
       "src/types/sdk-work-api-response.ts",
       "src/types/sdk-work-command-data.ts",
       "src/types/sdk-work-command-response.ts",
@@ -84,52 +90,35 @@
       "custom/build-runtime.mjs",
       "custom/README.md"
     ],
-    "backedUpFiles": [
-      "package.json",
-      "sdkwork-sdk.json"
-    ]
+    "backedUpFiles": []
   },
   "impact": {
     "schemaVersion": 1,
     "areas": [
-      "api-surface",
-      "models",
-      "build-metadata"
+      "models"
     ],
     "details": [
       {
-        "area": "api-surface",
-        "paths": [
-          "src/api/ai.ts"
-        ]
-      },
-      {
         "area": "models",
         "paths": [
-          "src/types/model-catalog-sync-result.ts"
-        ]
-      },
-      {
-        "area": "build-metadata",
-        "paths": [
-          "package.json",
-          "sdkwork-sdk.json"
+          "src/types/field-error.ts",
+          "src/types/problem-detail.ts"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface, models, build-metadata. Verification is required."
+    "summary": "Detected impact areas: models. Verification is required."
   },
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface, models, build-metadata. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: models. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, build-metadata.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -147,7 +136,7 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, build-metadata.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: models.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -165,14 +154,12 @@
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "high",
+    "riskLevel": "medium",
     "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
     "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "backed-up-generated-files",
-      "manual-review-required",
       "verification-required"
     ]
   },

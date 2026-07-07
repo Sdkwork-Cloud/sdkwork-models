@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { AiResourceGroupsCreateResult, AiResourceGroupsUpdateResult, AiResourcesCreateResult, AiResourcesUpdateResult, ModelCatalogSyncResult, ModelMappingsCreateResult, ModelMappingsReplaceResult, ModelMappingsResolveCreateResult, ModelMappingsUpdateResult, ModelRankingsRefreshResult, ModelRankingsStatusRetrieveResult, ModelsCreateResult, ModelsUpdateResult, ModelVendorsCreateResult, SdkWorkCommandData, SdkWorkPageData } from '../types';
+import type { AiResourceGroupResourcesPage, AiResourcesPage, ModelCatalogPage, ModelRankingRefreshJobHistoryPage, ModelRankingsPage, NoData } from '../types';
 
 
 export interface AiModelVideoProfilesListParams {
@@ -17,11 +17,11 @@ export class AiModelVideoProfilesApi {
 
 
 /** List model video generation profiles */
-  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<SdkWorkPageData> {
+  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
+    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
   }
 }
 
@@ -44,7 +44,7 @@ export class AiVideoProfilesApi {
 
 
 /** List video generation profiles */
-  async list(params?: AiVideoProfilesListParams): Promise<SdkWorkPageData> {
+  async list(params?: AiVideoProfilesListParams): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -54,7 +54,7 @@ export class AiVideoProfilesApi {
       { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
       { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/video_profiles`), query));
+    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/video_profiles`), query));
   }
 }
 
@@ -71,11 +71,11 @@ export class AiModelVoicesApi {
 
 
 /** List model TTS voices */
-  async list(modelId: string, params?: AiModelVoicesListParams): Promise<SdkWorkPageData> {
+  async list(modelId: string, params?: AiModelVoicesListParams): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
+    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
   }
 }
 
@@ -97,7 +97,7 @@ export class AiVoicesApi {
 
 
 /** List TTS voices */
-  async list(params?: AiVoicesListParams): Promise<SdkWorkPageData> {
+  async list(params?: AiVoicesListParams): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -106,8 +106,14 @@ export class AiVoicesApi {
       { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/voices`), query));
+    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/voices`), query));
   }
+}
+
+export interface AiAiResourcesListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
 }
 
 export class AiAiResourcesApi {
@@ -119,19 +125,30 @@ export class AiAiResourcesApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/resources`));
+  async list(params?: AiAiResourcesListParams): Promise<AiResourcesPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<AiResourcesPage>(appendQueryString(backendApiPath(`/ai/resources`), query));
   }
 
 /** Create */
-  async create(): Promise<AiResourcesCreateResult> {
-    return this.client.post<AiResourcesCreateResult>(backendApiPath(`/ai/resources`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/resources`));
   }
 
 /** Update */
-  async update(resourceId: string): Promise<AiResourcesUpdateResult> {
-    return this.client.put<AiResourcesUpdateResult>(backendApiPath(`/ai/resources/${serializePathParameter(resourceId, { name: 'resourceId', style: 'simple', explode: false })}`));
+  async update(resourceId: string): Promise<NoData> {
+    return this.client.put<NoData>(backendApiPath(`/ai/resources/${serializePathParameter(resourceId, { name: 'resourceId', style: 'simple', explode: false })}`));
   }
+}
+
+export interface AiAiResourceGroupsResourcesListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
 }
 
 export class AiAiResourceGroupsResourcesApi {
@@ -143,8 +160,13 @@ export class AiAiResourceGroupsResourcesApi {
 
 
 /** List */
-  async list(groupIdOrCode: string): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`));
+  async list(groupIdOrCode: string, params?: AiAiResourceGroupsResourcesListParams): Promise<AiResourceGroupResourcesPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<AiResourceGroupResourcesPage>(appendQueryString(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`), query));
   }
 }
 
@@ -159,27 +181,36 @@ export class AiAiResourceGroupsApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/resource_groups`));
+  async list(): Promise<NoData> {
+    return this.client.get<NoData>(backendApiPath(`/ai/resource_groups`));
   }
 
 /** Create */
-  async create(): Promise<AiResourceGroupsCreateResult> {
-    return this.client.post<AiResourceGroupsCreateResult>(backendApiPath(`/ai/resource_groups`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/resource_groups`));
   }
 
 /** Delete */
-  async delete(groupId: string): Promise<SdkWorkCommandData> {
-    return this.client.delete<SdkWorkCommandData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`));
+  async delete(groupId: string): Promise<NoData> {
+    return this.client.delete<NoData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`));
   }
 
 /** Update */
-  async update(groupId: string): Promise<AiResourceGroupsUpdateResult> {
-    return this.client.patch<AiResourceGroupsUpdateResult>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`));
+  async update(groupId: string): Promise<NoData> {
+    return this.client.patch<NoData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`));
   }
 }
 
 export interface AiModelsListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  billingMeter?: string;
+  vendorCodes?: string[];
+  modalities?: string[];
+  capabilities?: string[];
+  categories?: string[];
+  groups?: string[];
   modelTypes?: string;
 }
 
@@ -192,31 +223,40 @@ export class AiModelsApi {
 
 
 /** List */
-  async list(params?: AiModelsListParams): Promise<SdkWorkPageData> {
+  async list(params?: AiModelsListParams): Promise<ModelCatalogPage> {
     const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
+      { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
+      { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
+      { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
+      { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
       { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<SdkWorkPageData>(appendQueryString(backendApiPath(`/ai/models`), query));
+    return this.client.get<ModelCatalogPage>(appendQueryString(backendApiPath(`/ai/models`), query));
   }
 
 /** Create */
-  async create(): Promise<ModelsCreateResult> {
-    return this.client.post<ModelsCreateResult>(backendApiPath(`/ai/models`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/models`));
   }
 
 /** Refresh */
-  async refresh(): Promise<ModelCatalogSyncResult> {
-    return this.client.post<ModelCatalogSyncResult>(backendApiPath(`/ai/models/refresh`));
+  async refresh(): Promise<unknown> {
+    return this.client.post<unknown>(backendApiPath(`/ai/models/refresh`));
   }
 
 /** Delete */
-  async delete(modelId: string): Promise<SdkWorkCommandData> {
-    return this.client.delete<SdkWorkCommandData>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`));
+  async delete(modelId: string): Promise<NoData> {
+    return this.client.delete<NoData>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`));
   }
 
 /** Update */
-  async update(modelId: string): Promise<ModelsUpdateResult> {
-    return this.client.patch<ModelsUpdateResult>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`));
+  async update(modelId: string): Promise<NoData> {
+    return this.client.patch<NoData>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`));
   }
 }
 
@@ -229,14 +269,26 @@ export class AiModelVendorsApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/model_vendors`));
+  async list(): Promise<NoData> {
+    return this.client.get<NoData>(backendApiPath(`/ai/model_vendors`));
   }
 
 /** Create */
-  async create(): Promise<ModelVendorsCreateResult> {
-    return this.client.post<ModelVendorsCreateResult>(backendApiPath(`/ai/model_vendors`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/model_vendors`));
   }
+}
+
+export interface AiModelRankingsStatusRetrieveParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  billingMeter?: string;
+  vendorCodes?: string[];
+  modalities?: string[];
+  capabilities?: string[];
+  categories?: string[];
+  groups?: string[];
 }
 
 export class AiModelRankingsStatusApi {
@@ -248,9 +300,25 @@ export class AiModelRankingsStatusApi {
 
 
 /** Retrieve */
-  async retrieve(): Promise<ModelRankingsStatusRetrieveResult> {
-    return this.client.get<ModelRankingsStatusRetrieveResult>(backendApiPath(`/ai/model_rankings/status`));
+  async retrieve(params?: AiModelRankingsStatusRetrieveParams): Promise<ModelCatalogPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
+      { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
+      { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
+      { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
+      { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
+    ]);
+    return this.client.get<ModelCatalogPage>(appendQueryString(backendApiPath(`/ai/model_rankings/status`), query));
   }
+}
+
+export interface AiModelRankingsJobsListParams {
+  rankScope?: string;
+  pageSize?: number;
 }
 
 export class AiModelRankingsJobsApi {
@@ -262,9 +330,21 @@ export class AiModelRankingsJobsApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/model_rankings/jobs`));
+  async list(params?: AiModelRankingsJobsListParams): Promise<ModelRankingRefreshJobHistoryPage> {
+    const query = buildQueryString([
+      { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<ModelRankingRefreshJobHistoryPage>(appendQueryString(backendApiPath(`/ai/model_rankings/jobs`), query));
   }
+}
+
+export interface AiModelRankingsListParams {
+  rankScope?: string;
+  vendorCode?: string;
+  modality?: string;
+  q?: string;
+  pageSize?: number;
 }
 
 export class AiModelRankingsApi {
@@ -280,13 +360,20 @@ export class AiModelRankingsApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/model_rankings`));
+  async list(params?: AiModelRankingsListParams): Promise<ModelRankingsPage> {
+    const query = buildQueryString([
+      { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'modality', value: params?.modality, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/model_rankings`), query));
   }
 
 /** Refresh */
-  async refresh(): Promise<ModelRankingsRefreshResult> {
-    return this.client.post<ModelRankingsRefreshResult>(backendApiPath(`/ai/model_rankings/refresh`));
+  async refresh(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/model_rankings/refresh`));
   }
 }
 
@@ -299,8 +386,8 @@ export class AiModelMappingsResolveApi {
 
 
 /** Create */
-  async create(): Promise<ModelMappingsResolveCreateResult> {
-    return this.client.post<ModelMappingsResolveCreateResult>(backendApiPath(`/ai/model_mappings/resolve`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/model_mappings/resolve`));
   }
 }
 
@@ -315,28 +402,28 @@ export class AiModelMappingsApi {
 
 
 /** List */
-  async list(): Promise<SdkWorkPageData> {
-    return this.client.get<SdkWorkPageData>(backendApiPath(`/ai/model_mappings`));
+  async list(): Promise<NoData> {
+    return this.client.get<NoData>(backendApiPath(`/ai/model_mappings`));
   }
 
 /** Create */
-  async create(): Promise<ModelMappingsCreateResult> {
-    return this.client.post<ModelMappingsCreateResult>(backendApiPath(`/ai/model_mappings`));
+  async create(): Promise<NoData> {
+    return this.client.post<NoData>(backendApiPath(`/ai/model_mappings`));
   }
 
 /** Replace */
-  async replace(): Promise<ModelMappingsReplaceResult> {
-    return this.client.put<ModelMappingsReplaceResult>(backendApiPath(`/ai/model_mappings`));
+  async replace(): Promise<NoData> {
+    return this.client.put<NoData>(backendApiPath(`/ai/model_mappings`));
   }
 
 /** Delete */
-  async delete(mappingId: string): Promise<SdkWorkCommandData> {
-    return this.client.delete<SdkWorkCommandData>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`));
+  async delete(mappingId: string): Promise<NoData> {
+    return this.client.delete<NoData>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`));
   }
 
 /** Update */
-  async update(mappingId: string): Promise<ModelMappingsUpdateResult> {
-    return this.client.patch<ModelMappingsUpdateResult>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`));
+  async update(mappingId: string): Promise<NoData> {
+    return this.client.patch<NoData>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`));
   }
 }
 

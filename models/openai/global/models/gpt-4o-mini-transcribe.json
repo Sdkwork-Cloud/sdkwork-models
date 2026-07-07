@@ -34,5 +34,7 @@
   ],
   "supportsStreaming": true,
   "vendorCode": "openai",
-  "vendorName": "OpenAI"
+  "vendorName": "OpenAI",
+  "supportsTools": false,
+  "supportsJsonSchema": false
 }

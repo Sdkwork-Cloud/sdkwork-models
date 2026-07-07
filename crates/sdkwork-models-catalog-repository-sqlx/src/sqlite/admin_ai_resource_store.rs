@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
 use sdkwork_models_contract_service::{
-    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceItem,
-    AdminAiResourceMemberCommand, AdminAiResourceMemberItem, AdminAiResourceReadFuture,
-    AdminAiResourceStore, CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
+    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceGroupResourcesPage,
+    AdminAiResourceItem, AdminAiResourceListPage, AdminAiResourceMemberCommand,
+    AdminAiResourceMemberItem, AdminAiResourceReadFuture, AdminAiResourceStore,
+    CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
     DeleteAdminAiResourceGroupCommand, DomainError, DomainResult,
     ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
     ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
@@ -37,7 +38,7 @@ impl AdminAiResourceStore for SqliteAdminAiResourceStore {
     fn list_ai_resources<'a>(
         &'a self,
         query: ListAdminAiResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceListPage> {
         Box::pin(async move { list_ai_resources(&self.pool, query).await })
     }
 
@@ -230,7 +231,7 @@ impl AdminAiResourceStore for SqliteAdminAiResourceStore {
     fn list_ai_resource_group_resources<'a>(
         &'a self,
         query: ListAdminAiResourceGroupResourcesQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupResourceItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupResourcesPage> {
         Box::pin(async move { list_ai_resource_group_resources(&self.pool, query).await })
     }
 
@@ -259,9 +260,57 @@ impl AdminAiResourceStore for SqliteAdminAiResourceStore {
 async fn list_ai_resources(
     pool: &SqlitePool,
     query: ListAdminAiResourcesQuery,
-) -> DomainResult<Vec<AdminAiResourceItem>> {
+) -> DomainResult<AdminAiResourceListPage> {
     let members =
         load_members(pool, query.subject.tenant_id, query.subject.organization_id).await?;
+    let search = resource_search_pattern(query.q.as_deref());
+    let total_count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(1)
+        FROM ai_resource
+        WHERE (
+                (tenant_id = ? AND organization_id = ?)
+                OR (tenant_id = 0 AND organization_id = 0)
+              )
+          AND deleted_at IS NULL
+          AND NOT (
+              tenant_id = 0
+              AND organization_id = 0
+              AND (? <> 0 OR ? <> 0)
+              AND EXISTS (
+                  SELECT 1
+                  FROM ai_resource tenant_resource
+                  WHERE tenant_resource.tenant_id = ?
+                    AND tenant_resource.organization_id = ?
+                    AND tenant_resource.resource_code = ai_resource.resource_code
+                    AND tenant_resource.deleted_at IS NULL
+              )
+          )
+          AND (
+              ? IS NULL
+              OR resource_code LIKE ?
+              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?
+              OR COALESCE(resource_type, '') LIKE ?
+              OR COALESCE(vendor_code, '') LIKE ?
+              OR COALESCE(modality_code, '') LIKE ?
+          )
+        "#,
+    )
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count AI resources", error))?;
     let rows = sqlx::query(
         r#"
         SELECT
@@ -311,8 +360,16 @@ async fn list_ai_resources(
                     AND tenant_resource.deleted_at IS NULL
               )
           )
+          AND (
+              ? IS NULL
+              OR resource_code LIKE ?
+              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?
+              OR COALESCE(resource_type, '') LIKE ?
+              OR COALESCE(vendor_code, '') LIKE ?
+              OR COALESCE(modality_code, '') LIKE ?
+          )
         ORDER BY COALESCE(sort_order, 100000) ASC, id ASC
-        LIMIT 1000
+        LIMIT ? OFFSET ?
         "#,
     )
     .bind(query.subject.tenant_id)
@@ -321,13 +378,23 @@ async fn list_ai_resources(
     .bind(query.subject.organization_id)
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(search.as_deref())
+    .bind(query.normalized_limit())
+    .bind(query.normalized_offset())
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list AI resources", error))?;
 
-    rows.into_iter()
+    let items = rows
+        .into_iter()
         .map(|row| item_from_row(row, &members))
-        .collect()
+        .collect::<DomainResult<Vec<_>>>()?;
+    Ok(AdminAiResourceListPage { items, total_count })
 }
 
 async fn list_ai_resource_groups(
@@ -453,7 +520,7 @@ async fn list_ai_resource_groups(
 async fn list_ai_resource_group_resources(
     pool: &SqlitePool,
     query: ListAdminAiResourceGroupResourcesQuery,
-) -> DomainResult<Vec<AdminAiResourceGroupResourceItem>> {
+) -> DomainResult<AdminAiResourceGroupResourcesPage> {
     let group = load_group_header(
         pool,
         query.subject.tenant_id,
@@ -462,111 +529,255 @@ async fn list_ai_resource_group_resources(
     )
     .await?
     .ok_or_else(|| DomainError::not_found("AI resource group was not found"))?;
-    let rows = if is_dynamic_group(group.group_code.as_str(), group.selection_mode.as_str()) {
-        sqlx::query(
-            r#"
-            SELECT
-                r.id,
-                r.resource_code,
-                r.resource_type,
-                COALESCE(NULLIF(r.display_name, ''), r.resource_code) AS display_name,
-                r.vendor_code,
-                r.modality_code,
-                r.api_code AS api_endpoint_code,
-                r.catalog_key,
-                r.model,
-                r.provider_native_model,
-                r.status,
-                r.sort_order,
-                'included' AS member_role
-            FROM ai_resource r
-            WHERE (
-                    (r.tenant_id = ? AND r.organization_id = ?)
-                    OR (r.tenant_id = 0 AND r.organization_id = 0)
+    let search = resource_search_pattern(query.q.as_deref());
+    let limit = query.normalized_limit();
+    let offset = query.normalized_offset();
+    let (total_count, rows) =
+        if is_dynamic_group(group.group_code.as_str(), group.selection_mode.as_str()) {
+            let total_count: i64 = sqlx::query_scalar(
+                r#"
+                SELECT COUNT(1)
+                FROM ai_resource r
+                WHERE (
+                        (r.tenant_id = ? AND r.organization_id = ?)
+                        OR (r.tenant_id = 0 AND r.organization_id = 0)
+                      )
+                  AND r.resource_type = 'api_endpoint'
+                  AND r.deleted_at IS NULL
+                  AND NOT (
+                      r.tenant_id = 0
+                      AND r.organization_id = 0
+                      AND (? <> 0 OR ? <> 0)
+                      AND EXISTS (
+                          SELECT 1
+                          FROM ai_resource tenant_resource
+                          WHERE tenant_resource.tenant_id = ?
+                            AND tenant_resource.organization_id = ?
+                            AND tenant_resource.resource_code = r.resource_code
+                            AND tenant_resource.deleted_at IS NULL
+                      )
                   )
-              AND r.resource_type = 'api_endpoint'
-              AND r.deleted_at IS NULL
-              AND NOT (
-                  r.tenant_id = 0
-                  AND r.organization_id = 0
-                  AND (? <> 0 OR ? <> 0)
-                  AND EXISTS (
-                      SELECT 1
-                      FROM ai_resource tenant_resource
-                      WHERE tenant_resource.tenant_id = ?
-                        AND tenant_resource.organization_id = ?
-                        AND tenant_resource.resource_code = r.resource_code
-                        AND tenant_resource.deleted_at IS NULL
+                  AND (
+                      ? IS NULL
+                      OR r.resource_code LIKE ?
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
+                      OR COALESCE(r.resource_type, '') LIKE ?
+                      OR COALESCE(r.vendor_code, '') LIKE ?
+                      OR COALESCE(r.modality_code, '') LIKE ?
                   )
-              )
-            ORDER BY COALESCE(r.sort_order, 100000) ASC, r.id ASC
-            LIMIT 2000
-            "#,
-        )
-        .bind(group.tenant_id)
-        .bind(group.organization_id)
-        .bind(group.tenant_id)
-        .bind(group.organization_id)
-        .bind(group.tenant_id)
-        .bind(group.organization_id)
-        .fetch_all(pool)
-        .await
-    } else {
-        sqlx::query(
-            r#"
-            SELECT
-                r.id,
-                r.resource_code,
-                r.resource_type,
-                COALESCE(NULLIF(r.display_name, ''), r.resource_code) AS display_name,
-                r.vendor_code,
-                r.modality_code,
-                r.api_code AS api_endpoint_code,
-                r.catalog_key,
-                r.model,
-                r.provider_native_model,
-                r.status,
-                COALESCE(i.sort_order, r.sort_order) AS sort_order,
-                COALESCE(NULLIF(i.item_role, ''), 'included') AS member_role
-            FROM ai_resource_group_item i
-            JOIN ai_resource r
-              ON r.resource_code = i.resource_code
-             AND r.deleted_at IS NULL
-             AND (
-                  (r.tenant_id = i.tenant_id AND r.organization_id = i.organization_id)
-                  OR (r.tenant_id = 0 AND r.organization_id = 0)
-             )
-             AND NOT (
-                  r.tenant_id = 0
-                  AND r.organization_id = 0
-                  AND (i.tenant_id <> 0 OR i.organization_id <> 0)
-                  AND EXISTS (
-                      SELECT 1
-                      FROM ai_resource tenant_resource
-                      WHERE tenant_resource.tenant_id = i.tenant_id
-                        AND tenant_resource.organization_id = i.organization_id
-                        AND tenant_resource.resource_code = i.resource_code
-                        AND tenant_resource.deleted_at IS NULL
+                "#,
+            )
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .fetch_one(pool)
+            .await
+            .map_err(|error| store_error("failed to count AI resource group resources", error))?;
+            let rows = sqlx::query(
+                r#"
+                SELECT
+                    r.id,
+                    r.resource_code,
+                    r.resource_type,
+                    COALESCE(NULLIF(r.display_name, ''), r.resource_code) AS display_name,
+                    r.vendor_code,
+                    r.modality_code,
+                    r.api_code AS api_endpoint_code,
+                    r.catalog_key,
+                    r.model,
+                    r.provider_native_model,
+                    r.status,
+                    r.sort_order,
+                    'included' AS member_role
+                FROM ai_resource r
+                WHERE (
+                        (r.tenant_id = ? AND r.organization_id = ?)
+                        OR (r.tenant_id = 0 AND r.organization_id = 0)
+                      )
+                  AND r.resource_type = 'api_endpoint'
+                  AND r.deleted_at IS NULL
+                  AND NOT (
+                      r.tenant_id = 0
+                      AND r.organization_id = 0
+                      AND (? <> 0 OR ? <> 0)
+                      AND EXISTS (
+                          SELECT 1
+                          FROM ai_resource tenant_resource
+                          WHERE tenant_resource.tenant_id = ?
+                            AND tenant_resource.organization_id = ?
+                            AND tenant_resource.resource_code = r.resource_code
+                            AND tenant_resource.deleted_at IS NULL
+                      )
                   )
-             )
-            WHERE i.tenant_id = ?
-              AND i.organization_id = ?
-              AND i.resource_group_id = ?
-              AND i.item_type = 'resource'
-              AND i.deleted_at IS NULL
-              AND i.status = 1
-            ORDER BY COALESCE(i.sort_order, r.sort_order, 100000) ASC, i.id ASC
-            LIMIT 2000
-            "#,
-        )
-        .bind(group.tenant_id)
-        .bind(group.organization_id)
-        .bind(group.id)
-        .fetch_all(pool)
-        .await
-    }
-    .map_err(|error| store_error("failed to list AI resource group resources", error))?;
-    rows.into_iter().map(group_resource_from_row).collect()
+                  AND (
+                      ? IS NULL
+                      OR r.resource_code LIKE ?
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
+                      OR COALESCE(r.resource_type, '') LIKE ?
+                      OR COALESCE(r.vendor_code, '') LIKE ?
+                      OR COALESCE(r.modality_code, '') LIKE ?
+                  )
+                ORDER BY COALESCE(r.sort_order, 100000) ASC, r.id ASC
+                LIMIT ? OFFSET ?
+                "#,
+            )
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(pool)
+            .await
+            .map_err(|error| store_error("failed to list AI resource group resources", error))?;
+            (total_count, rows)
+        } else {
+            let total_count: i64 = sqlx::query_scalar(
+                r#"
+                SELECT COUNT(1)
+                FROM ai_resource_group_item i
+                JOIN ai_resource r
+                  ON r.resource_code = i.resource_code
+                 AND r.deleted_at IS NULL
+                 AND (
+                      (r.tenant_id = i.tenant_id AND r.organization_id = i.organization_id)
+                      OR (r.tenant_id = 0 AND r.organization_id = 0)
+                 )
+                 AND NOT (
+                      r.tenant_id = 0
+                      AND r.organization_id = 0
+                      AND (i.tenant_id <> 0 OR i.organization_id <> 0)
+                      AND EXISTS (
+                          SELECT 1
+                          FROM ai_resource tenant_resource
+                          WHERE tenant_resource.tenant_id = i.tenant_id
+                            AND tenant_resource.organization_id = i.organization_id
+                            AND tenant_resource.resource_code = i.resource_code
+                            AND tenant_resource.deleted_at IS NULL
+                      )
+                 )
+                WHERE i.tenant_id = ?
+                  AND i.organization_id = ?
+                  AND i.resource_group_id = ?
+                  AND i.item_type = 'resource'
+                  AND i.deleted_at IS NULL
+                  AND i.status = 1
+                  AND (
+                      ? IS NULL
+                      OR r.resource_code LIKE ?
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
+                      OR COALESCE(r.resource_type, '') LIKE ?
+                      OR COALESCE(r.vendor_code, '') LIKE ?
+                      OR COALESCE(r.modality_code, '') LIKE ?
+                  )
+                "#,
+            )
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.id)
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .fetch_one(pool)
+            .await
+            .map_err(|error| store_error("failed to count AI resource group resources", error))?;
+            let rows = sqlx::query(
+                r#"
+                SELECT
+                    r.id,
+                    r.resource_code,
+                    r.resource_type,
+                    COALESCE(NULLIF(r.display_name, ''), r.resource_code) AS display_name,
+                    r.vendor_code,
+                    r.modality_code,
+                    r.api_code AS api_endpoint_code,
+                    r.catalog_key,
+                    r.model,
+                    r.provider_native_model,
+                    r.status,
+                    COALESCE(i.sort_order, r.sort_order) AS sort_order,
+                    COALESCE(NULLIF(i.item_role, ''), 'included') AS member_role
+                FROM ai_resource_group_item i
+                JOIN ai_resource r
+                  ON r.resource_code = i.resource_code
+                 AND r.deleted_at IS NULL
+                 AND (
+                      (r.tenant_id = i.tenant_id AND r.organization_id = i.organization_id)
+                      OR (r.tenant_id = 0 AND r.organization_id = 0)
+                 )
+                 AND NOT (
+                      r.tenant_id = 0
+                      AND r.organization_id = 0
+                      AND (i.tenant_id <> 0 OR i.organization_id <> 0)
+                      AND EXISTS (
+                          SELECT 1
+                          FROM ai_resource tenant_resource
+                          WHERE tenant_resource.tenant_id = i.tenant_id
+                            AND tenant_resource.organization_id = i.organization_id
+                            AND tenant_resource.resource_code = i.resource_code
+                            AND tenant_resource.deleted_at IS NULL
+                      )
+                 )
+                WHERE i.tenant_id = ?
+                  AND i.organization_id = ?
+                  AND i.resource_group_id = ?
+                  AND i.item_type = 'resource'
+                  AND i.deleted_at IS NULL
+                  AND i.status = 1
+                  AND (
+                      ? IS NULL
+                      OR r.resource_code LIKE ?
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
+                      OR COALESCE(r.resource_type, '') LIKE ?
+                      OR COALESCE(r.vendor_code, '') LIKE ?
+                      OR COALESCE(r.modality_code, '') LIKE ?
+                  )
+                ORDER BY COALESCE(i.sort_order, r.sort_order, 100000) ASC, i.id ASC
+                LIMIT ? OFFSET ?
+                "#,
+            )
+            .bind(group.tenant_id)
+            .bind(group.organization_id)
+            .bind(group.id)
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(search.as_deref())
+            .bind(limit)
+            .bind(offset)
+            .fetch_all(pool)
+            .await
+            .map_err(|error| store_error("failed to list AI resource group resources", error))?;
+            (total_count, rows)
+        };
+
+    let items = rows
+        .into_iter()
+        .map(group_resource_from_row)
+        .collect::<DomainResult<Vec<_>>>()?;
+    Ok(AdminAiResourceGroupResourcesPage { items, total_count })
 }
 
 async fn create_ai_resource_group(
@@ -1599,6 +1810,13 @@ fn members_from_rows(
             });
     }
     Ok(members)
+}
+
+fn resource_search_pattern(value: Option<&str>) -> Option<String> {
+    value
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| format!("%{value}%"))
 }
 
 fn item_from_row(

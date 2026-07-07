@@ -5,10 +5,9 @@ use crate::runtime_id::next_claw_runtime_id;
 use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
 use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
-    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
     ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture, ModelRankingRefreshCommand,
     ModelRankingRefreshFuture, ModelRankingRefreshOutcome, ModelRankingRefreshRunStatus,
-    ModelRankingRefreshStore,
+    ModelRankingRefreshStore, normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
 };
 
 const MODEL_RANKING_REFRESH_JOB_TYPE: i64 = 20;
@@ -317,7 +316,7 @@ async fn load_ranking_aggregates(
                 SUM(COALESCE(u.total_tokens, 0)) AS token_count,
                 SUM(COALESCE(NULLIF(CAST(COALESCE(NULLIF(CAST(u.customer_charge_amount AS TEXT), ''), '0') AS REAL), 0), CAST(COALESCE(NULLIF(CAST(u.cost_amount AS TEXT), ''), '0') AS REAL), 0)) AS cost_amount,
                 COALESCE(NULLIF(MAX(u.currency), ''), 'USD') AS currency
-            FROM ai_usage_fact u
+            FROM ai_usage u
             JOIN model_scope m
               ON m.catalog_key = u.catalog_key
              AND m.model_row_no = 1
@@ -563,7 +562,7 @@ fn ranking_metadata(
         "refreshIntervalSeconds": command.refresh_interval_seconds,
         "nextRefreshAt": next_refresh_at,
         "cacheMaxAgeSeconds": command.cache_max_age_seconds,
-        "sourceTables": ["ai_usage_fact", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["ai_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }
@@ -586,7 +585,7 @@ fn audit_payload(command: &ModelRankingRefreshAuditCommand) -> Result<String, Do
         "consecutiveFailureCount": command.consecutive_failure_count.max(0),
         "alertRecommended": command.alert_recommended,
         "alertSeverity": command.alert_severity,
-        "sourceTables": ["ai_usage_fact", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["ai_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }

@@ -1,11 +1,11 @@
 use sdkwork_models::validation::is_decimal_string;
 use sdkwork_models::{
-    find_meter, find_model, find_model_by_vendor_region, find_protocol, get_best_reference_price,
-    get_model_prices, get_model_region_prices, list_available_models,
+    find_meter, find_model, find_model_by_vendor_region, find_protocol, find_video_profile,
+    get_best_reference_price, get_model_prices, get_model_region_prices, list_available_models,
     list_client_api_compatibility_by_vendor, list_meters, list_models, list_models_by_capability,
-    list_models_by_modality, list_models_by_protocol, list_protocols, list_protocols_by_vendor,
-    list_vendor_regions, list_video_profiles, list_video_profiles_for_model, find_video_profile,
-    list_voices, list_voices_for_model, list_vendors, load_bundled_catalog,
+    list_models_by_modality, list_models_by_protocol, list_models_with_feature, list_protocols,
+    list_protocols_by_vendor, list_vendor_regions, list_vendors, list_video_profiles,
+    list_video_profiles_for_model, list_voices, list_voices_for_model, load_bundled_catalog,
     load_catalog, load_vendor_catalog, validate_catalog, ModelCatalog, ModelFilter,
     VideoProfileFilter, VoiceFilter,
 };
@@ -485,4 +485,30 @@ fn direct_vendor_loader_reads_nested_provider_model_id_files() {
             .first()
             .map(|pricing| pricing.model_id.as_str())
     );
+}
+
+#[test]
+fn model_capability_predicates_reflect_catalog_flags() {
+    let catalog = load_bundled_catalog().expect("catalog should load");
+
+    let claude = find_model(&catalog, "anthropic/claude-opus-4-8").expect("claude model");
+    assert!(sdkwork_models::model_supports_vision(claude));
+    assert!(sdkwork_models::model_supports_tool_call(claude));
+    assert!(!sdkwork_models::model_supports_audio_input(claude));
+
+    let live = find_model(&catalog, "google/gemini-3.1-flash-live-preview").expect("live model");
+    assert!(sdkwork_models::model_supports_speech_input(live));
+    assert!(sdkwork_models::model_supports_feature(live, "tool_call"));
+
+    let tts = find_model(&catalog, "google/gemini-3.1-flash-tts-preview").expect("tts model");
+    assert!(!sdkwork_models::model_supports_tool_call(tts));
+
+    let profile = sdkwork_models::get_model_capability_profile(claude);
+    assert_eq!(profile.catalog_key, "anthropic/claude-opus-4-8");
+    assert!(profile
+        .features
+        .iter()
+        .any(|feature| feature == "tool_call"));
+
+    assert!(!list_models_with_feature(&catalog, "tool_call").is_empty());
 }

@@ -1431,9 +1431,7 @@ async fn import_voices(
     load_voice_ids(conn).await
 }
 
-async fn load_voice_ids(
-    conn: &mut SqliteConnection,
-) -> Result<BTreeMap<String, i64>, sqlx::Error> {
+async fn load_voice_ids(conn: &mut SqliteConnection) -> Result<BTreeMap<String, i64>, sqlx::Error> {
     let rows = sqlx::query(
         "SELECT id, catalog_key FROM ai_model_voice WHERE tenant_id = 0 AND organization_id = 0",
     )

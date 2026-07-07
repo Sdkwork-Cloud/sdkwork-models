@@ -1,8 +1,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use crate::capabilities::model_supports_feature;
 use crate::types::{
     BillingMeter, ClientApiCompatibility, ModelCatalog, ModelInfo, ModelPrice, ModelVendorIdentity,
-    ProtocolStandard, TtsVoice, VideoGenerationProfile, VendorRegionRef,
+    ProtocolStandard, TtsVoice, VendorRegionRef, VideoGenerationProfile,
 };
 
 #[derive(Debug, Clone, Default)]
@@ -271,6 +272,16 @@ pub fn list_models_by_modality<'a>(
     )
 }
 
+pub fn list_models_with_feature<'a>(
+    catalog: &'a ModelCatalog,
+    feature: &'a str,
+) -> Vec<&'a ModelInfo> {
+    list_models(catalog, ModelFilter::default())
+        .into_iter()
+        .filter(|model| model_supports_feature(model, feature))
+        .collect()
+}
+
 pub fn list_protocols(catalog: &ModelCatalog) -> Vec<&ProtocolStandard> {
     catalog.protocols.iter().collect()
 }
@@ -391,11 +402,10 @@ pub fn list_voices<'a>(catalog: &'a ModelCatalog, filter: VoiceFilter<'_>) -> Ve
                 .unwrap_or(true)
         })
         .filter(|voice| match filter.locale {
-            Some(locale) => voice.primary_locale == locale
-                || voice
-                    .supported_locales
-                    .iter()
-                    .any(|entry| entry == locale),
+            Some(locale) => {
+                voice.primary_locale == locale
+                    || voice.supported_locales.iter().any(|entry| entry == locale)
+            }
             None => true,
         })
         .filter(|voice| match filter.search_query {
@@ -413,7 +423,10 @@ pub fn list_voices<'a>(catalog: &'a ModelCatalog, filter: VoiceFilter<'_>) -> Ve
                 .flat_map(|vendor| vendor.model_voice_bindings.iter())
                 .any(|binding| {
                     binding.catalog_key == model_key
-                        && binding.bindings.iter().any(|entry| entry.voice_key == voice.catalog_key)
+                        && binding
+                            .bindings
+                            .iter()
+                            .any(|entry| entry.voice_key == voice.catalog_key)
                 }),
             None => true,
         })
@@ -505,7 +518,10 @@ pub fn list_video_profiles<'a>(
                 }
                 if filter.duration_tier_code.is_some_and(|tier_code| {
                     profile.duration_tier_code.as_deref() != Some(tier_code)
-                        && !profile.duration_tier_codes.iter().any(|entry| entry == tier_code)
+                        && !profile
+                            .duration_tier_codes
+                            .iter()
+                            .any(|entry| entry == tier_code)
                 }) {
                     continue;
                 }

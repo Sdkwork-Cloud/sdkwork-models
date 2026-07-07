@@ -87,6 +87,9 @@ export interface ModelInfo {
   releaseStage: string;
   shelfState: string;
   routingState: string;
+  supportsStreaming?: boolean;
+  supportsTools?: boolean;
+  supportsJsonSchema?: boolean;
   source: SourceEvidence;
 }
 

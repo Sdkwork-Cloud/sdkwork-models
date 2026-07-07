@@ -34,5 +34,8 @@
     "Retrieval"
   ],
   "vendorCode": "google",
-  "vendorName": "Google"
+  "vendorName": "Google",
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "supportsJsonSchema": false
 }

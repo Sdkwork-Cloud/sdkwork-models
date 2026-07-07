@@ -15,9 +15,8 @@ use crate::api::request_id::generate_server_request_id;
 pub struct ApiResponse;
 
 pub fn new_trace_id() -> String {
-    generate_server_request_id().unwrap_or_else(|_| {
-        "00000000-0000-4000-8000-000000000000".to_string()
-    })
+    generate_server_request_id()
+        .unwrap_or_else(|_| "00000000-0000-4000-8000-000000000000".to_string())
 }
 
 pub fn trace_id_from_context(ctx: Option<&WebRequestContext>) -> String {
@@ -43,11 +42,7 @@ impl ApiResponse {
         code: SdkWorkResultCode,
         message: impl Into<String>,
     ) -> ProblemResponse {
-        ProblemResponse::from_code(
-            code,
-            message.into(),
-            trace_id_from_context(Some(ctx)),
-        )
+        ProblemResponse::from_code(code, message.into(), trace_id_from_context(Some(ctx)))
     }
 }
 
@@ -92,8 +87,8 @@ impl ProblemResponse {
 impl IntoResponse for ProblemResponse {
     fn into_response(self) -> Response {
         let trace_id = self.problem.trace_id.clone();
-        let status = StatusCode::from_u16(self.problem.status)
-            .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+        let status =
+            StatusCode::from_u16(self.problem.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
         let mut response = (status, Json(self.problem)).into_response();
         attach_trace_header(&mut response, &trace_id);
         response
@@ -169,7 +164,10 @@ mod tests {
         let response = problem_for(&ctx, SdkWorkResultCode::ValidationError, "invalid input");
         assert_eq!(response.status(), StatusCode::BAD_REQUEST);
         assert_eq!(
-            response.headers().get("x-sdkwork-trace-id").and_then(|v| v.to_str().ok()),
+            response
+                .headers()
+                .get("x-sdkwork-trace-id")
+                .and_then(|v| v.to_str().ok()),
             Some("trace-from-context-abc")
         );
     }

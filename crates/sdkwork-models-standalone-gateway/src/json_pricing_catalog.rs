@@ -23,10 +23,7 @@ impl JsonPricingCatalog {
     pub fn from_catalog(catalog: &ModelCatalog) -> Self {
         let mut vendors = BTreeMap::new();
         for vendor in &catalog.vendors {
-            vendors.insert(
-                vendor.vendor_code.clone(),
-                map_vendor_definition(vendor),
-            );
+            vendors.insert(vendor.vendor_code.clone(), map_vendor_definition(vendor));
         }
 
         let mut models = Vec::new();
@@ -52,7 +49,8 @@ impl JsonPricingCatalog {
     }
 
     pub fn load_from_root(root: impl AsRef<Path>) -> Result<Arc<Self>, String> {
-        let catalog = load_catalog(root).map_err(|error| format!("load catalog JSON failed: {error}"))?;
+        let catalog =
+            load_catalog(root).map_err(|error| format!("load catalog JSON failed: {error}"))?;
         Ok(Arc::new(Self::from_catalog(&catalog)))
     }
 }
@@ -181,7 +179,11 @@ impl PricingCatalog for JsonPricingCatalog {
         None
     }
 
-    fn find_provider_route(&self, _model: &str, _provider_code: &str) -> Option<ModelProviderRoute> {
+    fn find_provider_route(
+        &self,
+        _model: &str,
+        _provider_code: &str,
+    ) -> Option<ModelProviderRoute> {
         None
     }
 
@@ -193,13 +195,16 @@ impl PricingCatalog for JsonPricingCatalog {
         provider_code: Option<&str>,
         pricing_plan_code: Option<&str>,
     ) -> Option<ModelPrice> {
-        self.prices.iter().find(|price| {
-            price.model == model
-                && price.price_side == price_side
-                && price.billing_meter == billing_meter
-                && price.provider_code.as_deref() == provider_code
-                && price.pricing_plan_code.as_deref() == pricing_plan_code
-        }).cloned()
+        self.prices
+            .iter()
+            .find(|price| {
+                price.model == model
+                    && price.price_side == price_side
+                    && price.billing_meter == billing_meter
+                    && price.provider_code.as_deref() == provider_code
+                    && price.pricing_plan_code.as_deref() == pricing_plan_code
+            })
+            .cloned()
     }
 }
 

@@ -183,6 +183,12 @@ def list_models_by_modality(catalog: ModelCatalog, input_modality: str, output_m
     return list_models(catalog, input_modality=input_modality, output_modality=output_modality)
 
 
+def list_models_with_feature(catalog: ModelCatalog, feature: str) -> list[dict]:
+    from .capabilities import model_supports_feature
+
+    return [model for model in list_models(catalog) if model_supports_feature(model, feature)]
+
+
 def list_protocols(catalog: ModelCatalog) -> list[dict]:
     return catalog.protocols
 

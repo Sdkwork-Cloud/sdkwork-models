@@ -40,5 +40,6 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "vendorCode": "tencent",
-  "vendorName": "Tencent Cloud"
+  "vendorName": "Tencent Cloud",
+  "supportsJsonSchema": true
 }
