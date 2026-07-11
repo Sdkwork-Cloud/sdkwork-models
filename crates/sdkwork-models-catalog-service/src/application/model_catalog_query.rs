@@ -18,7 +18,8 @@ const MODEL_CATEGORY_OPEN_SOURCE: &str = "Open Source";
 const MODEL_CATEGORY_PROPRIETARY: &str = "Proprietary";
 const MODEL_CATEGORY_FREE: &str = "Free";
 const MODEL_CATEGORY_NEW: &str = "New";
-const MAX_MODEL_CATALOG_LIMIT: usize = 1_000;
+const DEFAULT_MODEL_CATALOG_PAGE_SIZE: usize = 20;
+const MAX_MODEL_CATALOG_PAGE_SIZE: usize = 200;
 const INVALID_MODEL_CATEGORY_FILTER: &str = "__invalid_model_category__";
 
 pub struct ModelCatalogQueryService<'a, C: PricingCatalog> {
@@ -36,7 +37,7 @@ pub struct ListModelCatalogQuery {
     pub categories: Vec<String>,
     pub groups: Vec<String>,
     pub search_query: Option<String>,
-    pub limit: Option<usize>,
+    pub page_size: Option<usize>,
     pub offset: Option<usize>,
 }
 
@@ -60,7 +61,7 @@ impl ListModelCatalogQuery {
 pub struct ModelCatalogPage {
     pub items: Vec<ModelCatalogItem>,
     pub groups: Vec<ModelCatalogGroup>,
-    pub limit: usize,
+    pub page_size: usize,
     pub offset: usize,
     pub total_items: usize,
 }
@@ -144,9 +145,9 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         let groups = normalize_filter_values(&query.groups);
         let search_query = normalize_filter_value(query.search_query.as_deref());
         let limit = query
-            .limit
-            .unwrap_or(MAX_MODEL_CATALOG_LIMIT)
-            .min(MAX_MODEL_CATALOG_LIMIT);
+            .page_size
+            .unwrap_or(DEFAULT_MODEL_CATALOG_PAGE_SIZE)
+            .min(MAX_MODEL_CATALOG_PAGE_SIZE);
         let offset = query.normalized_offset();
         let all_items = self
             .catalog
@@ -257,7 +258,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         Ok(ModelCatalogPage {
             items: models,
             groups: group_catalog,
-            limit,
+            page_size: limit,
             offset,
             total_items,
         })

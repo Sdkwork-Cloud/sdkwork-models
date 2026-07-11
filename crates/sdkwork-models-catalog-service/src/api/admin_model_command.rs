@@ -3,7 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
 use axum::extract::{Path, Query, State};
-use axum::http::HeaderMap;
+use axum::http::{HeaderMap, StatusCode};
 use axum::response::Response;
 use axum::routing::{get, patch, post};
 use axum::Router;
@@ -16,7 +16,9 @@ use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
-use crate::api::response::{finish_success, problem_for};
+use crate::api::response::{
+    finish_no_content, finish_success, finish_success_with_status, problem_for,
+};
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -192,15 +194,19 @@ struct AdminModelCatalogSyncRequest {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct AdminModelMappingsQuery {
     binding_type: Option<String>,
     vendor_code: Option<String>,
     channel_id: Option<Value>,
     channel_code: Option<String>,
     q: Option<String>,
+    page: Option<i64>,
+    page_size: Option<i64>,
 }
 
 #[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct AdminModelsListQuery {
     vendor_id: Option<String>,
     vendor_code: Option<String>,
@@ -508,6 +514,7 @@ struct AdminModelMappingResolveResponse {
     rule: Option<AdminModelMappingRuleResponse>,
 }
 
+#[derive(Debug)]
 enum AdminModelCommandBuildError {
     BadRequest(String),
     System(DomainError),
@@ -632,11 +639,14 @@ async fn fetch_model_mappings(
         Ok(query) => query,
         Err(error) => return command_build_error_response(&ctx, error),
     };
+    let page_size = query.normalized_limit();
+    let page_no = (query.normalized_offset() / page_size) + 1;
     match state.store.list_model_mappings(query).await {
-        Ok(items) => finish_success(
+        Ok(page) => finish_success(
             &ctx,
-            AdminModelListResponse {
-                items: items.into_iter().map(to_mapping_response).collect(),
+            AdminModelPageResponse {
+                items: page.items.into_iter().map(to_mapping_response).collect(),
+                page_info: offset_page_info(page_no, page_size, page.total_count),
             },
         ),
         Err(error) => {
@@ -662,8 +672,9 @@ async fn create_vendor(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_vendor(command).await {
-        Ok(item) => finish_success(
+        Ok(item) => finish_success_with_status(
             &ctx,
+            StatusCode::CREATED,
             AdminModelItemEnvelope {
                 item: to_vendor_response(item),
             },
@@ -692,8 +703,9 @@ async fn create_model(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.create_model(command).await {
-        Ok(item) => finish_success(
+        Ok(item) => finish_success_with_status(
             &ctx,
+            StatusCode::CREATED,
             AdminModelItemEnvelope {
                 item: to_model_response(item),
             },
@@ -724,8 +736,9 @@ async fn create_model_mapping(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.create_model_mapping(command).await {
-        Ok(item) => finish_success(
+        Ok(item) => finish_success_with_status(
             &ctx,
+            StatusCode::CREATED,
             AdminModelItemEnvelope {
                 item: to_mapping_response(item),
             },
@@ -822,7 +835,7 @@ async fn delete_model(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.delete_model(command).await {
-        Ok(()) => finish_success(&ctx, serde_json::json!({ "deleted": true })),
+        Ok(()) => finish_no_content(&ctx),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
             admin_model_system_response(&ctx, "ai model delete store is unavailable", error)
@@ -844,7 +857,7 @@ async fn delete_model_mapping(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.delete_model_mapping(command).await {
-        Ok(()) => finish_success(&ctx, serde_json::json!({ "deleted": true })),
+        Ok(()) => finish_no_content(&ctx),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
             admin_model_system_response(&ctx, "model mapping delete store is unavailable", error)
@@ -1094,7 +1107,7 @@ fn build_list_models_query(
         vendor_code: query.vendor_code,
         q: query.q,
         model_types: query.model_types,
-        limit: Some(page_size),
+        page_size: Some(page_size),
         offset: Some((page - 1) * page_size),
     })
 }
@@ -1103,6 +1116,18 @@ fn build_list_model_mappings_query(
     subject: AdminModelSubject,
     query: AdminModelMappingsQuery,
 ) -> Result<ListAdminModelMappingsQuery, AdminModelCommandBuildError> {
+    let page = query.page.unwrap_or(1);
+    if page < 1 {
+        return Err(AdminModelCommandBuildError::BadRequest(
+            "page must be greater than or equal to 1".to_owned(),
+        ));
+    }
+    let page_size = query.page_size.unwrap_or(DEFAULT_LIST_PAGE_SIZE);
+    if !(1..=MAX_LIST_PAGE_SIZE).contains(&page_size) {
+        return Err(AdminModelCommandBuildError::BadRequest(format!(
+            "page_size must be between 1 and {MAX_LIST_PAGE_SIZE}"
+        )));
+    }
     Ok(ListAdminModelMappingsQuery {
         subject,
         binding_type: query
@@ -1122,6 +1147,8 @@ fn build_list_model_mappings_query(
             MAX_VENDOR_CODE_LEN,
         )?,
         q: normalize_mapping_optional_text(query.q.as_deref(), "q", MAX_MAPPING_QUERY_LEN)?,
+        page_size: Some(page_size),
+        offset: Some((page - 1) * page_size),
     })
 }
 
@@ -2894,4 +2921,69 @@ fn civil_from_days(days: i64) -> (i64, i64, i64) {
     let month = month_prime + if month_prime < 10 { 3 } else { -9 };
     let year = year + if month <= 2 { 1 } else { 0 };
     (year, month, day)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_subject() -> AdminModelSubject {
+        AdminModelSubject {
+            tenant_id: 100001,
+            organization_id: 0,
+            operator_id: 42,
+            operator_type: 1,
+        }
+    }
+
+    #[test]
+    fn model_mappings_query_maps_page_and_page_size_to_limit_offset() {
+        let query = build_list_model_mappings_query(
+            test_subject(),
+            AdminModelMappingsQuery {
+                binding_type: Some("channel".to_owned()),
+                vendor_code: Some("openai".to_owned()),
+                channel_id: Some(Value::String("123".to_owned())),
+                channel_code: Some("primary".to_owned()),
+                q: Some("gpt".to_owned()),
+                page: Some(3),
+                page_size: Some(25),
+            },
+        )
+        .expect("model mappings query should be valid");
+
+        assert_eq!(query.binding_type.as_deref(), Some("channel"));
+        assert_eq!(query.vendor_code.as_deref(), Some("openai"));
+        assert_eq!(query.channel_id, Some(123));
+        assert_eq!(query.channel_code.as_deref(), Some("primary"));
+        assert_eq!(query.q.as_deref(), Some("gpt"));
+        assert_eq!(query.normalized_limit(), 25);
+        assert_eq!(query.normalized_offset(), 50);
+    }
+
+    #[test]
+    fn model_mappings_query_rejects_page_size_over_standard_limit() {
+        let error = build_list_model_mappings_query(
+            test_subject(),
+            AdminModelMappingsQuery {
+                binding_type: None,
+                vendor_code: None,
+                channel_id: None,
+                channel_code: None,
+                q: None,
+                page: Some(1),
+                page_size: Some(MAX_LIST_PAGE_SIZE + 1),
+            },
+        )
+        .expect_err("page_size over SDKWork max must fail");
+
+        match error {
+            AdminModelCommandBuildError::BadRequest(message) => {
+                assert!(message.contains("page_size must be between 1 and 200"));
+            }
+            AdminModelCommandBuildError::System(_) => {
+                panic!("page_size validation must be a bad request");
+            }
+        }
+    }
 }

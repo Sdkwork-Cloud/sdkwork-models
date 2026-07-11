@@ -12,6 +12,7 @@ use sdkwork_models_contract_service::{
 use sqlx::{Row, Sqlite, SqlitePool, Transaction};
 
 use crate::routing_config_change::{record_sqlite_ai_routing_config_change, AiRoutingConfigChange};
+use crate::runtime_id::next_claw_runtime_id;
 
 const AI_RESOURCE_TARGET_TYPE: i32 = 91;
 
@@ -1085,12 +1086,13 @@ async fn insert_ai_resource(
     tx: &mut Transaction<'_, Sqlite>,
     command: &CreateAdminAiResourceCommand,
 ) -> DomainResult<i64> {
+    let resource_id = next_claw_runtime_id("ai_resource")?;
     sqlx::query(
         r#"
         INSERT INTO ai_resource
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, sort_order, id)
         VALUES
-            (?, ?, ?, 1, ?, ?, ?, 0, '{}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, 1, ?, ?, ?, 0, '{}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         "#,
     )
     .bind(&command.resource_uuid)
@@ -1110,22 +1112,24 @@ async fn insert_ai_resource(
     .bind(command.provider_native_model.as_deref())
     .bind(serde_json::json!({ "compositionMode": &command.composition_mode }).to_string())
     .bind(command.sort_order)
+    .bind(resource_id)
     .execute(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create AI resource", error))?;
-    last_insert_rowid(tx).await
+    Ok(resource_id)
 }
 
 async fn insert_ai_resource_group(
     tx: &mut Transaction<'_, Sqlite>,
     command: &CreateAdminAiResourceGroupCommand,
 ) -> DomainResult<i64> {
+    let group_id = next_claw_runtime_id("ai_resource_group")?;
     sqlx::query(
         r#"
         INSERT INTO ai_resource_group
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, description, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, description, sort_order, id)
         VALUES
-            (?, ?, ?, 1, ?, ?, ?, 0, '{}', ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, 1, ?, ?, ?, 0, '{}', ?, ?, ?, ?, ?, ?, ?)
         "#,
     )
     .bind(&command.group_uuid)
@@ -1140,10 +1144,11 @@ async fn insert_ai_resource_group(
     .bind(&command.selection_mode)
     .bind(command.description.as_deref())
     .bind(command.sort_order)
+    .bind(group_id)
     .execute(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create AI resource group", error))?;
-    last_insert_rowid(tx).await
+    Ok(group_id)
 }
 
 async fn update_ai_resource_core(
@@ -1442,9 +1447,9 @@ async fn insert_members(
         sqlx::query(
             r#"
             INSERT INTO ai_resource_group_item
-                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order)
+                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order, id)
             VALUES
-                (?, ?, ?, 1, 1, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (?, ?, ?, 1, 1, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(tenant_id, organization_id, resource_group_id, item_type, resource_code, child_resource_group_code) DO UPDATE SET
                 status = 1,
                 deleted_at = NULL,
@@ -1472,6 +1477,7 @@ async fn insert_members(
         .bind(&resolved_member.child_resource_group_code)
         .bind(&member.member_role)
         .bind(member.sort_order)
+        .bind(next_claw_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource member", error))?;
@@ -1630,10 +1636,11 @@ async fn ensure_resource_group(
         return Ok(group_id);
     }
 
-    sqlx::query(
+    let group_id = next_claw_runtime_id("ai_resource_group")?;
+    let result = sqlx::query(
         r#"
         INSERT INTO ai_resource_group
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, sort_order, id)
         SELECT
             ?,
             tenant_id,
@@ -1648,7 +1655,8 @@ async fn ensure_resource_group(
             COALESCE(NULLIF(display_name, ''), resource_code),
             resource_type,
             ?,
-            sort_order
+            sort_order,
+            ?
         FROM ai_resource
         WHERE id = ?
           AND tenant_id = ?
@@ -1660,17 +1668,19 @@ async fn ensure_resource_group(
     .bind(requested_at)
     .bind(requested_at)
     .bind(composition_mode)
+    .bind(group_id)
     .bind(resource_id)
     .bind(tenant_id)
     .bind(organization_id)
     .execute(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create resource group", error))?;
-
-    sqlx::query_scalar("SELECT last_insert_rowid()")
-        .fetch_one(&mut **tx)
-        .await
-        .map_err(|error| store_error("failed to read resource group id", error))
+    if result.rows_affected() == 0 {
+        return Err(DomainError::not_found(format!(
+            "AI resource was not found: {resource_id}"
+        )));
+    }
+    Ok(group_id)
 }
 
 async fn load_resource_by_id(
@@ -2269,9 +2279,9 @@ async fn insert_group_resource_members(
         sqlx::query(
             r#"
             INSERT INTO ai_resource_group_item
-                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order)
+                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order, id)
             VALUES
-                (?, ?, ?, 1, 1, ?, ?, 0, '{}', ?, ?, 'resource', ?, ?, NULL, '', ?, ?)
+                (?, ?, ?, 1, 1, ?, ?, 0, '{}', ?, ?, 'resource', ?, ?, NULL, '', ?, ?, ?)
             ON CONFLICT(tenant_id, organization_id, resource_group_id, item_type, resource_code, child_resource_group_code) DO UPDATE SET
                 status = 1,
                 deleted_at = NULL,
@@ -2294,6 +2304,7 @@ async fn insert_group_resource_members(
         .bind(&member.resource_code)
         .bind(&member.item_role)
         .bind(member.sort_order)
+        .bind(next_claw_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource group member", error))?;
@@ -2468,13 +2479,6 @@ fn ai_resource_group_routing_config_change<'a>(
     }
 }
 
-async fn last_insert_rowid(tx: &mut Transaction<'_, Sqlite>) -> DomainResult<i64> {
-    sqlx::query_scalar("SELECT last_insert_rowid()")
-        .fetch_one(&mut **tx)
-        .await
-        .map_err(|error| store_error("failed to read inserted AI resource id", error))
-}
-
 async fn insert_audit_log(
     tx: &mut Transaction<'_, Sqlite>,
     audit_log_uuid: &str,
@@ -2490,11 +2494,12 @@ async fn insert_audit_log(
     sqlx::query(
         r#"
         INSERT INTO ops_audit_log
-            (uuid, tenant_id, organization_id, action, target_type, target_id, request_id, operator_id, operator_type, change_summary)
+            (id, uuid, tenant_id, organization_id, action, target_type, target_id, request_id, operator_id, operator_type, change_summary)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         "#,
     )
+    .bind(next_claw_runtime_id("ops_audit_log")?)
     .bind(audit_log_uuid)
     .bind(tenant_id)
     .bind(organization_id)

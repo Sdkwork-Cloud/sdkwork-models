@@ -3,18 +3,21 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
 use axum::extract::{Path, Query, State};
-use axum::http::HeaderMap;
+use axum::http::{HeaderMap, StatusCode};
 use axum::response::Response;
 use axum::routing::{get, patch, put};
 use axum::Router;
 use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
-use crate::api::response::{finish_success, problem_for};
+use crate::api::response::{
+    finish_no_content, finish_success, finish_success_with_status, problem_for,
+};
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{
@@ -119,12 +122,6 @@ struct AdminAiResourceGroupItemEnvelope {
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct AdminAiResourceGroupDeleteResponse {
-    deleted: bool,
-}
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
 struct AdminAiResourceGroupItemResponse {
     id: String,
     group_code: String,
@@ -189,7 +186,7 @@ struct AiResourceMemberRequest {
     member_resource_code: Option<String>,
     member_role: Option<String>,
     required: Option<bool>,
-    sort_order: Option<i64>,
+    sort_order: Option<Value>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -206,7 +203,7 @@ struct AiResourceCreateRequest {
     provider_native_model: Option<String>,
     composition_mode: Option<String>,
     status: Option<String>,
-    sort_order: Option<i64>,
+    sort_order: Option<Value>,
     members: Option<Vec<AiResourceMemberRequest>>,
 }
 
@@ -224,7 +221,7 @@ struct AiResourceUpdateRequest {
     provider_native_model: Option<Option<String>>,
     composition_mode: Option<String>,
     status: Option<String>,
-    sort_order: Option<Option<i64>>,
+    sort_order: Option<Option<Value>>,
     members: Option<Vec<AiResourceMemberRequest>>,
 }
 
@@ -233,7 +230,7 @@ struct AiResourceUpdateRequest {
 struct AiResourceGroupMemberRequest {
     resource_code: Option<String>,
     item_role: Option<String>,
-    sort_order: Option<i64>,
+    sort_order: Option<Value>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -244,7 +241,7 @@ struct AiResourceGroupCreateRequest {
     group_type: Option<String>,
     selection_mode: Option<String>,
     description: Option<String>,
-    sort_order: Option<i64>,
+    sort_order: Option<Value>,
     status: Option<String>,
     members: Option<Vec<AiResourceGroupMemberRequest>>,
 }
@@ -257,7 +254,7 @@ struct AiResourceGroupUpdateRequest {
     group_type: Option<String>,
     selection_mode: Option<String>,
     description: Option<Option<String>>,
-    sort_order: Option<Option<i64>>,
+    sort_order: Option<Option<Value>>,
     status: Option<String>,
     members: Option<Vec<AiResourceGroupMemberRequest>>,
 }
@@ -426,8 +423,9 @@ async fn create_ai_resource(
     };
 
     match state.store.create_ai_resource(command).await {
-        Ok(item) => finish_success(
+        Ok(item) => finish_success_with_status(
             &ctx,
+            StatusCode::CREATED,
             AdminAiResourceItemEnvelope {
                 item: to_item_response(item),
             },
@@ -459,8 +457,9 @@ async fn create_ai_resource_group(
     };
 
     match state.store.create_ai_resource_group(command).await {
-        Ok(item) => finish_success(
+        Ok(item) => finish_success_with_status(
             &ctx,
+            StatusCode::CREATED,
             AdminAiResourceGroupItemEnvelope {
                 item: to_group_response(item),
             },
@@ -534,7 +533,8 @@ async fn delete_ai_resource_group(
     };
 
     match state.store.delete_ai_resource_group(command).await {
-        Ok(deleted) => finish_success(&ctx, AdminAiResourceGroupDeleteResponse { deleted }),
+        Ok(true) => finish_no_content(&ctx),
+        Ok(false) => not_found_response(&ctx, "AI resource group was not found"),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) if error.is_conflict() => conflict_response(&ctx, error),
         Err(error) => ai_resource_system_response(
@@ -706,7 +706,7 @@ fn build_group_create_command(
         )?,
         selection_mode,
         description: optional_text(request.description, "description", MAX_DESCRIPTION_LEN)?,
-        sort_order: optional_non_negative(request.sort_order, "sortOrder")?,
+        sort_order: optional_non_negative(request.sort_order.as_ref(), "sortOrder")?,
         status: normalize_status(
             optional_text(request.status, "status", 32)?.unwrap_or_else(|| "active".to_owned()),
         )?,
@@ -752,7 +752,7 @@ fn build_group_update_command(
             .transpose()?,
         sort_order: request
             .sort_order
-            .map(|value| optional_non_negative(value, "sortOrder"))
+            .map(|value| optional_non_negative(value.as_ref(), "sortOrder"))
             .transpose()?,
         status: request.status.map(normalize_status).transpose()?,
         members,
@@ -829,7 +829,7 @@ fn build_create_command(
         status: normalize_status(
             optional_text(request.status, "status", 32)?.unwrap_or_else(|| "active".to_owned()),
         )?,
-        sort_order: optional_non_negative(request.sort_order, "sortOrder")?,
+        sort_order: optional_non_negative(request.sort_order.as_ref(), "sortOrder")?,
         members,
         request_id: generate_server_request_id().map_err(request_id_error)?,
         requested_at: current_timestamp_string(),
@@ -866,7 +866,7 @@ fn normalize_group_members(
                 optional_text(member.item_role, "itemRole", 64)?
                     .unwrap_or_else(|| "included".to_owned()),
             )?,
-            sort_order: optional_non_negative(member.sort_order, "member.sortOrder")?,
+            sort_order: optional_non_negative(member.sort_order.as_ref(), "member.sortOrder")?,
         });
     }
     Ok(normalized)
@@ -941,7 +941,7 @@ fn build_update_command(
         status: request.status.map(normalize_status).transpose()?,
         sort_order: request
             .sort_order
-            .map(|value| optional_non_negative(value, "sortOrder"))
+            .map(|value| optional_non_negative(value.as_ref(), "sortOrder"))
             .transpose()?,
         members,
         request_id: generate_server_request_id().map_err(request_id_error)?,
@@ -980,7 +980,7 @@ fn normalize_members(
                     .unwrap_or_else(|| "included".to_owned()),
             )?,
             required: member.required.unwrap_or(true),
-            sort_order: optional_non_negative(member.sort_order, "member.sortOrder")?,
+            sort_order: optional_non_negative(member.sort_order.as_ref(), "member.sortOrder")?,
         });
     }
     Ok(normalized)
@@ -1184,15 +1184,43 @@ fn is_dynamic_all_group(_group_code: &str, selection_mode: &str) -> bool {
 }
 
 fn optional_non_negative(
-    value: Option<i64>,
+    value: Option<&Value>,
     field_name: &str,
 ) -> Result<Option<i64>, AiResourceCommandBuildError> {
+    let value = parse_optional_i64_value(value, field_name)?;
     if value.is_some_and(|value| value < 0) {
         return Err(AiResourceCommandBuildError::BadRequest(format!(
             "{field_name} must be a non-negative integer"
         )));
     }
     Ok(value)
+}
+
+fn parse_optional_i64_value(
+    value: Option<&Value>,
+    field_name: &str,
+) -> Result<Option<i64>, AiResourceCommandBuildError> {
+    let Some(value) = value else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    let raw = match value {
+        Value::String(value) => value.trim().to_owned(),
+        Value::Number(value) => value.to_string(),
+        _ => {
+            return Err(AiResourceCommandBuildError::BadRequest(format!(
+                "{field_name} must be an integer string"
+            )))
+        }
+    };
+    if raw.is_empty() {
+        return Ok(None);
+    }
+    raw.parse::<i64>().map(Some).map_err(|_| {
+        AiResourceCommandBuildError::BadRequest(format!("{field_name} must be an integer string"))
+    })
 }
 
 fn parse_positive_id(value: &str, field_name: &str) -> Result<i64, String> {
@@ -1298,4 +1326,47 @@ fn ai_resource_system_response(
         SdkWorkResultCode::InternalError,
         format!("{context}: {error}"),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn optional_non_negative_accepts_int64_string_values() {
+        let value = Value::String("42".to_owned());
+
+        let parsed = match optional_non_negative(Some(&value), "sortOrder") {
+            Ok(parsed) => parsed,
+            Err(_) => panic!("string encoded int64 sort order should be accepted"),
+        };
+
+        assert_eq!(parsed, Some(42));
+    }
+
+    #[test]
+    fn optional_non_negative_treats_null_as_clear_value() {
+        let parsed = match optional_non_negative(Some(&Value::Null), "sortOrder") {
+            Ok(parsed) => parsed,
+            Err(_) => panic!("null sort order should be accepted as an explicit clear value"),
+        };
+
+        assert_eq!(parsed, None);
+    }
+
+    #[test]
+    fn optional_non_negative_rejects_negative_int64_strings() {
+        let value = Value::String("-1".to_owned());
+        let error = optional_non_negative(Some(&value), "sortOrder")
+            .expect_err("negative sort order must be rejected");
+
+        match error {
+            AiResourceCommandBuildError::BadRequest(message) => {
+                assert!(message.contains("non-negative integer"));
+            }
+            AiResourceCommandBuildError::System(_) => {
+                panic!("negative sort order should be a validation error");
+            }
+        }
+    }
 }

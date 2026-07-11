@@ -58,12 +58,11 @@ export function ModelAdmin() {
     setLoadError(null);
     try {
       const pageResult = await ModelService.fetchModelsPage({
-        vendorId: vendor.id,
         vendorCode: vendor.vendorCode,
         q: search.trim() || undefined,
         modelTypes: modalityFilters.length > 0 ? modalityFilters.join(',') : undefined,
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
+        page,
+        pageSize,
       });
       setModels(pageResult.items);
       setVendorModelTotal(pageResult.totalCount);
@@ -81,7 +80,7 @@ export function ModelAdmin() {
       const initialized = await ModelService.fetchInitializedCatalog();
       setVendors(initialized.vendors);
       const counts = await Promise.all(initialized.vendors.map(async (vendor) => {
-        const probe = await ModelService.fetchModelsPage({ vendorId: vendor.id, limit: 1, offset: 0 });
+        const probe = await ModelService.fetchModelsPage({ vendorCode: vendor.vendorCode, page: 1, pageSize: 1 });
         return [vendor.id, probe.totalCount] as const;
       }));
       setVendorModelCounts(Object.fromEntries(counts));

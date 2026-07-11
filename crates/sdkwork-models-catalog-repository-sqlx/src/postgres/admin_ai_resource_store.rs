@@ -14,6 +14,7 @@ use sqlx::{PgPool, Postgres, Row, Transaction};
 use crate::routing_config_change::{
     record_postgres_ai_routing_config_change, AiRoutingConfigChange,
 };
+use crate::runtime_id::next_claw_runtime_id;
 
 const AI_RESOURCE_TARGET_TYPE: i32 = 91;
 
@@ -1042,9 +1043,9 @@ async fn insert_ai_resource(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, sort_order, id)
         VALUES
-            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17)
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18)
         RETURNING id
         "#,
     )
@@ -1065,6 +1066,7 @@ async fn insert_ai_resource(
     .bind(command.provider_native_model.as_deref())
     .bind(serde_json::json!({ "compositionMode": &command.composition_mode }).to_string())
     .bind(command.sort_order)
+    .bind(next_claw_runtime_id("ai_resource")?)
     .fetch_one(&mut **tx)
     .await
         .map_err(|error| store_error("failed to create AI resource", error))
@@ -1077,9 +1079,9 @@ async fn insert_ai_resource_group(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource_group
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, description, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, description, sort_order, id)
         VALUES
-            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12)
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13)
         RETURNING id
         "#,
     )
@@ -1095,6 +1097,7 @@ async fn insert_ai_resource_group(
     .bind(&command.selection_mode)
     .bind(command.description.as_deref())
     .bind(command.sort_order)
+    .bind(next_claw_runtime_id("ai_resource_group")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create AI resource group", error))
@@ -1446,9 +1449,9 @@ async fn insert_group_resource_members(
         sqlx::query(
             r#"
             INSERT INTO ai_resource_group_item
-                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order)
+                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order, id)
             VALUES
-                ($1, $2, $3, 1, 1, $4, $5, 0, '{}'::jsonb, $6, $7, 'resource', $8, $9, NULL, '', $10, $11)
+                ($1, $2, $3, 1, 1, $4, $5, 0, '{}'::jsonb, $6, $7, 'resource', $8, $9, NULL, '', $10, $11, $12)
             ON CONFLICT(tenant_id, organization_id, resource_group_id, item_type, resource_code, child_resource_group_code) DO UPDATE SET
                 status = 1,
                 deleted_at = NULL,
@@ -1471,6 +1474,7 @@ async fn insert_group_resource_members(
         .bind(&member.resource_code)
         .bind(&member.item_role)
         .bind(member.sort_order)
+        .bind(next_claw_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource group member", error))?;
@@ -1566,9 +1570,9 @@ async fn insert_members(
         sqlx::query(
             r#"
             INSERT INTO ai_resource_group_item
-                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order)
+                (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_group_id, resource_group_code, item_type, resource_id, resource_code, child_resource_group_id, child_resource_group_code, item_role, sort_order, id)
             VALUES
-                ($1, $2, $3, 1, 1, $4, $5, 0, $6::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+                ($1, $2, $3, 1, 1, $4, $5, 0, $6::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
             ON CONFLICT(tenant_id, organization_id, resource_group_id, item_type, resource_code, child_resource_group_code) DO UPDATE SET
                 status = 1,
                 deleted_at = NULL,
@@ -1596,6 +1600,7 @@ async fn insert_members(
         .bind(&resolved_member.child_resource_group_code)
         .bind(&member.member_role)
         .bind(member.sort_order)
+        .bind(next_claw_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource member", error))?;
@@ -1741,7 +1746,7 @@ async fn ensure_resource_group(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource_group
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, sort_order)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, group_code, group_name, group_type, selection_mode, sort_order, id)
         SELECT
             $7,
             tenant_id,
@@ -1756,7 +1761,8 @@ async fn ensure_resource_group(
             COALESCE(NULLIF(display_name, ''), resource_code),
             resource_type,
             $3,
-            sort_order
+            sort_order,
+            $8
         FROM ai_resource
         WHERE id = $4
           AND tenant_id = $5
@@ -1772,6 +1778,7 @@ async fn ensure_resource_group(
     .bind(tenant_id)
     .bind(organization_id)
     .bind(group_uuid)
+    .bind(next_claw_runtime_id("ai_resource_group")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create resource group", error))
@@ -2422,11 +2429,12 @@ async fn insert_audit_log(
     sqlx::query(
         r#"
         INSERT INTO ops_audit_log
-            (uuid, tenant_id, organization_id, action, target_type, target_id, request_id, operator_id, operator_type, change_summary)
+            (id, uuid, tenant_id, organization_id, action, target_type, target_id, request_id, operator_id, operator_type, change_summary)
         VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb)
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb)
         "#,
     )
+    .bind(next_claw_runtime_id("ops_audit_log")?)
     .bind(audit_log_uuid)
     .bind(tenant_id)
     .bind(organization_id)

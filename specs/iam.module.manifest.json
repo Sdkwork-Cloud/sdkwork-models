@@ -52,7 +52,7 @@
           { "operationId": "modelVendors.list", "permission": "intelligence.models.read" },
           { "operationId": "models.list", "permission": "intelligence.models.read" },
           { "operationId": "modelMappings.list", "permission": "intelligence.models.read" },
-          { "operationId": "modelMappings.resolve.create", "permission": "intelligence.models.read" },
+          { "operationId": "modelMappings.resolve", "permission": "intelligence.models.read" },
           { "operationId": "modelRankings.list", "permission": "intelligence.models.read" },
           { "operationId": "modelRankings.status.retrieve", "permission": "intelligence.models.read" },
           { "operationId": "modelRankings.jobs.list", "permission": "intelligence.models.read" },

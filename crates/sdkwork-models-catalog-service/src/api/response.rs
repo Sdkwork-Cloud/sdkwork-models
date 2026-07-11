@@ -56,9 +56,24 @@ pub fn problem_for(
 }
 
 pub fn finish_success<T: Serialize>(ctx: &WebRequestContext, data: T) -> Response {
+    finish_success_with_status(ctx, StatusCode::OK, data)
+}
+
+pub fn finish_success_with_status<T: Serialize>(
+    ctx: &WebRequestContext,
+    status: StatusCode,
+    data: T,
+) -> Response {
     let trace_id = trace_id_from_context(Some(ctx));
     let envelope = SdkWorkApiResponse::success(data, trace_id.clone());
-    let mut response = Json(envelope).into_response();
+    let mut response = (status, Json(envelope)).into_response();
+    attach_trace_header(&mut response, &trace_id);
+    response
+}
+
+pub fn finish_no_content(ctx: &WebRequestContext) -> Response {
+    let trace_id = trace_id_from_context(Some(ctx));
+    let mut response = StatusCode::NO_CONTENT.into_response();
     attach_trace_header(&mut response, &trace_id);
     response
 }
@@ -156,6 +171,39 @@ mod tests {
     fn finish_success_attaches_trace_header() {
         let response = finish_success(&test_context(), serde_json::json!({"item": 1}));
         assert!(response.headers().get("x-sdkwork-trace-id").is_some());
+    }
+
+    #[test]
+    fn finish_success_with_status_uses_requested_status_and_trace_header() {
+        let response = finish_success_with_status(
+            &test_context(),
+            StatusCode::CREATED,
+            serde_json::json!({"item": 1}),
+        );
+
+        assert_eq!(response.status(), StatusCode::CREATED);
+        assert_eq!(
+            response
+                .headers()
+                .get("x-sdkwork-trace-id")
+                .and_then(|v| v.to_str().ok()),
+            Some("trace-from-context-abc")
+        );
+    }
+
+    #[test]
+    fn finish_no_content_uses_204_without_json_body() {
+        let response = finish_no_content(&test_context());
+
+        assert_eq!(response.status(), StatusCode::NO_CONTENT);
+        assert!(response.headers().get("content-type").is_none());
+        assert_eq!(
+            response
+                .headers()
+                .get("x-sdkwork-trace-id")
+                .and_then(|v| v.to_str().ok()),
+            Some("trace-from-context-abc")
+        );
     }
 
     #[test]

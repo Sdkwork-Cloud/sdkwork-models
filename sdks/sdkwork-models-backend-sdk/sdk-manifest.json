@@ -5,6 +5,14 @@
   "apiAuthority": "sdkwork-models-backend-api",
   "sdkFamily": "sdkwork-models-backend-sdk",
   "sdkType": "backend",
+  "packageName": "@sdkwork/models-backend-sdk",
+  "transportPackageName": "sdkwork-models-backend-sdk-generated-typescript",
+  "typescript": {
+    "composedRoot": "sdkwork-models-backend-sdk-typescript",
+    "composedEntry": "sdkwork-models-backend-sdk-typescript/src/index.ts",
+    "transportRoot": "sdkwork-models-backend-sdk-typescript/generated/server-openapi",
+    "transportEntry": "sdkwork-models-backend-sdk-typescript/generated/server-openapi/src/index.ts"
+  },
   "apiPrefix": "/backend/v3/api",
   "generationInputSpec": "openapi/sdkwork-models-backend-api.openapi.json",
   "generatedPackages": {
@@ -57,6 +65,6 @@
   "baseUrl": "http://127.0.0.1:18080",
   "standardProfile": "sdkwork-v3",
   "fixedSdkVersion": "0.1.0",
-  "ownerOnlyOperationCount": 29,
+  "ownerOnlyOperationCount": 28,
   "managedBy": "tools/models_sdk_generator_runner.mjs"
 }

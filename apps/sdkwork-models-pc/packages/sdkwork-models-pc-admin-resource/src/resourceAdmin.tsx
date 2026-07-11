@@ -696,6 +696,7 @@ export function ResourceAdmin() {
             emptySearch: t('admin.model.resources.form.emptyAssignableResourceSearch'),
             selectedCount: (count) => t('admin.model.resources.form.selectedResources', { count }),
             done: t('admin.model.resources.actions.save'),
+            close: t('admin.model.resources.actions.cancel'),
             columns: {
               resource: t('admin.model.resources.columns.resource'),
               kind: t('admin.model.resources.columns.kind'),
@@ -722,6 +723,7 @@ export function ResourceAdmin() {
             emptySearch: t('admin.model.resources.form.emptyAssignableResourceSearch'),
             selectedCount: (count) => t('admin.model.resources.form.selectedResources', { count }),
             done: t('admin.model.resources.actions.save'),
+            close: t('admin.model.resources.actions.cancel'),
             columns: {
               resource: t('admin.model.resources.columns.resource'),
               kind: t('admin.model.resources.columns.kind'),

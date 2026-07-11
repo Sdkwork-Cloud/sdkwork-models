@@ -18,20 +18,21 @@ import type {
   AdminAiModelCreateRequest,
   AdminAiModelUpdateRequest,
   AdminModelCatalogSyncRequest,
-  AdminModelCatalogSyncResponse,
   AdminModelMappingCreateRequest,
   AdminModelMappingResolveRequest,
-  AdminModelMappingRuleBinding,
   AdminModelMappingRuleBindingInput,
-  AdminModelMappingRuleItem,
   AdminModelMappingRuleItemInput,
   AdminModelMappingUpdateRequest,
   AdminModelVendorCreateRequest,
-  ModelRankingItem,
-  ModelRankingRefreshStatus,
+  ModelCatalogSyncResult,
   ModelRankingRefreshTriggerRequest,
   ModelRankingRefreshTriggerResponse,
 } from '@sdkwork/models-backend-sdk';
+
+type AdminAiModelType = NonNullable<AdminAiModelCreateRequest['type']>;
+type ModelRankingMetricItem = { name: string; requests: string; baseVolume: string };
+type ModelRankingRefreshStatusValue = 'ready' | 'empty' | 'unavailable';
+type ModelMetadataType = Model['type'] | AdminAiModelType;
 
 export interface Vendor {
   id: string;
@@ -82,7 +83,7 @@ export type ModelCatalogSyncReport = {
   dryRun: boolean;
   familyCount: number;
   meterCount: number;
-  mode: AdminModelCatalogSyncResponse['mode'];
+  mode: ModelCatalogSyncResult['mode'];
   modelCount: number;
   priceCount: number;
   rankingCount: number;
@@ -136,7 +137,7 @@ export type ModelRankingRefreshStatusView = {
   snapshotPeriod: string;
   sourceCount: number;
   sourceTables: string[];
-  status: ModelRankingRefreshStatus['status'];
+  status: ModelRankingRefreshStatusValue;
   tenantId: string;
   windowEnd: string;
   windowStart: string;
@@ -326,45 +327,41 @@ export function selectPreferredModelVendorId(
 }
 
 export type ModelListQuery = {
-  vendorId?: string;
   vendorCode?: string;
   q?: string;
   modelTypes?: string;
-  limit?: number;
-  offset?: number;
+  page?: number;
+  pageSize?: number;
 };
 
 export type ModelListPage = {
   items: Model[];
   totalCount: number;
+  hasMore: boolean;
 };
 
 async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
   const params: {
-    vendorId?: string;
-    vendorCode?: string;
+    page?: number;
+    pageSize?: number;
     q?: string;
     modelTypes?: string;
-    limit?: string;
-    offset?: string;
+    vendorCodes?: string[];
   } = {};
-  if (query.vendorId) {
-    params.vendorId = query.vendorId;
+  if (query.page !== undefined) {
+    params.page = query.page;
+  }
+  if (query.pageSize !== undefined) {
+    params.pageSize = query.pageSize;
   }
   if (query.vendorCode) {
-    params.vendorCode = query.vendorCode;
+    params.vendorCodes = [query.vendorCode];
   }
   if (query.q) {
     params.q = query.q;
   }
   if (query.modelTypes) {
     params.modelTypes = query.modelTypes;
-  }
-  if (query.limit !== undefined) {
-    params.limit = String(query.limit);
-  }
-  if (query.offset !== undefined) {
-    params.offset = String(query.offset);
   }
   return Object.keys(params).length === 0
     ? getModelsBackendSdkClient().ai.models.list()
@@ -375,8 +372,10 @@ function readModelListPage(result: unknown, errorMessage: string): ModelListPage
   ensureSdkworkApiSuccess(result, errorMessage);
   const record = readApiRecord(result);
   const items = readRequiredApiItems(record, errorMessage).map(normalizeModel);
-  const totalCount = readNumber(record, 'totalCount') ?? items.length;
-  return { items, totalCount };
+  const pageInfo = isRecord(record.pageInfo) ? record.pageInfo : {};
+  const totalCount = readPageTotalItems(pageInfo, items.length);
+  const hasMore = readBoolean(pageInfo, 'hasMore', false);
+  return { items, totalCount, hasMore };
 }
 
 async function enrichModelsWithRankingCalls(models: Model[]): Promise<Model[]> {
@@ -397,19 +396,20 @@ export class ModelService {
     return {
       items: await enrichModelsWithRankingCalls(page.items),
       totalCount: page.totalCount,
+      hasMore: page.hasMore,
     };
   }
 
   static async fetchAllModels(): Promise<Model[]> {
     const pageSize = 200;
-    let offset = 0;
-    let totalCount = Number.POSITIVE_INFINITY;
+    let pageNumber = 1;
+    let hasMore = true;
     const models: Model[] = [];
-    while (offset < totalCount) {
-      const page = await ModelService.fetchModelsPage({ limit: pageSize, offset });
+    while (hasMore) {
+      const page = await ModelService.fetchModelsPage({ page: pageNumber, pageSize });
       models.push(...page.items);
-      totalCount = page.totalCount;
-      offset += page.items.length;
+      hasMore = page.hasMore;
+      pageNumber += 1;
       if (page.items.length === 0) {
         break;
       }
@@ -431,7 +431,7 @@ export class ModelService {
   static async fetchInitializedCatalog(): Promise<InitializedModelCatalog> {
     const [vendors, probe] = await Promise.all([
       ModelService.fetchVendors(),
-      ModelService.fetchModelsPage({ limit: 1, offset: 0 }),
+      ModelService.fetchModelsPage({ page: 1, pageSize: 1 }),
     ]);
     if (vendors.length > 0 && probe.totalCount > 0) {
       return {
@@ -448,12 +448,12 @@ export class ModelService {
     };
   }
 
-  static async fetchModelRankings(): Promise<Pick<ModelRankingItem, 'name' | 'requests' | 'baseVolume'>[]> {
-    const result = await getModelsBackendSdkClient().ai.modelRankings.list({ limit: '200' });
+  static async fetchModelRankings(): Promise<ModelRankingMetricItem[]> {
+    const result = await getModelsBackendSdkClient().ai.modelRankings.list({ pageSize: 200 });
     ensureSdkworkApiSuccess(result, 'Failed to fetch model rankings');
     return readRequiredApiItems(readApiRecord(result), 'Failed to fetch model rankings', ['items'])
       .map(normalizeRankingItem)
-      .filter((item): item is Pick<ModelRankingItem, 'name' | 'requests' | 'baseVolume'> => item !== null);
+      .filter((item): item is ModelRankingMetricItem => item !== null);
   }
 
   static async fetchModelRankingRefreshStatus(): Promise<ModelRankingRefreshStatusView> {
@@ -463,7 +463,7 @@ export class ModelService {
   }
 
   static async fetchModelRankingRefreshJobs(): Promise<ModelRankingRefreshJobHistoryView> {
-    const result = await getModelsBackendSdkClient().ai.modelRankings.jobs.list({ limit: '20' });
+    const result = await getModelsBackendSdkClient().ai.modelRankings.jobs.list({ pageSize: 20 });
     ensureSdkworkApiSuccess(result, 'Failed to fetch model ranking refresh jobs');
     return {
       items: readRequiredApiItems(readApiRecord(result), 'Failed to fetch model ranking refresh jobs', ['items'])
@@ -553,8 +553,7 @@ export class ModelService {
   }
 
   static async deleteModel(id: string): Promise<boolean> {
-    const result = await getModelsBackendSdkClient().ai.models.delete(requiredSafePathSegment(id, 'modelId'));
-    ensureDeleteResult(result, 'Model delete confirmation is required');
+    await getModelsBackendSdkClient().ai.models.delete(requiredSafePathSegment(id, 'modelId'));
     return true;
   }
 }
@@ -620,9 +619,8 @@ export class ModelMappingService {
   }
 
   static async deleteModelMapping(id: string): Promise<boolean> {
-    const result = await getModelsBackendSdkClient().ai.modelMappings.delete(requiredSafePathSegment(id, 'mappingId'));
-    ensureSdkworkApiSuccess(result, 'Failed to delete model mapping');
-    return readBoolean(readRequiredRecord(readApiRecord(result).data, 'Model mapping delete response is missing data'), 'deleted', false);
+    await getModelsBackendSdkClient().ai.modelMappings.delete(requiredSafePathSegment(id, 'mappingId'));
+    return true;
   }
 
   static deleteMapping(id: string): Promise<boolean> {
@@ -630,9 +628,9 @@ export class ModelMappingService {
   }
 
   static async resolveModelMapping(input: ModelMappingResolveInput): Promise<ModelMappingResolveResult> {
-    const result = await getModelsBackendSdkClient().ai.modelMappings.resolve.create(input);
+    const result = await getModelsBackendSdkClient().ai.modelMappings.resolve(input);
     ensureSdkworkApiSuccess(result, 'Failed to resolve model mapping');
-    return normalizeModelMappingResolveResult(readApiRecord(result).data);
+    return normalizeModelMappingResolveResult(result);
   }
 
   static resolveMapping(input: ModelMappingResolveInput): Promise<ModelMappingResolveResult> {
@@ -651,13 +649,6 @@ async function updateModelPatch(
   );
   ensureSdkworkApiSuccess(result, errorMessage);
   return normalizeModel(readRequiredApiItem(result, 'Updated model response is missing data'));
-}
-
-function ensureDeleteResult(result: unknown, message: string): void {
-  ensureSdkworkApiSuccess(result, message);
-  if (readBoolean(readApiRecord(result), 'deleted') !== true) {
-    throw new Error(message);
-  }
 }
 
 function normalizeModelRankingRefreshStatus(value: ApiRecord): ModelRankingRefreshStatusView {
@@ -737,7 +728,7 @@ function normalizeModelRankingRefreshTrigger(value: ApiRecord): ModelRankingRefr
   };
 }
 
-function fetchModelRankingCallStats(): Promise<Pick<ModelRankingItem, 'name' | 'requests' | 'baseVolume'>[]> {
+function fetchModelRankingCallStats(): Promise<ModelRankingMetricItem[]> {
   return ModelService.fetchModelRankings().catch(() => []);
 }
 
@@ -823,7 +814,7 @@ function toUpdateModelRequest(model: ModelPatchInput): AdminAiModelUpdateRequest
   }
   if (model.type !== undefined) {
     const nextType = modelType(model.type);
-    if (!model.currentType || model.currentType !== nextType) {
+    if (!model.currentType || modelType(model.currentType) !== nextType) {
       Object.assign(request, defaultModelCreateMetadata(nextType));
       request.type = nextType;
     }
@@ -899,11 +890,23 @@ function currencyCode(value: string, fieldName: string): string {
   return normalized;
 }
 
-function modelType(value: Model['type']): AdminAiModelCreateRequest['type'] {
-  if (value === 'Chat' || value === 'Image' || value === 'Audio' || value === 'Embedding' || value === 'Music' || value === 'SoundEffect' || value === 'Video') {
-    return value;
+function modelType(value: Model['type']): AdminAiModelType {
+  switch (value) {
+    case 'Chat':
+      return 'chat';
+    case 'Image':
+      return 'image';
+    case 'Audio':
+    case 'Music':
+    case 'SoundEffect':
+      return 'audio';
+    case 'Embedding':
+      return 'embedding';
+    case 'Video':
+      return 'video';
+    default:
+      throw new Error(value ? `Unsupported model type: ${value}` : 'Model type is required');
   }
-  throw new Error(value ? `Unsupported model type: ${value}` : 'Model type is required');
 }
 
 function decimalAmount(value: string, fieldName: string): string {
@@ -1128,7 +1131,7 @@ function readModelDisplayName(item: ApiRecord, runtimeModel: string): string {
   return name || runtimeModel;
 }
 
-function modelCallsByName(items: Pick<ModelRankingItem, 'name' | 'requests' | 'baseVolume'>[]): Map<string, string> {
+function modelCallsByName(items: ModelRankingMetricItem[]): Map<string, string> {
   const callsByName = new Map<string, string>();
   items
     .forEach((item) => {
@@ -1140,7 +1143,7 @@ function modelCallsByName(items: Pick<ModelRankingItem, 'name' | 'requests' | 'b
   return callsByName;
 }
 
-function normalizeRankingItem(value: unknown): Pick<ModelRankingItem, 'name' | 'requests' | 'baseVolume'> | null {
+function normalizeRankingItem(value: unknown): ModelRankingMetricItem | null {
   if (!isRecord(value)) {
     return null;
   }
@@ -1161,6 +1164,18 @@ function readRequiredNonNegativeInteger(record: ApiRecord, key: string, label: s
     throw new Error(`${label} must be a non-negative integer`);
   }
   return value;
+}
+
+function readPageTotalItems(pageInfo: ApiRecord, fallback: number): number {
+  const value = pageInfo.totalItems;
+  if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) {
+    return value;
+  }
+  if (typeof value === 'string' && /^(0|[1-9]\d*)$/u.test(value)) {
+    const parsed = Number(value);
+    return Number.isSafeInteger(parsed) ? parsed : fallback;
+  }
+  return fallback;
 }
 
 function readRequiredNonNegativeInt64String(record: ApiRecord, key: string, label: string): string {
@@ -1431,7 +1446,7 @@ function readModelStatus(item: ApiRecord): Model['status'] {
   throw new Error(`Unsupported model status: ${status}`);
 }
 
-function readSyncMode(item: ApiRecord): AdminModelCatalogSyncResponse['mode'] {
+function readSyncMode(item: ApiRecord): ModelCatalogSyncResult['mode'] {
   const mode = readRequiredString(item, 'mode', 'Model catalog sync response is missing mode');
   if (mode === 'official_refresh' || mode === 'vendor_refresh' || mode === 'catalog_version_refresh' || mode === 'dry_run') {
     return mode;
@@ -1461,10 +1476,29 @@ function readSnapshotPeriod(
 
 function readModelType(item: ApiRecord): Model['type'] {
   const type = readString(item, 'type');
-  if (type === 'Chat' || type === 'Image' || type === 'Audio' || type === 'Embedding' || type === 'Music' || type === 'SoundEffect' || type === 'Video') {
-    return type;
+  switch (type) {
+    case 'Chat':
+    case 'chat':
+      return 'Chat';
+    case 'Image':
+    case 'image':
+      return 'Image';
+    case 'Audio':
+    case 'audio':
+      return 'Audio';
+    case 'Embedding':
+    case 'embedding':
+      return 'Embedding';
+    case 'Music':
+      return 'Music';
+    case 'SoundEffect':
+      return 'SoundEffect';
+    case 'Video':
+    case 'video':
+      return 'Video';
+    default:
+      throw new Error(type ? `Unsupported model type: ${type}` : 'Model type is required');
   }
-  throw new Error(type ? `Unsupported model type: ${type}` : 'Model type is required');
 }
 
 function readNullableNumber(item: ApiRecord, key: string): number | null {
@@ -1476,7 +1510,7 @@ function readNullableNumber(item: ApiRecord, key: string): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function defaultModelCreateMetadata(type: Model['type']): Pick<
+function defaultModelCreateMetadata(type: ModelMetadataType): Pick<
   AdminAiModelCreateRequest,
   | 'modalities'
   | 'inputModalities'
@@ -1490,12 +1524,13 @@ function defaultModelCreateMetadata(type: Model['type']): Pick<
   | 'routingState'
 > {
   const common = {
-    releaseStage: '1',
-    shelfState: '1',
-    routingState: '1',
+    releaseStage: 1,
+    shelfState: 1,
+    routingState: 1,
   };
   switch (type) {
     case 'Image':
+    case 'image':
       return {
         ...common,
         modalities: ['image'],
@@ -1507,6 +1542,7 @@ function defaultModelCreateMetadata(type: Model['type']): Pick<
         supportsJsonSchema: false,
       };
     case 'Audio':
+    case 'audio':
       return {
         ...common,
         modalities: ['audio'],
@@ -1518,6 +1554,7 @@ function defaultModelCreateMetadata(type: Model['type']): Pick<
         supportsJsonSchema: false,
       };
     case 'Embedding':
+    case 'embedding':
       return {
         ...common,
         modalities: ['embedding'],
@@ -1551,6 +1588,7 @@ function defaultModelCreateMetadata(type: Model['type']): Pick<
         supportsJsonSchema: false,
       };
     case 'Video':
+    case 'video':
       return {
         ...common,
         modalities: ['video'],

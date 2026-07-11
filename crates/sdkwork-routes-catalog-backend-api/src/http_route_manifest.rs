@@ -70,7 +70,7 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         HttpMethod::Post,
         "/backend/v3/api/ai/model_mappings/resolve",
         SDK_DOMAIN,
-        "modelMappings.resolve.create",
+        "modelMappings.resolve",
     )
     .with_required_permission("intelligence.models.read"),
     HttpRoute::dual_token(

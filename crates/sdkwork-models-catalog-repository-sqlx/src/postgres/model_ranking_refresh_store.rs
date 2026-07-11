@@ -5,9 +5,10 @@ use crate::runtime_id::next_claw_runtime_id;
 use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
 use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
+    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
     ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture, ModelRankingRefreshCommand,
     ModelRankingRefreshFuture, ModelRankingRefreshOutcome, ModelRankingRefreshRunStatus,
-    ModelRankingRefreshStore, normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
+    ModelRankingRefreshStore,
 };
 
 const MODEL_RANKING_REFRESH_JOB_TYPE: i64 = 20;

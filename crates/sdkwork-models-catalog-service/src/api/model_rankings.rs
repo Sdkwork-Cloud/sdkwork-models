@@ -9,6 +9,7 @@ use sdkwork_claw_http::TrustedRequestSubject;
 use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::response::{finish_success, problem_for};
@@ -29,7 +30,7 @@ use crate::ports::{
     ModelRankingsSource, ModelRankingsSubject,
 };
 
-const DEFAULT_RANKING_LIMIT: i64 = 200;
+const DEFAULT_RANKING_PAGE_SIZE: i64 = 20;
 const MAX_RANKING_LIMIT: i64 = 200;
 const DEFAULT_JOB_HISTORY_LIMIT: i64 = 20;
 const MAX_JOB_HISTORY_LIMIT: i64 = 200;
@@ -43,6 +44,7 @@ struct ModelRankingsState {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct ModelRankingsHttpQuery {
     rank_scope: Option<String>,
     vendor_code: Option<String>,
@@ -340,11 +342,13 @@ async fn fetch_model_rankings(
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct ModelRankingStatusHttpQuery {
     rank_scope: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct ModelRankingJobsHttpQuery {
     rank_scope: Option<String>,
     page_size: Option<i64>,
@@ -355,10 +359,10 @@ struct ModelRankingJobsHttpQuery {
 struct ModelRankingRefreshHttpRequest {
     rank_scope: Option<String>,
     snapshot_period: Option<String>,
-    limit: Option<i64>,
-    lookback_days: Option<i64>,
-    refresh_interval_seconds: Option<i64>,
-    cache_max_age_seconds: Option<i64>,
+    page_size: Option<Value>,
+    lookback_days: Option<Value>,
+    refresh_interval_seconds: Option<Value>,
+    cache_max_age_seconds: Option<Value>,
 }
 
 #[derive(Debug, Serialize)]
@@ -366,17 +370,17 @@ struct ModelRankingRefreshHttpRequest {
 struct ModelRankingRefreshTriggerResponse {
     triggered: bool,
     status: String,
-    tenant_id: i64,
-    organization_id: i64,
+    tenant_id: String,
+    organization_id: String,
     rank_scope: String,
     snapshot_date: String,
     snapshot_period: String,
     window_start: String,
     window_end: String,
-    generated_count: i64,
-    source_count: i64,
-    refresh_interval_seconds: i64,
-    cache_max_age_seconds: i64,
+    generated_count: String,
+    source_count: String,
+    refresh_interval_seconds: String,
+    cache_max_age_seconds: String,
     next_refresh_at: String,
 }
 
@@ -413,7 +417,7 @@ fn optional_rankings_subject(
 }
 
 fn validate_query(query: ModelRankingsHttpQuery) -> Result<ModelRankingsQuery, String> {
-    let limit = query.page_size.unwrap_or(DEFAULT_RANKING_LIMIT);
+    let limit = query.page_size.unwrap_or(DEFAULT_RANKING_PAGE_SIZE);
     if !(1..=MAX_RANKING_LIMIT).contains(&limit) {
         return Err(format!(
             "model rankings page_size must be between 1 and {MAX_RANKING_LIMIT}"
@@ -484,7 +488,7 @@ fn manual_refresh_config(
     let defaults = ModelRankingRefreshWorkerConfig::default();
     let refresh_interval_seconds = validate_optional_range(
         "model ranking refresh interval seconds",
-        request.refresh_interval_seconds,
+        request.refresh_interval_seconds.as_ref(),
         defaults.interval_millis as i64 / 1_000,
         60,
         86_400,
@@ -501,14 +505,14 @@ fn manual_refresh_config(
         )?,
         limit: validate_optional_range(
             "model ranking refresh limit",
-            request.limit,
+            request.page_size.as_ref(),
             defaults.limit,
             1,
             1_000,
         )?,
         lookback_days: validate_optional_range(
             "model ranking refresh lookback days",
-            request.lookback_days,
+            request.lookback_days.as_ref(),
             defaults.lookback_days,
             1,
             366,
@@ -516,7 +520,7 @@ fn manual_refresh_config(
         interval_millis: (refresh_interval_seconds as u64) * 1_000,
         cache_max_age_seconds: validate_optional_range(
             "model ranking cache max age seconds",
-            request.cache_max_age_seconds,
+            request.cache_max_age_seconds.as_ref(),
             defaults.cache_max_age_seconds,
             1,
             86_400,
@@ -569,17 +573,43 @@ fn validate_snapshot_period(
 
 fn validate_optional_range(
     name: &'static str,
-    value: Option<i64>,
+    value: Option<&Value>,
     fallback: i64,
     min: i64,
     max: i64,
 ) -> Result<i64, (SdkWorkResultCode, String)> {
-    let value = value.unwrap_or(fallback);
+    let value = parse_optional_i64_value(name, value)?.unwrap_or(fallback);
     if (min..=max).contains(&value) {
         Ok(value)
     } else {
         bad_refresh_request(format!("{name} must be between {min} and {max}"))
     }
+}
+
+fn parse_optional_i64_value(
+    name: &'static str,
+    value: Option<&Value>,
+) -> Result<Option<i64>, (SdkWorkResultCode, String)> {
+    let Some(value) = value else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    let raw = match value {
+        Value::String(value) => value.trim().to_owned(),
+        Value::Number(value) => value.to_string(),
+        _ => return bad_refresh_request(format!("{name} must be an integer string")),
+    };
+    if raw.is_empty() {
+        return Ok(None);
+    }
+    raw.parse::<i64>().map(Some).map_err(|_| {
+        (
+            SdkWorkResultCode::ValidationError,
+            format!("{name} must be an integer string"),
+        )
+    })
 }
 
 fn bad_refresh_request<T>(message: impl Into<String>) -> Result<T, (SdkWorkResultCode, String)> {
@@ -599,17 +629,72 @@ fn trigger_response(
             "empty"
         }
         .to_owned(),
-        tenant_id: subject.tenant_id,
-        organization_id: subject.organization_id,
+        tenant_id: subject.tenant_id.to_string(),
+        organization_id: subject.organization_id.to_string(),
         rank_scope: outcome.rank_scope,
         snapshot_date: outcome.snapshot_date,
         snapshot_period: outcome.snapshot_period,
         window_start: outcome.window_start,
         window_end: outcome.window_end,
-        generated_count: outcome.generated_count,
-        source_count: outcome.source_count,
-        refresh_interval_seconds: (config.interval_millis / 1_000) as i64,
-        cache_max_age_seconds: config.cache_max_age_seconds,
+        generated_count: outcome.generated_count.to_string(),
+        source_count: outcome.source_count.to_string(),
+        refresh_interval_seconds: (config.interval_millis / 1_000).to_string(),
+        cache_max_age_seconds: config.cache_max_age_seconds.to_string(),
         next_refresh_at: outcome.next_refresh_at,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn manual_refresh_config_accepts_int64_string_request_fields() {
+        let subject = ModelRankingsSubject {
+            tenant_id: 100001,
+            organization_id: 200002,
+            user_id: 300003,
+        };
+        let config = manual_refresh_config(
+            subject,
+            ModelRankingRefreshHttpRequest {
+                rank_scope: Some("Global".to_owned()),
+                snapshot_period: Some("daily".to_owned()),
+                page_size: Some(Value::String("50".to_owned())),
+                lookback_days: Some(Value::String("14".to_owned())),
+                refresh_interval_seconds: Some(Value::String("120".to_owned())),
+                cache_max_age_seconds: Some(Value::String("90".to_owned())),
+            },
+        )
+        .expect("string encoded int64 fields should be accepted");
+
+        assert_eq!(config.tenant_id, 100001);
+        assert_eq!(config.organization_id, 200002);
+        assert_eq!(config.rank_scope, "global");
+        assert_eq!(config.snapshot_period, "daily");
+        assert_eq!(config.limit, 50);
+        assert_eq!(config.lookback_days, 14);
+        assert_eq!(config.interval_millis, 120_000);
+        assert_eq!(config.cache_max_age_seconds, 90);
+    }
+
+    #[test]
+    fn manual_refresh_config_rejects_non_integer_request_fields() {
+        let subject = ModelRankingsSubject {
+            tenant_id: 100001,
+            organization_id: 0,
+            user_id: 0,
+        };
+        let error = manual_refresh_config(
+            subject,
+            ModelRankingRefreshHttpRequest {
+                page_size: Some(Value::String("not-an-integer".to_owned())),
+                ..ModelRankingRefreshHttpRequest::default()
+            },
+        )
+        .expect_err("invalid int64 strings must be rejected");
+
+        assert_eq!(error.0, SdkWorkResultCode::ValidationError);
+        assert!(error.1.contains("model ranking refresh limit"));
     }
 }

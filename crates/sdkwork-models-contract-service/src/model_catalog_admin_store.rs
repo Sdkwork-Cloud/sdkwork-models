@@ -209,7 +209,7 @@ pub struct ListAdminAiModelsQuery {
     pub vendor_code: Option<String>,
     pub q: Option<String>,
     pub model_types: Option<String>,
-    pub limit: Option<i64>,
+    pub page_size: Option<i64>,
     pub offset: Option<i64>,
 }
 
@@ -224,7 +224,7 @@ impl ListAdminAiModelsQuery {
     pub const MAX_LIMIT: i64 = 200;
 
     pub fn normalized_limit(&self) -> i64 {
-        self.limit
+        self.page_size
             .unwrap_or(Self::DEFAULT_LIMIT)
             .clamp(1, Self::MAX_LIMIT)
     }
@@ -242,6 +242,29 @@ pub struct ListAdminModelMappingsQuery {
     pub channel_id: Option<i64>,
     pub channel_code: Option<String>,
     pub q: Option<String>,
+    pub page_size: Option<i64>,
+    pub offset: Option<i64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AdminModelMappingListPage {
+    pub items: Vec<AdminModelMappingRuleItem>,
+    pub total_count: i64,
+}
+
+impl ListAdminModelMappingsQuery {
+    pub const DEFAULT_LIMIT: i64 = 20;
+    pub const MAX_LIMIT: i64 = 200;
+
+    pub fn normalized_limit(&self) -> i64 {
+        self.page_size
+            .unwrap_or(Self::DEFAULT_LIMIT)
+            .clamp(1, Self::MAX_LIMIT)
+    }
+
+    pub fn normalized_offset(&self) -> i64 {
+        self.offset.unwrap_or(0).max(0)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -432,7 +455,7 @@ pub trait ModelCatalogAdminStore {
     fn list_model_mappings<'a>(
         &'a self,
         query: ListAdminModelMappingsQuery,
-    ) -> AdminModelCommandFuture<'a, Vec<AdminModelMappingRuleItem>>;
+    ) -> AdminModelCommandFuture<'a, AdminModelMappingListPage>;
 
     fn create_vendor<'a>(
         &'a self,

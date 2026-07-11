@@ -13,19 +13,124 @@
   "paths": {
     "/backend/v3/api/ai/model_mappings": {
       "get": {
-        "description": "List. Reads ai. Writes none. File targets none.",
+        "description": "List model mapping rules with SQL-backed offset pagination and optional binding/vendor/channel/search filters.",
         "operationId": "modelMappings.list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "binding_type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "global",
+                "vendor",
+                "channel_group",
+                "channel",
+                "provider_account",
+                "site",
+                "site_service"
+              ]
+            },
+            "description": "Filter mappings by binding type."
+          },
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Filter mappings by source, target, or binding vendor code."
+          },
+          {
+            "in": "query",
+            "name": "channel_id",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$",
+              "x-sdkwork-int64-string": true
+            },
+            "description": "Filter mappings by channel binding id encoded as int64 string."
+          },
+          {
+            "in": "query",
+            "name": "channel_code",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Filter mappings by channel binding code."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Free-text search on vendor codes, mapping items, and binding labels."
+          }
+        ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsListResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/ModelMappingsPage"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -98,15 +203,15 @@
         "operationId": "modelMappings.create",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsCreateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -174,107 +279,51 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
-      },
-      "put": {
-        "description": "Replace. Reads ai. Writes ops_audit_log. File targets none.",
-        "operationId": "modelMappings.replace",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsReplaceResult"
-                }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model mapping create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelMappingCreateRequest"
               }
-            },
-            "description": "OK"
-          },
-          "400": {
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            },
-            "description": "Bad Request"
-          },
-          "401": {
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "500": {
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            },
-            "description": "Server Error"
-          },
-          "default": {
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            },
-            "description": "Error response."
+            }
           }
-        },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
-        "summary": "Replace",
-        "tags": [
-          "ai"
-        ],
-        "x-contract-kind": "update",
-        "x-file-targets": [],
-        "x-read-sources": [
-          "ai"
-        ],
-        "x-route-scope": "admin",
-        "x-sdk-domain": "intelligence",
-        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
-        "x-sdkwork-domain": "intelligence",
-        "x-sdkwork-owner": "sdkwork-models",
-        "x-sdkwork-resource": "modelMappings",
-        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": [
-          "ops_audit_log"
-        ]
+        }
       }
     },
     "/backend/v3/api/ai/model_mappings/resolve": {
       "post": {
-        "description": "Create. Reads ai. Writes ops_audit_log. File targets none.",
-        "operationId": "modelMappings.resolve.create",
+        "description": "Resolve a model mapping rule without creating or mutating catalog state.",
+        "operationId": "modelMappings.resolve",
         "parameters": [],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsResolveCreateResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -337,12 +386,23 @@
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
-        "x-sdkwork-resource": "modelMappings.resolve",
+        "x-sdkwork-resource": "modelMappings",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model mapping resolve request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelMappingResolveRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/model_mappings/{mappingId}": {
@@ -361,15 +421,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsDeleteResult"
-                }
-              }
-            },
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "content": {
@@ -455,14 +508,14 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelMappingsUpdateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -530,7 +583,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model mapping update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelMappingUpdateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/model_rankings": {
@@ -779,14 +843,33 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelRankingsRefreshResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/ModelRankingRefreshTriggerResponse"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -854,7 +937,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model ranking refresh request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelRankingRefreshTriggerRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/model_rankings/status": {
@@ -1141,15 +1235,15 @@
         "operationId": "modelVendors.create",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelVendorsCreateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1217,7 +1311,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model vendor create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelVendorCreateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/models": {
@@ -1430,15 +1535,15 @@
         "operationId": "models.create",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelsCreateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1506,7 +1611,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI model create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiModelCreateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/models/refresh": {
@@ -1516,6 +1632,7 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -1530,23 +1647,18 @@
                       ],
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
-                          "properties": {
-                            "item": {
-                              "$ref": "#/components/schemas/ModelsRefreshResult"
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/ModelCatalogSyncResult"
                             }
-                          }
+                          ]
                         }
                       }
                     }
                   ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1614,7 +1726,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Model catalog refresh request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelCatalogSyncRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/models/{modelId}": {
@@ -1633,15 +1756,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ModelsDeleteResult"
-                }
-              }
-            },
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "content": {
@@ -1727,14 +1843,14 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelsUpdateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1802,7 +1918,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI model update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiModelUpdateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/resource_groups": {
@@ -1892,15 +2019,15 @@
         "operationId": "aiResourceGroups.create",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AiResourceGroupsCreateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1968,7 +2095,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource group create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceGroupCreateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources": {
@@ -2114,15 +2252,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AiResourceGroupsDeleteResult"
-                }
-              }
-            },
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "content": {
@@ -2208,14 +2339,14 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AiResourceGroupsUpdateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2283,7 +2414,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource group update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceGroupUpdateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/resources": {
@@ -2408,15 +2550,15 @@
         "operationId": "aiResources.create",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AiResourcesCreateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2484,7 +2626,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceCreateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/resources/{resourceId}": {
@@ -2504,14 +2657,14 @@
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AiResourcesUpdateResult"
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2579,7 +2732,18 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceUpdateRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/backend/v3/api/ai/voices": {
@@ -3086,6 +3250,1354 @@
       }
     },
     "schemas": {
+      "AdminAiModelCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating an AI model catalog entry.",
+        "properties": {
+          "vendorId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "chat",
+              "image",
+              "embedding",
+              "audio",
+              "video",
+              "rerank",
+              "moderation"
+            ]
+          },
+          "regionPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiModelRegionPriceRequest"
+            },
+            "maxItems": 200
+          },
+          "contextTokens": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported model modalities."
+          },
+          "inputModalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported input modalities."
+          },
+          "outputModalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported output modalities."
+          },
+          "apiFormat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "capabilityIntro": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Model limitations."
+          },
+          "supportedLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported natural languages."
+          },
+          "useCases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Recommended use cases."
+          },
+          "trainingDataCutoff": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          },
+          "maxOutputTokens": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "supportsStreaming": {
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "type": "boolean"
+          },
+          "supportsJsonSchema": {
+            "type": "boolean"
+          },
+          "releaseStage": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "shelfState": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "routingState": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "replacementModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          }
+        },
+        "required": [
+          "vendorId",
+          "model",
+          "type",
+          "regionPrices",
+          "contextTokens"
+        ]
+      },
+      "AdminAiModelRegionPriceRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Regional model pricing input. Decimal wire fields are encoded as strings.",
+        "properties": {
+          "regionCode": {
+            "type": "string",
+            "maxLength": 32,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "currency": {
+            "type": "string",
+            "maxLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "priceIn": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "x-sdkwork-decimal-string": true
+          },
+          "priceOut": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "x-sdkwork-decimal-string": true
+          },
+          "cacheReadPrice": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "x-sdkwork-decimal-string": true
+          },
+          "cacheWritePrice": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "x-sdkwork-decimal-string": true
+          }
+        },
+        "required": [
+          "regionCode",
+          "currency"
+        ]
+      },
+      "AdminAiModelUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for patching an AI model catalog entry.",
+        "properties": {
+          "vendorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "chat",
+              "image",
+              "embedding",
+              "audio",
+              "video",
+              "rerank",
+              "moderation",
+              null
+            ]
+          },
+          "regionPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiModelRegionPriceRequest"
+            },
+            "maxItems": 200
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "contextTokens": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "modalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported model modalities."
+          },
+          "inputModalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported input modalities."
+          },
+          "outputModalities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported output modalities."
+          },
+          "apiFormat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "capabilityIntro": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Model limitations."
+          },
+          "supportedLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Supported natural languages."
+          },
+          "useCases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 128,
+            "description": "Recommended use cases."
+          },
+          "trainingDataCutoff": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          },
+          "maxOutputTokens": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "supportsStreaming": {
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "type": "boolean"
+          },
+          "supportsJsonSchema": {
+            "type": "boolean"
+          },
+          "releaseStage": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "shelfState": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "routingState": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "replacementModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          }
+        }
+      },
+      "AdminAiResourceCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating an AI resource.",
+        "properties": {
+          "resourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "compositionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "single",
+              "any",
+              "all",
+              null
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceMemberInput"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "resourceCode",
+          "resourceType",
+          "displayName"
+        ]
+      },
+      "AdminAiResourceGroupCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating an AI resource group.",
+        "properties": {
+          "groupCode": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "groupName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "groupType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "api_group",
+              null
+            ]
+          },
+          "selectionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "manual",
+              "all",
+              "any",
+              "dynamic_all_api",
+              null
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceGroupMemberInput"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "groupCode",
+          "groupName"
+        ]
+      },
+      "AdminAiResourceGroupMemberInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource group member input.",
+        "properties": {
+          "resourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "itemRole": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "included",
+              "optional",
+              "fallback",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          }
+        },
+        "required": [
+          "resourceCode"
+        ]
+      },
+      "AdminAiResourceGroupUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for updating an AI resource group.",
+        "properties": {
+          "groupCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "groupName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "groupType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "api_group",
+              null
+            ]
+          },
+          "selectionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "manual",
+              "all",
+              "any",
+              "dynamic_all_api",
+              null
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceGroupMemberInput"
+            },
+            "maxItems": 512
+          }
+        }
+      },
+      "AdminAiResourceMemberInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource composition member input.",
+        "properties": {
+          "memberResourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "memberRole": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "included",
+              "optional",
+              "fallback",
+              null
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          }
+        },
+        "required": [
+          "memberResourceCode"
+        ]
+      },
+      "AdminAiResourceUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for updating an AI resource.",
+        "properties": {
+          "resourceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle",
+              null
+            ]
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "compositionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "single",
+              "any",
+              "all",
+              null
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceMemberInput"
+            },
+            "maxItems": 512
+          }
+        }
+      },
+      "AdminModelCatalogSyncRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for refreshing the AI model catalog.",
+        "properties": {
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "official_refresh",
+              "vendor_refresh",
+              "catalog_version_refresh",
+              "dry_run"
+            ]
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 200
+          },
+          "force": {
+            "type": "boolean"
+          },
+          "catalogRoot": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "catalogVersion": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          }
+        }
+      },
+      "AdminModelMappingCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating a model mapping rule.",
+        "properties": {
+          "sourceVendorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "sourceVendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "targetVendorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "targetVendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "mappingMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "alias",
+              null
+            ]
+          },
+          "matchType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "exact",
+              null
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminModelMappingRuleBindingInput"
+            },
+            "maxItems": 200
+          },
+          "mappingItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminModelMappingRuleItemInput"
+            },
+            "maxItems": 1000
+          }
+        },
+        "required": [
+          "sourceVendorCode",
+          "targetVendorCode",
+          "bindings",
+          "mappingItems"
+        ]
+      },
+      "AdminModelMappingResolveRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for resolving a model mapping rule without mutating catalog state.",
+        "properties": {
+          "sourceModel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Source model identifier to resolve."
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]*$",
+            "description": "Optional source vendor code scope."
+          },
+          "channelId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "description": "Optional channel id scope encoded as int64 string."
+          },
+          "channelCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]*$",
+            "description": "Optional channel code scope."
+          },
+          "providerAccountId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "description": "Optional provider account id scope encoded as int64 string."
+          },
+          "providerAccountCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]*$",
+            "description": "Optional provider account binding code scope."
+          }
+        },
+        "required": [
+          "sourceModel"
+        ]
+      },
+      "AdminModelMappingRuleBindingInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Model mapping rule binding input.",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "bindingType": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "bindingId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "bindingCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "bindingName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "bindingType"
+        ]
+      },
+      "AdminModelMappingRuleItemInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Model mapping rule item input.",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "sourceModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "sourceCatalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "targetModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "targetCatalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "targetProviderModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "targetProviderNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "sourceModel",
+          "targetModel"
+        ]
+      },
+      "AdminModelMappingUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for updating a model mapping rule.",
+        "properties": {
+          "sourceVendorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "sourceVendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "targetVendorId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "targetVendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "mappingMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "alias",
+              null
+            ]
+          },
+          "matchType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "exact",
+              null
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminModelMappingRuleBindingInput"
+            },
+            "maxItems": 200
+          },
+          "mappingItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminModelMappingRuleItemInput"
+            },
+            "maxItems": 1000
+          }
+        }
+      },
+      "AdminModelVendorCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating an AI model vendor.",
+        "properties": {
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]*$",
+            "description": "Optional vendor code. The backend generates a code when omitted."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Vendor display name."
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "color": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 32
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "AiResourceGroupResourcesPage": {
         "additionalProperties": false,
         "description": "Ai resource group resources page schema exposed by Claw Router.",
@@ -3121,60 +4633,6 @@
           "pageInfo"
         ],
         "type": "object"
-      },
-      "AiResourceGroupsCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resource groups create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Ai resource groups create result schema exposed by Claw Router.",
-        "x-operation-id": "aiResourceGroups.create"
-      },
-      "AiResourceGroupsDeleteResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resource groups delete result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Ai resource groups delete result schema exposed by Claw Router.",
-        "x-operation-id": "aiResourceGroups.delete"
       },
       "AiResourceGroupsListResult": {
         "allOf": [
@@ -3229,60 +4687,6 @@
         ],
         "description": "Ai resource groups resources list result schema exposed by Claw Router.",
         "x-operation-id": "aiResourceGroups.resources.list"
-      },
-      "AiResourceGroupsUpdateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resource groups update result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Ai resource groups update result schema exposed by Claw Router.",
-        "x-operation-id": "aiResourceGroups.update"
-      },
-      "AiResourcesCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resources create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Ai resources create result schema exposed by Claw Router.",
-        "x-operation-id": "aiResources.create"
       },
       "AiResourcesListResult": {
         "allOf": [
@@ -3346,33 +4750,6 @@
           "pageInfo"
         ],
         "type": "object"
-      },
-      "AiResourcesUpdateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resources update result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Ai resources update result schema exposed by Claw Router.",
-        "x-operation-id": "aiResources.update"
       },
       "FieldError": {
         "type": "object",
@@ -3547,167 +4924,169 @@
         ],
         "type": "object"
       },
-      "ModelMappingsCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
+      "ModelCatalogSyncResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Catalog sync result returned by models.refresh.",
+        "properties": {
+          "synced": {
+            "type": "boolean"
           },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
+          "source": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "dryRun": {
+            "type": "boolean"
+          },
+          "catalogVersion": {
+            "type": "string"
+          },
+          "requestedCatalogVersion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "catalogRoot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "meterCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "vendorCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "familyCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "modelCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "capabilityCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "priceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rankingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceBindingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "videoProfileCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "acceptedCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshotId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "syncRunId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
           }
-        ],
-        "description": "Model mappings create result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.create"
+        },
+        "required": [
+          "synced",
+          "source",
+          "mode",
+          "dryRun",
+          "catalogVersion",
+          "vendorCodes",
+          "sourceHash",
+          "meterCount",
+          "vendorCount",
+          "familyCount",
+          "modelCount",
+          "capabilityCount",
+          "priceCount",
+          "rankingCount",
+          "voiceCount",
+          "voiceBindingCount",
+          "videoProfileCount",
+          "acceptedCount",
+          "vendors",
+          "models"
+        ]
       },
-      "ModelMappingsDeleteResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings delete result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
+      "ModelMappingsPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Paginated model mapping rules returned by modelMappings.list.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "description": "Model mapping rule response item."
             },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model mappings delete result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.delete"
-      },
-      "ModelMappingsListResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
+            "maxItems": 200,
+            "description": "Model mapping rule items."
           },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings list result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
               }
-            },
-            "required": [
-              "data"
             ],
-            "type": "object"
+            "description": "Offset pagination metadata for model mappings."
           }
-        ],
-        "description": "Model mappings list result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.list"
-      },
-      "ModelMappingsReplaceResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings replace result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model mappings replace result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.replace"
-      },
-      "ModelMappingsResolveCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings resolve create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model mappings resolve create result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.resolve.create"
-      },
-      "ModelMappingsUpdateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model mappings update result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model mappings update result schema exposed by Claw Router.",
-        "x-operation-id": "modelMappings.update"
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ]
       },
       "ModelRankingRefreshJobHistoryPage": {
         "additionalProperties": false,
@@ -3744,6 +5123,163 @@
           "pageInfo"
         ],
         "type": "object"
+      },
+      "ModelRankingRefreshTriggerRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for manually refreshing model ranking snapshots.",
+        "properties": {
+          "rankScope": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "snapshotPeriod": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly",
+              "monthly",
+              null
+            ]
+          },
+          "limit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "lookbackDays": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "refreshIntervalSeconds": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "cacheMaxAgeSeconds": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          }
+        }
+      },
+      "ModelRankingRefreshTriggerResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Response data returned after manually refreshing model ranking snapshots.",
+        "properties": {
+          "triggered": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "empty"
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "organizationId": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "rankScope": {
+            "type": "string",
+            "maxLength": 80,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "snapshotDate": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "snapshotPeriod": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly",
+              "monthly"
+            ]
+          },
+          "windowStart": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "windowEnd": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "generatedCount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "sourceCount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "refreshIntervalSeconds": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "cacheMaxAgeSeconds": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true
+          },
+          "nextRefreshAt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "triggered",
+          "status",
+          "tenantId",
+          "organizationId",
+          "rankScope",
+          "snapshotDate",
+          "snapshotPeriod",
+          "windowStart",
+          "windowEnd",
+          "generatedCount",
+          "sourceCount",
+          "refreshIntervalSeconds",
+          "cacheMaxAgeSeconds",
+          "nextRefreshAt"
+        ]
       },
       "ModelRankingsJobsListResult": {
         "allOf": [
@@ -3865,33 +5401,6 @@
         ],
         "type": "object"
       },
-      "ModelRankingsRefreshResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model rankings refresh result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model rankings refresh result schema exposed by Claw Router.",
-        "x-operation-id": "modelRankings.refresh"
-      },
       "ModelRankingsStatusRetrieveResult": {
         "allOf": [
           {
@@ -3918,33 +5427,6 @@
         ],
         "description": "Model rankings status retrieve result schema exposed by Claw Router.",
         "x-operation-id": "modelRankings.status.retrieve"
-      },
-      "ModelVendorsCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by model vendors create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Model vendors create result schema exposed by Claw Router.",
-        "x-operation-id": "modelVendors.create"
       },
       "ModelVendorsListResult": {
         "allOf": [
@@ -3973,60 +5455,6 @@
         "description": "Model vendors list result schema exposed by Claw Router.",
         "x-operation-id": "modelVendors.list"
       },
-      "ModelsCreateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by models create result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Models create result schema exposed by Claw Router.",
-        "x-operation-id": "models.create"
-      },
-      "ModelsDeleteResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by models delete result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Models delete result schema exposed by Claw Router.",
-        "x-operation-id": "models.delete"
-      },
       "ModelsListResult": {
         "allOf": [
           {
@@ -4053,33 +5481,6 @@
         ],
         "description": "Models list result schema exposed by Claw Router.",
         "x-operation-id": "models.list"
-      },
-      "ModelsUpdateResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by models update result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Models update result schema exposed by Claw Router.",
-        "x-operation-id": "models.update"
       },
       "NoData": {
         "additionalProperties": false,
@@ -4218,139 +5619,22 @@
         "maximum": 79999,
         "description": "Platform or domain error code per API_SPEC.md §15.3."
       },
-      "ModelCatalogSyncResult": {
-        "type": "object",
-        "additionalProperties": false,
-        "description": "Catalog sync result returned by models.refresh.",
-        "properties": {
-          "synced": {
-            "type": "boolean"
+      "SdkWorkResourceResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SdkWorkApiResponse"
           },
-          "source": {
-            "type": "string"
-          },
-          "mode": {
-            "type": "string"
-          },
-          "dryRun": {
-            "type": "boolean"
-          },
-          "catalogVersion": {
-            "type": "string"
-          },
-          "requestedCatalogVersion": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "catalogRoot": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "vendorCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "sourceHash": {
-            "type": "string"
-          },
-          "meterCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "vendorCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "familyCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "modelCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "capabilityCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "priceCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "rankingCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "voiceCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "voiceBindingCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "videoProfileCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "acceptedCount": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "snapshotId": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "syncRunId": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "vendors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          },
-          "models": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
+          {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/SdkWorkResourceData"
+              }
             }
           }
-        },
-        "required": [
-          "synced",
-          "source",
-          "mode",
-          "dryRun",
-          "catalogVersion",
-          "vendorCodes",
-          "sourceHash",
-          "meterCount",
-          "vendorCount",
-          "familyCount",
-          "modelCount",
-          "capabilityCount",
-          "priceCount",
-          "rankingCount",
-          "voiceCount",
-          "voiceBindingCount",
-          "videoProfileCount",
-          "acceptedCount",
-          "vendors",
-          "models"
         ]
       },
       "SdkWorkResourceData": {
@@ -4405,24 +5689,6 @@
             "type": "string"
           }
         }
-      },
-      "SdkWorkResourceResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "type": "object",
-            "required": [
-              "data"
-            ],
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/SdkWorkResourceData"
-              }
-            }
-          }
-        ]
       },
       "SdkWorkListResponse": {
         "allOf": [

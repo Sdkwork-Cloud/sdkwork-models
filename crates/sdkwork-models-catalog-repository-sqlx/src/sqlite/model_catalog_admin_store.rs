@@ -17,14 +17,14 @@ use crate::runtime_id::next_claw_runtime_id;
 use crate::ENV_MODELS_CATALOG_ROOT;
 use sdkwork_models_contract_service::{
     AdminAiModelItem, AdminAiModelListPage, AdminAiModelRegionPriceCommand,
-    AdminModelCatalogSyncItem, AdminModelCommandFuture, AdminModelMappingRuleBindingDraft,
-    AdminModelMappingRuleBindingItem, AdminModelMappingRuleItem, AdminModelMappingRuleItemDraft,
-    AdminModelMappingRuleMappingItem, AdminModelSubject, AdminModelVendorItem,
-    CreateAdminAiModelCommand, CreateAdminModelMappingCommand, CreateAdminModelVendorCommand,
-    DeleteAdminAiModelCommand, DeleteAdminModelMappingCommand, ListAdminAiModelsQuery,
-    ListAdminModelMappingsQuery, ListAdminModelVendorsQuery, ModelCatalogAdminStore,
-    ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult, SyncAdminModelCatalogCommand,
-    UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
+    AdminModelCatalogSyncItem, AdminModelCommandFuture, AdminModelMappingListPage,
+    AdminModelMappingRuleBindingDraft, AdminModelMappingRuleBindingItem, AdminModelMappingRuleItem,
+    AdminModelMappingRuleItemDraft, AdminModelMappingRuleMappingItem, AdminModelSubject,
+    AdminModelVendorItem, CreateAdminAiModelCommand, CreateAdminModelMappingCommand,
+    CreateAdminModelVendorCommand, DeleteAdminAiModelCommand, DeleteAdminModelMappingCommand,
+    ListAdminAiModelsQuery, ListAdminModelMappingsQuery, ListAdminModelVendorsQuery,
+    ModelCatalogAdminStore, ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult,
+    SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
 };
 use sdkwork_models_contract_service::{DomainError, DomainResult};
 
@@ -119,7 +119,7 @@ impl ModelCatalogAdminStore for SqliteModelCatalogAdminStore {
     fn list_model_mappings<'a>(
         &'a self,
         query: ListAdminModelMappingsQuery,
-    ) -> AdminModelCommandFuture<'a, Vec<AdminModelMappingRuleItem>> {
+    ) -> AdminModelCommandFuture<'a, AdminModelMappingListPage> {
         Box::pin(async move { list_model_mappings(&self.pool, query).await })
     }
 
@@ -801,12 +801,124 @@ async fn list_models(
 async fn list_model_mappings(
     pool: &SqlitePool,
     query: ListAdminModelMappingsQuery,
-) -> DomainResult<Vec<AdminModelMappingRuleItem>> {
+) -> DomainResult<AdminModelMappingListPage> {
     let channel_id = query.channel_id;
     let channel_code = query.channel_code.as_deref();
     let binding_type = query.binding_type.as_deref();
     let vendor_code = query.vendor_code.as_deref();
     let q = query.q.as_deref();
+    let limit = query.normalized_limit();
+    let offset = query.normalized_offset();
+    let count_row = sqlx::query(
+        r#"
+        SELECT COUNT(*) AS total_count
+        FROM ai_model_mapping_rule r
+        WHERE r.tenant_id = ?
+          AND r.organization_id = ?
+          AND r.deleted_at IS NULL
+          AND r.status = 1
+          AND (
+              ? IS NULL
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_binding b
+                  WHERE b.rule_id = r.id
+                    AND b.tenant_id = r.tenant_id
+                    AND b.organization_id = r.organization_id
+                    AND b.deleted_at IS NULL
+                    AND b.status = 1
+                    AND b.binding_type = ?
+              )
+          )
+          AND (
+              ? IS NULL
+              OR r.source_vendor_code = ?
+              OR r.target_vendor_code = ?
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_binding b
+                  WHERE b.rule_id = r.id
+                    AND b.tenant_id = r.tenant_id
+                    AND b.organization_id = r.organization_id
+                    AND b.deleted_at IS NULL
+                    AND b.status = 1
+                    AND b.binding_type = 'vendor'
+                    AND b.binding_code = ?
+              )
+          )
+          AND (
+              ? IS NULL
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_binding b
+                  WHERE b.rule_id = r.id
+                    AND b.tenant_id = r.tenant_id
+                    AND b.organization_id = r.organization_id
+                    AND b.deleted_at IS NULL
+                    AND b.status = 1
+                    AND b.binding_type = 'channel'
+                    AND b.binding_id = ?
+              )
+          )
+          AND (
+              ? IS NULL
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_binding b
+                  WHERE b.rule_id = r.id
+                    AND b.tenant_id = r.tenant_id
+                    AND b.organization_id = r.organization_id
+                    AND b.deleted_at IS NULL
+                    AND b.status = 1
+                    AND b.binding_type = 'channel'
+                    AND b.binding_code = ?
+              )
+          )
+          AND (
+              ? IS NULL
+              OR r.source_vendor_code LIKE '%' || ? || '%'
+              OR r.target_vendor_code LIKE '%' || ? || '%'
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_item i
+                  WHERE i.rule_id = r.id
+                    AND i.tenant_id = r.tenant_id
+                    AND i.organization_id = r.organization_id
+                    AND i.deleted_at IS NULL
+                    AND i.status = 1
+                    AND (i.source_model LIKE '%' || ? || '%' OR i.target_model LIKE '%' || ? || '%')
+              )
+              OR EXISTS (
+                  SELECT 1 FROM ai_model_mapping_rule_binding b
+                  WHERE b.rule_id = r.id
+                    AND b.tenant_id = r.tenant_id
+                    AND b.organization_id = r.organization_id
+                    AND b.deleted_at IS NULL
+                    AND b.status = 1
+                    AND (COALESCE(b.binding_code, '') LIKE '%' || ? || '%' OR COALESCE(b.binding_name_snapshot, '') LIKE '%' || ? || '%')
+              )
+          )
+        "#,
+    )
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(binding_type)
+    .bind(binding_type)
+    .bind(vendor_code)
+    .bind(vendor_code)
+    .bind(vendor_code)
+    .bind(vendor_code)
+    .bind(channel_id)
+    .bind(channel_id)
+    .bind(channel_code)
+    .bind(channel_code)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .bind(q)
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count model mappings", error))?;
+    let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
     let rows = sqlx::query(&mapping_select_sql(
         r#"
         WHERE r.tenant_id = ?
@@ -922,6 +1034,8 @@ async fn list_model_mappings(
           END,
           r.updated_at DESC,
           r.id DESC
+        LIMIT ?
+        OFFSET ?
         "#,
     ))
     .bind(query.subject.tenant_id)
@@ -944,6 +1058,8 @@ async fn list_model_mappings(
     .bind(q)
     .bind(q)
     .bind(q)
+    .bind(limit)
+    .bind(offset)
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list model mappings", error))?;
@@ -952,7 +1068,7 @@ async fn list_model_mappings(
         .map(mapping_from_row)
         .collect::<DomainResult<Vec<_>>>()?;
     attach_model_mapping_children(pool, &mut items).await?;
-    Ok(items)
+    Ok(AdminModelMappingListPage { items, total_count })
 }
 
 async fn list_vendors_tx(

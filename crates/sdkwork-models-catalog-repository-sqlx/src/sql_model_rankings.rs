@@ -2,9 +2,9 @@ use serde_json::Value;
 
 use crate::model_modality;
 use sdkwork_models_contract_service::{
-    DEFAULT_MODEL_RANKING_RANK_SCOPE, DEFAULT_MODEL_RANKING_SNAPSHOT_PERIOD,
     ModelRankingHistoryEntry, ModelRankingHistoryPoint, ModelRankingItem,
     ModelRankingRefreshJobItem, ModelRankingRefreshStatus, ModelRankingsSource,
+    DEFAULT_MODEL_RANKING_RANK_SCOPE, DEFAULT_MODEL_RANKING_SNAPSHOT_PERIOD,
 };
 
 pub const DEFAULT_RANK_SCOPE: &str = DEFAULT_MODEL_RANKING_RANK_SCOPE;

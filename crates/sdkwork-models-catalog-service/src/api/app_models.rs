@@ -184,7 +184,7 @@ where
         categories: comma_separated_query_values(query.categories.as_deref()),
         groups: comma_separated_query_values(query.groups.as_deref()),
         search_query: query.q,
-        limit: Some(page_size),
+        page_size: Some(page_size),
         offset: Some(offset),
     }) {
         Ok(page) => finish_success(&ctx, to_response(page)),
@@ -197,8 +197,8 @@ fn to_response(page: ModelCatalogPage) -> AppModelCatalogResponse {
         items: page.items.into_iter().map(to_item_response).collect(),
         groups: page.groups.into_iter().map(to_group_response).collect(),
         page_info: offset_page_info(
-            ((page.offset / page.limit) + 1) as i64,
-            page.limit as i64,
+            ((page.offset / page.page_size) + 1) as i64,
+            page.page_size as i64,
             page.total_items as i64,
         ),
     }

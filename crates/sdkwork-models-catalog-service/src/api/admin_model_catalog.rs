@@ -10,6 +10,7 @@ use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
 
+use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::response::{finish_success, problem_for};
 use crate::application::{
     ApiKeyAuthenticator, ApiKeySecretHasher, AuthenticateApiKeyQuery, ListModelCatalogQuery,
@@ -39,12 +40,15 @@ struct AdminModelListRequest {
     api_key_id: Option<i64>,
     billing_meter: Option<String>,
     vendor_code: Option<String>,
+    page: Option<usize>,
+    page_size: Option<usize>,
 }
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct AdminModelListResponse {
     items: Vec<AdminModelItemResponse>,
+    page_info: ApiPageInfo,
 }
 
 #[derive(Debug, Serialize)]
@@ -119,6 +123,13 @@ where
             return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
         }
     };
+    let (page, page_size) = match validate_page_query(request.page, request.page_size) {
+        Ok(value) => value,
+        Err(message) => {
+            return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
+        }
+    };
+    let offset = (page - 1) * page_size;
     let identity = match ApiKeyIdentity::from_headers_and_uri(&headers, &uri) {
         Ok(identity) => identity,
         Err(error) => {
@@ -146,8 +157,8 @@ where
         categories: Vec::new(),
         groups: Vec::new(),
         search_query: None,
-        limit: None,
-        offset: None,
+        page_size: Some(page_size),
+        offset: Some(offset),
     }) {
         Ok(page) => finish_success(&ctx, to_response(page, &billing_meter)),
         Err(error) => problem_for(&ctx, SdkWorkResultCode::ValidationError, error.to_string()),
@@ -180,11 +191,38 @@ fn parse_query(query: Option<&str>) -> Result<AdminModelListRequest, String> {
             "vendor_code" if !value.is_empty() => {
                 request.vendor_code = Some(value.to_owned());
             }
+            "page" if !value.is_empty() => {
+                let page_value = value
+                    .parse::<usize>()
+                    .map_err(|_| "page must be a positive integer".to_owned())?;
+                request.page = Some(page_value);
+            }
+            "page_size" if !value.is_empty() => {
+                let size = value
+                    .parse::<usize>()
+                    .map_err(|_| "page_size must be a positive integer".to_owned())?;
+                request.page_size = Some(size);
+            }
             "" => {}
             _ => {}
         }
     }
     Ok(request)
+}
+
+fn validate_page_query(
+    page: Option<usize>,
+    page_size: Option<usize>,
+) -> Result<(usize, usize), String> {
+    let page = page.unwrap_or(1);
+    if page == 0 {
+        return Err("page must be greater than or equal to 1".to_owned());
+    }
+    let page_size = page_size.unwrap_or(20);
+    if !(1..=200).contains(&page_size) {
+        return Err("page_size must be between 1 and 200".to_owned());
+    }
+    Ok((page, page_size))
 }
 
 fn resolve_api_key_id<C>(
@@ -234,6 +272,11 @@ fn to_response(page: ModelCatalogPage, billing_meter: &BillingMeter) -> AdminMod
             .into_iter()
             .map(|item| to_item_response(item, billing_meter))
             .collect(),
+        page_info: offset_page_info(
+            ((page.offset / page.page_size) + 1) as i64,
+            page.page_size as i64,
+            page.total_items as i64,
+        ),
     }
 }
 

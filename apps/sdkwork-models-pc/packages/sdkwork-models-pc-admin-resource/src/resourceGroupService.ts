@@ -157,8 +157,8 @@ export class ResourceGroupService {
 
   static async fetchAssignableResources(): Promise<ResourceGroupAssignableResourceItem[]> {
     const result = await getModelsBackendSdkClient().ai.aiResources.list({
-      page: '1',
-      pageSize: '200',
+      page: 1,
+      pageSize: 200,
     });
     ensureSdkworkApiSuccess(result, 'Failed to fetch assignable resources');
     return readRequiredApiItems(result, 'Failed to fetch assignable resources').map(normalizeAssignableResourceItem);
@@ -186,18 +186,17 @@ export class ResourceGroupService {
   }
 
   static async deleteResourceGroup(groupId: string): Promise<boolean> {
-    const result = await getModelsBackendSdkClient().ai.aiResourceGroups.delete(
+    await getModelsBackendSdkClient().ai.aiResourceGroups.delete(
       requiredSafePathSegment(groupId, 'groupId'),
     );
-    ensureSdkworkApiSuccess(result, 'Failed to delete resource group');
-    return readBoolean(readApiRecord(result), 'deleted', false);
+    return true;
   }
 }
 
-function toSdkListParams(query: ResourceListQuery): { page?: string; pageSize?: string; q?: string } {
+function toSdkListParams(query: ResourceListQuery): { page?: number; pageSize?: number; q?: string } {
   return {
-    page: query.page === undefined ? undefined : String(query.page),
-    pageSize: query.pageSize === undefined ? undefined : String(query.pageSize),
+    page: query.page,
+    pageSize: query.pageSize,
     q: query.q?.trim() ? query.q.trim() : undefined,
   };
 }

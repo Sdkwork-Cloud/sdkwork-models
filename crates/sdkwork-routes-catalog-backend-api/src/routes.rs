@@ -76,7 +76,7 @@ pub const ROUTES: &[RouteDefinition] = &[
     RouteDefinition {
         method: "POST",
         path: "/backend/v3/api/ai/model_mappings/resolve",
-        operation_id: "modelMappings.resolve.create",
+        operation_id: "modelMappings.resolve",
         handler: "resolve_model_mapping",
         service_method: "resolve_model_mapping",
     },
