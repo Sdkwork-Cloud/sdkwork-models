@@ -1,4 +1,5 @@
 pub mod admin_ai_resource_store;
+mod decimal;
 pub mod entity_uuid_generator;
 pub mod error;
 pub mod model_catalog_admin_store;
@@ -8,6 +9,7 @@ pub mod ops_audit_log_recorder;
 pub mod routing_config_change_recorder;
 
 pub use admin_ai_resource_store::*;
+pub use decimal::DecimalValue;
 pub use entity_uuid_generator::*;
 pub use error::{DomainError, DomainResult};
 pub use model_catalog_admin_store::*;

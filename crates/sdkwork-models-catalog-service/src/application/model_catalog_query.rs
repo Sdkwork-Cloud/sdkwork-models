@@ -138,6 +138,11 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
 
     pub fn list_models(&self, query: ListModelCatalogQuery) -> DomainResult<ModelCatalogPage> {
         let resolver = PricingResolver::new(self.catalog);
+        let (price_tenant_id, price_organization_id) = query
+            .api_key_id
+            .and_then(|api_key_id| self.catalog.find_api_key(api_key_id))
+            .map(|api_key| (api_key.tenant_id, api_key.organization_id))
+            .unwrap_or((0, 0));
         let vendor_codes = query.normalized_vendor_codes();
         let modalities = normalize_modality_filter_values(&query.modalities);
         let capabilities = normalize_capability_filter_values(&query.capabilities);
@@ -162,9 +167,18 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                     .unwrap_or(ModelVendor::Unknown);
                 let model_lookup_key = model.catalog_key.as_str();
                 let provider_codes = self.provider_codes(model_lookup_key);
-                let official_reference_prices = self.official_reference_prices(model_lookup_key);
+                let official_reference_prices = self.official_reference_prices(
+                    price_tenant_id,
+                    price_organization_id,
+                    model_lookup_key,
+                );
                 let lowest_upstream_cost =
-                    self.lowest_upstream_cost(model_lookup_key, query.billing_meter.clone());
+                    self.lowest_upstream_cost(
+                        price_tenant_id,
+                        price_organization_id,
+                        model_lookup_key,
+                        query.billing_meter.clone(),
+                    );
                 let provider_for_resolve = lowest_upstream_cost
                     .as_ref()
                     .and_then(|price| price.provider_code.clone())
@@ -276,10 +290,20 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         provider_codes
     }
 
-    fn official_reference_prices(&self, model: &str) -> Vec<ModelCatalogReferencePriceView> {
+    fn official_reference_prices(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        model: &str,
+    ) -> Vec<ModelCatalogReferencePriceView> {
         let mut prices: Vec<ModelCatalogReferencePriceView> = self
             .catalog
-            .list_model_prices_for_side(model, PriceSide::OfficialReference)
+            .list_model_prices_for_scope_side(
+                tenant_id,
+                organization_id,
+                model,
+                PriceSide::OfficialReference,
+            )
             .into_iter()
             .filter(|price| {
                 price.provider_code.is_none()
@@ -309,9 +333,21 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         prices
     }
 
-    fn lowest_upstream_cost(&self, model: &str, billing_meter: BillingMeter) -> Option<ModelPrice> {
+    fn lowest_upstream_cost(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        model: &str,
+        billing_meter: BillingMeter,
+    ) -> Option<ModelPrice> {
         self.catalog
-            .list_model_prices(model, PriceSide::UpstreamCost, billing_meter)
+            .list_model_prices_for_scope(
+                tenant_id,
+                organization_id,
+                model,
+                PriceSide::UpstreamCost,
+                billing_meter,
+            )
             .into_iter()
             .min_by_key(|price| price.unit_price.unit_price)
     }

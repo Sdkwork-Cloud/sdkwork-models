@@ -21,6 +21,31 @@ pub trait PricingCatalog {
         billing_meter: BillingMeter,
     ) -> Vec<ModelPrice>;
     fn list_model_prices_for_side(&self, model: &str, price_side: PriceSide) -> Vec<ModelPrice>;
+
+    /// Returns prices visible from a tenant/organization scope. Implementations
+    /// without persisted scope metadata retain legacy behavior by default.
+    fn list_model_prices_for_scope(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        model: &str,
+        price_side: PriceSide,
+        billing_meter: BillingMeter,
+    ) -> Vec<ModelPrice> {
+        let _ = (tenant_id, organization_id);
+        self.list_model_prices(model, price_side, billing_meter)
+    }
+
+    fn list_model_prices_for_scope_side(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        model: &str,
+        price_side: PriceSide,
+    ) -> Vec<ModelPrice> {
+        let _ = (tenant_id, organization_id);
+        self.list_model_prices_for_side(model, price_side)
+    }
     fn find_api_key(&self, api_key_id: i64) -> Option<GatewayApiKey>;
     fn find_api_key_by_hash(&self, key_hash: &str) -> Option<GatewayApiKey>;
     fn find_channel_group(&self, group_id: i64) -> Option<ChannelGroup>;
@@ -32,6 +57,16 @@ pub trait PricingCatalog {
         group_id: i64,
     ) -> Option<ChannelGroupMetricSnapshot>;
     fn find_pricing_plan(&self, plan_code: &str) -> Option<PricingPlan>;
+
+    fn find_pricing_plan_for_scope(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        plan_code: &str,
+    ) -> Option<PricingPlan> {
+        let _ = (tenant_id, organization_id);
+        self.find_pricing_plan(plan_code)
+    }
     fn find_model(&self, model: &str) -> Option<AiModel>;
     fn find_vendor(&self, vendor_code: &str) -> Option<ModelVendorDefinition>;
     fn resolve_model_mapping(
@@ -48,4 +83,24 @@ pub trait PricingCatalog {
         provider_code: Option<&str>,
         pricing_plan_code: Option<&str>,
     ) -> Option<ModelPrice>;
+
+    fn find_model_price_for_scope(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        model: &str,
+        price_side: PriceSide,
+        billing_meter: BillingMeter,
+        provider_code: Option<&str>,
+        pricing_plan_code: Option<&str>,
+    ) -> Option<ModelPrice> {
+        let _ = (tenant_id, organization_id);
+        self.find_model_price(
+            model,
+            price_side,
+            billing_meter,
+            provider_code,
+            pricing_plan_code,
+        )
+    }
 }

@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
-use sqlx::{Row, Sqlite, SqlitePool, Transaction};
+use sdkwork_database_sqlx::sqlite_decimal::register_decimal_functions;
+use sqlx::{Acquire, Row, Sqlite, SqlitePool, Transaction};
 
 use crate::admin_models_list::{
     capability_codes_from_model_types, normalized_search_pattern, optional_non_empty,
@@ -443,7 +444,15 @@ impl ModelCatalogAdminStore for SqliteModelCatalogAdminStore {
             let dry_run = is_dry_run_mode(&command.mode);
             let source_code = normalize_catalog_source_code(&command.source);
             let source_hash = catalog_scope_source_hash(&source_code, &catalog);
-            let mut tx = self.pool.begin().await.map_err(|error| {
+            let mut connection = self.pool.acquire().await.map_err(|error| {
+                store_error("failed to acquire model catalog sync connection", error)
+            })?;
+            register_decimal_functions(&mut connection)
+                .await
+                .map_err(|error| {
+                    store_error("failed to register model catalog decimal functions", error)
+                })?;
+            let mut tx = connection.begin().await.map_err(|error| {
                 store_error("failed to begin model catalog sync transaction", error)
             })?;
             if !dry_run {
@@ -1122,7 +1131,7 @@ async fn list_models_tx(
                 AND tenant_model.deleted_at IS NULL
           )
         ORDER BY
-          CAST(COALESCE(m.rank_score, '0') AS REAL) DESC,
+          sdkwork_decimal_order_key(COALESCE(NULLIF(m.rank_score, ''), '0')) DESC,
           CASE WHEN m.tenant_id = ? AND m.organization_id = ? THEN 0 ELSE 1 END,
           m.display_name ASC,
           m.id ASC

@@ -1,14 +1,14 @@
+use sdkwork_database_sqlx::sqlite_decimal::register_decimal_functions;
 use sha2::{Digest, Sha256};
-use sqlx::{Row, Sqlite, SqlitePool, Transaction};
+use sqlx::{Acquire, Row, Sqlite, SqlitePool, Transaction};
 
 use crate::runtime_id::next_claw_runtime_id;
 use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
-use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
-    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
-    ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture, ModelRankingRefreshCommand,
-    ModelRankingRefreshFuture, ModelRankingRefreshOutcome, ModelRankingRefreshRunStatus,
-    ModelRankingRefreshStore,
+    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period, DecimalValue,
+    DomainError, ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture,
+    ModelRankingRefreshCommand, ModelRankingRefreshFuture, ModelRankingRefreshOutcome,
+    ModelRankingRefreshRunStatus, ModelRankingRefreshStore,
 };
 
 const MODEL_RANKING_REFRESH_JOB_TYPE: i64 = 20;
@@ -55,7 +55,7 @@ struct RankingAggregate {
     context_tokens: i64,
     request_count: i64,
     token_count: i64,
-    cost_amount: f64,
+    cost_amount: DecimalValue,
     currency: String,
     previous_rank_no: Option<i64>,
 }
@@ -87,7 +87,15 @@ async fn refresh_model_rankings(
         add_seconds_to_timestamp(&command.requested_at, command.refresh_interval_seconds);
     let metadata = ranking_metadata(&command, &next_refresh_at)?;
 
-    let mut tx = pool
+    let mut connection = pool.acquire().await.map_err(|error| {
+        store_error("failed to acquire model ranking refresh connection", error)
+    })?;
+    register_decimal_functions(&mut connection)
+        .await
+        .map_err(|error| {
+            store_error("failed to register model ranking decimal functions", error)
+        })?;
+    let mut tx = connection
         .begin()
         .await
         .map_err(|error| store_error("failed to begin model ranking refresh transaction", error))?;
@@ -262,7 +270,7 @@ async fn load_ranking_aggregates(
                             WHEN m.tenant_id = 0 AND m.organization_id = 0 THEN 1
                             ELSE 0
                         END DESC,
-                        CAST(COALESCE(NULLIF(CAST(m.rank_score AS TEXT), ''), '0') AS REAL) DESC,
+                        sdkwork_decimal_order_key(COALESCE(NULLIF(m.rank_score, ''), '0')) DESC,
                         m.id DESC
                 ) AS model_row_no
             FROM ai_model m
@@ -315,7 +323,7 @@ async fn load_ranking_aggregates(
                 m.context_tokens,
                 SUM(COALESCE(u.request_count, 1)) AS request_count,
                 SUM(COALESCE(u.total_tokens, 0)) AS token_count,
-                SUM(COALESCE(NULLIF(CAST(COALESCE(NULLIF(CAST(u.customer_charge_amount AS TEXT), ''), '0') AS REAL), 0), CAST(COALESCE(NULLIF(CAST(u.cost_amount AS TEXT), ''), '0') AS REAL), 0)) AS cost_amount,
+                sdkwork_decimal_sum(u.customer_charge_amount) AS cost_amount,
                 COALESCE(NULLIF(MAX(u.currency), ''), 'USD') AS currency
             FROM ai_usage u
             JOIN model_scope m
@@ -364,7 +372,7 @@ async fn load_ranking_aggregates(
         ORDER BY
             a.request_count DESC,
             a.token_count DESC,
-            a.cost_amount DESC,
+            sdkwork_decimal_order_key(a.cost_amount) DESC,
             a.catalog_key ASC
         LIMIT ?8
         "#,
@@ -381,27 +389,28 @@ async fn load_ranking_aggregates(
     .await
     .map_err(|error| store_error("failed to aggregate model ranking usage facts", error))?;
 
-    Ok(rows
-        .iter()
-        .map(|row| RankingAggregate {
-            source_rows: integer_cell(row, "source_rows"),
-            model_id: integer_cell(row, "model_id"),
-            catalog_key: string_cell(row, "catalog_key"),
-            model: string_cell(row, "model"),
-            vendor_code: string_cell(row, "vendor_code"),
-            region_code: string_cell(row, "region_code"),
-            vendor_name_snapshot: string_cell(row, "vendor_name_snapshot"),
-            modality: integer_cell(row, "modality"),
-            color_token: string_cell(row, "color_token"),
-            license_type: integer_cell(row, "license_type"),
-            context_tokens: integer_cell(row, "context_tokens"),
-            request_count: integer_cell(row, "request_count"),
-            token_count: integer_cell(row, "token_count"),
-            cost_amount: decimal_cell(row, "cost_amount"),
-            currency: string_cell(row, "currency"),
-            previous_rank_no: optional_integer_cell(row, "previous_rank_no"),
+    rows.iter()
+        .map(|row| {
+            Ok(RankingAggregate {
+                source_rows: integer_cell(row, "source_rows"),
+                model_id: integer_cell(row, "model_id"),
+                catalog_key: string_cell(row, "catalog_key"),
+                model: string_cell(row, "model"),
+                vendor_code: string_cell(row, "vendor_code"),
+                region_code: string_cell(row, "region_code"),
+                vendor_name_snapshot: string_cell(row, "vendor_name_snapshot"),
+                modality: integer_cell(row, "modality"),
+                color_token: string_cell(row, "color_token"),
+                license_type: integer_cell(row, "license_type"),
+                context_tokens: integer_cell(row, "context_tokens"),
+                request_count: integer_cell(row, "request_count"),
+                token_count: integer_cell(row, "token_count"),
+                cost_amount: decimal_cell(row, "cost_amount")?,
+                currency: string_cell(row, "currency"),
+                previous_rank_no: optional_integer_cell(row, "previous_rank_no"),
+            })
         })
-        .collect())
+        .collect()
 }
 
 async fn deactivate_existing_snapshot(
@@ -449,7 +458,7 @@ async fn upsert_ranking_snapshot(
     let previous_rank_no = row.previous_rank_no.unwrap_or(rank_no);
     let trend_score = previous_rank_no - rank_no;
     let request_count = row.request_count.max(0);
-    let cost_indicator = cost_indicator(row.cost_amount, request_count);
+    let cost_indicator = cost_indicator(row.cost_amount, request_count)?;
     let context_size_text = context_size_text(row.context_tokens);
     let pricing_text = pricing_text(&row.currency, row.cost_amount);
     let rank_payload = rank_payload(row, rank_no, previous_rank_no)?;
@@ -539,7 +548,7 @@ async fn upsert_ranking_snapshot(
     .bind(row.license_type)
     .bind(request_count)
     .bind(row.token_count.max(0))
-    .bind(decimal_text(row.cost_amount))
+    .bind(exact_decimal_text(row.cost_amount))
     .bind(&row.currency)
     .bind(win_rate(rank_no, previous_rank_no))
     .bind(decimal_text(trend_score as f64))
@@ -624,28 +633,30 @@ fn rank_payload(
         "sourceRows": row.source_rows,
         "requests": row.request_count,
         "tokens": row.token_count,
-        "costAmount": decimal_text(row.cost_amount),
+        "costAmount": exact_decimal_text(row.cost_amount),
         "currency": row.currency
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }
 
-fn cost_indicator(cost_amount: f64, requests: i64) -> i64 {
+fn cost_indicator(cost_amount: DecimalValue, requests: i64) -> Result<i64, DomainError> {
     if requests <= 0 {
-        return 3;
+        return Ok(3);
     }
-    let cost_per_request = cost_amount.max(0.0) / requests as f64;
-    if cost_per_request <= 0.01 {
+    let non_negative_cost = cost_amount.max(DecimalValue::ZERO);
+    let cost_per_request = non_negative_cost.divide_i64(requests)?;
+    let indicator = if cost_per_request <= DecimalValue::parse("0.01")? {
         1
-    } else if cost_per_request <= 0.05 {
+    } else if cost_per_request <= DecimalValue::parse("0.05")? {
         2
-    } else if cost_per_request <= 0.25 {
+    } else if cost_per_request <= DecimalValue::parse("0.25")? {
         3
-    } else if cost_per_request <= 1.0 {
+    } else if cost_per_request <= DecimalValue::ONE {
         4
     } else {
         5
-    }
+    };
+    Ok(indicator)
 }
 
 fn context_size_text(context_tokens: i64) -> Option<String> {
@@ -658,14 +669,14 @@ fn context_size_text(context_tokens: i64) -> Option<String> {
     }
 }
 
-fn pricing_text(currency: &str, cost_amount: f64) -> Option<String> {
+fn pricing_text(currency: &str, cost_amount: DecimalValue) -> Option<String> {
     if currency.trim().is_empty() {
         return None;
     }
     Some(format!(
         "{} {}/window",
         currency.trim(),
-        decimal_text(cost_amount)
+        exact_decimal_text(cost_amount)
     ))
 }
 
@@ -690,6 +701,10 @@ fn decimal_text(value: f64) -> String {
     } else {
         text
     }
+}
+
+fn exact_decimal_text(value: DecimalValue) -> String {
+    value.to_fixed_string(12)
 }
 
 fn stable_uuid(prefix: &str, parts: &[&str]) -> String {
@@ -726,12 +741,13 @@ fn integer_cell(row: &sqlx::sqlite::SqliteRow, column: &str) -> i64 {
     optional_integer_cell(row, column).unwrap_or(0)
 }
 
-fn decimal_cell(row: &sqlx::sqlite::SqliteRow, column: &str) -> f64 {
-    row.try_get::<Option<f64>, _>(column)
-        .ok()
-        .flatten()
-        .or_else(|| string_cell(row, column).parse::<f64>().ok())
-        .unwrap_or(0.0)
+fn decimal_cell(row: &sqlx::sqlite::SqliteRow, column: &str) -> Result<DecimalValue, DomainError> {
+    let value = string_cell(row, column);
+    DecimalValue::parse(&value).map_err(|error| {
+        DomainError::new(format!(
+            "invalid exact decimal in model ranking column {column}: {value}: {error}"
+        ))
+    })
 }
 
 fn store_error(context: &str, error: sqlx::Error) -> DomainError {

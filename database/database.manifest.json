@@ -13,9 +13,10 @@
   "tablePrefix": "ai_model_",
   "contractVersion": "1.0.0",
   "baselineStrategy": "baseline-plus-migrations",
+  "baselineAnchorTable": "ai_model_vendor",
   "modules": [],
   "lifecycle": {
-    "autoMigrate": true,
+    "autoMigrate": false,
     "seedOnBoot": false,
     "defaultSeedLocale": "zh-CN",
     "defaultSeedProfile": "standard",

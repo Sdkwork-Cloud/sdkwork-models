@@ -67,7 +67,11 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 group.id, api_key.organization_id
             )));
         }
-        let plan = self.find_plan(&group.pricing_plan_code)?;
+        let plan = self.find_plan(
+            api_key.tenant_id,
+            api_key.organization_id,
+            &group.pricing_plan_code,
+        )?;
         let model = self.find_model(&query.model)?;
         let vendor = self.find_vendor(&model.vendor_code)?;
         let explicit_region_code = query
@@ -90,16 +94,29 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     .map(|route| normalize_region_code(&route.region_code))
             })
             .unwrap_or_else(|| DEFAULT_PRICE_REGION_CODE.to_owned());
-        let upstream = self.find_upstream_cost(&query, &region_code);
+        let upstream = self.find_upstream_cost(
+            &query,
+            api_key.tenant_id,
+            api_key.organization_id,
+            &region_code,
+        );
         let price_scope = upstream
             .as_ref()
             .map(|price| price.catalog_key.as_str())
             .unwrap_or(query.model.as_str());
-        let official = self.find_official_reference(&query, price_scope, &region_code)?;
+        let official = self.find_official_reference(
+            &query,
+            api_key.tenant_id,
+            api_key.organization_id,
+            price_scope,
+            &region_code,
+        )?;
 
         let explicit_customer = self
             .catalog
-            .find_model_price(
+            .find_model_price_for_scope(
+                api_key.tenant_id,
+                api_key.organization_id,
                 price_scope,
                 PriceSide::CustomerCharge,
                 query.billing_meter.clone(),
@@ -160,9 +177,14 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             .ok_or_else(|| DomainError::new(format!("channel group not found: {group_id}")))
     }
 
-    fn find_plan(&self, plan_code: &str) -> DomainResult<crate::domain::PricingPlan> {
+    fn find_plan(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        plan_code: &str,
+    ) -> DomainResult<crate::domain::PricingPlan> {
         self.catalog
-            .find_pricing_plan(plan_code)
+            .find_pricing_plan_for_scope(tenant_id, organization_id, plan_code)
             .ok_or_else(|| DomainError::new(format!("pricing plan not found: {plan_code}")))
     }
 
@@ -181,11 +203,15 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
     fn find_official_reference(
         &self,
         query: &ResolveModelPriceQuery,
+        tenant_id: i64,
+        organization_id: i64,
         price_scope: &str,
         region_code: &str,
     ) -> DomainResult<ModelPrice> {
         self.catalog
-            .list_model_prices(
+            .list_model_prices_for_scope(
+                tenant_id,
+                organization_id,
                 price_scope,
                 PriceSide::OfficialReference,
                 query.billing_meter.clone(),
@@ -207,13 +233,17 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
     fn find_upstream_cost(
         &self,
         query: &ResolveModelPriceQuery,
+        tenant_id: i64,
+        organization_id: i64,
         region_code: &str,
     ) -> Option<ModelPrice> {
         let provider_code = query.provider_code.as_deref();
         if let Some(channel_id) = query.channel_id {
             return self
                 .catalog
-                .list_model_prices(
+                .list_model_prices_for_scope(
+                    tenant_id,
+                    organization_id,
                     &query.model,
                     PriceSide::UpstreamCost,
                     query.billing_meter.clone(),
@@ -228,7 +258,9 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         }
 
         self.catalog
-            .list_model_prices(
+            .list_model_prices_for_scope(
+                tenant_id,
+                organization_id,
                 &query.model,
                 PriceSide::UpstreamCost,
                 query.billing_meter.clone(),

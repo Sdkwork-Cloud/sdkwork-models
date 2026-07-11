@@ -3,12 +3,11 @@ use sqlx::{PgPool, Postgres, Row, Transaction};
 
 use crate::runtime_id::next_claw_runtime_id;
 use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
-use sdkwork_models_contract_service::DomainError;
 use sdkwork_models_contract_service::{
-    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period,
-    ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture, ModelRankingRefreshCommand,
-    ModelRankingRefreshFuture, ModelRankingRefreshOutcome, ModelRankingRefreshRunStatus,
-    ModelRankingRefreshStore,
+    normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period, DecimalValue,
+    DomainError, ModelRankingRefreshAuditCommand, ModelRankingRefreshAuditFuture,
+    ModelRankingRefreshCommand, ModelRankingRefreshFuture, ModelRankingRefreshOutcome,
+    ModelRankingRefreshRunStatus, ModelRankingRefreshStore,
 };
 
 const MODEL_RANKING_REFRESH_JOB_TYPE: i64 = 20;
@@ -55,7 +54,7 @@ struct RankingAggregate {
     context_tokens: i64,
     request_count: i64,
     token_count: i64,
-    cost_amount: f64,
+    cost_amount: DecimalValue,
     currency: String,
     previous_rank_no: Option<i64>,
 }
@@ -317,7 +316,7 @@ async fn load_ranking_aggregates(
                 m.context_tokens,
                 SUM(COALESCE(u.request_count, 1)) AS request_count,
                 SUM(COALESCE(u.total_tokens, 0)) AS token_count,
-                SUM(COALESCE(NULLIF(u.customer_charge_amount, 0), u.cost_amount, 0)) AS cost_amount,
+                SUM(COALESCE(u.customer_charge_amount, 0)) AS cost_amount,
                 COALESCE(NULLIF(MAX(u.currency), ''), 'USD') AS currency
             FROM ai_usage u
             JOIN model_scope m
@@ -383,27 +382,28 @@ async fn load_ranking_aggregates(
     .await
     .map_err(|error| store_error("failed to aggregate model ranking usage facts", error))?;
 
-    Ok(rows
-        .iter()
-        .map(|row| RankingAggregate {
-            source_rows: integer_cell(row, "source_rows"),
-            model_id: integer_cell(row, "model_id"),
-            catalog_key: string_cell(row, "catalog_key"),
-            model: string_cell(row, "model"),
-            vendor_code: string_cell(row, "vendor_code"),
-            region_code: string_cell(row, "region_code"),
-            vendor_name_snapshot: string_cell(row, "vendor_name_snapshot"),
-            modality: integer_cell(row, "modality"),
-            color_token: string_cell(row, "color_token"),
-            license_type: integer_cell(row, "license_type"),
-            context_tokens: integer_cell(row, "context_tokens"),
-            request_count: integer_cell(row, "request_count"),
-            token_count: integer_cell(row, "token_count"),
-            cost_amount: decimal_cell(row, "cost_amount"),
-            currency: string_cell(row, "currency"),
-            previous_rank_no: optional_integer_cell(row, "previous_rank_no"),
+    rows.iter()
+        .map(|row| {
+            Ok(RankingAggregate {
+                source_rows: integer_cell(row, "source_rows"),
+                model_id: integer_cell(row, "model_id"),
+                catalog_key: string_cell(row, "catalog_key"),
+                model: string_cell(row, "model"),
+                vendor_code: string_cell(row, "vendor_code"),
+                region_code: string_cell(row, "region_code"),
+                vendor_name_snapshot: string_cell(row, "vendor_name_snapshot"),
+                modality: integer_cell(row, "modality"),
+                color_token: string_cell(row, "color_token"),
+                license_type: integer_cell(row, "license_type"),
+                context_tokens: integer_cell(row, "context_tokens"),
+                request_count: integer_cell(row, "request_count"),
+                token_count: integer_cell(row, "token_count"),
+                cost_amount: decimal_cell(row, "cost_amount")?,
+                currency: string_cell(row, "currency"),
+                previous_rank_no: optional_integer_cell(row, "previous_rank_no"),
+            })
         })
-        .collect())
+        .collect()
 }
 
 async fn deactivate_existing_snapshot(
@@ -451,7 +451,7 @@ async fn upsert_ranking_snapshot(
     let previous_rank_no = row.previous_rank_no.unwrap_or(rank_no);
     let trend_score = previous_rank_no - rank_no;
     let request_count = row.request_count.max(0);
-    let cost_indicator = cost_indicator(row.cost_amount, request_count);
+    let cost_indicator = cost_indicator(row.cost_amount, request_count)?;
     let context_size_text = context_size_text(row.context_tokens);
     let pricing_text = pricing_text(&row.currency, row.cost_amount);
     let rank_payload = rank_payload(row, rank_no, previous_rank_no)?;
@@ -469,7 +469,7 @@ async fn upsert_ranking_snapshot(
              0, $6::jsonb, $7::date, $8, $9, $10, $11,
              $12, $13, $14, $15, $16, $17, $18,
              $19, $20, $21, $22, $23, $24, $25,
-             '[]'::jsonb, $26, $27, $28, $29, 0, 0,
+             '[]'::jsonb, $26, $27, $28::text::numeric, $29, 0, 0,
              1.000000, $30, $31, $32::jsonb)
         ON CONFLICT (tenant_id, organization_id, snapshot_date, snapshot_period, rank_scope, vendor_code, region_code, catalog_key) DO UPDATE SET
             source_type = excluded.source_type,
@@ -544,7 +544,7 @@ async fn upsert_ranking_snapshot(
     .bind(row.license_type)
     .bind(request_count)
     .bind(row.token_count.max(0))
-    .bind(decimal_text(row.cost_amount))
+    .bind(exact_decimal_text(row.cost_amount))
     .bind(&row.currency)
     .bind(win_rate(rank_no, previous_rank_no))
     .bind(decimal_text(trend_score as f64))
@@ -629,7 +629,7 @@ fn rank_payload(
         "sourceRows": row.source_rows,
         "requests": row.request_count,
         "tokens": row.token_count,
-        "costAmount": decimal_text(row.cost_amount),
+        "costAmount": exact_decimal_text(row.cost_amount),
         "currency": row.currency
     }))
     .map_err(|error| DomainError::new(error.to_string()))
@@ -642,22 +642,24 @@ fn sql_timestamp(value: &str) -> String {
         .to_owned()
 }
 
-fn cost_indicator(cost_amount: f64, requests: i64) -> i64 {
+fn cost_indicator(cost_amount: DecimalValue, requests: i64) -> Result<i64, DomainError> {
     if requests <= 0 {
-        return 3;
+        return Ok(3);
     }
-    let cost_per_request = cost_amount.max(0.0) / requests as f64;
-    if cost_per_request <= 0.01 {
+    let non_negative_cost = cost_amount.max(DecimalValue::ZERO);
+    let cost_per_request = non_negative_cost.divide_i64(requests)?;
+    let indicator = if cost_per_request <= DecimalValue::parse("0.01")? {
         1
-    } else if cost_per_request <= 0.05 {
+    } else if cost_per_request <= DecimalValue::parse("0.05")? {
         2
-    } else if cost_per_request <= 0.25 {
+    } else if cost_per_request <= DecimalValue::parse("0.25")? {
         3
-    } else if cost_per_request <= 1.0 {
+    } else if cost_per_request <= DecimalValue::ONE {
         4
     } else {
         5
-    }
+    };
+    Ok(indicator)
 }
 
 fn context_size_text(context_tokens: i64) -> Option<String> {
@@ -670,14 +672,14 @@ fn context_size_text(context_tokens: i64) -> Option<String> {
     }
 }
 
-fn pricing_text(currency: &str, cost_amount: f64) -> Option<String> {
+fn pricing_text(currency: &str, cost_amount: DecimalValue) -> Option<String> {
     if currency.trim().is_empty() {
         return None;
     }
     Some(format!(
         "{} {}/window",
         currency.trim(),
-        decimal_text(cost_amount)
+        exact_decimal_text(cost_amount)
     ))
 }
 
@@ -702,6 +704,10 @@ fn decimal_text(value: f64) -> String {
     } else {
         text
     }
+}
+
+fn exact_decimal_text(value: DecimalValue) -> String {
+    value.to_fixed_string(12)
 }
 
 fn stable_uuid(prefix: &str, parts: &[&str]) -> String {
@@ -738,10 +744,170 @@ fn integer_cell(row: &sqlx::postgres::PgRow, column: &str) -> i64 {
     optional_integer_cell(row, column).unwrap_or(0)
 }
 
-fn decimal_cell(row: &sqlx::postgres::PgRow, column: &str) -> f64 {
-    string_cell(row, column).parse::<f64>().unwrap_or(0.0)
+fn decimal_cell(row: &sqlx::postgres::PgRow, column: &str) -> Result<DecimalValue, DomainError> {
+    let value = string_cell(row, column);
+    DecimalValue::parse(&value).map_err(|error| {
+        DomainError::new(format!(
+            "invalid exact decimal in model ranking column {column}: {value}: {error}"
+        ))
+    })
 }
 
 fn store_error(context: &str, error: sqlx::Error) -> DomainError {
     DomainError::new(format!("{context}: {error}"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const POSTGRES_TEST_DATABASE_URL: &str = "SDKWORK_CLAW_POSTGRES_TEST_DATABASE_URL";
+
+    #[test]
+    fn ranking_sql_keeps_usage_cost_numeric_until_the_text_mapping_boundary() {
+        let production_source = include_str!("model_ranking_refresh_store.rs")
+            .split("#[cfg(test)]")
+            .next()
+            .expect("production source before test module");
+
+        assert!(
+            production_source.contains("SUM(COALESCE(u.customer_charge_amount, 0)) AS cost_amount")
+        );
+        assert!(production_source.contains("CAST(a.cost_amount AS TEXT) AS cost_amount"));
+        assert!(production_source.contains("a.cost_amount DESC"));
+        assert!(production_source.contains("$28::text::numeric"));
+        assert!(!production_source.contains("NULLIF(u.customer_charge_amount, 0)"));
+        assert!(!production_source.contains("u.cost_amount"));
+        assert!(!production_source.contains("cost_amount: f64"));
+        assert!(!production_source.contains(".bind(decimal_text(row.cost_amount))"));
+        assert!(!production_source.contains("\"costAmount\": decimal_text(row.cost_amount)"));
+    }
+
+    #[test]
+    fn exact_ranking_cost_remains_a_twelve_scale_decimal_in_snapshot_outputs() {
+        let cost_amount = DecimalValue::parse("9007199254740992.000000000010")
+            .expect("valid exact ranking amount");
+        let row = ranking_aggregate(cost_amount, 10);
+
+        assert_eq!(
+            exact_decimal_text(cost_amount),
+            "9007199254740992.000000000010"
+        );
+        assert_eq!(
+            pricing_text("USD", cost_amount).as_deref(),
+            Some("USD 9007199254740992.000000000010/window")
+        );
+
+        let payload: serde_json::Value =
+            serde_json::from_str(&rank_payload(&row, 1, 2).expect("valid exact ranking payload"))
+                .expect("ranking payload json");
+        assert_eq!(
+            payload
+                .get("costAmount")
+                .and_then(serde_json::Value::as_str),
+            Some("9007199254740992.000000000010")
+        );
+    }
+
+    #[test]
+    fn exact_cost_indicator_compares_decimal_boundaries_without_binary_floats() {
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("0.010000000000").unwrap(), 1).unwrap(),
+            1
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("0.010000000001").unwrap(), 1).unwrap(),
+            2
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("0.050000000001").unwrap(), 1).unwrap(),
+            3
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("0.250000000001").unwrap(), 1).unwrap(),
+            4
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("1.000000000001").unwrap(), 1).unwrap(),
+            5
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("-1.000000000000").unwrap(), 1).unwrap(),
+            1
+        );
+        assert_eq!(
+            cost_indicator(DecimalValue::parse("1.000000000000").unwrap(), 0).unwrap(),
+            3
+        );
+    }
+
+    #[tokio::test]
+    #[ignore = "requires SDKWORK_CLAW_POSTGRES_TEST_DATABASE_URL"]
+    async fn postgres_numeric_aggregation_and_snapshot_cast_preserve_exact_ranking_cost() {
+        let database_url = std::env::var(POSTGRES_TEST_DATABASE_URL).unwrap_or_else(|_| {
+            panic!(
+                "{POSTGRES_TEST_DATABASE_URL} is required for the PostgreSQL exact ranking decimal test"
+            )
+        });
+        let pool = PgPool::connect(&database_url)
+            .await
+            .unwrap_or_else(|error| {
+                panic!("connect PostgreSQL exact ranking test database: {error}")
+            });
+
+        let aggregate_row = sqlx::query(
+            r#"
+            SELECT CAST(SUM(amount) AS TEXT) AS cost_amount
+            FROM (
+                VALUES
+                    ('9007199254740992.000000000001'::numeric(38, 12)),
+                    ('0.000000000009'::numeric(38, 12))
+            ) AS exact_usage(amount)
+            "#,
+        )
+        .fetch_one(&pool)
+        .await
+        .expect("aggregate exact PostgreSQL ranking cost");
+        let cost_amount = decimal_cell(&aggregate_row, "cost_amount")
+            .expect("parse exact PostgreSQL ranking aggregate");
+        assert_eq!(
+            exact_decimal_text(cost_amount),
+            "9007199254740992.000000000010"
+        );
+
+        let snapshot_row =
+            sqlx::query("SELECT CAST($1::text::numeric(38, 12) AS TEXT) AS cost_amount")
+                .bind(exact_decimal_text(cost_amount))
+                .fetch_one(&pool)
+                .await
+                .expect("round-trip exact PostgreSQL ranking snapshot cost");
+        let persisted_cost = decimal_cell(&snapshot_row, "cost_amount")
+            .expect("parse exact PostgreSQL ranking snapshot cost");
+        assert_eq!(persisted_cost, cost_amount);
+        assert_eq!(
+            exact_decimal_text(persisted_cost),
+            "9007199254740992.000000000010"
+        );
+    }
+
+    fn ranking_aggregate(cost_amount: DecimalValue, request_count: i64) -> RankingAggregate {
+        RankingAggregate {
+            source_rows: 2,
+            model_id: 1,
+            catalog_key: "test/model".to_owned(),
+            model: "test-model".to_owned(),
+            vendor_code: "test-vendor".to_owned(),
+            region_code: "global".to_owned(),
+            vendor_name_snapshot: "Test Vendor".to_owned(),
+            modality: 1,
+            color_token: "#64748b".to_owned(),
+            license_type: 2,
+            context_tokens: 128_000,
+            request_count,
+            token_count: 42,
+            cost_amount,
+            currency: "USD".to_owned(),
+            previous_rank_no: Some(2),
+        }
+    }
 }
