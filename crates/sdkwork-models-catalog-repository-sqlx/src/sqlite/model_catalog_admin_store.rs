@@ -923,7 +923,6 @@ async fn list_model_mappings(
     .bind(q)
     .bind(q)
     .bind(q)
-    .bind(q)
     .fetch_one(pool)
     .await
     .map_err(|error| store_error("failed to count model mappings", error))?;
@@ -1059,7 +1058,6 @@ async fn list_model_mappings(
     .bind(channel_id)
     .bind(channel_code)
     .bind(channel_code)
-    .bind(q)
     .bind(q)
     .bind(q)
     .bind(q)
