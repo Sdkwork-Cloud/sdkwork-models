@@ -1,0 +1,45 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "embedding"
+  ],
+  "catalogKey": "alibaba/text-embedding-v4",
+  "colorToken": "#64748b",
+  "description": "Qwen3-Embedding series text embedding model supporting 100+ languages, sparse vectors, and up to 2048 dimensions on Alibaba Model Studio.",
+  "displayName": "Text Embedding V4",
+  "familyCode": "qwen-embedding",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 180,
+  "latencyP95Ms": 600,
+  "lifecycle": "active",
+  "modelId": "text-embedding-v4",
+  "outputModalities": [
+    "embedding"
+  ],
+  "primaryCapability": "embedding",
+  "rankScore": "730.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://help.aliyun.com/zh/model-studio/text-embedding-synchronous-api"
+  },
+  "strengths": [
+    "Embedding",
+    "Retrieval",
+    "Multilingual",
+    "Sparse vectors"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.850000",
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.860000"
+}

@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "luma_ai/ray-3.2",
+  "colorToken": "#6366f1",
+  "description": "Luma Ray 3.2 video model for text-to-video, image-to-video, video editing, and reframing with HDR and multi-keyframe support.",
+  "displayName": "Ray 3.2",
+  "familyCode": "luma-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "ray-3.2",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "870.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://docs.agents.lumalabs.ai/guides/videos/generation"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Video editing",
+    "HDR output"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "luma_ai",
+  "vendorName": "Luma AI",
+  "winRate": "0.900000"
+}

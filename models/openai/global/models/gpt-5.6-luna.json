@@ -6,7 +6,7 @@
   "catalogKey": "openai/gpt-5.6-luna",
   "colorToken": "#111827",
   "contextTokens": 1050000,
-  "description": "GPT-5.6 Luna fast and affordable preview tier for latency-sensitive workloads. Limited partner preview as of June 2026.",
+  "description": "GPT-5.6 Luna fast and affordable tier for latency-sensitive workloads. Generally available as of July 2026.",
   "displayName": "GPT-5.6 Luna",
   "familyCode": "gpt-5",
   "inputModalities": [
@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 500,
   "latencyP95Ms": 1800,
-  "lifecycle": "catalog_only",
+  "lifecycle": "active",
   "maxInputTokens": 1050000,
   "maxOutputTokens": 128000,
   "modelId": "gpt-5.6-luna",
@@ -25,12 +25,12 @@
   "primaryCapability": "chat",
   "rankScore": "1050.000000",
   "regionCode": "global",
-  "releaseStage": "preview",
-  "routingState": "catalog_only",
+  "releaseStage": "active",
+  "routingState": "enabled",
   "schemaVersion": "1.0.0",
-  "shelfState": "hidden",
+  "shelfState": "listed",
   "source": {
-    "observedAt": "2026-06-24T00:00:00Z",
+    "observedAt": "2026-07-14T00:00:00Z",
     "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
   },
   "strengths": [

@@ -13,10 +13,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
-      "unitPrice": "2.000000",
+      "unitPrice": "0.435000",
       "unitSize": "1000000"
     },
     {
@@ -29,10 +29,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
-      "unitPrice": "6.000000",
+      "unitPrice": "0.870000",
       "unitSize": "1000000"
     }
   ],

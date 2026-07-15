@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.000000",
@@ -29,46 +29,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "15.000000",
-      "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-05-07T00:00:00Z",
-      "meterCode": "llm_input_token",
-      "minimumQuantity": "200000",
-      "priceId": "anthropic-claude-sonnet-4-6-input-above-200k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
-      },
-      "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
-      "unitPrice": "6.000000",
-      "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-05-07T00:00:00Z",
-      "meterCode": "llm_output_token",
-      "minimumQuantity": "200000",
-      "priceId": "anthropic-claude-sonnet-4-6-output-above-200k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
-      },
-      "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
-      "unitPrice": "22.500000",
       "unitSize": "1000000"
     },
     {
@@ -81,9 +45,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
+      "tierCode": "cache_write_5m",
       "unitPrice": "3.750000",
       "unitSize": "1000000"
     },
@@ -91,18 +56,17 @@
       "currency": "USD",
       "effectiveFrom": "2026-05-07T00:00:00Z",
       "meterCode": "llm_cache_write_token",
-      "minimumQuantity": "200000",
-      "priceId": "anthropic-claude-sonnet-4-6-cache-write-above-200k",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-sonnet-4-6-cache-write-1h",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
-      "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
-      "unitPrice": "7.500000",
+      "tierCode": "cache_write_1h",
+      "unitPrice": "6.000000",
       "unitSize": "1000000"
     },
     {
@@ -115,28 +79,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.300000",
-      "unitSize": "1000000"
-    },
-    {
-      "currency": "USD",
-      "effectiveFrom": "2026-05-07T00:00:00Z",
-      "meterCode": "llm_cache_read_token",
-      "minimumQuantity": "200000",
-      "priceId": "anthropic-claude-sonnet-4-6-cache-read-above-200k",
-      "priceSide": "official",
-      "pricingScope": "model",
-      "quantityStep": "1",
-      "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
-      },
-      "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
-      "unitPrice": "0.600000",
       "unitSize": "1000000"
     }
   ],

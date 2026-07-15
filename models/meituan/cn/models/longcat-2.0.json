@@ -1,0 +1,47 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "meituan/longcat-2.0",
+  "colorToken": "#0284c7",
+  "contextTokens": 1048576,
+  "description": "Meituan LongCat 2.0 trillion-parameter MoE agentic model for coding, agent workflows, and ultra-long context tasks. Open-sourced under MIT license with 1M token context window.",
+  "displayName": "LongCat 2.0",
+  "familyCode": "longcat",
+  "inputModalities": [
+    "text"
+  ],
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 131072,
+  "modelId": "longcat-2.0",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "920.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://longcat.chat/platform/docs/zh/"
+  },
+  "strengths": [
+    "Chinese",
+    "Coding",
+    "Agentic",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.920000",
+  "vendorCode": "meituan",
+  "vendorName": "Meituan",
+  "winRate": "0.900000"
+}

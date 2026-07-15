@@ -1,6 +1,6 @@
 {
   "catalogVersion": "2026.07.05.3",
-  "observedAt": "2026-06-24T00:00:00Z",
+  "observedAt": "2026-07-14T00:00:00Z",
   "policy": {
     "officialFirst": true,
     "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
@@ -29,7 +29,7 @@
   "schemaVersion": "1.1.0",
   "vendors": [
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Alibaba Cloud mainland China operation with Qwen LLM, Wanxiang image/video, and text embedding models.",
       "official": {
         "additionalUrls": [
@@ -52,7 +52,8 @@
         "wan2.6-t2v",
         "wan2.6-i2v",
         "wan2.6-r2v",
-        "text-embedding-v3"
+        "text-embedding-v3",
+        "text-embedding-v4"
       ],
       "supportedModels": [
         "qwen3.6-max-preview"
@@ -126,12 +127,13 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Baidu AI Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; ERNIE/Qianfan product names are not vendor identities.",
       "official": {
         "additionalUrls": [
           "https://cloud.baidu.com/doc/WENXINWORKSHOP/",
-          "https://cloud.baidu.com/doc/qianfan-docs/"
+          "https://cloud.baidu.com/doc/qianfan-docs/",
+          "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
         ],
         "modelsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43",
         "pricingUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
@@ -144,7 +146,8 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
-        "ernie-5.0-thinking-preview"
+        "ernie-5.0-thinking-preview",
+        "ernie-5.1"
       ],
       "supportedModels": [
         "ernie-4.5-turbo-128k",
@@ -154,7 +157,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "FLUX.2 Pro pricing uses official per-megapixel BFL rows rather than synthetic per-result pricing. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
@@ -167,10 +170,13 @@
       "references": [],
       "regionCode": "global",
       "requiredModels": [
-        "flux-2-pro"
+        "flux-2-pro",
+        "flux-2-max"
       ],
       "supportedModels": [
-        "flux-2-flex"
+        "flux-2-flex",
+        "flux-2-klein-4b",
+        "flux-2-klein-9b"
       ],
       "vendorCode": "black_forest_labs",
       "verificationStatus": "official_url_declared"
@@ -446,10 +452,12 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Luma AI Dream Machine video API with Ray 2 and Ray 2 Flash models for text-to-video and image-to-video.",
       "official": {
         "additionalUrls": [
+          "https://docs.agents.lumalabs.ai/guides/pricing",
+          "https://docs.agents.lumalabs.ai/guides/videos/generation",
           "https://docs.lumalabs.ai/docs/video-generation"
         ],
         "modelsUrl": "https://docs.lumalabs.ai/docs/video-generation",
@@ -459,7 +467,8 @@
       "regionCode": "global",
       "requiredModels": [
         "ray-2",
-        "ray-flash-2"
+        "ray-flash-2",
+        "ray-3.2"
       ],
       "supportedModels": [],
       "vendorCode": "luma_ai",
@@ -547,10 +556,11 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Meituan mainland China operation is modeled as the cn region of the vendor with CNY billing. LongCat (Longmao) is tracked as the default model family entry pending richer official price-table snapshots.",
       "official": {
         "additionalUrls": [
+          "https://longcat.chat/platform/docs/zh/",
           "https://www.meituan.com"
         ],
         "modelsUrl": "https://www.meituan.com",
@@ -559,13 +569,14 @@
       "references": [],
       "regionCode": "cn",
       "requiredModels": [
-        "longcat-1.0"
+        "longcat-1.0",
+        "longcat-2.0"
       ],
       "vendorCode": "meituan",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Moonshot/Kimi international API operation is modeled as the global region of the vendor with USD billing. Official international landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -590,13 +601,14 @@
         "kimi-k2.5"
       ],
       "supportedModels": [
-        "kimi-k2.7-code-01hw"
+        "kimi-k2.7-code-01hw",
+        "kimi-k2.7-code-highspeed"
       ],
       "vendorCode": "moonshot",
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Moonshot/Kimi mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -621,7 +633,8 @@
         "kimi-k2.5"
       ],
       "supportedModels": [
-        "kimi-k2.7-code-01hw"
+        "kimi-k2.7-code-01hw",
+        "kimi-k2.7-code-highspeed"
       ],
       "vendorCode": "moonshot",
       "verificationStatus": "official_verified"
@@ -699,7 +712,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Stability AI image and audio API public docs. Added Stable Audio 2.5 music generation and text-to-audio SFX mode.",
       "official": {
         "additionalUrls": [
@@ -716,7 +729,8 @@
       "requiredModels": [
         "stable-image-ultra",
         "stable-audio-2.5",
-        "stable-audio-2.5-sfx"
+        "stable-audio-2.5-sfx",
+        "stable-audio-3.0"
       ],
       "supportedModels": [
         "stable-image-core"
@@ -725,7 +739,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Mureka official API platform from Kunlun Tech for song and instrumental generation.",
       "official": {
         "additionalUrls": [
@@ -739,7 +753,13 @@
       "regionCode": "global",
       "requiredModels": [
         "mureka-v7.5",
-        "mureka-o1"
+        "mureka-v8",
+        "mureka-v9",
+        "mureka-o1",
+        "mureka-o2"
+      ],
+      "supportedModels": [
+        "mureka-v7.6"
       ],
       "vendorCode": "mureka",
       "verificationStatus": "official_url_declared"
@@ -768,11 +788,12 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Suno API source.",
       "official": {
         "additionalUrls": [
-          "https://docs.suno.com/"
+          "https://docs.suno.com/",
+          "https://suno.com/blog/v5-5"
         ],
         "modelsUrl": "https://suno.com/api",
         "pricingUrl": "https://suno.com/api"
@@ -780,17 +801,19 @@
       "references": [],
       "regionCode": "global",
       "requiredModels": [
-        "suno-v5"
+        "suno-v5",
+        "suno-v5.5"
       ],
       "vendorCode": "suno",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Tencent Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; Hunyuan is a model family, not the vendor identity.",
       "official": {
         "additionalUrls": [
-          "https://cloud.tencent.com/document/product/1729/"
+          "https://cloud.tencent.com/document/product/1729/",
+          "https://cloud.tencent.com/document/product/1823/130055"
         ],
         "modelsUrl": "https://cloud.tencent.com/document/product/1729/104753",
         "pricingUrl": "https://cloud.tencent.com/document/product/1729/97731"
@@ -803,7 +826,8 @@
       ],
       "regionCode": "cn",
       "requiredModels": [
-        "hunyuan-turbos-latest"
+        "hunyuan-turbos-latest",
+        "hy3"
       ],
       "supportedModels": [
         "hunyuan-2.0-instruct-20251111",
@@ -922,7 +946,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "xAI official docs list Grok 4.3, 4.20 series, Build 0.1, and Grok Imagine image/video models.",
       "official": {
         "additionalUrls": [
@@ -946,6 +970,7 @@
         "grok-4.20-0309-non-reasoning",
         "grok-4.20-multi-agent-0309",
         "grok-4.3",
+        "grok-4.5",
         "grok-build-0.1",
         "grok-imagine-image",
         "grok-imagine-video"
@@ -958,7 +983,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Xiaomi MiMo is an open-source AI model platform offering frontier multimodal and agentic models. Models include MiMo-V2.5-Pro (1T params), MiMo-V2.5 (310B params, multimodal), MiMo-V2-Flash (309B params, fast inference), and MiMo-V2.5-Pro-FP4-DFlash (554B params, FP4 quantized).",
       "official": {
         "additionalUrls": [
@@ -977,11 +1002,14 @@
         "mimo-v2-flash",
         "mimo-v2.5-pro-fp4-dflash"
       ],
+      "supportedModels": [
+        "mimo-v2.5-pro-ultraspeed"
+      ],
       "vendorCode": "xiaomi",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-14T00:00:00Z",
       "notes": "Xiaomi MiMo mainland China operation is modeled as the cn region of the vendor with CNY billing. Same models as global region but with CNY pricing.",
       "official": {
         "additionalUrls": [
@@ -999,6 +1027,9 @@
         "mimo-v2.5",
         "mimo-v2-flash",
         "mimo-v2.5-pro-fp4-dflash"
+      ],
+      "supportedModels": [
+        "mimo-v2.5-pro-ultraspeed"
       ],
       "vendorCode": "xiaomi",
       "verificationStatus": "official_url_declared"

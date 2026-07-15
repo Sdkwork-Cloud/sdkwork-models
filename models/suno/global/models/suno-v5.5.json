@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "suno/suno-v5.5",
+  "colorToken": "#b91c1c",
+  "description": "Most expressive Suno music generation model with Voices, Custom models, and My Taste personalization.",
+  "displayName": "Suno v5.5",
+  "familyCode": "suno",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 65000,
+  "latencyP95Ms": 190000,
+  "lifecycle": "active",
+  "modelId": "suno-v5.5",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "780.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://suno.com/blog/v5-5"
+  },
+  "strengths": [
+    "Music generation",
+    "Song creation",
+    "Voice personalization",
+    "Custom model tuning"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "suno",
+  "vendorName": "Suno",
+  "winRate": "0.880000"
+}

@@ -20,6 +20,49 @@
       "rankScope": "commercial-default",
       "snapshotDate": "2026-07-02",
       "snapshotPeriod": "daily"
+    },
+    {
+      "items": [
+        {
+          "catalogKey": "mureka/mureka-v9",
+          "modelId": "mureka-v9",
+          "pricingText": "$0.045 / song generation",
+          "rankNo": 15
+        },
+        {
+          "catalogKey": "mureka/mureka-o2",
+          "modelId": "mureka-o2",
+          "pricingText": "$0.20 / song generation",
+          "rankNo": 16
+        },
+        {
+          "catalogKey": "mureka/mureka-v8",
+          "modelId": "mureka-v8",
+          "pricingText": "$0.045 / song generation",
+          "rankNo": 17
+        },
+        {
+          "catalogKey": "mureka/mureka-o1",
+          "modelId": "mureka-o1",
+          "pricingText": "$0.20 / song generation",
+          "rankNo": 18
+        },
+        {
+          "catalogKey": "mureka/mureka-v7.6",
+          "modelId": "mureka-v7.6",
+          "pricingText": "$0.045 / song generation",
+          "rankNo": 19
+        },
+        {
+          "catalogKey": "mureka/mureka-v7.5",
+          "modelId": "mureka-v7.5",
+          "pricingText": "$0.045 / song generation",
+          "rankNo": 20
+        }
+      ],
+      "rankScope": "commercial-default",
+      "snapshotDate": "2026-07-14",
+      "snapshotPeriod": "daily"
     }
   ],
   "vendorCode": "mureka"

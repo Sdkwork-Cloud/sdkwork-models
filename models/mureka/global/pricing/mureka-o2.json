@@ -1,0 +1,26 @@
+{
+  "catalogKey": "mureka/mureka-o2",
+  "currency": "USD",
+  "modelId": "mureka-o2",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "meterCode": "api_result",
+      "minimumQuantity": "0",
+      "priceId": "mureka-global-mureka-o2-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://platform.mureka.ai/docs/en/faq.html"
+      },
+      "unitPrice": "0.200000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "mureka"
+}

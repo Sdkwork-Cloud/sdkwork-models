@@ -1,0 +1,42 @@
+{
+  "catalogKey": "xiaomi/mimo-v2.5-pro-ultraspeed",
+  "currency": "USD",
+  "modelId": "mimo-v2.5-pro-ultraspeed",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-09T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-mimo-v2.5-pro-ultraspeed-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "1.305000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-09T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xiaomi-mimo-v2.5-pro-ultraspeed-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://platform.xiaomimimo.com"
+      },
+      "unitPrice": "2.610000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xiaomi"
+}

@@ -6,7 +6,7 @@
   "catalogKey": "openai/gpt-5.6-terra",
   "colorToken": "#111827",
   "contextTokens": 1050000,
-  "description": "GPT-5.6 Terra balanced preview model for everyday work at roughly half the cost of GPT-5.5. Limited partner preview as of June 2026.",
+  "description": "GPT-5.6 Terra balanced model for everyday work at roughly half the cost of GPT-5.5. Generally available as of July 2026.",
   "displayName": "GPT-5.6 Terra",
   "familyCode": "gpt-5",
   "inputModalities": [
@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 900,
   "latencyP95Ms": 3200,
-  "lifecycle": "catalog_only",
+  "lifecycle": "active",
   "maxInputTokens": 1050000,
   "maxOutputTokens": 128000,
   "modelId": "gpt-5.6-terra",
@@ -25,12 +25,12 @@
   "primaryCapability": "chat",
   "rankScore": "1150.000000",
   "regionCode": "global",
-  "releaseStage": "preview",
-  "routingState": "catalog_only",
+  "releaseStage": "active",
+  "routingState": "enabled",
   "schemaVersion": "1.0.0",
-  "shelfState": "hidden",
+  "shelfState": "listed",
   "source": {
-    "observedAt": "2026-06-24T00:00:00Z",
+    "observedAt": "2026-07-14T00:00:00Z",
     "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
   },
   "strengths": [

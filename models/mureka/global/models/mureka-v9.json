@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "mureka/mureka-v9",
+  "colorToken": "#a855f7",
+  "description": "Mureka V9 flagship music generation model with more lyric control, cleaner mix, and faster generation.",
+  "displayName": "Mureka V9",
+  "familyCode": "mureka",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 38000,
+  "latencyP95Ms": 100000,
+  "lifecycle": "active",
+  "modelId": "mureka-v9",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "840.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://platform.mureka.ai/docs/"
+  },
+  "strengths": [
+    "Song generation",
+    "Lyric control",
+    "Cleaner mix",
+    "Faster generation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.970000",
+  "vendorCode": "mureka",
+  "vendorName": "Mureka",
+  "winRate": "0.930000"
+}

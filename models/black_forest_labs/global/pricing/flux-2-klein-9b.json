@@ -1,0 +1,44 @@
+{
+  "catalogKey": "black_forest_labs/flux-2-klein-9b",
+  "currency": "USD",
+  "modelId": "flux-2-klein-9b",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "mediaDirection": "output",
+      "meterCode": "image_megapixel",
+      "minimumQuantity": "0",
+      "priceId": "bfl-flux-2-klein-9b-output-megapixel",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "unitPrice": "0.015000",
+      "unitSize": "1"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "mediaDirection": "input",
+      "meterCode": "image_megapixel",
+      "minimumQuantity": "0",
+      "priceId": "bfl-flux-2-klein-9b-input-megapixel",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "0.001",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "unitPrice": "0.002000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "black_forest_labs"
+}

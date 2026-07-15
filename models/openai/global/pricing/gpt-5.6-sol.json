@@ -13,8 +13,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "5.000000",
       "unitSize": "1000000"
@@ -29,8 +29,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
-        "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "30.000000",
       "unitSize": "1000000"

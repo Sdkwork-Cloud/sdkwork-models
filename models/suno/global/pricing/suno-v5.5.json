@@ -1,0 +1,26 @@
+{
+  "catalogKey": "suno/suno-v5.5",
+  "currency": "USD",
+  "modelId": "suno-v5.5",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-03-26T00:00:00Z",
+      "meterCode": "music_output_second",
+      "minimumQuantity": "0",
+      "priceId": "suno-v5.5-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://suno.com/blog/v5-5"
+      },
+      "unitPrice": "0.025000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "suno"
+}

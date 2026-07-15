@@ -1,0 +1,44 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "mureka/mureka-o2",
+  "colorToken": "#5b21b6",
+  "description": "Mureka O2 premium music reasoning model with enhanced composition quality and multilingual support. Successor to Mureka O1.",
+  "displayName": "Mureka O2",
+  "familyCode": "mureka",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 48000,
+  "latencyP95Ms": 130000,
+  "lifecycle": "active",
+  "modelId": "mureka-o2",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "830.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://platform.mureka.ai/docs/"
+  },
+  "strengths": [
+    "Premium quality",
+    "Multilingual composition",
+    "Contextual BGM"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "mureka",
+  "vendorName": "Mureka",
+  "winRate": "0.910000"
+}

@@ -5,7 +5,7 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
       "mediaDirection": "output",
       "meterCode": "image_megapixel",
       "minimumQuantity": "0",
@@ -14,15 +14,15 @@
       "pricingScope": "model",
       "quantityStep": "0.001",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
-      "unitPrice": "0.060000",
+      "unitPrice": "0.050000",
       "unitSize": "1"
     },
     {
       "currency": "USD",
-      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
       "mediaDirection": "input",
       "meterCode": "image_megapixel",
       "minimumQuantity": "0",
@@ -31,10 +31,10 @@
       "pricingScope": "model",
       "quantityStep": "0.001",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
-      "unitPrice": "0.030000",
+      "unitPrice": "0.050000",
       "unitSize": "1"
     }
   ],

@@ -29,28 +29,34 @@
           "rankNo": 8
         },
         {
+          "catalogKey": "xai/grok-4.5",
+          "modelId": "grok-4.5",
+          "pricingText": "$2.00 / 1M input; $6.00 / 1M output",
+          "rankNo": 9
+        },
+        {
           "catalogKey": "xai/grok-4.20-0309-reasoning",
           "modelId": "grok-4.20-0309-reasoning",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 9
+          "rankNo": 10
         },
         {
           "catalogKey": "xai/grok-4.20-multi-agent-0309",
           "modelId": "grok-4.20-multi-agent-0309",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 10
+          "rankNo": 11
         },
         {
           "catalogKey": "xai/grok-4.20-0309-non-reasoning",
           "modelId": "grok-4.20-0309-non-reasoning",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 11
+          "rankNo": 12
         },
         {
           "catalogKey": "xai/grok-4.3",
           "modelId": "grok-4.3",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 12
+          "rankNo": 13
         },
         {
           "catalogKey": "xai/grok-build-0.1",
@@ -60,7 +66,7 @@
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-07-02",
+      "snapshotDate": "2026-07-14",
       "snapshotPeriod": "daily"
     }
   ],

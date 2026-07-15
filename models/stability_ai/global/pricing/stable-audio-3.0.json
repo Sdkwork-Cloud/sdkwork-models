@@ -1,0 +1,26 @@
+{
+  "catalogKey": "stability_ai/stable-audio-3.0",
+  "currency": "USD",
+  "modelId": "stable-audio-3.0",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "meterCode": "api_result",
+      "minimumQuantity": "0",
+      "priceId": "stability-ai-global-stable-audio-3-0-result",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://platform.stability.ai/pricing"
+      },
+      "unitPrice": "0.260000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "stability_ai"
+}

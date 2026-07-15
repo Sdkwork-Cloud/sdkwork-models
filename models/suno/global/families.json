@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "suno-v5",
+      "defaultModel": "suno-v5.5",
       "displayName": "Suno",
       "familyCode": "suno",
       "familyType": "music",

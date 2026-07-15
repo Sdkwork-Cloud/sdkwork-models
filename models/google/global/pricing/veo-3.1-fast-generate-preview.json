@@ -13,10 +13,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
-      "unitPrice": "0.150000",
+      "unitPrice": "0.100000",
       "unitSize": "1"
     }
   ],

@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
       },
       "unitPrice": "10.000000",
@@ -29,10 +29,60 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
       },
       "unitPrice": "50.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-mythos-5-cache-write",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "tierCode": "cache_write_5m",
+      "unitPrice": "12.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_cache_write_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-mythos-5-cache-write-1h",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "tierCode": "cache_write_1h",
+      "unitPrice": "20.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-24T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "anthropic-claude-mythos-5-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-14T00:00:00Z",
+        "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
+      },
+      "unitPrice": "1.000000",
       "unitSize": "1000000"
     }
   ],

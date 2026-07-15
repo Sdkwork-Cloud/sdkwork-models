@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "stability_ai/stable-audio-3.0",
+  "colorToken": "#0f766e",
+  "description": "Stability AI Stable Audio 3.0 enterprise music and sound generation producing up to six minutes of high-quality audio with coherent structure from text prompts or audio samples.",
+  "displayName": "Stable Audio 3.0",
+  "familyCode": "stable-audio",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 2000,
+  "latencyP95Ms": 8000,
+  "lifecycle": "active",
+  "modelId": "stable-audio-3.0",
+  "outputModalities": [
+    "music",
+    "audio"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "760.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://platform.stability.ai/pricing"
+  },
+  "strengths": [
+    "Music generation",
+    "Extended duration audio",
+    "Enterprise sound production"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "stability_ai",
+  "vendorName": "Stability AI",
+  "winRate": "0.870000"
+}

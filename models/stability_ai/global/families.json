@@ -9,7 +9,7 @@
       "sortOrder": 10
     },
     {
-      "defaultModel": "stable-audio-2.5",
+      "defaultModel": "stable-audio-3.0",
       "displayName": "Stable Audio",
       "familyCode": "stable-audio",
       "familyType": "music",

@@ -1,0 +1,45 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "black_forest_labs/flux-2-klein-9b",
+  "colorToken": "#18181b",
+  "description": "FLUX.2 Klein 9B compact model with sub-second inference, step-distilled for balanced quality and speed in real-time applications.",
+  "displayName": "FLUX.2 Klein 9B",
+  "familyCode": "flux",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1500,
+  "latencyP95Ms": 5000,
+  "lifecycle": "active",
+  "modelId": "flux-2-klein-9b",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "740.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-14T00:00:00Z",
+    "sourceUrl": "https://docs.bfl.ai/flux_2/flux2_overview"
+  },
+  "strengths": [
+    "Image generation",
+    "Real-time generation",
+    "High throughput"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.920000",
+  "vendorCode": "black_forest_labs",
+  "vendorName": "Black Forest Labs",
+  "winRate": "0.840000"
+}

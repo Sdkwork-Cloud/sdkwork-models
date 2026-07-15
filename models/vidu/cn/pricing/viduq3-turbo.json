@@ -5,7 +5,7 @@
   "prices": [
     {
       "currency": "CNY",
-      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
       "meterCode": "video_output_second",
       "minimumQuantity": "0",
       "priceId": "vidu-cn-viduq3-turbo-second-720p",
@@ -13,10 +13,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-06-24T00:00:00Z",
+        "observedAt": "2026-07-14T00:00:00Z",
         "sourceUrl": "https://platform.vidu.cn/docs/pricing"
       },
-      "unitPrice": "0.343750",
+      "unitPrice": "0.375000",
       "unitSize": "1"
     }
   ],
