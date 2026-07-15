@@ -1,7 +1,7 @@
 {
   "name": "@sdkwork/models-app-sdk",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "Composed TypeScript consumer SDK for sdkwork-models app catalog API.",
   "type": "module",
   "main": "./generated/server-openapi/dist/index.cjs",
@@ -27,5 +27,26 @@
     "domain": "intelligence",
     "capability": "catalog-app-sdk",
     "status": "ready"
-  }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "src",
+    "dist",
+    "composed",
+    "generated/server-openapi/dist",
+    "generated/server-openapi/src",
+    "generated/server-openapi/sdkwork-sdk.json",
+    "generated/server-openapi/README.md",
+    "generated/server-openapi/LICENSE",
+    "generated/domains/server-openapi/dist",
+    "generated/domains/server-openapi/src",
+    "generated/domains/server-openapi/sdkwork-sdk.json",
+    "generated/domains/server-openapi/README.md",
+    "generated/domains/server-openapi/LICENSE",
+    "README.md",
+    "LICENSE"
+  ]
 }

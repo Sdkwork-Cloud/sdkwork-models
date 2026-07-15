@@ -1,5 +1,4 @@
-use axum::http::{HeaderValue, Method};
-use tower_http::cors::{AllowOrigin, CorsLayer};
+use sdkwork_web_axum::CanonicalCorsLayer;
 
 const PRODUCTION_DEFAULT_ORIGINS: &[&str] =
     &["https://models.sdkwork.com", "https://admin.sdkwork.com"];
@@ -11,45 +10,48 @@ const DEVELOPMENT_DEFAULT_ORIGINS: &[&str] = &[
     "http://127.0.0.1:8080",
 ];
 
-pub fn application_cors_layer() -> CorsLayer {
-    if cors_allow_any_enabled() {
-        return CorsLayer::permissive();
+pub fn application_cors_layer() -> CanonicalCorsLayer {
+    let development = !matches!(
+        std::env::var("SDKWORK_MODELS_ENVIRONMENT")
+            .unwrap_or_else(|_| "development".to_owned())
+            .trim()
+            .to_ascii_lowercase()
+            .as_str(),
+        "prod" | "production" | "staging"
+    );
+    let mut policy = if development {
+        sdkwork_web_core::CorsPolicy::development_private_network()
+    } else {
+        sdkwork_web_core::CorsPolicy::default()
+    };
+    for origin in parse_allowed_origins() {
+        if let Ok(origin) = origin.to_str() {
+            if !policy
+                .allowed_origins
+                .iter()
+                .any(|allowed| allowed == origin)
+            {
+                policy.allowed_origins.push(origin.to_owned());
+            }
+        }
     }
-
-    let origins = parse_allowed_origins();
-    CorsLayer::new()
-        .allow_origin(AllowOrigin::list(origins))
-        .allow_methods([
-            Method::GET,
-            Method::POST,
-            Method::PUT,
-            Method::PATCH,
-            Method::DELETE,
-            Method::OPTIONS,
-        ])
-        .allow_headers([
-            axum::http::header::AUTHORIZATION,
-            axum::http::header::CONTENT_TYPE,
-            axum::http::header::ACCEPT,
-            axum::http::HeaderName::from_static("access-token"),
-            axum::http::HeaderName::from_static("auth-token"),
-            axum::http::HeaderName::from_static("x-sdkwork-trace-id"),
-        ])
-        .allow_credentials(true)
+    for header in ["accept", "auth-token", "x-sdkwork-trace-id"] {
+        if !policy
+            .allowed_headers
+            .iter()
+            .any(|allowed| allowed == header)
+        {
+            policy.allowed_headers.push(header.to_owned());
+        }
+    }
+    sdkwork_web_axum::cors_layer_from_policy(policy)
 }
 
-fn cors_allow_any_enabled() -> bool {
-    matches!(
-        std::env::var("SDKWORK_MODELS_CORS_ALLOW_ANY").as_deref(),
-        Ok("1") | Ok("true") | Ok("TRUE")
-    )
-}
-
-fn parse_allowed_origins() -> Vec<HeaderValue> {
+fn parse_allowed_origins() -> Vec<axum::http::HeaderValue> {
     if let Ok(raw) = std::env::var("SDKWORK_MODELS_CORS_ALLOWED_ORIGINS") {
         return raw
             .split(',')
-            .filter_map(|origin| HeaderValue::from_str(origin.trim()).ok())
+            .filter_map(|origin| axum::http::HeaderValue::from_str(origin.trim()).ok())
             .collect();
     }
 
@@ -59,7 +61,7 @@ fn parse_allowed_origins() -> Vec<HeaderValue> {
     };
     defaults
         .iter()
-        .filter_map(|origin| HeaderValue::from_str(origin).ok())
+        .filter_map(|origin| axum::http::HeaderValue::from_str(origin).ok())
         .collect()
 }
 
