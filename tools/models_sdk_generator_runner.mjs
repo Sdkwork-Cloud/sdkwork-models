@@ -243,7 +243,12 @@ function writeModelsFamilyMetadata({
             generatedOutput: `${family.sdkName}-${language}/generated/server-openapi`,
           },
         ]));
+  const manifestPath = path.join(family.sdkRoot, "sdk-manifest.json");
+  const currentManifest = existsSync(manifestPath)
+    ? JSON.parse(readFileSync(manifestPath, "utf8"))
+    : {};
   const manifest = {
+    ...currentManifest,
     schemaVersion: 1,
     sdkName: family.sdkName,
     sdkOwner: family.sdkOwner,
@@ -265,7 +270,7 @@ function writeModelsFamilyMetadata({
 
   mkdirSync(family.sdkRoot, { recursive: true });
   writeFileSync(
-    path.join(family.sdkRoot, "sdk-manifest.json"),
+    manifestPath,
     `${JSON.stringify(manifest, null, 2)}\n`,
     "utf8",
   );
@@ -298,7 +303,7 @@ function toPosixPath(value) {
 }
 
 function syncModelsAssemblyMetadata(family, openapiPath) {
-  const assemblyPath = path.join(family.sdkRoot, ".sdkwork-assembly.json");
+  const assemblyPath = path.join(family.sdkRoot, "sdk-manifest.json");
   let assembly = {};
   if (existsSync(assemblyPath)) {
     assembly = JSON.parse(readFileSync(assemblyPath, "utf8"));

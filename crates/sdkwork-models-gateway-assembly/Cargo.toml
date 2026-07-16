@@ -1,0 +1,17 @@
+[package]
+name = "sdkwork-models-gateway-assembly"
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "Generated gateway assembly for sdkwork-models application HTTP plane."
+
+[lib]
+name = "sdkwork_models_gateway_assembly"
+path = "src/lib.rs"
+
+[dependencies]
+axum.workspace = true
+tokio.workspace = true
+sdkwork-models-standalone-gateway = { path = "../sdkwork-models-standalone-gateway" }
+sdkwork-routes-models-catalog-app-api = { path = "../sdkwork-routes-catalog-app-api" }
+sdkwork-routes-models-catalog-backend-api = { path = "../sdkwork-routes-catalog-backend-api" }

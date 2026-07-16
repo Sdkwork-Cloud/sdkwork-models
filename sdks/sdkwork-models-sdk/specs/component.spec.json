@@ -14,7 +14,7 @@
     "languages": ["dart", "java", "javascript", "python", "rust", "typescript"],
     "generated": false,
     "private": false,
-    "manifests": [".sdkwork-assembly.json", "README.md"]
+    "manifests": ["sdk-manifest.json", "README.md"]
   },
   "contracts": {
     "publicExports": ["@sdkwork/models", "sdkwork-models", "sdkwork_models"],

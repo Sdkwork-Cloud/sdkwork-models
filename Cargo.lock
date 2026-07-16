@@ -2372,6 +2372,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "sdkwork-models-gateway-assembly"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "sdkwork-models-standalone-gateway",
+ "sdkwork-routes-models-catalog-app-api",
+ "sdkwork-routes-models-catalog-backend-api",
+ "tokio",
+]
+
+[[package]]
 name = "sdkwork-models-standalone-gateway"
 version = "0.1.0"
 dependencies = [

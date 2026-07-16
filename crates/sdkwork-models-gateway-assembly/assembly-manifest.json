@@ -1,0 +1,30 @@
+{
+  "kind": "sdkwork.gateway.assembly",
+  "schemaVersion": 1,
+  "applicationCode": "models",
+  "packageName": "sdkwork-models-gateway-assembly",
+  "crateDir": "crates/sdkwork-models-gateway-assembly",
+  "generatedAt": "2026-07-16T04:44:51.240Z",
+  "routeCrates": [
+    {
+      "packageName": "sdkwork-routes-models-catalog-app-api",
+      "memberDir": "crates/sdkwork-routes-catalog-app-api",
+      "libName": "sdkwork_routes_models_catalog_app_api",
+      "surface": "app-api",
+      "pathPrefix": null,
+      "mountOrder": 0,
+      "hasGatewayMount": false,
+      "hasGatewayRouteManifest": false
+    },
+    {
+      "packageName": "sdkwork-routes-models-catalog-backend-api",
+      "memberDir": "crates/sdkwork-routes-catalog-backend-api",
+      "libName": "sdkwork_routes_models_catalog_backend_api",
+      "surface": "backend-api",
+      "pathPrefix": null,
+      "mountOrder": 1,
+      "hasGatewayMount": false,
+      "hasGatewayRouteManifest": false
+    }
+  ]
+}
