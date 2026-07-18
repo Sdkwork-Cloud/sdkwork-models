@@ -12,6 +12,13 @@ path = "src/lib.rs"
 [dependencies]
 axum.workspace = true
 tokio.workspace = true
-sdkwork-models-standalone-gateway = { path = "../sdkwork-models-standalone-gateway" }
+sdkwork_models_service_host.workspace = true
+sdkwork_models_catalog_repository_sqlx.workspace = true
+sdkwork_models_catalog_service.workspace = true
+sdkwork_models_contract_service.workspace = true
+sdkwork-database-id.workspace = true
+sdkwork-database-sqlx.workspace = true
+sdkwork-models.workspace = true
+sqlx.workspace = true
 sdkwork-routes-models-catalog-app-api = { path = "../sdkwork-routes-catalog-app-api" }
 sdkwork-routes-models-catalog-backend-api = { path = "../sdkwork-routes-catalog-backend-api" }

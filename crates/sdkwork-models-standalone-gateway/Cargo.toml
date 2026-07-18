@@ -22,14 +22,7 @@ tower-http = { version = "0.5", features = ["cors"] }
 tracing.workspace = true
 tracing-subscriber = "0.3"
 sdkwork-database-id.workspace = true
-sdkwork_models_catalog_service.workspace = true
-sdkwork_models_catalog_repository_sqlx.workspace = true
-sdkwork_models_contract_service.workspace = true
-sdkwork-models-database-host = { path = "../sdkwork-models-database-host" }
-sdkwork-models = { path = "../../sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust" }
-sdkwork_routes_models_catalog_app_api.workspace = true
-sdkwork_routes_models_catalog_backend_api.workspace = true
-sdkwork-iam-web-adapter.workspace = true
+sdkwork_models_gateway_assembly.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-web-core.workspace = true
 sdkwork-database-sqlx = { workspace = true }
@@ -38,4 +31,3 @@ sdkwork-database-sqlx = { workspace = true }
 http-body-util = "0.1"
 tokio = { version = "1.51", features = ["macros", "rt-multi-thread"] }
 tower = { version = "0.5", features = ["util"] }
-

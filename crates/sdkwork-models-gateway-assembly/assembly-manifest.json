@@ -4,7 +4,7 @@
   "applicationCode": "models",
   "packageName": "sdkwork-models-gateway-assembly",
   "crateDir": "crates/sdkwork-models-gateway-assembly",
-  "generatedAt": "2026-07-16T04:44:51.240Z",
+  "generatedAt": "2026-07-16T17:16:00.176Z",
   "routeCrates": [
     {
       "packageName": "sdkwork-routes-models-catalog-app-api",

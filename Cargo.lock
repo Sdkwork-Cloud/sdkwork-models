@@ -2376,10 +2376,29 @@ name = "sdkwork-models-gateway-assembly"
 version = "0.1.0"
 dependencies = [
  "axum",
- "sdkwork-models-standalone-gateway",
+ "sdkwork-database-id",
+ "sdkwork-database-sqlx",
+ "sdkwork-models",
+ "sdkwork-models-catalog-repository-sqlx",
+ "sdkwork-models-catalog-service",
+ "sdkwork-models-contract-service",
+ "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",
+ "sqlx",
  "tokio",
+]
+
+[[package]]
+name = "sdkwork-models-service-host"
+version = "0.1.0"
+dependencies = [
+ "dotenvy",
+ "sdkwork-database-sqlx",
+ "sdkwork-models",
+ "sdkwork-models-catalog-repository-sqlx",
+ "sdkwork-models-catalog-service",
+ "sdkwork-models-database-host",
 ]
 
 [[package]]
@@ -2391,14 +2410,7 @@ dependencies = [
  "http-body-util",
  "sdkwork-database-id",
  "sdkwork-database-sqlx",
- "sdkwork-iam-web-adapter",
- "sdkwork-models",
- "sdkwork-models-catalog-repository-sqlx",
- "sdkwork-models-catalog-service",
- "sdkwork-models-contract-service",
- "sdkwork-models-database-host",
- "sdkwork-routes-models-catalog-app-api",
- "sdkwork-routes-models-catalog-backend-api",
+ "sdkwork-models-gateway-assembly",
  "sdkwork-web-axum",
  "sdkwork-web-core",
  "serde_json",

@@ -30,6 +30,19 @@ pub fn models_health_router_with_readiness(probe: ModelsReadinessProbe) -> Route
         .with_state(probe)
 }
 
+pub fn models_health_router_with_database_pool(
+    pool: &sdkwork_database_sqlx::DatabasePool,
+) -> Router {
+    match pool {
+        sdkwork_database_sqlx::DatabasePool::Postgres(pool, _) => {
+            models_health_router_with_readiness(ModelsReadinessProbe::Postgres(pool.clone()))
+        }
+        sdkwork_database_sqlx::DatabasePool::Sqlite(pool, _) => {
+            models_health_router_with_readiness(ModelsReadinessProbe::Sqlite(pool.clone()))
+        }
+    }
+}
+
 async fn health_check() -> Response {
     (
         StatusCode::OK,

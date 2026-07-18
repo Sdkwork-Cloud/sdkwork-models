@@ -1,8 +1,8 @@
-use std::sync::Arc;
-
 use axum::Router;
-use sdkwork_models_standalone_gateway::application_cors_layer;
-use sdkwork_models_standalone_gateway::ModelsServiceHost;
+use sdkwork_models_gateway_assembly::assemble_application_router;
+use sdkwork_models_standalone_gateway::{
+    application_cors_layer, models_health_router_with_database_pool,
+};
 use tracing::info;
 
 #[tokio::main]
@@ -13,16 +13,15 @@ async fn main() {
         info!("IAM session resolution enabled");
     }
 
-    let host = Arc::new(
-        ModelsServiceHost::new()
-            .await
-            .expect("models service host bootstrap failed"),
-    );
+    let assembly = assemble_application_router()
+        .await
+        .expect("models gateway assembly failed");
 
     let app = Router::new()
-        .merge(host.health_router())
-        .merge(host.clone().app_router_with_framework().await)
-        .merge(host.backend_router_with_framework().await)
+        .merge(models_health_router_with_database_pool(
+            &assembly.database_pool,
+        ))
+        .merge(assembly.router)
         .layer(application_cors_layer());
 
     let addr = std::env::var("SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND")

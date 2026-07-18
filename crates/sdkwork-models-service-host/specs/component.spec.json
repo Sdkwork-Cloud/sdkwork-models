@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "sdkwork-models-service-host",
+    "type": "rust-crate",
+    "domain": "models",
+    "capability": "catalog-service-host",
+    "surface": "service-host",
+    "languages": ["rust"],
+    "generated": false
+  },
+  "contracts": {
+    "publicExports": ["."],
+    "runtimeEntrypoints": [],
+    "sdkDependencies": [],
+    "dependencyApiExports": [],
+    "dependencyApiSurfaces": [],
+    "events": [],
+    "configKeys": ["SDKWORK_MODELS_CATALOG_ROOT"]
+  }
+}

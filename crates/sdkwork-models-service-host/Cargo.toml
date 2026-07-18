@@ -1,0 +1,14 @@
+[package]
+name = "sdkwork-models-service-host"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "In-process Models database and catalog service container."
+
+[dependencies]
+dotenvy = "0.15"
+sdkwork-database-sqlx.workspace = true
+sdkwork_models_catalog_repository_sqlx.workspace = true
+sdkwork_models_catalog_service.workspace = true
+sdkwork_models_database_host.workspace = true
+sdkwork-models.workspace = true
