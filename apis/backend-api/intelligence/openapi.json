@@ -1365,75 +1365,10 @@
             }
           },
           {
-            "description": "Billing meter code filter.",
-            "in": "query",
-            "name": "billing_meter",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "description": "Comma-separated vendor code filter.",
             "explode": false,
             "in": "query",
             "name": "vendor_codes",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated modality filter.",
-            "explode": false,
-            "in": "query",
-            "name": "modalities",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated capability filter.",
-            "explode": false,
-            "in": "query",
-            "name": "capabilities",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated model category filter.",
-            "explode": false,
-            "in": "query",
-            "name": "categories",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated channel group filter.",
-            "explode": false,
-            "in": "query",
-            "name": "groups",
             "required": false,
             "schema": {
               "items": {
@@ -1936,17 +1871,70 @@
       "get": {
         "description": "List. Reads ai. Writes none. File targets none.",
         "operationId": "aiResourceGroups.list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "description": "Free-text resource group search query."
+          }
+        ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AiResourceGroupsListResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/AiResourceGroupsPage"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2018,6 +2006,17 @@
         "description": "Create. Reads ai. Writes ops_audit_log. File targets none.",
         "operationId": "aiResourceGroups.create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource group create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceGroupCreateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Created",
@@ -2095,18 +2094,7 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "AI resource group create request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminAiResourceGroupCreateRequest"
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources": {
@@ -2337,6 +2325,17 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource group update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceGroupUpdateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2414,18 +2413,7 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "AI resource group update request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminAiResourceGroupUpdateRequest"
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/backend/v3/api/ai/resources": {
@@ -2549,6 +2537,17 @@
         "description": "Create. Reads ai. Writes ops_audit_log. File targets none.",
         "operationId": "aiResources.create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceCreateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Created",
@@ -2626,18 +2625,7 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "AI resource create request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminAiResourceCreateRequest"
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/backend/v3/api/ai/resources/{resourceId}": {
@@ -2655,6 +2643,17 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceUpdateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2732,18 +2731,7 @@
         "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
         "x-write-tables": [
           "ops_audit_log"
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "AI resource update request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AdminAiResourceUpdateRequest"
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/backend/v3/api/ai/voices": {
@@ -3436,6 +3424,42 @@
           "regionPrices",
           "contextTokens"
         ]
+      },
+      "AdminAiModelPage": {
+        "additionalProperties": false,
+        "description": "Admin ai model page schema exposed by Claw Router.",
+        "name": "AdminAiModelPage",
+        "properties": {
+          "items": {
+            "description": "Items field on admin ai model page.",
+            "items": {
+              "additionalProperties": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/JsonValue"
+                  }
+                ],
+                "description": "Items field on admin ai model page."
+              },
+              "description": "Items field on admin ai model page.",
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "Page info field on admin ai model page."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ],
+        "type": "object"
       },
       "AdminAiModelRegionPriceRequest": {
         "type": "object",
@@ -4634,32 +4658,194 @@
         ],
         "type": "object"
       },
-      "AiResourceGroupsListResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by ai resource groups list result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
+      "AiResourceGroupsPage": {
+        "additionalProperties": false,
+        "description": "Paginated AI resource groups returned by aiResourceGroups.list.",
+        "name": "AiResourcesPage",
+        "properties": {
+          "items": {
+            "description": "Items field on ai resources page.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Items field on ai resources page.",
+              "properties": {
+                "apiEndpointCode": {
+                  "description": "Api endpoint code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "capabilities": {
+                  "description": "Capabilities field on ai resources page.",
+                  "items": {
+                    "description": "Items field on ai resources page.",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "capability": {
+                  "description": "Capability field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "catalogKey": {
+                  "description": "Catalog key field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "compositionMode": {
+                  "description": "Composition mode field on ai resources page.",
+                  "enum": [
+                    "single",
+                    "any",
+                    "all"
+                  ],
+                  "type": "string"
+                },
+                "displayName": {
+                  "description": "Display name field on ai resources page.",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Id field on ai resources page.",
+                  "type": "string"
+                },
+                "members": {
+                  "description": "Members field on ai resources page.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Items field on ai resources page.",
+                    "properties": {
+                      "memberResourceCode": {
+                        "description": "Member resource code field on ai resources page.",
+                        "type": "string"
+                      },
+                      "memberRole": {
+                        "description": "Member role field on ai resources page.",
+                        "enum": [
+                          "included",
+                          "optional",
+                          "fallback"
+                        ],
+                        "type": "string"
+                      },
+                      "parentResourceCode": {
+                        "description": "Parent resource code field on ai resources page.",
+                        "type": "string"
+                      },
+                      "required": {
+                        "description": "Required field on ai resources page.",
+                        "type": "boolean"
+                      },
+                      "sortOrder": {
+                        "description": "Sort order field on ai resources page.",
+                        "format": "int64",
+                        "nullable": true,
+                        "pattern": "^[0-9]+$",
+                        "type": "string",
+                        "x-sdkwork-int64-string": true,
+                        "x-sdkwork-rust-type": "i64"
+                      }
+                    },
+                    "required": [
+                      "parentResourceCode",
+                      "memberResourceCode",
+                      "memberRole",
+                      "required",
+                      "sortOrder"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "modalityCode": {
+                  "description": "Modality code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "model": {
+                  "description": "Model field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "providerNativeModel": {
+                  "description": "Provider native model field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "resourceCode": {
+                  "description": "Resource code field on ai resources page.",
+                  "type": "string"
+                },
+                "resourceType": {
+                  "description": "Resource type field on ai resources page.",
+                  "enum": [
+                    "vendor",
+                    "modality",
+                    "api_endpoint",
+                    "model_api",
+                    "bundle"
+                  ],
+                  "type": "string"
+                },
+                "sortOrder": {
+                  "description": "Sort order field on ai resources page.",
+                  "format": "int64",
+                  "nullable": true,
+                  "pattern": "^[0-9]+$",
+                  "type": "string",
+                  "x-sdkwork-int64-string": true,
+                  "x-sdkwork-rust-type": "i64"
+                },
+                "status": {
+                  "description": "Status field on ai resources page.",
+                  "enum": [
+                    "active",
+                    "disabled",
+                    "inactive"
+                  ],
+                  "type": "string"
+                },
+                "vendorCode": {
+                  "description": "Vendor code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "resourceCode",
+                "resourceType",
+                "displayName",
+                "vendorCode",
+                "modalityCode",
+                "apiEndpointCode",
+                "catalogKey",
+                "model",
+                "providerNativeModel",
+                "capabilities",
+                "compositionMode",
+                "status",
+                "sortOrder",
+                "members"
+              ],
+              "type": "object"
             },
-            "required": [
-              "data"
+            "type": "array"
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
             ],
-            "type": "object"
+            "description": "Page info field on ai resources page."
           }
+        },
+        "required": [
+          "items",
+          "pageInfo"
         ],
-        "description": "Ai resource groups list result schema exposed by Claw Router.",
-        "x-operation-id": "aiResourceGroups.list"
+        "type": "object"
       },
       "AiResourceGroupsResourcesListResult": {
         "allOf": [
@@ -4723,15 +4909,168 @@
           "items": {
             "description": "Items field on ai resources page.",
             "items": {
-              "additionalProperties": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/JsonValue"
-                  }
-                ],
-                "description": "Items field on ai resources page."
-              },
+              "additionalProperties": false,
               "description": "Items field on ai resources page.",
+              "properties": {
+                "apiEndpointCode": {
+                  "description": "Api endpoint code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "capabilities": {
+                  "description": "Capabilities field on ai resources page.",
+                  "items": {
+                    "description": "Items field on ai resources page.",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "capability": {
+                  "description": "Capability field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "catalogKey": {
+                  "description": "Catalog key field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "compositionMode": {
+                  "description": "Composition mode field on ai resources page.",
+                  "enum": [
+                    "single",
+                    "any",
+                    "all"
+                  ],
+                  "type": "string"
+                },
+                "displayName": {
+                  "description": "Display name field on ai resources page.",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Id field on ai resources page.",
+                  "type": "string"
+                },
+                "members": {
+                  "description": "Members field on ai resources page.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Items field on ai resources page.",
+                    "properties": {
+                      "memberResourceCode": {
+                        "description": "Member resource code field on ai resources page.",
+                        "type": "string"
+                      },
+                      "memberRole": {
+                        "description": "Member role field on ai resources page.",
+                        "enum": [
+                          "included",
+                          "optional",
+                          "fallback"
+                        ],
+                        "type": "string"
+                      },
+                      "parentResourceCode": {
+                        "description": "Parent resource code field on ai resources page.",
+                        "type": "string"
+                      },
+                      "required": {
+                        "description": "Required field on ai resources page.",
+                        "type": "boolean"
+                      },
+                      "sortOrder": {
+                        "description": "Sort order field on ai resources page.",
+                        "format": "int64",
+                        "nullable": true,
+                        "pattern": "^[0-9]+$",
+                        "type": "string",
+                        "x-sdkwork-int64-string": true,
+                        "x-sdkwork-rust-type": "i64"
+                      }
+                    },
+                    "required": [
+                      "parentResourceCode",
+                      "memberResourceCode",
+                      "memberRole",
+                      "required",
+                      "sortOrder"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "modalityCode": {
+                  "description": "Modality code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "model": {
+                  "description": "Model field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "providerNativeModel": {
+                  "description": "Provider native model field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "resourceCode": {
+                  "description": "Resource code field on ai resources page.",
+                  "type": "string"
+                },
+                "resourceType": {
+                  "description": "Resource type field on ai resources page.",
+                  "enum": [
+                    "vendor",
+                    "modality",
+                    "api_endpoint",
+                    "model_api",
+                    "bundle"
+                  ],
+                  "type": "string"
+                },
+                "sortOrder": {
+                  "description": "Sort order field on ai resources page.",
+                  "format": "int64",
+                  "nullable": true,
+                  "pattern": "^[0-9]+$",
+                  "type": "string",
+                  "x-sdkwork-int64-string": true,
+                  "x-sdkwork-rust-type": "i64"
+                },
+                "status": {
+                  "description": "Status field on ai resources page.",
+                  "enum": [
+                    "active",
+                    "disabled",
+                    "inactive"
+                  ],
+                  "type": "string"
+                },
+                "vendorCode": {
+                  "description": "Vendor code field on ai resources page.",
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "resourceCode",
+                "resourceType",
+                "displayName",
+                "vendorCode",
+                "modalityCode",
+                "apiEndpointCode",
+                "catalogKey",
+                "model",
+                "providerNativeModel",
+                "capabilities",
+                "compositionMode",
+                "status",
+                "sortOrder",
+                "members"
+              ],
               "type": "object"
             },
             "type": "array"
@@ -5467,7 +5806,7 @@
               "data": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ModelCatalogPage"
+                    "$ref": "#/components/schemas/AdminAiModelPage"
                   }
                 ],
                 "description": "Data field on models list result."

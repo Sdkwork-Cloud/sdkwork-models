@@ -1,7 +1,7 @@
 import type { PageInfo } from './page-info';
 
-/** Ai resources page schema exposed by Claw Router. */
-export interface AiResourcesPage {
+/** Paginated AI resource groups returned by aiResourceGroups.list. */
+export interface AiResourceGroupsPage {
   /** Items field on ai resources page. */
   items: Record<string, unknown>[];
   /** Page info field on ai resources page. */

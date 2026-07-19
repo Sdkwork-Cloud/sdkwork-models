@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { AdminAiModelCreateRequest, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AiResourceGroupResourcesPage, AiResourcesPage, ModelCatalogPage, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, NoData } from '../types';
+import type { AdminAiModelCreateRequest, AdminAiModelPage, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AiResourceGroupResourcesPage, AiResourceGroupsPage, AiResourcesPage, ModelCatalogPage, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, NoData } from '../types';
 
 
 export interface AiModelVideoProfilesListParams {
@@ -170,6 +170,12 @@ export class AiAiResourceGroupsResourcesApi {
   }
 }
 
+export interface AiAiResourceGroupsListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+}
+
 export class AiAiResourceGroupsApi {
   private client: HttpClient;
   public readonly resources: AiAiResourceGroupsResourcesApi;
@@ -181,8 +187,13 @@ export class AiAiResourceGroupsApi {
 
 
 /** List */
-  async list(): Promise<NoData> {
-    return this.client.get<NoData>(backendApiPath(`/ai/resource_groups`));
+  async list(params?: AiAiResourceGroupsListParams): Promise<AiResourceGroupsPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.get<AiResourceGroupsPage>(appendQueryString(backendApiPath(`/ai/resource_groups`), query));
   }
 
 /** Create */
@@ -205,12 +216,7 @@ export interface AiModelsListParams {
   page?: number;
   pageSize?: number;
   q?: string;
-  billingMeter?: string;
   vendorCodes?: string[];
-  modalities?: string[];
-  capabilities?: string[];
-  categories?: string[];
-  groups?: string[];
   modelTypes?: string;
 }
 
@@ -223,20 +229,15 @@ export class AiModelsApi {
 
 
 /** List */
-  async list(params?: AiModelsListParams): Promise<ModelCatalogPage> {
+  async list(params?: AiModelsListParams): Promise<AdminAiModelPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-      { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
       { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
-      { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
-      { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
-      { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
-      { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
       { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelCatalogPage>(appendQueryString(backendApiPath(`/ai/models`), query));
+    return this.client.get<AdminAiModelPage>(appendQueryString(backendApiPath(`/ai/models`), query));
   }
 
 /** Create */

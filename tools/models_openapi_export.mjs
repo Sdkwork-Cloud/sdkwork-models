@@ -1119,6 +1119,42 @@ function standardizeModelMappingsListOperation(document) {
   standardizeDataOperation(operation, "ModelMappingsPage", "OK");
 }
 
+function standardizeAiResourceGroupsListOperation(document) {
+  const operation = operationAt(document, "/backend/v3/api/ai/resource_groups", "get");
+  const sourcePageSchema = document.components?.schemas?.AiResourcesPage;
+  if (!operation || !sourcePageSchema) {
+    return;
+  }
+  document.components.schemas.AiResourceGroupsPage = {
+    ...structuredClone(sourcePageSchema),
+    description: "Paginated AI resource groups returned by aiResourceGroups.list.",
+  };
+  operation.parameters = [
+    {
+      in: "query",
+      name: "page",
+      required: false,
+      schema: { type: "integer", minimum: 1, default: 1 },
+      description: "Offset pagination page number.",
+    },
+    {
+      in: "query",
+      name: "page_size",
+      required: false,
+      schema: { type: "integer", minimum: 1, maximum: 200, default: 20 },
+      description: "Offset pagination page size.",
+    },
+    {
+      in: "query",
+      name: "q",
+      required: false,
+      schema: { type: "string", maxLength: 128 },
+      description: "Free-text resource group search query.",
+    },
+  ];
+  standardizeDataOperation(operation, "AiResourceGroupsPage", "OK");
+}
+
 function standardizeBackendWriteOperations(document) {
   ensureBackendWriteSchemas(document);
 
@@ -1272,6 +1308,7 @@ function standardizeBackendOperationPatterns(document) {
     }
   }
   standardizeBackendWriteOperations(document);
+  standardizeAiResourceGroupsListOperation(document);
   standardizeModelMappingsListOperation(document);
   standardizeModelMappingsResolveOperation(document);
   return document;

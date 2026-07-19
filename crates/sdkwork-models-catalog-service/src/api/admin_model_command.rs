@@ -2,6 +2,7 @@ use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Bytes;
+use axum::extract::rejection::QueryRejection;
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::Response;
@@ -208,10 +209,8 @@ struct AdminModelMappingsQuery {
 #[derive(Debug, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct AdminModelsListQuery {
-    vendor_id: Option<String>,
-    vendor_code: Option<String>,
     q: Option<String>,
-    model_types: Option<String>,
+    vendor_codes: Option<String>,
     page: Option<i64>,
     page_size: Option<i64>,
 }
@@ -583,10 +582,14 @@ async fn fetch_vendors(
 async fn fetch_models(
     ctx: WebRequestContext,
     State(state): State<AdminModelCommandState>,
-    Query(query): Query<AdminModelsListQuery>,
+    query: Result<Query<AdminModelsListQuery>, QueryRejection>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
+    let Query(query) = match query {
+        Ok(query) => query,
+        Err(rejection) => return invalid_models_query_response(&ctx, rejection),
+    };
     let subject = map_subject(trusted);
     let list_query = match build_list_models_query(subject, query) {
         Ok(query) => query,
@@ -596,9 +599,7 @@ async fn fetch_models(
         operation = "models.list",
         tenant_id = list_query.subject.tenant_id,
         organization_id = list_query.subject.organization_id,
-        vendor_id = list_query.vendor_id.as_deref(),
-        vendor_code = list_query.vendor_code.as_deref(),
-        model_types = list_query.model_types.as_deref(),
+        vendor_codes = ?list_query.vendor_codes,
         limit = list_query.normalized_limit(),
         offset = list_query.normalized_offset(),
         "listing admin ai models"
@@ -1103,13 +1104,60 @@ fn build_list_models_query(
     }
     Ok(ListAdminAiModelsQuery {
         subject,
-        vendor_id: query.vendor_id,
-        vendor_code: query.vendor_code,
+        vendor_id: None,
+        vendor_codes: normalize_list_vendor_codes(query.vendor_codes.as_deref())?,
         q: query.q,
-        model_types: query.model_types,
+        model_types: None,
         page_size: Some(page_size),
         offset: Some((page - 1) * page_size),
     })
+}
+
+fn normalize_list_vendor_codes(value: Option<&str>) -> Result<Vec<String>, String> {
+    let mut vendor_codes = Vec::new();
+    for value in value.unwrap_or_default().split(',') {
+        let value = value.trim();
+        if value.is_empty() {
+            continue;
+        }
+        if value.len() > MAX_VENDOR_CODE_LEN {
+            return Err(format!(
+                "vendor_codes items must be at most {MAX_VENDOR_CODE_LEN} bytes"
+            ));
+        }
+        if !value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_'))
+        {
+            return Err(
+                "vendor_codes items must contain only letters, numbers, hyphen, or underscore"
+                    .to_owned(),
+            );
+        }
+        let code = value.to_ascii_lowercase();
+        if !vendor_codes.iter().any(|existing| existing == &code) {
+            vendor_codes.push(code);
+        }
+        if vendor_codes.len() > MAX_SYNC_VENDOR_CODES {
+            return Err(format!(
+                "vendor_codes must contain {MAX_SYNC_VENDOR_CODES} items or fewer"
+            ));
+        }
+    }
+    Ok(vendor_codes)
+}
+
+fn invalid_models_query_response(ctx: &WebRequestContext, rejection: QueryRejection) -> Response {
+    tracing::warn!(
+        operation = "models.list",
+        rejection = %rejection.body_text(),
+        "rejected invalid admin model list query"
+    );
+    problem_for(
+        ctx,
+        SdkWorkResultCode::InvalidParameter,
+        "Query parameters do not match the operation schema.",
+    )
 }
 
 fn build_list_model_mappings_query(
@@ -2985,5 +3033,27 @@ mod tests {
                 panic!("page_size validation must be a bad request");
             }
         }
+    }
+
+    #[test]
+    fn models_query_normalizes_comma_separated_vendor_codes() {
+        let query = build_list_models_query(
+            test_subject(),
+            AdminModelsListQuery {
+                q: Some("gpt".to_owned()),
+                vendor_codes: Some(" OpenAI,anthropic,openai ".to_owned()),
+                page: Some(2),
+                page_size: Some(10),
+            },
+        )
+        .expect("admin model list query should be valid");
+
+        assert_eq!(
+            query.vendor_codes,
+            vec!["openai".to_owned(), "anthropic".to_owned()]
+        );
+        assert_eq!(query.q.as_deref(), Some("gpt"));
+        assert_eq!(query.normalized_limit(), 10);
+        assert_eq!(query.normalized_offset(), 10);
     }
 }

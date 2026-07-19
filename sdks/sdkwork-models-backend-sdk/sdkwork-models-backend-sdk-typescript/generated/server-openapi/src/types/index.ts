@@ -1,5 +1,6 @@
 export * from './common';
 export type { AdminAiModelCreateRequest } from './admin-ai-model-create-request';
+export type { AdminAiModelPage } from './admin-ai-model-page';
 export type { AdminAiModelRegionPriceRequest } from './admin-ai-model-region-price-request';
 export type { AdminAiModelUpdateRequest } from './admin-ai-model-update-request';
 export type { AdminAiResourceCreateRequest } from './admin-ai-resource-create-request';
@@ -16,7 +17,7 @@ export type { AdminModelMappingRuleItemInput } from './admin-model-mapping-rule-
 export type { AdminModelMappingUpdateRequest } from './admin-model-mapping-update-request';
 export type { AdminModelVendorCreateRequest } from './admin-model-vendor-create-request';
 export type { AiResourceGroupResourcesPage } from './ai-resource-group-resources-page';
-export type { AiResourceGroupsListResult } from './ai-resource-groups-list-result';
+export type { AiResourceGroupsPage } from './ai-resource-groups-page';
 export type { AiResourceGroupsResourcesListResult } from './ai-resource-groups-resources-list-result';
 export type { AiResourcesListResult } from './ai-resources-list-result';
 export type { AiResourcesPage } from './ai-resources-page';
@@ -51,3 +52,4 @@ export type { ModelMappingsListResponse } from './model-mappings-list-response';
 export type { ModelMappingsResolveResponse } from './model-mappings-resolve-response';
 export type { ModelRankingsRefreshResponse } from './model-rankings-refresh-response';
 export type { ModelsRefreshResponse } from './models-refresh-response';
+export type { AiResourceGroupsListResponse } from './ai-resource-groups-list-response';

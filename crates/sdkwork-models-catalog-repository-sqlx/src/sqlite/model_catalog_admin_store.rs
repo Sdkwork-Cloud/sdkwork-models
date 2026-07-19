@@ -4,8 +4,9 @@ use sdkwork_database_sqlx::sqlite_decimal::register_decimal_functions;
 use sqlx::{Acquire, Row, Sqlite, SqlitePool, Transaction};
 
 use crate::admin_models_list::{
-    capability_codes_from_model_types, normalized_search_pattern, optional_non_empty,
-    sqlite_capability_in_clause, LIST_MODELS_BASE_WHERE_SQLITE, LIST_MODELS_COUNT_WHERE_SQLITE,
+    capability_codes_from_model_types, normalized_search_pattern, normalized_vendor_codes,
+    optional_non_empty, sqlite_capability_in_clause, sqlite_vendor_codes_in_clause,
+    LIST_MODELS_BASE_WHERE_SQLITE, LIST_MODELS_COUNT_WHERE_SQLITE, LIST_MODELS_ORDER_PAGE_SQLITE,
 };
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
@@ -735,16 +736,17 @@ async fn list_models(
     query: ListAdminAiModelsQuery,
 ) -> DomainResult<AdminAiModelListPage> {
     let vendor_id = optional_non_empty(&query.vendor_id).map(str::to_owned);
-    let vendor_code = optional_non_empty(&query.vendor_code).map(str::to_owned);
+    let vendor_codes = normalized_vendor_codes(&query);
     let search_pattern = normalized_search_pattern(&query);
     let capability_codes = capability_codes_from_model_types(query.model_types.as_deref());
+    let vendor_clause = sqlite_vendor_codes_in_clause(vendor_codes.len());
     let capability_clause = sqlite_capability_in_clause(capability_codes.len());
     let limit = query.normalized_limit();
     let offset = query.normalized_offset();
 
     let count_sql = format!(
-        "SELECT COUNT(*) AS total_count FROM ai_model m {}{}",
-        LIST_MODELS_COUNT_WHERE_SQLITE, capability_clause
+        "SELECT COUNT(*) AS total_count FROM ai_model m {}{}{}",
+        LIST_MODELS_COUNT_WHERE_SQLITE, vendor_clause, capability_clause
     );
     let mut count_query = sqlx::query(&count_sql)
         .bind(query.subject.tenant_id)
@@ -753,11 +755,12 @@ async fn list_models(
         .bind(query.subject.organization_id)
         .bind(vendor_id.as_deref())
         .bind(vendor_id.as_deref())
-        .bind(vendor_code.as_deref())
-        .bind(vendor_code.as_deref())
         .bind(search_pattern.as_deref())
         .bind(search_pattern.as_deref())
         .bind(search_pattern.as_deref());
+    for vendor_code in &vendor_codes {
+        count_query = count_query.bind(vendor_code);
+    }
     for code in &capability_codes {
         count_query = count_query.bind(code);
     }
@@ -767,7 +770,9 @@ async fn list_models(
         .map_err(|error| store_error("failed to count ai models", error))?;
     let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
 
-    let list_predicate = format!("{LIST_MODELS_BASE_WHERE_SQLITE}{capability_clause}");
+    let list_predicate = format!(
+        "{LIST_MODELS_BASE_WHERE_SQLITE}{vendor_clause}{capability_clause}{LIST_MODELS_ORDER_PAGE_SQLITE}"
+    );
     let list_sql = model_select_sql(
         list_predicate.as_str(),
         query.subject.tenant_id,
@@ -780,17 +785,18 @@ async fn list_models(
         .bind(query.subject.organization_id)
         .bind(vendor_id.as_deref())
         .bind(vendor_id.as_deref())
-        .bind(vendor_code.as_deref())
-        .bind(vendor_code.as_deref())
         .bind(search_pattern.as_deref())
         .bind(search_pattern.as_deref())
-        .bind(search_pattern.as_deref())
-        .bind(query.subject.tenant_id)
-        .bind(query.subject.organization_id);
+        .bind(search_pattern.as_deref());
+    for vendor_code in &vendor_codes {
+        list_query = list_query.bind(vendor_code);
+    }
     for code in &capability_codes {
         list_query = list_query.bind(code);
     }
     let rows = list_query
+        .bind(query.subject.tenant_id)
+        .bind(query.subject.organization_id)
         .bind(limit)
         .bind(offset)
         .fetch_all(pool)

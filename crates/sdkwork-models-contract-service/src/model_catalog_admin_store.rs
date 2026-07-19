@@ -206,7 +206,7 @@ pub struct ListAdminModelVendorsQuery {
 pub struct ListAdminAiModelsQuery {
     pub subject: AdminModelSubject,
     pub vendor_id: Option<String>,
-    pub vendor_code: Option<String>,
+    pub vendor_codes: Vec<String>,
     pub q: Option<String>,
     pub model_types: Option<String>,
     pub page_size: Option<i64>,

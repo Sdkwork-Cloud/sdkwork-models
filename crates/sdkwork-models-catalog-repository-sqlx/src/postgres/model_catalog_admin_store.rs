@@ -3,9 +3,8 @@ use std::collections::BTreeMap;
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
 use crate::admin_models_list::{
-    capability_codes_from_model_types, normalized_search_pattern, optional_non_empty,
-    LIST_MODELS_BASE_WHERE_POSTGRES, LIST_MODELS_BASE_WHERE_POSTGRES_WITH_CAPABILITIES,
-    LIST_MODELS_COUNT_WHERE_POSTGRES, LIST_MODELS_COUNT_WHERE_POSTGRES_WITH_CAPABILITIES,
+    capability_codes_from_model_types, normalized_search_pattern, normalized_vendor_codes,
+    optional_non_empty, LIST_MODELS_BASE_WHERE_POSTGRES, LIST_MODELS_COUNT_WHERE_POSTGRES,
 };
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
@@ -727,57 +726,30 @@ async fn list_models(
     query: ListAdminAiModelsQuery,
 ) -> DomainResult<AdminAiModelListPage> {
     let vendor_id = optional_non_empty(&query.vendor_id).map(str::to_owned);
-    let vendor_code = optional_non_empty(&query.vendor_code).map(str::to_owned);
+    let vendor_codes = normalized_vendor_codes(&query);
     let search_pattern = normalized_search_pattern(&query);
     let capability_codes = capability_codes_from_model_types(query.model_types.as_deref());
     let limit = query.normalized_limit();
     let offset = query.normalized_offset();
 
-    let (count_sql, list_predicate) = if capability_codes.is_empty() {
-        (
-            LIST_MODELS_COUNT_WHERE_POSTGRES,
-            LIST_MODELS_BASE_WHERE_POSTGRES,
-        )
-    } else {
-        (
-            LIST_MODELS_COUNT_WHERE_POSTGRES_WITH_CAPABILITIES,
-            LIST_MODELS_BASE_WHERE_POSTGRES_WITH_CAPABILITIES,
-        )
-    };
-
-    let count_row = if capability_codes.is_empty() {
-        sqlx::query(&format!(
-            "SELECT COUNT(*)::bigint AS total_count FROM ai_model m {count_sql}"
-        ))
-        .bind(query.subject.tenant_id)
-        .bind(query.subject.organization_id)
-        .bind(query.subject.tenant_id)
-        .bind(query.subject.organization_id)
-        .bind(vendor_id.as_deref())
-        .bind(vendor_code.as_deref())
-        .bind(search_pattern.as_deref())
-        .fetch_one(pool)
-        .await
-    } else {
-        sqlx::query(&format!(
-            "SELECT COUNT(*)::bigint AS total_count FROM ai_model m {count_sql}"
-        ))
-        .bind(query.subject.tenant_id)
-        .bind(query.subject.organization_id)
-        .bind(query.subject.tenant_id)
-        .bind(query.subject.organization_id)
-        .bind(vendor_id.as_deref())
-        .bind(vendor_code.as_deref())
-        .bind(search_pattern.as_deref())
-        .bind(&capability_codes)
-        .fetch_one(pool)
-        .await
-    }
+    let count_row = sqlx::query(&format!(
+        "SELECT COUNT(*)::bigint AS total_count FROM ai_model m {LIST_MODELS_COUNT_WHERE_POSTGRES}"
+    ))
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(vendor_id.as_deref())
+    .bind(&vendor_codes)
+    .bind(search_pattern.as_deref())
+    .bind(&capability_codes)
+    .fetch_one(pool)
+    .await
     .map_err(|error| store_error("failed to count ai models", error))?;
     let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
 
     let list_sql = model_select_sql(
-        list_predicate,
+        LIST_MODELS_BASE_WHERE_POSTGRES,
         query.subject.tenant_id,
         query.subject.organization_id,
     );
@@ -789,20 +761,16 @@ async fn list_models(
         .bind(query.subject.tenant_id)
         .bind(query.subject.organization_id)
         .bind(vendor_id)
-        .bind(vendor_code)
-        .bind(search_pattern);
+        .bind(&vendor_codes)
+        .bind(search_pattern)
+        .bind(&capability_codes);
 
-    let rows = if capability_codes.is_empty() {
-        list_query.bind(limit).bind(offset).fetch_all(pool).await
-    } else {
-        list_query
-            .bind(&capability_codes)
-            .bind(limit)
-            .bind(offset)
-            .fetch_all(pool)
-            .await
-    }
-    .map_err(|error| store_error("failed to list ai models", error))?;
+    let rows = list_query
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(pool)
+        .await
+        .map_err(|error| store_error("failed to list ai models", error))?;
     let mut models = rows
         .into_iter()
         .map(model_from_row)

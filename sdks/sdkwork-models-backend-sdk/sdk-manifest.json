@@ -66,5 +66,18 @@
   "standardProfile": "sdkwork-v3",
   "fixedSdkVersion": "0.1.0",
   "ownerOnlyOperationCount": 28,
-  "managedBy": "tools/models_sdk_generator_runner.mjs"
+  "managedBy": "tools/models_sdk_generator_runner.mjs",
+  "workspace": "sdkwork-models-backend-sdk",
+  "authoritySpec": "openapi/sdkwork-models-backend-api.openapi.json",
+  "derivedSpecs": {
+    "default": "openapi/sdkwork-models-backend-api.openapi.json"
+  },
+  "discoverySurface": {
+    "sdkTarget": "backend",
+    "apiPrefix": "/backend/v3/api",
+    "generatedProtocols": [
+      "http-openapi"
+    ],
+    "manualTransports": []
+  }
 }

@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "3f8246a78ff9eeb56cbd47e5c73fadb6ff41869d4575a2741547ab4af597490d"
+      "sha256": "1f359de331aeba1dbafd67a77db61fbe0f6b885c87bb4976763b73f14e09aa98"
     },
     {
       "path": "src/api/base.ts",
@@ -89,6 +89,10 @@
     {
       "path": "src/types/admin-ai-model-create-request.ts",
       "sha256": "62f2165b8b2efb0f0d64ba3df5e45ac011c66578061d002dd0018d2947920a54"
+    },
+    {
+      "path": "src/types/admin-ai-model-page.ts",
+      "sha256": "936651712cd234ed0780797b04ae4fe067f91657a47c19b7eb1aa1956c7266c2"
     },
     {
       "path": "src/types/admin-ai-model-region-price-request.ts",
@@ -155,8 +159,12 @@
       "sha256": "1dd668d5171e1b996fdd7a830b8364b52fda7cbe141b7daf4e128498f2d3914e"
     },
     {
-      "path": "src/types/ai-resource-groups-list-result.ts",
-      "sha256": "53f91fa3361036119b30e132808b5d24b4cbba73de7f7abfd6aa9623a96e4c3b"
+      "path": "src/types/ai-resource-groups-list-response.ts",
+      "sha256": "22c40c952b10328f82ae274c56b2e06788ee7bbfc116795d7a98a98e9370a789"
+    },
+    {
+      "path": "src/types/ai-resource-groups-page.ts",
+      "sha256": "3f1e17d4024745481a37ec92675ebc57a5ca1cddfe3437ea2f9e4d8bdf39bce8"
     },
     {
       "path": "src/types/ai-resource-groups-resources-list-result.ts",
@@ -168,7 +176,7 @@
     },
     {
       "path": "src/types/ai-resources-page.ts",
-      "sha256": "03d3594c370193ff54fe7aba77e694ef1882756f932dde6d119aa0f76fa4ac21"
+      "sha256": "688d064c519fc9456ec4c63221dc5122ff4c51c767de6d4cf8437074516bb280"
     },
     {
       "path": "src/types/common.ts",
@@ -180,7 +188,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "2b07fe92477528de388cd58052ed7f46c14329ab3c2f28ac0a7b16904c23616f"
+      "sha256": "669fdeda50b6836fc747ffba4ea653eab9d2b63bcc11ee0834f17443dd7c0e4a"
     },
     {
       "path": "src/types/json-null.ts",
@@ -252,7 +260,7 @@
     },
     {
       "path": "src/types/models-list-result.ts",
-      "sha256": "e106597630f8aee81d9505a5907bf005302ccccab1ba6674e050964486e7ff56"
+      "sha256": "c948c97cc4c54162bcef42e754ee31be7a0ac4a9cdb6d5f8ede4ec2df3c2742b"
     },
     {
       "path": "src/types/models-refresh-response.ts",

@@ -1,5 +1,5 @@
 use axum::{
-    http::{HeaderName, HeaderValue, StatusCode},
+    http::{header::CONTENT_TYPE, HeaderName, HeaderValue, StatusCode},
     response::{IntoResponse, Response},
     Json,
 };
@@ -105,6 +105,10 @@ impl IntoResponse for ProblemResponse {
         let status =
             StatusCode::from_u16(self.problem.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
         let mut response = (status, Json(self.problem)).into_response();
+        response.headers_mut().insert(
+            CONTENT_TYPE,
+            HeaderValue::from_static("application/problem+json"),
+        );
         attach_trace_header(&mut response, &trace_id);
         response
     }
@@ -144,6 +148,7 @@ mod tests {
             client_kind: None,
             operation: None,
             trace_id: Some("trace-from-context-abc".to_owned()),
+            idempotency_key: None,
         }
     }
 
@@ -211,6 +216,13 @@ mod tests {
         let ctx = test_context();
         let response = problem_for(&ctx, SdkWorkResultCode::ValidationError, "invalid input");
         assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        assert_eq!(
+            response
+                .headers()
+                .get(CONTENT_TYPE)
+                .and_then(|value| value.to_str().ok()),
+            Some("application/problem+json")
+        );
         assert_eq!(
             response
                 .headers()
