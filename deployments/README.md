@@ -6,8 +6,8 @@
 
 | Profile | Process | Binary |
 | --- | --- | --- |
-| `standalone.*` | Application ingress | `sdkwork-models-standalone-gateway` |
-| `cloud.*` | Application ingress + optional cloud gateway | `sdkwork-models-standalone-gateway` + `sdkwork-api-cloud-gateway` |
+| `standalone.*` | Application ingress | `sdkwork-api-models-standalone-gateway` |
+| `cloud.*` | Application ingress + optional cloud gateway | `sdkwork-api-models-standalone-gateway` + `sdkwork-api-cloud-gateway` |
 
 ## Bootstrap
 

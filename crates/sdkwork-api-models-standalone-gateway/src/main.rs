@@ -1,6 +1,6 @@
 use axum::Router;
-use sdkwork_models_gateway_assembly::assemble_application_router;
-use sdkwork_models_standalone_gateway::{
+use sdkwork_api_models_assembly::assemble_api_router;
+use sdkwork_api_models_standalone_gateway::{
     application_cors_layer, models_health_router_with_database_pool,
 };
 use tracing::info;
@@ -13,7 +13,7 @@ async fn main() {
         info!("IAM session resolution enabled");
     }
 
-    let assembly = assemble_application_router()
+    let assembly = assemble_api_router()
         .await
         .expect("models gateway assembly failed");
 
@@ -26,13 +26,13 @@ async fn main() {
 
     let addr = std::env::var("SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND")
         .unwrap_or_else(|_| "127.0.0.1:8080".to_owned());
-    info!(%addr, "starting sdkwork-models-standalone-gateway");
+    info!(%addr, "starting sdkwork-api-models-standalone-gateway");
     let listener = tokio::net::TcpListener::bind(&addr)
         .await
-        .expect("bind sdkwork-models-standalone-gateway listener");
+        .expect("bind sdkwork-api-models-standalone-gateway listener");
     axum::serve(listener, app)
         .await
-        .expect("serve sdkwork-models-standalone-gateway");
+        .expect("serve sdkwork-api-models-standalone-gateway");
 }
 
 fn iam_enabled() -> bool {

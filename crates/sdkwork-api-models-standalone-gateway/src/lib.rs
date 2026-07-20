@@ -8,7 +8,7 @@ pub use health_router::{
     models_health_router, models_health_router_with_database_pool,
     models_health_router_with_readiness, ModelsReadinessProbe,
 };
-pub use sdkwork_models_gateway_assembly::{
+pub use sdkwork_api_models_assembly::{
     catalog_app_router_with_catalog, catalog_app_router_with_catalog_and_read_store,
     catalog_app_router_with_catalog_voice_and_read_store, catalog_app_router_with_postgres_pool,
     catalog_app_router_with_sqlite_pool, catalog_backend_router_with_postgres_pool,

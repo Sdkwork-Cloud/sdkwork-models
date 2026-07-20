@@ -15,8 +15,8 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Domain / capability | `intelligence` / `catalog` |
 | Archetype | `composed-product-module` with standalone HTTP server |
 | PC root | `apps/sdkwork-models-pc/` |
-| HTTP composition | `crates/sdkwork-models-standalone-gateway/` |
-| Standalone binary | `sdkwork-models-standalone-gateway` |
+| HTTP composition | `crates/sdkwork-api-models-standalone-gateway/` |
+| Standalone binary | `sdkwork-api-models-standalone-gateway` |
 | Database module | `database/` (`sdkwork.database.module`) |
 
 ## Framework Integration
@@ -75,7 +75,7 @@ pnpm install
 pnpm run api:check:route-manifest
 pnpm run db:validate
 pnpm run topology:validate
-cargo check -p sdkwork-models-standalone-gateway
+cargo check -p sdkwork-api-models-standalone-gateway
 pnpm run verify
 ```
 

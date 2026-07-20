@@ -1,13 +1,13 @@
 [workspace]
 members = [
     "crates/sdkwork-api-models-assembly",
-    "crates/sdkwork-models-gateway-assembly",
+    "crates/sdkwork-api-models-assembly",
   "crates/sdkwork-models-contract-service",
   "crates/sdkwork-models-catalog-repository-sqlx",
   "crates/sdkwork-models-catalog-service",
   "crates/sdkwork-models-database-bootstrap",
   "crates/sdkwork-models-database-host",
-  "crates/sdkwork-models-standalone-gateway",
+  "crates/sdkwork-api-models-standalone-gateway",
   "crates/sdkwork-models-service-host",
   "crates/sdkwork-routes-catalog-app-api",
   "crates/sdkwork-routes-catalog-backend-api",
@@ -47,7 +47,7 @@ sdkwork_models_catalog_repository_sqlx = { package = "sdkwork-models-catalog-rep
 sdkwork_models_catalog_service = { package = "sdkwork-models-catalog-service", path = "crates/sdkwork-models-catalog-service" }
 sdkwork_models_database_bootstrap = { package = "sdkwork-models-database-bootstrap", path = "crates/sdkwork-models-database-bootstrap" }
 sdkwork_models_database_host = { package = "sdkwork-models-database-host", path = "crates/sdkwork-models-database-host" }
-sdkwork_models_gateway_assembly = { package = "sdkwork-models-gateway-assembly", path = "crates/sdkwork-models-gateway-assembly" }
+sdkwork_api_models_assembly = { package = "sdkwork-api-models-assembly", path = "crates/sdkwork-api-models-assembly" }
 sdkwork_models_service_host = { package = "sdkwork-models-service-host", path = "crates/sdkwork-models-service-host" }
 sdkwork_routes_models_catalog_app_api = { package = "sdkwork-routes-models-catalog-app-api", path = "crates/sdkwork-routes-catalog-app-api" }
 sdkwork_routes_models_catalog_backend_api = { package = "sdkwork-routes-models-catalog-backend-api", path = "crates/sdkwork-routes-catalog-backend-api" }

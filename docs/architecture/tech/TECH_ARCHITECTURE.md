@@ -31,7 +31,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 | Mode | Ingress | Notes |
 | --- | --- | --- |
 | Composed | Claw Router backend/app routers | Primary production path |
-| Standalone | `sdkwork-models-standalone-gateway` | Declared in `specs/topology.spec.json` |
+| Standalone | `sdkwork-api-models-standalone-gateway` | Declared in `specs/topology.spec.json` |
 | Cloud | `sdkwork-api-cloud-gateway` + app upstream | `configs/sdkwork-api-cloud-gateway.models.*.toml` |
 
 ## 4. Security
@@ -54,7 +54,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 
 ```powershell
 pnpm run verify
-cargo check -p sdkwork-models-standalone-gateway
+cargo check -p sdkwork-api-models-standalone-gateway
 pnpm run topology:validate
 ```
 

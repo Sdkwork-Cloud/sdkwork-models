@@ -23,7 +23,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 - Video generation profile catalog (modes, duration tiers, wire mappings) for all video models with DB import sync
 - Multi-tenant admin HTTP API with IAM enforcement
 - App read API for catalog consumers (models, vendors, rankings, voices, video profiles)
-- Standalone deployable `sdkwork-models-standalone-gateway` binary
+- Standalone deployable `sdkwork-api-models-standalone-gateway` binary
 - Generated TypeScript/Rust/Java/Python/Dart SDK families
 
 ## 4. Non-Goals
@@ -37,7 +37,7 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 - `pnpm run verify` passes on every merge
 - OpenAPI authority matches composed host export (`models_openapi_export.mjs --check`)
 - Route manifest tests pass for app and backend crates
-- Standalone topology can start `sdkwork-models-standalone-gateway`
+- Standalone topology can start `sdkwork-api-models-standalone-gateway`
 
 ## 6. Phases
 

@@ -74,8 +74,8 @@
   },
   "components": {
     "applicationServer": {
-      "crate": "sdkwork-models-standalone-gateway",
-      "binary": "sdkwork-models-standalone-gateway"
+      "crate": "sdkwork-api-models-standalone-gateway",
+      "binary": "sdkwork-api-models-standalone-gateway"
     }
   },
   "orchestration": {
@@ -84,8 +84,8 @@
         "processes": [
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-standalone-gateway",
-            "binary": "sdkwork-models-standalone-gateway",
+            "crate": "sdkwork-api-models-standalone-gateway",
+            "binary": "sdkwork-api-models-standalone-gateway",
             "required": true,
             "role": "api-standalone-gateway"
           }
@@ -105,8 +105,8 @@
         "processes": [
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-standalone-gateway",
-            "binary": "sdkwork-models-standalone-gateway",
+            "crate": "sdkwork-api-models-standalone-gateway",
+            "binary": "sdkwork-api-models-standalone-gateway",
             "required": true,
             "role": "api-standalone-gateway"
           }
@@ -120,8 +120,8 @@
         "processes": [
           {
             "id": "application.public-ingress",
-            "crate": "sdkwork-models-standalone-gateway",
-            "binary": "sdkwork-models-standalone-gateway",
+            "crate": "sdkwork-api-models-standalone-gateway",
+            "binary": "sdkwork-api-models-standalone-gateway",
             "required": true,
             "role": "api-standalone-gateway"
           }
