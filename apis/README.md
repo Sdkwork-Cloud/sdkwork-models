@@ -12,8 +12,8 @@ OpenAPI JSON files are extracted from the composed host authority via `tools/mod
 Materialize aggregated authorities into `sdks/sdkwork-models-{app,backend}-sdk/openapi/` before SDK generation:
 
 ```bash
-pnpm run openapi:export
-pnpm run openapi:materialize
+pnpm run api:materialize:openapi
+pnpm run api:materialize:models
 pnpm run sdk:generate
 pnpm run sdk:build
 ```

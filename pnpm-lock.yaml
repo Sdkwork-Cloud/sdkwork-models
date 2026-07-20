@@ -38,9 +38,14 @@ importers:
 
   .:
     dependencies:
+      '@sdkwork/app-topology':
+        specifier: workspace:*
+        version: link:../sdkwork-app-topology
       '@sdkwork/utils':
         specifier: workspace:*
         version: link:../sdkwork-utils/packages/sdkwork-utils-typescript
+
+  ../sdkwork-app-topology: {}
 
   ../sdkwork-appbase/packages/common/foundation/sdkwork-runtime-bootstrap:
     dependencies:
@@ -60,6 +65,9 @@ importers:
       '@sdkwork/utils':
         specifier: workspace:*
         version: link:../../../../../sdkwork-utils/packages/sdkwork-utils-typescript
+      lucide-react:
+        specifier: 'catalog:'
+        version: 1.7.0(react@19.2.4)
     devDependencies:
       '@sdkwork/ui-pc-react':
         specifier: workspace:*
@@ -157,9 +165,6 @@ importers:
       '@sdkwork/iam-app-sdk':
         specifier: workspace:*
         version: link:../../../../sdks/sdkwork-iam-app-sdk/sdkwork-iam-app-sdk-typescript
-      '@sdkwork/runtime-bootstrap':
-        specifier: workspace:*
-        version: link:../../../../../sdkwork-appbase/packages/common/foundation/sdkwork-runtime-bootstrap
       '@sdkwork/sdk-common':
         specifier: ^1.0.2
         version: 1.0.3
@@ -311,6 +316,12 @@ importers:
         version: link:../../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript
 
   ../sdkwork-iam/sdks/sdkwork-iam-backend-sdk/sdkwork-iam-backend-sdk-typescript:
+    dependencies:
+      '@sdkwork/sdk-common':
+        specifier: workspace:*
+        version: link:../../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript
+
+  ../sdkwork-iam/sdks/sdkwork-iam-open-sdk/sdkwork-iam-open-sdk-typescript:
     dependencies:
       '@sdkwork/sdk-common':
         specifier: workspace:*

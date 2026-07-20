@@ -80,7 +80,7 @@
         "run": "pnpm run build"
       }
     ],
-    "validate": [
+    "models:validate": [
       {
         "name": "Run SDKWork verify",
         "shell": "pwsh",

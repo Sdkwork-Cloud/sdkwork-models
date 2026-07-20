@@ -141,7 +141,7 @@
     "commands": [
       "pnpm run check",
       "pnpm run verify",
-      "pnpm run route-manifest:check",
+      "pnpm run api:check:route-manifest",
       "pnpm run db:validate",
       "node ../sdkwork-specs/tools/check-api-response-envelope.mjs --workspace .",
       "cargo test --workspace --offline"

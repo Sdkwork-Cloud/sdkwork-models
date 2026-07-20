@@ -416,7 +416,7 @@ At runtime, ClawRouter resolves the catalog from `SDKWORK_MODELS_CATALOG_ROOT`
 when set, then falls back to the bundled local Rust package catalog. The
 environment variable must point at this project root.
 
-In the local ClawRouter workspace, `pnpm.cmd dev` and `pnpm.cmd server:dev`
+In the local ClawRouter workspace, `pnpm.cmd dev` and `pnpm.cmd dev:server`
 default `SDKWORK_MODELS_CATALOG_ROOT` to this checkout-local
 `data/sdkwork-models` directory and run `refresh-catalog --force` before
 starting the Rust services. Updating JSON files here is enough for the next dev

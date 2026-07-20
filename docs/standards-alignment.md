@@ -28,7 +28,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | `sdkwork-database` | Aligned | `sdkwork-models-database-host` bootstraps lifecycle from `database.manifest.json` |
 | `sdkwork-iam-web-adapter` | Aligned | `web_bootstrap.rs` in backend and app route crates |
 | `sdkwork-utils` | Aligned | Rust handlers use `SdkWorkApiResponse`; tools/PC use `@sdkwork/utils` |
-| `sdkwork-sdk-generator` | Aligned | `pnpm run openapi:export` + `sdk:generate` |
+| `sdkwork-sdk-generator` | Aligned | `pnpm run api:materialize:openapi` + `sdk:generate` |
 | `sdkwork-discovery` | N/A | No RPC services in this repository |
 | `sdkwork-drive` | N/A | No file-upload surfaces in this product |
 
@@ -72,7 +72,7 @@ Standalone installs use `.npmrc` (`auto-install-peers=false`) so peer packages r
 
 ```powershell
 pnpm install
-pnpm run route-manifest:check
+pnpm run api:check:route-manifest
 pnpm run db:validate
 pnpm run topology:validate
 cargo check -p sdkwork-models-standalone-gateway

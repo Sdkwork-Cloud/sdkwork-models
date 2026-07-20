@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "kind": "sdkwork.app.topology",
   "appId": "sdkwork-models",
   "archetype": "application-http-gateway",
@@ -36,10 +36,7 @@
     "environment": "SDKWORK_MODELS_ENVIRONMENT",
     "profileId": "SDKWORK_MODELS_PROFILE_ID",
     "clientDeploymentProfile": "VITE_SDKWORK_MODELS_DEPLOYMENT_PROFILE",
-    "gatewayAutostart": "SDKWORK_MODELS_PLATFORM_API_GATEWAY_AUTOSTART",
     "standaloneGatewayBind": "SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND",
-    "cloudGatewayBind": "SDKWORK_API_CLOUD_GATEWAY_BIND",
-    "cloudGatewayConfig": "SDKWORK_API_CLOUD_GATEWAY_CONFIG",
     "clientApiGatewayBaseUrl": "VITE_SDKWORK_MODELS_PLATFORM_API_GATEWAY_HTTP_URL",
     "apiGatewayBaseUrl": "SDKWORK_MODELS_PLATFORM_API_GATEWAY_HTTP_URL",
     "corsAllowedOrigins": "SDKWORK_MODELS_CORS_ALLOWED_ORIGINS",
@@ -60,11 +57,8 @@
       "protocols": [
         "http"
       ],
-      "owner": "sdkwork-api-cloud-gateway",
-      "bindEnv": "SDKWORK_API_CLOUD_GATEWAY_BIND",
       "httpUrlEnv": "SDKWORK_MODELS_PLATFORM_API_GATEWAY_HTTP_URL",
-      "clientHttpEnv": "VITE_SDKWORK_MODELS_PLATFORM_API_GATEWAY_HTTP_URL",
-      "autostartEnv": "SDKWORK_MODELS_PLATFORM_API_GATEWAY_AUTOSTART"
+      "clientHttpEnv": "VITE_SDKWORK_MODELS_PLATFORM_API_GATEWAY_HTTP_URL"
     }
   },
   "cloudPublicHosts": {
@@ -82,12 +76,6 @@
     "applicationServer": {
       "crate": "sdkwork-models-standalone-gateway",
       "binary": "sdkwork-models-standalone-gateway"
-    },
-    "cloudGateway": {
-      "crate": "sdkwork-api-cloud-gateway",
-      "binary": "sdkwork-api-cloud-gateway",
-      "repository": "sdkwork-api-cloud-gateway",
-      "configGlob": "configs/sdkwork-api-cloud-gateway.models.{profile}.toml"
     }
   },
   "orchestration": {
@@ -98,7 +86,8 @@
             "id": "application.public-ingress",
             "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
-            "required": true
+            "required": true,
+            "role": "api-standalone-gateway"
           }
         ],
         "healthSurfaces": [
@@ -106,21 +95,7 @@
         ]
       },
       "cloud.development": {
-        "processes": [
-          {
-            "id": "platform.api-gateway",
-            "crate": "sdkwork-api-cloud-gateway",
-            "binary": "sdkwork-api-cloud-gateway",
-            "repository": "sdkwork-api-cloud-gateway",
-            "required": false
-          },
-          {
-            "id": "application.public-ingress",
-            "crate": "sdkwork-models-standalone-gateway",
-            "binary": "sdkwork-models-standalone-gateway",
-            "required": true
-          }
-        ],
+        "processes": [],
         "healthSurfaces": [
           "application.public-ingress",
           "platform.api-gateway"
@@ -129,17 +104,11 @@
       "cloud.production": {
         "processes": [
           {
-            "id": "platform.api-gateway",
-            "crate": "sdkwork-api-cloud-gateway",
-            "binary": "sdkwork-api-cloud-gateway",
-            "repository": "sdkwork-api-cloud-gateway",
-            "required": false
-          },
-          {
             "id": "application.public-ingress",
             "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
-            "required": true
+            "required": true,
+            "role": "api-standalone-gateway"
           }
         ],
         "healthSurfaces": [
@@ -153,7 +122,8 @@
             "id": "application.public-ingress",
             "crate": "sdkwork-models-standalone-gateway",
             "binary": "sdkwork-models-standalone-gateway",
-            "required": true
+            "required": true,
+            "role": "api-standalone-gateway"
           }
         ],
         "healthSurfaces": [
@@ -163,10 +133,7 @@
     }
   },
   "packaging": {
-    "cloudConfigFiles": [
-      "sdkwork-api-cloud-gateway.models.development.toml",
-      "sdkwork-api-cloud-gateway.models.production.toml"
-    ],
+    "cloudConfigFiles": [],
     "targets": [
       {
         "id": "container-noarch-cloud-container-config-bundle-tar-gz",

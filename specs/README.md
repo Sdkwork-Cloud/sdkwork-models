@@ -55,7 +55,7 @@ Root SDKWork standards remain authoritative. Local component specs can narrow or
 - `@sdkwork/models-app-sdk` — app catalog read API (`/app/v3/api/ai/*`, including voice list routes)
 - `@sdkwork/models-backend-sdk` — backend admin catalog API (`/backend/v3/api/ai/*`, including voice list and catalog sync)
 
-Materialize generated OpenAPI authorities with `pnpm run openapi:materialize` after `pnpm run openapi:export`. Drift is gated in `pnpm run check`.
+Materialize generated OpenAPI authorities with `pnpm run api:materialize:models` after `pnpm run api:materialize:openapi`. Drift is gated in `pnpm run check`.
 
 ## Local Extension Specs
 
@@ -65,4 +65,4 @@ Materialize generated OpenAPI authorities with `pnpm run openapi:materialize` af
 
 - `pnpm run check`
 - `pnpm run verify`
-- `pnpm run openapi:export && pnpm run openapi:materialize && pnpm run sdk:generate`
+- `pnpm run api:materialize:openapi && pnpm run api:materialize:models && pnpm run sdk:generate`
