@@ -15,3 +15,13 @@ pub use web_bootstrap::{
     intelligence_catalog_app_api_prefixes, intelligence_catalog_app_api_public_path_prefixes,
     wrap_router_with_web_framework, wrap_router_with_web_framework_from_env,
 };
+
+use sdkwork_web_core::HttpRouteManifest;
+
+pub fn gateway_route_manifest() -> HttpRouteManifest {
+    app_route_manifest()
+}
+
+pub fn gateway_mount() -> HttpRouteManifest {
+    gateway_route_manifest()
+}

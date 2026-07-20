@@ -21,3 +21,13 @@ pub use web_bootstrap::{
     intelligence_catalog_backend_api_public_path_prefixes, wrap_router_with_web_framework,
     wrap_router_with_web_framework_from_env,
 };
+
+use sdkwork_web_core::HttpRouteManifest;
+
+pub fn gateway_route_manifest() -> HttpRouteManifest {
+    backend_route_manifest()
+}
+
+pub fn gateway_mount() -> HttpRouteManifest {
+    gateway_route_manifest()
+}
