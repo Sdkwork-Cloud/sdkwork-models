@@ -7,7 +7,7 @@
 | Profile | Process | Binary |
 | --- | --- | --- |
 | `standalone.*` | Application ingress | `sdkwork-api-models-standalone-gateway` |
-| `cloud.*` | Application ingress + optional cloud gateway | `sdkwork-api-models-standalone-gateway` + `sdkwork-api-cloud-gateway` |
+| `cloud.*` | Published API assembly consumed by the remote platform ingress | `sdkwork-api-models-assembly` |
 
 ## Bootstrap
 
@@ -19,7 +19,7 @@
 
 ## Gateway
 
-Cloud gateway configs live under `configs/sdkwork-api-cloud-gateway.models.{development,production}.toml`.
+Platform ingress selection and rollout live in the platform deployment authority; this application publishes `sdkwork-api-models-assembly`.
 
 Validate:
 

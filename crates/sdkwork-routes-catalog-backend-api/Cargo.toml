@@ -11,6 +11,8 @@ path = "src/lib.rs"
 [dependencies]
 axum.workspace = true
 sdkwork_models_catalog_service.workspace = true
+sdkwork_models_contract_service.workspace = true
+sdkwork-models.workspace = true
 sdkwork-web-core.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-iam-web-adapter.workspace = true

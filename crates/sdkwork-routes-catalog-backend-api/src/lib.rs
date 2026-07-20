@@ -28,6 +28,42 @@ pub fn gateway_route_manifest() -> HttpRouteManifest {
     backend_route_manifest()
 }
 
-pub fn gateway_mount() -> HttpRouteManifest {
-    gateway_route_manifest()
+pub fn gateway_mount(
+    admin_store: std::sync::Arc<
+        dyn sdkwork_models_contract_service::ModelCatalogAdminStore + Send + Sync,
+    >,
+    read_store: std::sync::Arc<
+        dyn sdkwork_models_contract_service::ModelRankingsReadModelStore + Send + Sync,
+    >,
+    refresh_store: std::sync::Arc<
+        dyn sdkwork_models_contract_service::ModelRankingRefreshStore + Send + Sync,
+    >,
+    ai_resource_store: std::sync::Arc<
+        dyn sdkwork_models_contract_service::AdminAiResourceStore + Send + Sync,
+    >,
+    entity_uuid_generator: std::sync::Arc<
+        dyn sdkwork_models_contract_service::EntityUuidGenerator + Send + Sync,
+    >,
+    voice_catalog: std::sync::Arc<sdkwork_models::ModelCatalog>,
+) -> axum::Router {
+    sdkwork_models_catalog_service::admin_model_management_router_with_store(
+        admin_store,
+        std::sync::Arc::clone(&entity_uuid_generator),
+    )
+    .merge(
+        sdkwork_models_catalog_service::admin_model_rankings_router_with_read_store_and_refresh_store(
+            read_store,
+            refresh_store,
+        ),
+    )
+    .merge(sdkwork_models_catalog_service::admin_ai_resource_router_with_store(
+        ai_resource_store,
+        entity_uuid_generator,
+    ))
+    .merge(sdkwork_models_catalog_service::backend_voice_catalog_router(
+        std::sync::Arc::clone(&voice_catalog),
+    ))
+    .merge(sdkwork_models_catalog_service::backend_video_profile_catalog_router(
+        voice_catalog,
+    ))
 }

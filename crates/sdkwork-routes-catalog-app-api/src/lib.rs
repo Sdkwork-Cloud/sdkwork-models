@@ -22,6 +22,22 @@ pub fn gateway_route_manifest() -> HttpRouteManifest {
     app_route_manifest()
 }
 
-pub fn gateway_mount() -> HttpRouteManifest {
-    gateway_route_manifest()
+pub fn gateway_mount<C>(
+    pricing_catalog: std::sync::Arc<C>,
+    voice_catalog: std::sync::Arc<sdkwork_models::ModelCatalog>,
+    read_store: std::sync::Arc<
+        dyn sdkwork_models_contract_service::ModelRankingsReadModelStore + Send + Sync,
+    >,
+) -> axum::Router
+where
+    C: sdkwork_models_catalog_service::PricingCatalog + Send + Sync + 'static,
+{
+    sdkwork_models_catalog_service::app_model_catalog_router(pricing_catalog)
+        .merge(sdkwork_models_catalog_service::app_voice_catalog_router(
+            std::sync::Arc::clone(&voice_catalog),
+        ))
+        .merge(sdkwork_models_catalog_service::app_video_profile_catalog_router(voice_catalog))
+        .merge(
+            sdkwork_models_catalog_service::app_model_rankings_router_with_read_store(read_store),
+        )
 }

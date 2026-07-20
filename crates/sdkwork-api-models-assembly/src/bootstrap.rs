@@ -1,15 +1,20 @@
-//! Gateway bootstrap for sdkwork-models.
+//! Application API assembly bootstrap for sdkwork-models.
 
 use axum::Router;
 use sdkwork_database_sqlx::DatabasePool;
+use sdkwork_models_catalog_repository_sqlx::{
+    PostgresAdminAiResourceStore, PostgresModelCatalogAdminStore, PostgresModelRankingRefreshStore,
+    PostgresModelRankingsReadStore, SqliteAdminAiResourceStore, SqliteModelCatalogAdminStore,
+    SqliteModelRankingRefreshStore, SqliteModelRankingsReadStore,
+};
+use sdkwork_models_contract_service::{
+    AdminAiResourceStore, EntityUuidGenerator, ModelCatalogAdminStore, ModelRankingRefreshStore,
+    ModelRankingsReadModelStore,
+};
 use sdkwork_models_service_host::ModelsServiceHost;
 use std::sync::Arc;
 
-use crate::catalog_app_router::catalog_app_router_with_catalog_voice_and_read_store;
-use crate::catalog_backend_router::{
-    catalog_backend_router_with_postgres_pool_and_catalog,
-    catalog_backend_router_with_sqlite_pool_and_catalog,
-};
+use crate::entity_uuid_generator::CatalogEntityUuidGenerator;
 
 pub struct ApiAssembly {
     pub router: Router,
@@ -20,36 +25,52 @@ pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
     let host = Arc::new(ModelsServiceHost::new().await?);
     let app_business = match host.database_pool() {
         DatabasePool::Postgres(pool, _) => {
-            use sdkwork_models_catalog_repository_sqlx::PostgresModelRankingsReadStore;
-            use sdkwork_models_contract_service::ModelRankingsReadModelStore;
             let read_store: Arc<dyn ModelRankingsReadModelStore + Send + Sync> =
                 Arc::new(PostgresModelRankingsReadStore::new(pool.clone()));
-            catalog_app_router_with_catalog_voice_and_read_store(
+            sdkwork_routes_models_catalog_app_api::gateway_mount(
                 host.pricing_catalog(),
                 host.voice_catalog(),
                 read_store,
             )
         }
         DatabasePool::Sqlite(pool, _) => {
-            use sdkwork_models_catalog_repository_sqlx::SqliteModelRankingsReadStore;
-            use sdkwork_models_contract_service::ModelRankingsReadModelStore;
             let read_store: Arc<dyn ModelRankingsReadModelStore + Send + Sync> =
                 Arc::new(SqliteModelRankingsReadStore::new(pool.clone()));
-            catalog_app_router_with_catalog_voice_and_read_store(
+            sdkwork_routes_models_catalog_app_api::gateway_mount(
                 host.pricing_catalog(),
                 host.voice_catalog(),
                 read_store,
             )
         }
     };
+    let entity_uuid_generator: Arc<dyn EntityUuidGenerator + Send + Sync> =
+        CatalogEntityUuidGenerator::arc();
     let backend_business = match host.database_pool() {
-        DatabasePool::Postgres(pool, _) => catalog_backend_router_with_postgres_pool_and_catalog(
-            pool.clone(),
-            Some(host.voice_catalog()),
-        ),
-        DatabasePool::Sqlite(pool, _) => catalog_backend_router_with_sqlite_pool_and_catalog(
-            pool.clone(),
-            Some(host.voice_catalog()),
+        DatabasePool::Postgres(pool, _) => {
+            sdkwork_routes_models_catalog_backend_api::gateway_mount(
+                Arc::new(PostgresModelCatalogAdminStore::new(pool.clone()))
+                    as Arc<dyn ModelCatalogAdminStore + Send + Sync>,
+                Arc::new(PostgresModelRankingsReadStore::new(pool.clone()))
+                    as Arc<dyn ModelRankingsReadModelStore + Send + Sync>,
+                Arc::new(PostgresModelRankingRefreshStore::new(pool.clone()))
+                    as Arc<dyn ModelRankingRefreshStore + Send + Sync>,
+                Arc::new(PostgresAdminAiResourceStore::new(pool.clone()))
+                    as Arc<dyn AdminAiResourceStore + Send + Sync>,
+                Arc::clone(&entity_uuid_generator),
+                host.voice_catalog(),
+            )
+        }
+        DatabasePool::Sqlite(pool, _) => sdkwork_routes_models_catalog_backend_api::gateway_mount(
+            Arc::new(SqliteModelCatalogAdminStore::new(pool.clone()))
+                as Arc<dyn ModelCatalogAdminStore + Send + Sync>,
+            Arc::new(SqliteModelRankingsReadStore::new(pool.clone()))
+                as Arc<dyn ModelRankingsReadModelStore + Send + Sync>,
+            Arc::new(SqliteModelRankingRefreshStore::new(pool.clone()))
+                as Arc<dyn ModelRankingRefreshStore + Send + Sync>,
+            Arc::new(SqliteAdminAiResourceStore::new(pool.clone()))
+                as Arc<dyn AdminAiResourceStore + Send + Sync>,
+            entity_uuid_generator,
+            host.voice_catalog(),
         ),
     };
     let app = sdkwork_routes_models_catalog_app_api::wrap_router_with_web_framework_from_env(

@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "crates/sdkwork-api-models-assembly",
-    "crates/sdkwork-api-models-assembly",
   "crates/sdkwork-models-contract-service",
   "crates/sdkwork-models-catalog-repository-sqlx",
   "crates/sdkwork-models-catalog-service",

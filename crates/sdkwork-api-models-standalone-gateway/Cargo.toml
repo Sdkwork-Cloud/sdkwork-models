@@ -14,14 +14,12 @@ path = "src/main.rs"
 
 [dependencies]
 axum.workspace = true
-dotenvy = "0.15"
 serde_json.workspace = true
 sqlx.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "net"] }
 tower-http = { version = "0.5", features = ["cors"] }
 tracing.workspace = true
 tracing-subscriber = "0.3"
-sdkwork-database-id.workspace = true
 sdkwork_api_models_assembly.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-web-core.workspace = true
