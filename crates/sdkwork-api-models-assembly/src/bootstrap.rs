@@ -16,7 +16,7 @@ pub struct ApiAssembly {
     pub database_pool: DatabasePool,
 }
 
-pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
+pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
     let host = Arc::new(ModelsServiceHost::new().await?);
     let app_business = match host.database_pool() {
         DatabasePool::Postgres(pool, _) => {
@@ -68,5 +68,5 @@ pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
 }
 
 pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
-    assemble_api_router().await
+    assemble_business_routes().await
 }
