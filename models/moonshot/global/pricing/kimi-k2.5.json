@@ -9,11 +9,11 @@
       "meterCode": "llm_cache_read_token",
       "minimumQuantity": "0",
       "priceId": "moonshot-global-kimi-k2-5-cache-read",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "0.100000",
@@ -25,11 +25,11 @@
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
       "priceId": "moonshot-global-kimi-k2-5-input",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "0.600000",
@@ -41,11 +41,11 @@
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
       "priceId": "moonshot-global-kimi-k2-5-output",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "3.000000",

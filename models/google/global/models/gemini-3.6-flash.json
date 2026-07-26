@@ -1,0 +1,51 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "google/gemini-3.6-flash",
+  "colorToken": "#1d4ed8",
+  "contextTokens": 1048576,
+  "description": "Gemini 3.6 Flash main-tier model with 17% fewer output tokens than 3.5 Flash, improved agentic coding and multimodal efficiency.",
+  "displayName": "Gemini 3.6 Flash",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 380,
+  "latencyP95Ms": 1300,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 65535,
+  "modelId": "gemini-3.6-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1060.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-25T00:00:00Z",
+    "sourceUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/"
+  },
+  "strengths": [
+    "Agents",
+    "Coding",
+    "Multimodal",
+    "Token efficiency"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.995000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.960000"
+}

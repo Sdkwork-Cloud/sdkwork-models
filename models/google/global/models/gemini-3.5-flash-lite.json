@@ -1,0 +1,51 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "google/gemini-3.5-flash-lite",
+  "colorToken": "#1d4ed8",
+  "contextTokens": 1048576,
+  "description": "Fastest, most cost-efficient Gemini 3.5 Flash Lite for high-throughput agentic search and document processing at 350 tokens/sec.",
+  "displayName": "Gemini 3.5 Flash Lite",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 280,
+  "latencyP95Ms": 1100,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 65535,
+  "modelId": "gemini-3.5-flash-lite",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "980.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-25T00:00:00Z",
+    "sourceUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/"
+  },
+  "strengths": [
+    "Lowest cost",
+    "Low latency",
+    "Multimodal",
+    "High throughput"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.970000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.910000"
+}

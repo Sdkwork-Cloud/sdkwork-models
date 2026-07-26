@@ -5,6 +5,12 @@
     {
       "items": [
         {
+          "catalogKey": "moonshot/kimi-k3",
+          "modelId": "kimi-k3",
+          "pricingText": "USD 3.00 / 1M input; USD 0.30 / 1M cache read; USD 15.00 / 1M output",
+          "rankNo": 1
+        },
+        {
           "catalogKey": "moonshot/kimi-k2.7-code",
           "modelId": "kimi-k2.7-code",
           "pricingText": "USD 0.95 / 1M input; USD 0.19 / 1M cache read; USD 4.00 / 1M output",
@@ -30,7 +36,7 @@
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-06-14",
+      "snapshotDate": "2026-07-16",
       "snapshotPeriod": "daily"
     }
   ],

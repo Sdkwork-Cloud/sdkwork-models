@@ -576,7 +576,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-07-14T00:00:00Z",
+      "lastCheckedAt": "2026-07-25T00:00:00Z",
       "notes": "Moonshot/Kimi international API operation is modeled as the global region of the vendor with USD billing. Official international landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -608,7 +608,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-07-14T00:00:00Z",
+      "lastCheckedAt": "2026-07-25T00:00:00Z",
       "notes": "Moonshot/Kimi mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -640,7 +640,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-06-24T00:00:00Z",
+      "lastCheckedAt": "2026-07-25T00:00:00Z",
       "notes": "OpenAI official API model and pricing docs. Added GPT-4o mini TTS, TTS-1 HD, GPT-4o transcribe diarize, and Whisper-1 alongside GPT Realtime and transcription defaults.",
       "official": {
         "additionalUrls": [

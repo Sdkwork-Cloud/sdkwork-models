@@ -9,11 +9,11 @@
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
       "priceId": "google-gemini-3.1-flash-lite-input",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.100000",
@@ -25,11 +25,11 @@
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
       "priceId": "google-gemini-3.1-flash-lite-output",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.400000",

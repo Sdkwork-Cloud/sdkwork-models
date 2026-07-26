@@ -144,6 +144,9 @@
     {
       "models": [
         {
+          "modelId": "kimi-k3"
+        },
+        {
           "modelId": "kimi-k2.7-code"
         },
         {
@@ -159,19 +162,23 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-07-14T00:00:00Z",
+      "observedAt": "2026-07-25T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.com/",
+        "https://www.kimi.com/blog/kimi-k3",
         "https://platform.kimi.com/docs/pricing/chat-k27-code",
         "https://platform.kimi.com/docs/pricing/chat-k26",
         "https://platform.kimi.com/docs/pricing/chat-k25"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "16384bcf39a384f2e877484b9965d37561e7a40116218074e726da2133ec3d01",
+      "sourceSnapshotHash": "4ab12458841eb1e22819f8074106c8bbb0120ca7a2a184869d1dc8ffb03547ae",
       "vendorCode": "moonshot"
     },
     {
       "models": [
+        {
+          "modelId": "kimi-k3"
+        },
         {
           "modelId": "kimi-k2.7-code"
         },
@@ -188,15 +195,16 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-07-14T00:00:00Z",
+      "observedAt": "2026-07-25T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.ai/",
+        "https://www.kimi.com/blog/kimi-k3",
         "https://platform.kimi.ai/docs/pricing/chat-k27-code",
         "https://platform.kimi.ai/docs/pricing/chat-k26",
         "https://platform.kimi.ai/docs/pricing/chat-k25"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "e3bb08605d5273d13dfcd38d31bbc82c6a25a923d68901ebe3421002c4a85456",
+      "sourceSnapshotHash": "23053c7418346deaeedb9c0773a74989adcfb7586781acbba03590c7b948230b",
       "vendorCode": "moonshot"
     }
   ]

@@ -9,11 +9,11 @@
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
       "priceId": "alibaba-qwen3.6-max-preview-input",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "9.000000",
@@ -25,11 +25,11 @@
       "meterCode": "llm_input_token",
       "minimumQuantity": "128000",
       "priceId": "alibaba-qwen3.6-max-preview-input-above-128k",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,
@@ -43,11 +43,11 @@
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
       "priceId": "alibaba-qwen3.6-max-preview-output",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "54.000000",
@@ -59,11 +59,11 @@
       "meterCode": "llm_output_token",
       "minimumQuantity": "128000",
       "priceId": "alibaba-qwen3.6-max-preview-output-above-128k",
-      "priceSide": "official",
+      "priceSide": "reference",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-25T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,

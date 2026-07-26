@@ -25,16 +25,16 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-14T00:00:00Z",
+    "observedAt": "2026-07-25T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/models"
   },
   "strengths": [
     "Transcription",
     "Cost efficiency"
   ],
+  "supportsJsonSchema": false,
   "supportsStreaming": true,
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
   "supportsTools": false,
-  "supportsJsonSchema": false
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
 }

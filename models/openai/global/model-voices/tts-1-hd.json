@@ -1,24 +1,80 @@
 {
-  "schemaVersion": "1.0.0",
-  "vendorCode": "openai",
-  "regionCode": "global",
-  "modelId": "tts-1-hd",
-  "catalogKey": "openai/tts-1-hd",
   "bindings": [
-    { "voiceKey": "openai/alloy", "voiceId": "alloy", "isDefault": true, "compatibility": "full", "sortOrder": 10 },
-    { "voiceKey": "openai/ash", "voiceId": "ash", "compatibility": "full", "sortOrder": 20 },
-    { "voiceKey": "openai/ballad", "voiceId": "ballad", "compatibility": "full", "sortOrder": 30 },
-    { "voiceKey": "openai/coral", "voiceId": "coral", "compatibility": "full", "sortOrder": 40 },
-    { "voiceKey": "openai/echo", "voiceId": "echo", "compatibility": "full", "sortOrder": 50 },
-    { "voiceKey": "openai/fable", "voiceId": "fable", "compatibility": "full", "sortOrder": 60 },
-    { "voiceKey": "openai/onyx", "voiceId": "onyx", "compatibility": "full", "sortOrder": 70 },
-    { "voiceKey": "openai/nova", "voiceId": "nova", "compatibility": "full", "sortOrder": 80 },
-    { "voiceKey": "openai/sage", "voiceId": "sage", "compatibility": "full", "sortOrder": 90 },
-    { "voiceKey": "openai/shimmer", "voiceId": "shimmer", "compatibility": "full", "sortOrder": 100 },
-    { "voiceKey": "openai/verse", "voiceId": "verse", "compatibility": "full", "sortOrder": 110 }
+    {
+      "compatibility": "full",
+      "isDefault": true,
+      "sortOrder": 10,
+      "voiceId": "alloy",
+      "voiceKey": "openai/alloy"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 20,
+      "voiceId": "ash",
+      "voiceKey": "openai/ash"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 30,
+      "voiceId": "ballad",
+      "voiceKey": "openai/ballad"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 40,
+      "voiceId": "coral",
+      "voiceKey": "openai/coral"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 50,
+      "voiceId": "echo",
+      "voiceKey": "openai/echo"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 60,
+      "voiceId": "fable",
+      "voiceKey": "openai/fable"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 70,
+      "voiceId": "onyx",
+      "voiceKey": "openai/onyx"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 80,
+      "voiceId": "nova",
+      "voiceKey": "openai/nova"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 90,
+      "voiceId": "sage",
+      "voiceKey": "openai/sage"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 100,
+      "voiceId": "shimmer",
+      "voiceKey": "openai/shimmer"
+    },
+    {
+      "compatibility": "full",
+      "sortOrder": 110,
+      "voiceId": "verse",
+      "voiceKey": "openai/verse"
+    }
   ],
+  "catalogKey": "openai/tts-1-hd",
+  "modelId": "tts-1-hd",
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
   "source": {
-    "observedAt": "2026-07-03T00:00:00Z",
+    "observedAt": "2026-07-25T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
-  }
+  },
+  "vendorCode": "openai"
 }

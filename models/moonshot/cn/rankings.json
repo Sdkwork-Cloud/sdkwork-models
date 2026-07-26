@@ -5,6 +5,12 @@
     {
       "items": [
         {
+          "catalogKey": "moonshot/kimi-k3",
+          "modelId": "kimi-k3",
+          "pricingText": "CNY 20.00 / 1M input; CNY 2.00 / 1M cache read; CNY 100.00 / 1M output",
+          "rankNo": 1
+        },
+        {
           "catalogKey": "moonshot/kimi-k2.7-code",
           "modelId": "kimi-k2.7-code",
           "pricingText": "CNY 6.50 / 1M input; CNY 1.30 / 1M cache read; CNY 27.00 / 1M output",
@@ -30,7 +36,7 @@
         }
       ],
       "rankScope": "china-mainland-default",
-      "snapshotDate": "2026-06-14",
+      "snapshotDate": "2026-07-16",
       "snapshotPeriod": "daily"
     }
   ],

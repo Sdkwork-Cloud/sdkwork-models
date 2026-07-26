@@ -1,0 +1,58 @@
+{
+  "catalogKey": "moonshot/kimi-k3",
+  "currency": "CNY",
+  "modelId": "kimi-k3",
+  "prices": [
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-16T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k3-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-25T00:00:00Z",
+        "sourceUrl": "https://www.kimi.com/blog/kimi-k3"
+      },
+      "unitPrice": "20.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-16T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k3-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-25T00:00:00Z",
+        "sourceUrl": "https://www.kimi.com/blog/kimi-k3"
+      },
+      "unitPrice": "100.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-07-16T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "moonshot-cn-kimi-k3-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-07-25T00:00:00Z",
+        "sourceUrl": "https://www.kimi.com/blog/kimi-k3"
+      },
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "moonshot"
+}

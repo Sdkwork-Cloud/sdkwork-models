@@ -6,7 +6,7 @@
   "catalogKey": "alibaba/qwen3.6-max-preview",
   "colorToken": "#2563eb",
   "contextTokens": 262144,
-  "description": "Qwen preview flagship model for Chinese and multilingual workflows.",
+  "description": "Previous Qwen3.6 Max preview generation superseded by Qwen3.8 Max preview at WAIC 2026 on July 19, 2026; kept for migration reference.",
   "displayName": "Qwen3.6 Max Preview",
   "familyCode": "qwen",
   "inputModalities": [
@@ -14,7 +14,7 @@
   ],
   "latencyP50Ms": 780,
   "latencyP95Ms": 2600,
-  "lifecycle": "preview",
+  "lifecycle": "deprecated",
   "maxInputTokens": 262144,
   "maxOutputTokens": 65536,
   "modelId": "qwen3.6-max-preview",
@@ -24,13 +24,14 @@
   "primaryCapability": "chat",
   "rankScore": "910.000000",
   "regionCode": "cn",
-  "releaseStage": "preview",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "replacementModel": "qwen3.8-max-preview",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-14T00:00:00Z",
-    "sourceUrl": "https://help.aliyun.com/zh/model-studio/text-generation-model"
+    "observedAt": "2026-07-25T00:00:00Z",
+    "sourceUrl": "https://qwenlm.github.io/blog/qwen3.8-max-preview/"
   },
   "strengths": [
     "Chinese",
