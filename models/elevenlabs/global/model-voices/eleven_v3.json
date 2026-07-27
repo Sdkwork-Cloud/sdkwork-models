@@ -1,21 +1,21 @@
 {
-  "schemaVersion": "1.0.0",
-  "vendorCode": "elevenlabs",
-  "regionCode": "global",
-  "modelId": "eleven_v3",
-  "catalogKey": "elevenlabs/eleven_v3",
   "bindings": [
     {
-      "voiceKey": "elevenlabs/_catalog_dynamic",
-      "voiceId": "_catalog_dynamic",
-      "isDefault": true,
       "compatibility": "full",
+      "isDefault": true,
+      "notes": "Use any voice_id from the ElevenLabs voice library API.",
       "sortOrder": 10,
-      "notes": "Use any voice_id from the ElevenLabs voice library API."
+      "voiceId": "_catalog_dynamic",
+      "voiceKey": "elevenlabs/_catalog_dynamic"
     }
   ],
+  "catalogKey": "elevenlabs/eleven_v3",
+  "modelId": "eleven_v3",
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
   "source": {
-    "observedAt": "2026-07-03T00:00:00Z",
+    "observedAt": "2026-07-26T00:00:00Z",
     "sourceUrl": "https://elevenlabs.io/docs/api-reference/text-to-speech"
-  }
+  },
+  "vendorCode": "elevenlabs"
 }

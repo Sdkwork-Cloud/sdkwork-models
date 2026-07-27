@@ -1,24 +1,25 @@
 {
-  "schemaVersion": "1.0.0",
-  "vendorCode": "bytedance",
-  "regionCode": "global",
-  "modelId": "doubao-seedance-2-0-260128",
   "catalogKey": "bytedance/doubao-seedance-2-0-260128",
+  "modelId": "doubao-seedance-2-0-260128",
   "profiles": [
     {
-      "profileCode": "t2v_range_720p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
       "catalogKey": "bytedance/doubao-seedance-2-0-260128/t2v_range_720p",
       "displayName": "Text to Video · 2–12s · 720p",
-      "generationMode": "text_to_video",
       "durationPolicy": "range",
-      "minDurationSeconds": 2,
-      "maxDurationSeconds": 12,
       "durationStepSeconds": 1,
+      "generationMode": "text_to_video",
+      "isDefault": true,
+      "maxDurationSeconds": 12,
+      "minDurationSeconds": 2,
+      "outputAudio": true,
+      "profileCode": "t2v_range_720p",
       "resolution": "720p",
       "resolutionTierCode": "res_720p",
-      "aspectRatios": ["16:9", "9:16", "1:1"],
-      "outputAudio": true,
-      "isDefault": true,
       "sortOrder": 10,
       "wireParameters": {
         "duration": "2-12",
@@ -26,18 +27,22 @@
       }
     },
     {
-      "profileCode": "i2v_range_720p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
       "catalogKey": "bytedance/doubao-seedance-2-0-260128/i2v_range_720p",
       "displayName": "Image to Video · 2–12s · 720p",
-      "generationMode": "image_to_video",
       "durationPolicy": "range",
-      "minDurationSeconds": 2,
-      "maxDurationSeconds": 12,
       "durationStepSeconds": 1,
+      "generationMode": "image_to_video",
+      "maxDurationSeconds": 12,
+      "minDurationSeconds": 2,
+      "outputAudio": true,
+      "profileCode": "i2v_range_720p",
       "resolution": "720p",
       "resolutionTierCode": "res_720p",
-      "aspectRatios": ["16:9", "9:16", "1:1"],
-      "outputAudio": true,
       "sortOrder": 20,
       "wireParameters": {
         "duration": "2-12",
@@ -45,8 +50,11 @@
       }
     }
   ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
   "source": {
-    "observedAt": "2026-07-04T00:00:00Z",
+    "observedAt": "2026-07-26T00:00:00Z",
     "sourceUrl": "https://www.volcengine.com/docs/82379"
-  }
+  },
+  "vendorCode": "bytedance"
 }

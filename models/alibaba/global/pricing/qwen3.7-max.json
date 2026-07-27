@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.qwencloud.com/models/qwen3.7-max"
       },
       "unitPrice": "2.500000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.qwencloud.com/models/qwen3.7-max"
       },
       "unitPrice": "7.500000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.qwencloud.com/models/qwen3.7-max"
       },
       "tierCode": "cache_write_5m",
@@ -62,7 +62,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.qwencloud.com/models/qwen3.7-max"
       },
       "unitPrice": "0.250000",

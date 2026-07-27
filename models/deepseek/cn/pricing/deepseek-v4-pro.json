@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
       "unitPrice": "0.025000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
       "unitPrice": "3.000000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
       "unitPrice": "6.000000",

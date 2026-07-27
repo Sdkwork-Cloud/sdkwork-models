@@ -1,0 +1,47 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "mureka/mureka-o3",
+  "colorToken": "#4c1d95",
+  "description": "Mureka O3 premium music reasoning model released July 19, 2026 at WAIC 2026. Built on the V9.5 base, O3 extends MusiCoT with test-time scaling: the model continuously extends the composition, reviews deviations, and corrects subsequent decisions. Achieves emotion expression score 7.88 and arrangement structure score 7.20 in blind evaluation. Successor to Mureka O2.",
+  "displayName": "Mureka O3",
+  "familyCode": "mureka",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 46000,
+  "latencyP95Ms": 125000,
+  "lifecycle": "active",
+  "modelId": "mureka-o3",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "850.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-26T00:00:00Z",
+    "sourceUrl": "https://platform.mureka.ai/docs/"
+  },
+  "strengths": [
+    "Test-time music reasoning",
+    "Extended MusiCoT",
+    "Emotion expression 7.88",
+    "Arrangement structure 7.20",
+    "Premium multilingual composition"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.970000",
+  "vendorCode": "mureka",
+  "vendorName": "Mureka",
+  "winRate": "0.930000"
+}

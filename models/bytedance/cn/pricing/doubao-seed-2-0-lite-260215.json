@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.volcengine.com/docs/82379/1544106"
       },
       "unitPrice": "1.600000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://www.volcengine.com/docs/82379/1544106"
       },
       "unitPrice": "8.000000",

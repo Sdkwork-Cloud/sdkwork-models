@@ -11,6 +11,12 @@
           "rankNo": 18
         },
         {
+          "catalogKey": "bytedance/doubao-seedance-2-5-260623",
+          "modelId": "doubao-seedance-2-5-260623",
+          "pricingText": "CNY 1.50 / output second (4K native); CNY 1.00 / 1080p; CNY 0.60 / 720p",
+          "rankNo": 17
+        },
+        {
           "catalogKey": "bytedance/doubao-seedance-2-0-260128",
           "modelId": "doubao-seedance-2-0-260128",
           "pricingText": "CNY 0.86 / output second",
@@ -42,7 +48,7 @@
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-07-02",
+      "snapshotDate": "2026-07-25",
       "snapshotPeriod": "daily"
     }
   ],

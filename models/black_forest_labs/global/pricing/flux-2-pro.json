@@ -14,7 +14,7 @@
       "pricingScope": "model",
       "quantityStep": "0.001",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
       "unitPrice": "0.030000",
@@ -31,7 +31,7 @@
       "pricingScope": "model",
       "quantityStep": "0.001",
       "source": {
-        "observedAt": "2026-07-14T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
       "unitPrice": "0.015000",

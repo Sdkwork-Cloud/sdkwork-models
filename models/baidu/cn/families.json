@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "ernie-5.0-thinking-preview",
+      "defaultModel": "ernie-5.1",
       "displayName": "ERNIE",
       "familyCode": "ernie",
       "familyType": "llm",

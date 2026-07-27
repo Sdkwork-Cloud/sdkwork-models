@@ -1,31 +1,33 @@
 {
+  "regionCode": "global",
   "schemaVersion": "1.0.0",
   "vendorCode": "elevenlabs",
-  "regionCode": "global",
   "voices": [
     {
-      "schemaVersion": "1.0.0",
-      "voiceId": "_catalog_dynamic",
-      "displayName": "ElevenLabs Voice Library",
-      "vendorCode": "elevenlabs",
-      "regionCode": "global",
       "catalogKey": "elevenlabs/_catalog_dynamic",
-      "primaryLocale": "en-US",
-      "supportedLocales": ["en-US"],
-      "gender": "unspecified",
-      "voiceKind": "neural",
-      "provisioningMode": "vendor_api",
-      "wireParameter": "voice_id",
-      "vendorListEndpoint": "https://api.elevenlabs.io/v1/voices",
       "description": "Official ElevenLabs voice library fetched at runtime via GET /v1/voices; catalog bindings reference cloned or premade voice_id values.",
+      "displayName": "ElevenLabs Voice Library",
+      "gender": "unspecified",
       "lifecycle": "active",
+      "primaryLocale": "en-US",
+      "provisioningMode": "vendor_api",
+      "regionCode": "global",
       "releaseStage": "active",
-      "shelfState": "listed",
       "routingState": "enabled",
+      "schemaVersion": "1.0.0",
+      "shelfState": "listed",
       "source": {
-        "observedAt": "2026-07-03T00:00:00Z",
+        "observedAt": "2026-07-26T00:00:00Z",
         "sourceUrl": "https://elevenlabs.io/docs/api-reference/voices/search"
-      }
+      },
+      "supportedLocales": [
+        "en-US"
+      ],
+      "vendorCode": "elevenlabs",
+      "vendorListEndpoint": "https://api.elevenlabs.io/v1/voices",
+      "voiceId": "_catalog_dynamic",
+      "voiceKind": "neural",
+      "wireParameter": "voice_id"
     }
   ]
 }

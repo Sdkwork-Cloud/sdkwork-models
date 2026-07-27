@@ -1,0 +1,47 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "music"
+  ],
+  "catalogKey": "minimax/music-3.0",
+  "colorToken": "#1d4ed8",
+  "description": "MiniMax Music 3.0 flagship music generation model released July 16, 2026. Delivers full-length songs with vocals or instrumental tracks, improved vocal clarity, richer arrangements, and tighter prompt adherence over Music 2.6. Supports lyrics optimizer, BPM and key control, and reference audio conditioning.",
+  "displayName": "MiniMax Music 3.0",
+  "familyCode": "minimax-music",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 22000,
+  "latencyP95Ms": 80000,
+  "lifecycle": "active",
+  "modelId": "music-3.0",
+  "outputModalities": [
+    "music"
+  ],
+  "primaryCapability": "music",
+  "rankScore": "820.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-26T00:00:00Z",
+    "sourceUrl": "https://platform.minimaxi.com/docs/guides/music-generation"
+  },
+  "strengths": [
+    "Song generation",
+    "Vocal clarity",
+    "Lyrics optimizer",
+    "BPM and key control",
+    "Reference audio conditioning"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "minimax",
+  "vendorName": "MiniMax",
+  "winRate": "0.900000"
+}

@@ -1,0 +1,51 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat",
+    "reasoning"
+  ],
+  "catalogKey": "anthropic/claude-opus-5",
+  "colorToken": "#7c2d12",
+  "contextTokens": 1000000,
+  "description": "Claude Opus 5 frontier model released July 24, 2026; step-change improvement over Claude Opus 4.8 with 1M token context window, 128k max output, thinking on by default, and the full effort ladder (low/medium/high/xhigh/max).",
+  "displayName": "Claude Opus 5",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1180,
+  "latencyP95Ms": 4200,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-opus-5",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1230.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-26T00:00:00Z",
+    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long context",
+    "Thinking"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.998000",
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.993000"
+}

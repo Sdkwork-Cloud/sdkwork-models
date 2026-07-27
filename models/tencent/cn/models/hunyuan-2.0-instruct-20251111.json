@@ -27,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-14T00:00:00Z",
+    "observedAt": "2026-07-26T00:00:00Z",
     "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
   },
   "strengths": [
@@ -36,9 +36,9 @@
     "Code",
     "Writing"
   ],
+  "supportsJsonSchema": true,
   "supportsStreaming": true,
   "supportsTools": true,
   "vendorCode": "tencent",
-  "vendorName": "Tencent Cloud",
-  "supportsJsonSchema": true
+  "vendorName": "Tencent Cloud"
 }

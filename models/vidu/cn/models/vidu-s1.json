@@ -1,0 +1,52 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video",
+    "streaming"
+  ],
+  "catalogKey": "vidu/vidu-s1",
+  "colorToken": "#6d28d9",
+  "description": "Vidu S1 real-time interactive video generation model released July 3, 2026 at the 2026 Global Digital Economy Conference. Uses AR+Diffusion autoregressive streaming to drive full-body character motion from voice input in real time, with interruptible commands, stable hour-long interactions at 540P/25FPS (peak 42FPS), and one-shot digital human generation from a single image. Built on TurboDiffusion, SageAttention, SLA, SpargeAttention, and TurboServe acceleration for consumer-GPU deployment.",
+  "displayName": "Vidu S1",
+  "familyCode": "vidu-stream",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio"
+  ],
+  "latencyP50Ms": 280,
+  "latencyP95Ms": 600,
+  "lifecycle": "active",
+  "maxOutputSeconds": 3600,
+  "modelId": "vidu-s1",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "streaming",
+  "rankScore": "860.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-26T00:00:00Z",
+    "sourceUrl": "https://www.shengshu.com/zh/news/"
+  },
+  "strengths": [
+    "Real-time streaming interaction",
+    "Voice-driven full-body motion",
+    "Hour-long stable interaction",
+    "One-shot digital human",
+    "Consumer-GPU deployment",
+    "Interruptible commands"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "vidu",
+  "vendorName": "Vidu",
+  "winRate": "0.880000"
+}

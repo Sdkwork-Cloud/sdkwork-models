@@ -1,21 +1,21 @@
 {
-  "schemaVersion": "1.0.0",
-  "vendorCode": "minimax",
-  "regionCode": "cn",
-  "modelId": "speech-2.8-hd",
-  "catalogKey": "minimax/speech-2.8-hd",
   "bindings": [
     {
-      "voiceKey": "minimax/_catalog_dynamic",
-      "voiceId": "_catalog_dynamic",
-      "isDefault": true,
       "compatibility": "full",
+      "isDefault": true,
+      "notes": "Use any voice_id from the MiniMax voice library API.",
       "sortOrder": 10,
-      "notes": "Use any voice_id from the MiniMax voice library API."
+      "voiceId": "_catalog_dynamic",
+      "voiceKey": "minimax/_catalog_dynamic"
     }
   ],
+  "catalogKey": "minimax/speech-2.8-hd",
+  "modelId": "speech-2.8-hd",
+  "regionCode": "cn",
+  "schemaVersion": "1.0.0",
   "source": {
-    "observedAt": "2026-07-04T00:00:00Z",
+    "observedAt": "2026-07-26T00:00:00Z",
     "sourceUrl": "https://platform.minimaxi.com/docs/api-reference/speech-t2a-voice"
-  }
+  },
+  "vendorCode": "minimax"
 }

@@ -1,0 +1,53 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "bytedance/doubao-seedance-2-5-260623",
+  "colorToken": "#dc2626",
+  "description": "ByteDance Seedance 2.5 flagship video generation model released June 23, 2026 at the Volcano Engine FORCE Conference. Delivers up to 30 seconds of native 4K 10-bit video in a single forward pass with unified joint audio-video generation architecture. Supports up to 50 multimodal reference inputs (images, videos, audio) for character and brand identity consistency, native local scene editing without re-generation, and 3D white-box previs for cinematic previsualization. Skipped versions 2.1-2.4 to signal a generational architectural leap over Seedance 2.0.",
+  "displayName": "Doubao Seedance 2.5",
+  "familyCode": "seedance",
+  "inputModalities": [
+    "text",
+    "image",
+    "video",
+    "audio"
+  ],
+  "latencyP50Ms": 80000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "active",
+  "maxOutputSeconds": 30,
+  "maxReferenceInputs": 50,
+  "modelId": "doubao-seedance-2-5-260623",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "880.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-07-26T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/82379/1544106"
+  },
+  "strengths": [
+    "Native 4K 10-bit video",
+    "30-second single-pass generation",
+    "50 multimodal references",
+    "Native audio synthesis",
+    "Local scene editing",
+    "3D white-box previs"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.900000"
+}

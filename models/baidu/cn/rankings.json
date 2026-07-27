@@ -5,31 +5,6 @@
     {
       "items": [
         {
-          "catalogKey": "baidu/ernie-5.0-thinking-preview",
-          "modelId": "ernie-5.0-thinking-preview",
-          "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output",
-          "rankNo": 12
-        },
-        {
-          "catalogKey": "baidu/ernie-x1.1",
-          "modelId": "ernie-x1.1",
-          "pricingText": "CNY 8.00 / 1M input; CNY 32.00 / 1M output",
-          "rankNo": 13
-        },
-        {
-          "catalogKey": "baidu/ernie-4.5-turbo-128k",
-          "modelId": "ernie-4.5-turbo-128k",
-          "pricingText": "CNY 4.00 / 1M input; CNY 16.00 / 1M output",
-          "rankNo": 14
-        }
-      ],
-      "rankScope": "commercial-default",
-      "snapshotDate": "2026-06-14",
-      "snapshotPeriod": "daily"
-    },
-    {
-      "items": [
-        {
           "catalogKey": "baidu/ernie-5.1",
           "modelId": "ernie-5.1",
           "pricingText": "CNY 4.00 / 1M input; CNY 18.00 / 1M output",
@@ -55,7 +30,7 @@
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-07-14",
+      "snapshotDate": "2026-07-25",
       "snapshotPeriod": "daily"
     }
   ],

@@ -27,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-14T00:00:00Z",
+    "observedAt": "2026-07-26T00:00:00Z",
     "sourceUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
   },
   "strengths": [
@@ -35,9 +35,9 @@
     "Knowledge",
     "Search"
   ],
+  "supportsJsonSchema": true,
   "supportsStreaming": true,
-  "vendorCode": "baidu",
-  "vendorName": "Baidu AI Cloud",
   "supportsTools": true,
-  "supportsJsonSchema": true
+  "vendorCode": "baidu",
+  "vendorName": "Baidu AI Cloud"
 }

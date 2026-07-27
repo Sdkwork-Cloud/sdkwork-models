@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "step-3.5-flash-2603",
+      "defaultModel": "step-3.7-flash",
       "displayName": "Step Flash",
       "familyCode": "step-flash",
       "familyType": "llm",

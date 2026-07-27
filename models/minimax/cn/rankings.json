@@ -57,10 +57,16 @@
           "modelId": "music-2.6",
           "pricingText": "CNY 1.00 / song",
           "rankNo": 9
+        },
+        {
+          "catalogKey": "minimax/music-3.0",
+          "modelId": "music-3.0",
+          "pricingText": "CNY 1.00 / song",
+          "rankNo": 10
         }
       ],
       "rankScope": "china-mainland-default",
-      "snapshotDate": "2026-05-08",
+      "snapshotDate": "2026-07-26",
       "snapshotPeriod": "daily"
     }
   ],

@@ -17,6 +17,7 @@ pub(crate) const ACTIVE_STATUS: i32 = 1;
 pub(crate) const INACTIVE_STATUS: i32 = 0;
 pub const DEFAULT_CATALOG_REFRESH_SOURCE: &str = "sdkwork_models";
 pub(crate) const SYNC_MODE_DRY_RUN: &str = "dry_run";
+const AI_RESOURCE_DESCRIPTION_MAX_CHARS: usize = 512;
 
 pub(crate) fn pricing_catalog_key(vendor_code: &str, model_id: &str) -> String {
     model_catalog_key(vendor_code, model_id)
@@ -957,7 +958,7 @@ pub(crate) fn catalog_ai_resource_projections(
                 composition_mode: "single".to_owned(),
                 capability_schema: "{}".to_owned(),
                 metadata_schema: "{}".to_owned(),
-                description: vendor.description.clone(),
+                description: ai_resource_description(vendor.description.clone()),
                 sort_order: (index as i32) + 1,
             },
         );
@@ -989,7 +990,7 @@ pub(crate) fn catalog_ai_resource_projections(
                 })
                 .to_string(),
                 metadata_schema: "{}".to_owned(),
-                description: Some(modality.description),
+                description: ai_resource_description(Some(modality.description)),
                 sort_order: 5_000 + modality.sort_order + (index as i32),
             },
         );
@@ -1013,7 +1014,9 @@ pub(crate) fn catalog_ai_resource_projections(
                 composition_mode: "single".to_owned(),
                 capability_schema: "{}".to_owned(),
                 metadata_schema: "{}".to_owned(),
-                description: Some("Model catalog API endpoint capability".to_owned()),
+                description: ai_resource_description(Some(
+                    "Model catalog API endpoint capability".to_owned(),
+                )),
                 sort_order: 10_000 + endpoint.sort_order,
             },
         );
@@ -1063,13 +1066,22 @@ pub(crate) fn catalog_ai_resource_projections(
                 })
                 .to_string(),
                 metadata_schema: "{}".to_owned(),
-                description: model.description.clone(),
+                description: ai_resource_description(model.description.clone()),
                 sort_order: 20_000 + (index as i32) + 1,
             },
         );
     }
 
     resources.into_values().collect()
+}
+
+fn ai_resource_description(description: Option<String>) -> Option<String> {
+    description.map(|mut value| {
+        if let Some((byte_index, _)) = value.char_indices().nth(AI_RESOURCE_DESCRIPTION_MAX_CHARS) {
+            value.truncate(byte_index);
+        }
+        value
+    })
 }
 
 fn catalog_modality_resource_projections(catalog: &ModelCatalog) -> Vec<CatalogModalityProjection> {
@@ -1804,7 +1816,42 @@ pub(crate) fn json_array(values: &[String]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{catalog_sync_run_uuid, price_provider_code};
+    use super::{ai_resource_description, catalog_sync_run_uuid, price_provider_code};
+
+    #[test]
+    fn ai_resource_description_preserves_none_and_short_values() {
+        assert_eq!(None, ai_resource_description(None));
+        assert_eq!(
+            Some("short description".to_owned()),
+            ai_resource_description(Some("short description".to_owned()))
+        );
+    }
+
+    #[test]
+    fn ai_resource_description_preserves_exact_character_limit() {
+        let description = "a".repeat(512);
+        assert_eq!(
+            Some(description.clone()),
+            ai_resource_description(Some(description))
+        );
+    }
+
+    #[test]
+    fn ai_resource_description_truncates_values_over_character_limit() {
+        let description = format!("{}b", "a".repeat(512));
+        assert_eq!(
+            Some("a".repeat(512)),
+            ai_resource_description(Some(description))
+        );
+    }
+
+    #[test]
+    fn ai_resource_description_truncates_multibyte_values_at_utf8_boundary() {
+        let description = format!("{}{}", "界".repeat(512), "文".repeat(48));
+        let projected = ai_resource_description(Some(description)).expect("description");
+        assert_eq!(512, projected.chars().count());
+        assert_eq!("界".repeat(512), projected);
+    }
 
     #[test]
     fn catalog_sync_run_uuid_fits_varchar_64_for_installer_style_snapshot_uuid() {

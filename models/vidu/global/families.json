@@ -15,6 +15,14 @@
       "familyType": "sfx",
       "primaryModality": "sfx",
       "sortOrder": 20
+    },
+    {
+      "defaultModel": "vidu-s1",
+      "displayName": "Vidu S1",
+      "familyCode": "vidu-stream",
+      "familyType": "streaming",
+      "primaryModality": "streaming",
+      "sortOrder": 30
     }
   ],
   "regionCode": "global",

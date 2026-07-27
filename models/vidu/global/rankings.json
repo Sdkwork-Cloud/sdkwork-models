@@ -11,6 +11,12 @@
           "rankNo": 14
         },
         {
+          "catalogKey": "vidu/vidu-s1",
+          "modelId": "vidu-s1",
+          "pricingText": "USD 0.004 / output second (540p streaming)",
+          "rankNo": 15
+        },
+        {
           "catalogKey": "vidu/viduq3-turbo",
           "modelId": "viduq3-turbo",
           "pricingText": "USD 0.055 / output second (720p)",
@@ -30,7 +36,7 @@
         }
       ],
       "rankScope": "commercial-default",
-      "snapshotDate": "2026-07-03",
+      "snapshotDate": "2026-07-26",
       "snapshotPeriod": "daily"
     }
   ],

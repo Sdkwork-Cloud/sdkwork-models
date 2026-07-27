@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.07.05.3",
-  "observedAt": "2026-07-14T00:00:00Z",
+  "catalogVersion": "2026.07.26.1",
+  "observedAt": "2026-07-26T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -12,12 +12,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-06-24T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "40b3189e6e9f46344eae84692c6fa9585acaa135a3c1f926128aea56debd8906",
+      "sourceSnapshotHash": "2e6a0dfcedefdabf965c15c385ae473c78807f76f945601c06183c037d9c0de6",
       "vendorCode": "deepseek"
     },
     {
@@ -29,12 +29,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-06-24T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/quick_start/pricing"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "abb9106048f1a7cd21e5809c31d18c90fd712e9641f7a456a4639e8311b96c4d",
+      "sourceSnapshotHash": "46a1166187ba1615850d4c9e5d65503692ca733efe26185c4e1033a048e9fe69",
       "vendorCode": "deepseek"
     },
     {
@@ -64,21 +64,25 @@
           "modelId": "music-2.6"
         },
         {
+          "modelId": "music-3.0"
+        },
+        {
           "modelId": "speech-2.8-hd"
         },
         {
           "modelId": "speech-2.8-turbo"
         }
       ],
-      "observedAt": "2026-06-24T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://platform.minimaxi.com/docs/guides/models-intro",
         "https://platform.minimaxi.com/docs/guides/pricing-paygo",
         "https://platform.minimaxi.com/docs/guides/text-generation",
-        "https://platform.minimaxi.com/docs/guides/text-chat"
+        "https://platform.minimaxi.com/docs/guides/text-chat",
+        "https://platform.minimaxi.com/docs/guides/music-generation"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "9abe6b50e508e8230193a781ccbc9682c41fb6aad25e24a9f70b1cfa197981ec",
+      "sourceSnapshotHash": "826f6ed681fe3774701f3644554b131a61e06b1433d75f746147b0ecd1f14981",
       "vendorCode": "minimax"
     },
     {
@@ -117,6 +121,9 @@
           "modelId": "music-2.6"
         },
         {
+          "modelId": "music-3.0"
+        },
+        {
           "modelId": "music-cover"
         },
         {
@@ -126,7 +133,7 @@
           "modelId": "speech-2.8-turbo"
         }
       ],
-      "observedAt": "2026-06-24T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://platform.minimax.io/docs/guides/models-intro",
         "https://platform.minimax.io/docs/guides/pricing-paygo",
@@ -135,10 +142,11 @@
         "https://www.minimax.io/blog/minimax-m3",
         "https://platform.minimax.io/docs/guides/pricing-video",
         "https://platform.minimax.io/docs/guides/image-generation",
-        "https://platform.minimax.io/docs/api-reference/music-generation"
+        "https://platform.minimax.io/docs/api-reference/music-generation",
+        "https://platform.minimax.io/docs/guides/music-generation"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "8180b6930b116d59fdb96173a09c41475e198a326e0d8ad482dc84626efdb8c1",
+      "sourceSnapshotHash": "64a37d7035a08fae1233d63c434bf815cfb30d930042f53954314279c4dafc3c",
       "vendorCode": "minimax"
     },
     {
@@ -162,7 +170,7 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-07-25T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.com/",
         "https://www.kimi.com/blog/kimi-k3",
@@ -171,7 +179,7 @@
         "https://platform.kimi.com/docs/pricing/chat-k25"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "4ab12458841eb1e22819f8074106c8bbb0120ca7a2a184869d1dc8ffb03547ae",
+      "sourceSnapshotHash": "b84bf5267e9b00609b897ffd2c4873879035c38d9e26b3b487b9dcf0230ad0b0",
       "vendorCode": "moonshot"
     },
     {
@@ -195,7 +203,7 @@
           "modelId": "kimi-k2.5"
         }
       ],
-      "observedAt": "2026-07-25T00:00:00Z",
+      "observedAt": "2026-07-26T00:00:00Z",
       "officialUrls": [
         "https://platform.kimi.ai/",
         "https://www.kimi.com/blog/kimi-k3",
@@ -204,7 +212,7 @@
         "https://platform.kimi.ai/docs/pricing/chat-k25"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "23053c7418346deaeedb9c0773a74989adcfb7586781acbba03590c7b948230b",
+      "sourceSnapshotHash": "cc70e14281e40188f8b8a3e166f9a5ecc820165990083fa56dd4e37ef9066841",
       "vendorCode": "moonshot"
     }
   ]
