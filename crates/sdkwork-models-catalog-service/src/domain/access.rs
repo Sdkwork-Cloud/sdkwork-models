@@ -6,7 +6,7 @@ pub struct GatewayApiKey {
     pub tenant_id: i64,
     pub organization_id: i64,
     pub user_id: i64,
-    pub group_id: i64,
+    pub default_account_group_id: i64,
     pub name: String,
     pub key_prefix: String,
     pub key_display_masked: String,
@@ -18,18 +18,18 @@ pub struct GatewayApiKey {
     pub expire_at: Option<String>,
     pub status_code: i32,
     pub default_for_runtime: bool,
-    pub group_bindings: Vec<GatewayApiKeyChannelGroupBinding>,
+    pub account_group_bindings: Vec<GatewayApiKeyAccountGroupBinding>,
 }
 
 impl GatewayApiKey {
-    pub fn new(id: i64, group_id: i64, key_prefix: &str, key_hash: &str) -> Self {
+    pub fn new(id: i64, default_account_group_id: i64, key_prefix: &str, key_hash: &str) -> Self {
         let key_prefix = key_prefix.to_owned();
         Self {
             id,
             tenant_id: 0,
             organization_id: 0,
             user_id: 0,
-            group_id,
+            default_account_group_id,
             name: key_prefix.clone(),
             key_display_masked: mask_key_prefix(&key_prefix),
             key_prefix,
@@ -41,7 +41,7 @@ impl GatewayApiKey {
             expire_at: None,
             status_code: 1,
             default_for_runtime: false,
-            group_bindings: Vec::new(),
+            account_group_bindings: Vec::new(),
         }
     }
 
@@ -80,21 +80,21 @@ impl GatewayApiKey {
         self
     }
 
-    pub fn with_group_bindings(
+    pub fn with_account_group_bindings(
         mut self,
-        group_bindings: Vec<GatewayApiKeyChannelGroupBinding>,
+        account_group_bindings: Vec<GatewayApiKeyAccountGroupBinding>,
     ) -> Self {
-        self.group_bindings = normalized_group_bindings(group_bindings);
+        self.account_group_bindings = normalized_account_group_bindings(account_group_bindings);
         self
     }
 
-    pub fn effective_group_bindings(&self) -> Vec<GatewayApiKeyChannelGroupBinding> {
-        if self.group_bindings.is_empty() {
-            vec![GatewayApiKeyChannelGroupBinding::default_route(
-                self.group_id,
+    pub fn effective_account_group_bindings(&self) -> Vec<GatewayApiKeyAccountGroupBinding> {
+        if self.account_group_bindings.is_empty() {
+            vec![GatewayApiKeyAccountGroupBinding::default_route(
+                self.default_account_group_id,
             )]
         } else {
-            self.group_bindings.clone()
+            self.account_group_bindings.clone()
         }
     }
 
@@ -123,9 +123,9 @@ impl GatewayApiKey {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct GatewayApiKeyChannelGroupBinding {
-    pub group_id: i64,
-    pub group_code: String,
+pub struct GatewayApiKeyAccountGroupBinding {
+    pub account_group_id: i64,
+    pub account_group_code: String,
     pub pricing_plan_code: String,
     pub binding_role: String,
     pub routing_strategy: String,
@@ -133,17 +133,17 @@ pub struct GatewayApiKeyChannelGroupBinding {
     pub weight: i32,
 }
 
-impl GatewayApiKeyChannelGroupBinding {
+impl GatewayApiKeyAccountGroupBinding {
     pub fn new(
-        group_id: i64,
-        group_code: &str,
+        account_group_id: i64,
+        account_group_code: &str,
         pricing_plan_code: &str,
         priority: i32,
         weight: i32,
     ) -> Self {
         Self {
-            group_id,
-            group_code: group_code.trim().to_owned(),
+            account_group_id,
+            account_group_code: account_group_code.trim().to_owned(),
             pricing_plan_code: pricing_plan_code.trim().to_owned(),
             binding_role: "route".to_owned(),
             routing_strategy: "auto".to_owned(),
@@ -152,10 +152,10 @@ impl GatewayApiKeyChannelGroupBinding {
         }
     }
 
-    pub fn default_route(group_id: i64) -> Self {
+    pub fn default_route(account_group_id: i64) -> Self {
         Self {
-            group_id,
-            group_code: String::new(),
+            account_group_id,
+            account_group_code: String::new(),
             pricing_plan_code: String::new(),
             binding_role: "route".to_owned(),
             routing_strategy: "auto".to_owned(),
@@ -174,8 +174,8 @@ impl GatewayApiKeyChannelGroupBinding {
         self
     }
 
-    pub fn with_group_code(mut self, group_code: &str) -> Self {
-        self.group_code = group_code.trim().to_owned();
+    pub fn with_account_group_code(mut self, account_group_code: &str) -> Self {
+        self.account_group_code = account_group_code.trim().to_owned();
         self
     }
 
@@ -186,7 +186,7 @@ impl GatewayApiKeyChannelGroupBinding {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ChannelGroup {
+pub struct UpstreamAccountGroup {
     pub id: i64,
     pub tenant_id: i64,
     pub organization_id: i64,
@@ -215,24 +215,24 @@ impl GatewayAccessPolicy {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ChannelGroupMetricSnapshot {
-    pub group_id: i64,
+pub struct UpstreamAccountGroupMetricSnapshot {
+    pub account_group_id: i64,
     pub capacity_used: Option<DecimalValue>,
     pub capacity_limit: Option<DecimalValue>,
     pub usage_amount_total: Option<DecimalValue>,
     pub snapshot_at: Option<String>,
 }
 
-impl ChannelGroupMetricSnapshot {
+impl UpstreamAccountGroupMetricSnapshot {
     pub fn new(
-        group_id: i64,
+        account_group_id: i64,
         capacity_used: Option<DecimalValue>,
         capacity_limit: Option<DecimalValue>,
         usage_amount_total: Option<DecimalValue>,
         snapshot_at: Option<String>,
     ) -> Self {
         Self {
-            group_id,
+            account_group_id,
             capacity_used,
             capacity_limit,
             usage_amount_total,
@@ -292,12 +292,12 @@ fn mask_key_prefix(key_prefix: &str) -> String {
     }
 }
 
-fn normalized_group_bindings(
-    group_bindings: Vec<GatewayApiKeyChannelGroupBinding>,
-) -> Vec<GatewayApiKeyChannelGroupBinding> {
-    let mut bindings = group_bindings
+fn normalized_account_group_bindings(
+    account_group_bindings: Vec<GatewayApiKeyAccountGroupBinding>,
+) -> Vec<GatewayApiKeyAccountGroupBinding> {
+    let mut bindings = account_group_bindings
         .into_iter()
-        .filter(|binding| binding.group_id > 0)
+        .filter(|binding| binding.account_group_id > 0)
         .map(|mut binding| {
             binding.binding_role = normalized_text_or(&binding.binding_role, "route");
             binding.routing_strategy = normalized_text_or(&binding.routing_strategy, "auto");
@@ -308,10 +308,10 @@ fn normalized_group_bindings(
         (
             binding.priority,
             std::cmp::Reverse(binding.weight),
-            binding.group_id,
+            binding.account_group_id,
         )
     });
-    bindings.dedup_by_key(|binding| binding.group_id);
+    bindings.dedup_by_key(|binding| binding.account_group_id);
     bindings
 }
 
@@ -324,7 +324,7 @@ fn normalized_text_or(value: &str, fallback: &str) -> String {
     }
 }
 
-impl ChannelGroup {
+impl UpstreamAccountGroup {
     pub fn new(
         id: i64,
         code: &str,

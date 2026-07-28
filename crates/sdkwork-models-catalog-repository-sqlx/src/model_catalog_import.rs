@@ -1758,7 +1758,7 @@ pub(crate) fn price_side_code(value: &str) -> i32 {
     }
 }
 
-pub(crate) fn price_provider_code(
+pub(crate) fn price_supplier_code(
     vendor_code: &str,
     _region_code: &str,
     price_side: &str,
@@ -1816,7 +1816,7 @@ pub(crate) fn json_array(values: &[String]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{ai_resource_description, catalog_sync_run_uuid, price_provider_code};
+    use super::{ai_resource_description, catalog_sync_run_uuid, price_supplier_code};
 
     #[test]
     fn ai_resource_description_preserves_none_and_short_values() {
@@ -1875,22 +1875,22 @@ mod tests {
     }
 
     #[test]
-    fn price_provider_code_keeps_vendor_identity_separate_from_region() {
+    fn price_supplier_code_keeps_vendor_identity_separate_from_region() {
         assert_eq!(
             Some("minimax_direct".to_owned()),
-            price_provider_code("minimax", "cn", "upstream", None)
+            price_supplier_code("minimax", "cn", "upstream", None)
         );
         assert_eq!(
             Some("minimax_direct".to_owned()),
-            price_provider_code("minimax", "global", "official", Some("provider"))
+            price_supplier_code("minimax", "global", "official", Some("provider"))
         );
         assert_eq!(
             Some("kuaishou_direct".to_owned()),
-            price_provider_code("kuaishou", "global", "official", Some("channel"))
+            price_supplier_code("kuaishou", "global", "official", Some("channel"))
         );
         assert_eq!(
             None,
-            price_provider_code("minimax", "cn", "official", Some("model"))
+            price_supplier_code("minimax", "cn", "official", Some("model"))
         );
     }
 }

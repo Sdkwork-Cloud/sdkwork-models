@@ -4,8 +4,8 @@ use sdkwork_utils_rust::{is_blank, snake_case};
 
 use crate::application::{PricingResolver, ResolveModelPriceQuery};
 use crate::domain::{
-    AiModel, BillingMeter, ChannelGroup, DomainResult, ModelPrice, ModelVendor, PriceSide,
-    ProviderChannelGroupBinding,
+    AiModel, BillingMeter, DomainResult, ModelPrice, ModelVendor, PriceSide, UpstreamAccountGroup,
+    UpstreamAccountGroupBinding,
 };
 use crate::ports::PricingCatalog;
 
@@ -102,7 +102,7 @@ pub struct ModelCatalogItem {
     pub shelf_state: Option<i32>,
     pub routing_state: Option<i32>,
     pub replacement_model: Option<String>,
-    pub provider_codes: Vec<String>,
+    pub supplier_codes: Vec<String>,
     pub official_reference_prices: Vec<ModelCatalogReferencePriceView>,
     pub lowest_upstream_cost_unit_price: Option<String>,
     pub lowest_upstream_cost_currency: Option<String>,
@@ -166,33 +166,32 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                     .map(|vendor| vendor.vendor)
                     .unwrap_or(ModelVendor::Unknown);
                 let model_lookup_key = model.catalog_key.as_str();
-                let provider_codes = self.provider_codes(model_lookup_key);
+                let supplier_codes = self.supplier_codes(model_lookup_key);
                 let official_reference_prices = self.official_reference_prices(
                     price_tenant_id,
                     price_organization_id,
                     model_lookup_key,
                 );
-                let lowest_upstream_cost =
-                    self.lowest_upstream_cost(
-                        price_tenant_id,
-                        price_organization_id,
-                        model_lookup_key,
-                        query.billing_meter.clone(),
-                    );
+                let lowest_upstream_cost = self.lowest_upstream_cost(
+                    price_tenant_id,
+                    price_organization_id,
+                    model_lookup_key,
+                    query.billing_meter.clone(),
+                );
                 let provider_for_resolve = lowest_upstream_cost
                     .as_ref()
-                    .and_then(|price| price.provider_code.clone())
-                    .or_else(|| provider_codes.first().cloned());
+                    .and_then(|price| price.supplier_code.clone())
+                    .or_else(|| supplier_codes.first().cloned());
                 let price_availability = query
                     .api_key_id
                     .map(|api_key_id| {
                         resolver.resolve(ResolveModelPriceQuery {
                             api_key_id,
-                            channel_group_id: None,
+                            account_group_id: None,
                             model: model_lookup_key.to_owned(),
                             billing_meter: query.billing_meter.clone(),
-                            provider_code: provider_for_resolve,
-                            channel_id: None,
+                            supplier_code: provider_for_resolve,
+                            account_id: None,
                             region_code: lowest_upstream_cost
                                 .as_ref()
                                 .map(|price| price.region_code.clone()),
@@ -235,7 +234,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                     shelf_state: model.shelf_state,
                     routing_state: model.routing_state,
                     replacement_model: model.replacement_model,
-                    provider_codes,
+                    supplier_codes,
                     official_reference_prices,
                     lowest_upstream_cost_unit_price: lowest_upstream_cost
                         .as_ref()
@@ -278,16 +277,16 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         })
     }
 
-    fn provider_codes(&self, model: &str) -> Vec<String> {
-        let mut provider_codes: Vec<String> = self
+    fn supplier_codes(&self, model: &str) -> Vec<String> {
+        let mut supplier_codes: Vec<String> = self
             .catalog
-            .list_provider_routes(model)
+            .list_model_upstream_routes(model)
             .into_iter()
-            .map(|route| route.provider_code)
+            .map(|route| route.supplier_code)
             .collect();
-        provider_codes.sort();
-        provider_codes.dedup();
-        provider_codes
+        supplier_codes.sort();
+        supplier_codes.dedup();
+        supplier_codes
     }
 
     fn official_reference_prices(
@@ -306,8 +305,8 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
             )
             .into_iter()
             .filter(|price| {
-                price.provider_code.is_none()
-                    && price.channel_id.is_none()
+                price.supplier_code.is_none()
+                    && price.account_id.is_none()
                     && price.pricing_plan_code.is_none()
             })
             .map(|price| ModelCatalogReferencePriceView {
@@ -369,7 +368,7 @@ fn configured_model_group_catalog<C: PricingCatalog>(
     }
 
     let mut groups = catalog
-        .list_channel_groups()
+        .list_upstream_account_groups()
         .into_iter()
         .filter_map(|group| {
             let key = configured_group_code(&group)?;
@@ -406,7 +405,7 @@ fn group_has_models_sort_key(group: &ModelCatalogGroup) -> usize {
 
 fn configured_model_groups<C: PricingCatalog>(catalog: &C, model: &AiModel) -> Vec<String> {
     let groups_by_id = catalog
-        .list_channel_groups()
+        .list_upstream_account_groups()
         .into_iter()
         .filter_map(|group| configured_group_code(&group).map(|code| (group.id, code)))
         .collect::<BTreeMap<_, _>>();
@@ -414,19 +413,19 @@ fn configured_model_groups<C: PricingCatalog>(catalog: &C, model: &AiModel) -> V
         return Vec::new();
     }
 
-    let channel_routes = catalog.list_provider_channel_routes();
-    let any_group_bindings = channel_routes
+    let account_routes = catalog.list_upstream_account_routes();
+    let any_account_group_bindings = account_routes
         .iter()
-        .any(|route| !route.group_bindings.is_empty());
+        .any(|route| !route.account_group_bindings.is_empty());
     let mut selected_group_ids = BTreeSet::new();
-    if any_group_bindings {
+    if any_account_group_bindings {
         let model_capability_codes = model_group_capability_codes(model);
-        for route in channel_routes {
-            for binding in route.group_bindings {
-                if groups_by_id.contains_key(&binding.group_id)
+        for route in account_routes {
+            for binding in route.account_group_bindings {
+                if groups_by_id.contains_key(&binding.account_group_id)
                     && binding_matches_model_capability(&binding, &model_capability_codes)
                 {
-                    selected_group_ids.insert(binding.group_id);
+                    selected_group_ids.insert(binding.account_group_id);
                 }
             }
         }
@@ -448,7 +447,7 @@ fn configured_model_groups<C: PricingCatalog>(catalog: &C, model: &AiModel) -> V
     groups
 }
 
-fn configured_group_code(group: &ChannelGroup) -> Option<String> {
+fn configured_group_code(group: &UpstreamAccountGroup) -> Option<String> {
     let code = group.code.trim();
     if !code.is_empty() {
         return Some(code.to_owned());
@@ -462,7 +461,7 @@ fn configured_group_code(group: &ChannelGroup) -> Option<String> {
 }
 
 fn binding_matches_model_capability(
-    binding: &ProviderChannelGroupBinding,
+    binding: &UpstreamAccountGroupBinding,
     model_capability_codes: &BTreeSet<String>,
 ) -> bool {
     if binding.capabilities.is_empty() {

@@ -316,25 +316,23 @@ pub struct AiModel {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ModelMappingBindingType {
-    ProviderAccount,
-    Channel,
-    ChannelGroup,
+    UpstreamAccount,
+    UpstreamAccountGroup,
+    SupplierEndpoint,
+    UpstreamSupplier,
     Vendor,
     Global,
-    Site,
-    SiteService,
 }
 
 impl ModelMappingBindingType {
     pub fn from_str(value: &str) -> DomainResult<Self> {
         match value.trim().to_ascii_lowercase().as_str() {
-            "provider_account" => Ok(Self::ProviderAccount),
-            "channel" => Ok(Self::Channel),
-            "channel_group" => Ok(Self::ChannelGroup),
+            "upstream_account" => Ok(Self::UpstreamAccount),
+            "upstream_account_group" => Ok(Self::UpstreamAccountGroup),
+            "supplier_endpoint" => Ok(Self::SupplierEndpoint),
+            "upstream_supplier" => Ok(Self::UpstreamSupplier),
             "vendor" => Ok(Self::Vendor),
             "global" => Ok(Self::Global),
-            "site" => Ok(Self::Site),
-            "site_service" => Ok(Self::SiteService),
             value => Err(DomainError::new(format!(
                 "ai_model_mapping_rule_binding.binding_type contains unsupported value: {value}"
             ))),
@@ -343,25 +341,23 @@ impl ModelMappingBindingType {
 
     pub fn priority_rank(self) -> i32 {
         match self {
-            Self::ProviderAccount => 0,
-            Self::Channel => 1,
-            Self::ChannelGroup => 2,
-            Self::Vendor => 3,
-            Self::Global => 4,
-            Self::Site => 5,
-            Self::SiteService => 6,
+            Self::UpstreamAccount => 0,
+            Self::UpstreamAccountGroup => 1,
+            Self::SupplierEndpoint => 2,
+            Self::UpstreamSupplier => 3,
+            Self::Vendor => 4,
+            Self::Global => 5,
         }
     }
 
     pub fn as_str(self) -> &'static str {
         match self {
-            Self::ProviderAccount => "provider_account",
-            Self::Channel => "channel",
-            Self::ChannelGroup => "channel_group",
+            Self::UpstreamAccount => "upstream_account",
+            Self::UpstreamAccountGroup => "upstream_account_group",
+            Self::SupplierEndpoint => "supplier_endpoint",
+            Self::UpstreamSupplier => "upstream_supplier",
             Self::Vendor => "vendor",
             Self::Global => "global",
-            Self::Site => "site",
-            Self::SiteService => "site_service",
         }
     }
 }
@@ -369,16 +365,14 @@ impl ModelMappingBindingType {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ResolveModelMappingContext {
     pub vendor_code: Option<String>,
-    pub channel_id: Option<i64>,
-    pub channel_code: Option<String>,
-    pub channel_group_id: Option<i64>,
-    pub channel_group_code: Option<String>,
-    pub provider_account_id: Option<i64>,
-    pub provider_account_code: Option<String>,
-    pub site_id: Option<i64>,
-    pub site_code: Option<String>,
-    pub site_service_id: Option<i64>,
-    pub site_service_code: Option<String>,
+    pub supplier_id: Option<i64>,
+    pub supplier_code: Option<String>,
+    pub endpoint_id: Option<i64>,
+    pub endpoint_code: Option<String>,
+    pub account_id: Option<i64>,
+    pub account_code: Option<String>,
+    pub account_group_id: Option<i64>,
+    pub account_group_code: Option<String>,
 }
 
 impl ResolveModelMappingContext {
@@ -391,49 +385,35 @@ impl ResolveModelMappingContext {
         self
     }
 
-    pub fn with_channel_id(mut self, channel_id: i64) -> Self {
-        self.channel_id = Some(channel_id);
+    pub fn with_supplier(mut self, supplier_id: Option<i64>, supplier_code: Option<&str>) -> Self {
+        self.supplier_id = supplier_id;
+        self.supplier_code = supplier_code.and_then(normalized_optional_text);
         self
     }
 
-    pub fn with_channel_code(mut self, channel_code: impl Into<String>) -> Self {
-        self.channel_code = normalized_optional_text(&channel_code.into());
+    pub fn with_endpoint(mut self, endpoint_id: Option<i64>, endpoint_code: Option<&str>) -> Self {
+        self.endpoint_id = endpoint_id;
+        self.endpoint_code = endpoint_code.and_then(normalized_optional_text);
         self
     }
 
-    pub fn with_channel_group_id(mut self, channel_group_id: i64) -> Self {
-        self.channel_group_id = Some(channel_group_id);
+    pub fn with_account_id(mut self, account_id: i64) -> Self {
+        self.account_id = Some(account_id);
         self
     }
 
-    pub fn with_channel_group_code(mut self, channel_group_code: impl Into<String>) -> Self {
-        self.channel_group_code = normalized_optional_text(&channel_group_code.into());
+    pub fn with_account_code(mut self, account_code: impl Into<String>) -> Self {
+        self.account_code = normalized_optional_text(&account_code.into());
         self
     }
 
-    pub fn with_provider_account_id(mut self, provider_account_id: i64) -> Self {
-        self.provider_account_id = Some(provider_account_id);
+    pub fn with_account_group_id(mut self, account_group_id: i64) -> Self {
+        self.account_group_id = Some(account_group_id);
         self
     }
 
-    pub fn with_provider_account_code(mut self, provider_account_code: impl Into<String>) -> Self {
-        self.provider_account_code = normalized_optional_text(&provider_account_code.into());
-        self
-    }
-
-    pub fn with_site(mut self, site_id: Option<i64>, site_code: Option<&str>) -> Self {
-        self.site_id = site_id;
-        self.site_code = site_code.and_then(normalized_optional_text);
-        self
-    }
-
-    pub fn with_site_service(
-        mut self,
-        site_service_id: Option<i64>,
-        site_service_code: Option<&str>,
-    ) -> Self {
-        self.site_service_id = site_service_id;
-        self.site_service_code = site_service_code.and_then(normalized_optional_text);
+    pub fn with_account_group_code(mut self, account_group_code: impl Into<String>) -> Self {
+        self.account_group_code = normalized_optional_text(&account_group_code.into());
         self
     }
 }
@@ -870,7 +850,7 @@ impl ProviderAuthProfile {
     }
 
     pub fn from_account_config(
-        provider_code: &str,
+        supplier_code: &str,
         auth_type: Option<&str>,
         auth_config_json: Option<&str>,
     ) -> DomainResult<Self> {
@@ -913,18 +893,18 @@ impl ProviderAuthProfile {
             .as_deref()
         {
             Some("query") => Self::query(
-                name.or_else(|| default_query_auth_name(provider_code))
+                name.or_else(|| default_query_auth_name(supplier_code))
                     .ok_or_else(|| {
                         DomainError::new(
-                            "integration_provider_account.auth_config query auth name is required",
+                            "integration_upstream_account.auth_config query auth name is required",
                         )
                     })?,
             ),
             Some("header") => Self::header(
-                name.or_else(|| default_header_auth_name(provider_code))
+                name.or_else(|| default_header_auth_name(supplier_code))
                     .ok_or_else(|| {
                         DomainError::new(
-                            "integration_provider_account.auth_config header auth name is required",
+                            "integration_upstream_account.auth_config header auth name is required",
                         )
                     })?,
             ),
@@ -934,11 +914,11 @@ impl ProviderAuthProfile {
             Some("claude_code") => Self::bearer(),
             Some("bearer") => Self::bearer(),
             Some("standard_api_key" | "api_key" | "1" | "") | None => {
-                provider_default_auth_profile(provider_code, name)
+                provider_default_auth_profile(supplier_code, name)
             }
             Some(value) => {
                 return Err(DomainError::new(format!(
-                    "integration_provider_account.auth_type contains unsupported value: {value}"
+                    "integration_upstream_account.auth_type contains unsupported value: {value}"
                 )));
             }
         };
@@ -962,7 +942,7 @@ fn parse_auth_config(auth_config_json: Option<&str>) -> DomainResult<Value> {
     {
         Some(value) => serde_json::from_str(value).map_err(|error| {
             DomainError::new(format!(
-                "integration_provider_account.auth_config must be valid JSON: {error}"
+                "integration_upstream_account.auth_config must be valid JSON: {error}"
             ))
         }),
         None => Ok(Value::Object(Default::default())),
@@ -1005,14 +985,14 @@ fn parse_auth_default_headers(config: &Value) -> DomainResult<Vec<ProviderAuthHe
     };
     let object = default_headers.as_object().ok_or_else(|| {
         DomainError::new(
-            "integration_provider_account.auth_config defaultHeaders must be an object",
+            "integration_upstream_account.auth_config defaultHeaders must be an object",
         )
     })?;
     let mut headers = Vec::with_capacity(object.len());
     for (name, value) in object {
         let value = value.as_str().ok_or_else(|| {
             DomainError::new(format!(
-                "integration_provider_account.auth_config defaultHeaders.{name} must be a string"
+                "integration_upstream_account.auth_config defaultHeaders.{name} must be a string"
             ))
         })?;
         let name = validate_provider_auth_header_name(name.trim(), "defaultHeaders header name")?;
@@ -1033,13 +1013,13 @@ fn validate_auth_profile(profile: &ProviderAuthProfile) -> DomainResult<()> {
         ProviderAuthType::Header | ProviderAuthType::Query
     ) {
         let name = profile.name.as_deref().ok_or_else(|| {
-            DomainError::new("integration_provider_account.auth_config auth name is required")
+            DomainError::new("integration_upstream_account.auth_config auth name is required")
         })?;
         if profile.auth_type == ProviderAuthType::Header {
             validate_provider_auth_header_name(name, "auth header name")?;
         } else if name.trim().is_empty() {
             return Err(DomainError::new(
-                "integration_provider_account.auth_config query auth name must not be blank",
+                "integration_upstream_account.auth_config query auth name must not be blank",
             ));
         }
     }
@@ -1050,12 +1030,12 @@ fn validate_provider_auth_header_name(name: &str, label: &str) -> DomainResult<S
     let name = name.trim().to_ascii_lowercase();
     if name.is_empty() {
         return Err(DomainError::new(format!(
-            "integration_provider_account.auth_config {label} must not be blank"
+            "integration_upstream_account.auth_config {label} must not be blank"
         )));
     }
     if !name.bytes().all(is_valid_http_header_name_byte) {
         return Err(DomainError::new(format!(
-            "integration_provider_account.auth_config {label} is invalid: {name}"
+            "integration_upstream_account.auth_config {label} is invalid: {name}"
         )));
     }
     Ok(name)
@@ -1064,12 +1044,12 @@ fn validate_provider_auth_header_name(name: &str, label: &str) -> DomainResult<S
 fn validate_provider_auth_header_value(name: &str, value: &str, label: &str) -> DomainResult<()> {
     if value.is_empty() {
         return Err(DomainError::new(format!(
-            "integration_provider_account.auth_config {label}.{name} must not be blank"
+            "integration_upstream_account.auth_config {label}.{name} must not be blank"
         )));
     }
     if value.bytes().any(|byte| matches!(byte, 0..=31 | 127)) {
         return Err(DomainError::new(format!(
-            "integration_provider_account.auth_config {label}.{name} contains an invalid header value"
+            "integration_upstream_account.auth_config {label}.{name} contains an invalid header value"
         )));
     }
     Ok(())
@@ -1118,11 +1098,11 @@ fn normalize_auth_type_code(value: &str) -> String {
 }
 
 fn provider_default_auth_profile(
-    provider_code: &str,
+    supplier_code: &str,
     configured_name: Option<String>,
 ) -> ProviderAuthProfile {
-    let provider_code = provider_code.trim().to_ascii_lowercase();
-    match provider_code.as_str() {
+    let supplier_code = supplier_code.trim().to_ascii_lowercase();
+    match supplier_code.as_str() {
         "google" | "gemini" | "google_gemini" => ProviderAuthProfile::header(
             configured_name.unwrap_or_else(|| "x-goog-api-key".to_owned()),
         ),
@@ -1138,8 +1118,8 @@ fn provider_default_auth_profile(
     }
 }
 
-fn default_header_auth_name(provider_code: &str) -> Option<String> {
-    match provider_code.trim().to_ascii_lowercase().as_str() {
+fn default_header_auth_name(supplier_code: &str) -> Option<String> {
+    match supplier_code.trim().to_ascii_lowercase().as_str() {
         "google" | "gemini" | "google_gemini" => Some("x-goog-api-key".to_owned()),
         "anthropic" | "claude" => Some("x-api-key".to_owned()),
         "azure" | "azure_openai" => Some("api-key".to_owned()),
@@ -1147,21 +1127,21 @@ fn default_header_auth_name(provider_code: &str) -> Option<String> {
     }
 }
 
-fn default_query_auth_name(provider_code: &str) -> Option<String> {
-    match provider_code.trim().to_ascii_lowercase().as_str() {
+fn default_query_auth_name(supplier_code: &str) -> Option<String> {
+    match supplier_code.trim().to_ascii_lowercase().as_str() {
         "google" | "gemini" | "google_gemini" => Some("key".to_owned()),
         _ => Some("api_key".to_owned()),
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ModelProviderRoute {
+pub struct ModelUpstreamRoute {
     pub catalog_key: String,
     pub model: String,
     pub api_code: Option<String>,
     pub region_code: String,
-    pub provider_code: String,
-    pub channel_id: i64,
+    pub supplier_code: String,
+    pub account_id: i64,
     pub credential_id: Option<i64>,
     pub credential_rotation: String,
     pub credential_priority: i32,
@@ -1175,18 +1155,18 @@ pub struct ModelProviderRoute {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ProviderChannelGroupBinding {
-    pub group_id: i64,
+pub struct UpstreamAccountGroupBinding {
+    pub account_group_id: i64,
     pub priority: i32,
     pub weight: i32,
     pub api_scope: Vec<String>,
     pub capabilities: Vec<String>,
 }
 
-impl ProviderChannelGroupBinding {
-    pub fn new(group_id: i64, priority: i32, weight: i32) -> Self {
+impl UpstreamAccountGroupBinding {
+    pub fn new(account_group_id: i64, priority: i32, weight: i32) -> Self {
         Self {
-            group_id,
+            account_group_id,
             priority,
             weight,
             api_scope: Vec::new(),
@@ -1195,7 +1175,7 @@ impl ProviderChannelGroupBinding {
     }
 
     pub fn new_resource_scoped<A, C, AS, CS>(
-        group_id: i64,
+        account_group_id: i64,
         priority: i32,
         weight: i32,
         api_scope: AS,
@@ -1208,7 +1188,7 @@ impl ProviderChannelGroupBinding {
         CS: IntoIterator<Item = C>,
     {
         Self {
-            group_id,
+            account_group_id,
             priority,
             weight,
             api_scope: api_scope.into_iter().map(Into::into).collect(),
@@ -1218,57 +1198,55 @@ impl ProviderChannelGroupBinding {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ProviderChannelRoute {
-    pub provider_code: String,
-    pub channel_id: i64,
+pub struct UpstreamAccountRoute {
+    pub supplier_code: String,
+    pub account_id: i64,
     pub credential_id: Option<i64>,
     pub credential_rotation: String,
     pub credential_priority: i32,
     pub credential_weight: i32,
-    pub channel_code: Option<String>,
+    pub account_code: Option<String>,
     pub region_code: String,
-    pub site_id: Option<i64>,
-    pub site_code: Option<String>,
-    pub site_service_id: Option<i64>,
-    pub site_service_code: Option<String>,
+    pub supplier_id: Option<i64>,
+    pub endpoint_id: Option<i64>,
+    pub endpoint_code: Option<String>,
     pub base_url: Option<String>,
     pub secret_ref: Option<String>,
     pub auth_profile: ProviderAuthProfile,
     pub timeout_ms: Option<u64>,
     pub retry_policy: Option<ProviderRetryPolicy>,
-    pub group_bindings: Vec<ProviderChannelGroupBinding>,
-    pub channel_health_status: i32,
+    pub account_group_bindings: Vec<UpstreamAccountGroupBinding>,
+    pub account_health_status: i32,
     pub credential_health_status: i32,
 }
 
-impl ProviderChannelRoute {
-    pub fn new(provider_code: &str, channel_id: i64) -> Self {
+impl UpstreamAccountRoute {
+    pub fn new(supplier_code: &str, account_id: i64) -> Self {
         Self {
-            provider_code: provider_code.to_owned(),
-            channel_id,
+            supplier_code: supplier_code.to_owned(),
+            account_id,
             credential_id: None,
             credential_rotation: DEFAULT_CREDENTIAL_ROTATION.to_owned(),
             credential_priority: 100,
             credential_weight: 100,
-            channel_code: None,
+            account_code: None,
             region_code: "global".to_owned(),
-            site_id: None,
-            site_code: None,
-            site_service_id: None,
-            site_service_code: None,
+            supplier_id: None,
+            endpoint_id: None,
+            endpoint_code: None,
             base_url: None,
             secret_ref: None,
             auth_profile: ProviderAuthProfile::default(),
             timeout_ms: None,
             retry_policy: None,
-            group_bindings: Vec::new(),
-            channel_health_status: 1,
+            account_group_bindings: Vec::new(),
+            account_health_status: 1,
             credential_health_status: 1,
         }
     }
 
-    pub fn with_channel_code(mut self, channel_code: &str) -> Self {
-        self.channel_code = normalized_optional_text(channel_code);
+    pub fn with_account_code(mut self, account_code: &str) -> Self {
+        self.account_code = normalized_optional_text(account_code);
         self
     }
 
@@ -1291,23 +1269,18 @@ impl ProviderChannelRoute {
         self
     }
 
-    pub fn with_site(mut self, site_id: Option<i64>, site_code: Option<&str>) -> Self {
-        self.site_id = site_id;
-        self.site_code = site_code.and_then(normalized_optional_text);
+    pub fn with_supplier_id(mut self, supplier_id: i64) -> Self {
+        self.supplier_id = (supplier_id > 0).then_some(supplier_id);
         self
     }
 
-    pub fn with_site_service(
-        mut self,
-        site_service_id: Option<i64>,
-        site_service_code: Option<&str>,
-    ) -> Self {
-        self.site_service_id = site_service_id;
-        self.site_service_code = site_service_code.and_then(normalized_optional_text);
+    pub fn with_endpoint(mut self, endpoint_id: Option<i64>, endpoint_code: Option<&str>) -> Self {
+        self.endpoint_id = endpoint_id.filter(|value| *value > 0);
+        self.endpoint_code = endpoint_code.and_then(normalized_optional_text);
         self
     }
 
-    pub fn with_provider_endpoint(
+    pub fn with_upstream_endpoint(
         mut self,
         base_url: Option<impl Into<String>>,
         secret_ref: Option<impl Into<String>>,
@@ -1332,15 +1305,24 @@ impl ProviderChannelRoute {
         self
     }
 
-    pub fn with_group_binding(mut self, group_id: i64, priority: i32, weight: i32) -> Self {
-        self.group_bindings
-            .push(ProviderChannelGroupBinding::new(group_id, priority, weight));
+    pub fn with_account_group_binding(
+        mut self,
+        account_group_id: i64,
+        priority: i32,
+        weight: i32,
+    ) -> Self {
+        self.account_group_bindings
+            .push(UpstreamAccountGroupBinding::new(
+                account_group_id,
+                priority,
+                weight,
+            ));
         self
     }
 
-    pub fn with_resource_scoped_group_binding<A, C, AS, CS>(
+    pub fn with_resource_scoped_account_group_binding<A, C, AS, CS>(
         mut self,
-        group_id: i64,
+        account_group_id: i64,
         priority: i32,
         weight: i32,
         api_scope: AS,
@@ -1352,9 +1334,9 @@ impl ProviderChannelRoute {
         AS: IntoIterator<Item = A>,
         CS: IntoIterator<Item = C>,
     {
-        self.group_bindings
-            .push(ProviderChannelGroupBinding::new_resource_scoped(
-                group_id,
+        self.account_group_bindings
+            .push(UpstreamAccountGroupBinding::new_resource_scoped(
+                account_group_id,
                 priority,
                 weight,
                 api_scope,
@@ -1363,26 +1345,29 @@ impl ProviderChannelRoute {
         self
     }
 
-    pub fn with_group_bindings(mut self, group_bindings: Vec<ProviderChannelGroupBinding>) -> Self {
-        self.group_bindings = group_bindings;
+    pub fn with_account_group_bindings(
+        mut self,
+        account_group_bindings: Vec<UpstreamAccountGroupBinding>,
+    ) -> Self {
+        self.account_group_bindings = account_group_bindings;
         self
     }
 
-    /// Returns true when both the channel and its credential are healthy (health_status == 1).
-    pub fn is_channel_healthy(&self) -> bool {
-        self.channel_health_status == 1 && self.credential_health_status == 1
+    /// Returns true when both the account and its credential are healthy (health_status == 1).
+    pub fn is_account_healthy(&self) -> bool {
+        self.account_health_status == 1 && self.credential_health_status == 1
     }
 }
 
-impl ModelProviderRoute {
-    pub fn new(model: &str, provider_code: &str, channel_id: i64, provider_model: &str) -> Self {
+impl ModelUpstreamRoute {
+    pub fn new(model: &str, supplier_code: &str, account_id: i64, provider_model: &str) -> Self {
         Self {
             catalog_key: model.to_owned(),
             model: model.to_owned(),
             api_code: None,
             region_code: "global".to_owned(),
-            provider_code: provider_code.to_owned(),
-            channel_id,
+            supplier_code: supplier_code.to_owned(),
+            account_id,
             credential_id: None,
             credential_rotation: DEFAULT_CREDENTIAL_ROTATION.to_owned(),
             credential_priority: 100,
@@ -1399,8 +1384,8 @@ impl ModelProviderRoute {
     pub fn new_for_catalog_key(
         catalog_key: &str,
         model: &str,
-        provider_code: &str,
-        channel_id: i64,
+        supplier_code: &str,
+        account_id: i64,
         provider_model: &str,
     ) -> Self {
         Self {
@@ -1408,8 +1393,8 @@ impl ModelProviderRoute {
             model: model.to_owned(),
             api_code: None,
             region_code: "global".to_owned(),
-            provider_code: provider_code.to_owned(),
-            channel_id,
+            supplier_code: supplier_code.to_owned(),
+            account_id,
             credential_id: None,
             credential_rotation: DEFAULT_CREDENTIAL_ROTATION.to_owned(),
             credential_priority: 100,
@@ -1453,7 +1438,7 @@ impl ModelProviderRoute {
         self
     }
 
-    pub fn with_provider_endpoint(
+    pub fn with_upstream_endpoint(
         mut self,
         base_url: Option<impl Into<String>>,
         secret_ref: Option<impl Into<String>>,

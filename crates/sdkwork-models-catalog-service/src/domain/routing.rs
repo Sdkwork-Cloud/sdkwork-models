@@ -8,7 +8,7 @@ pub enum RoutingPolicyScope {
     Tenant,
     Organization,
     ApiKey,
-    ChannelGroup,
+    UpstreamAccountGroup,
 }
 
 impl RoutingPolicyScope {
@@ -18,7 +18,7 @@ impl RoutingPolicyScope {
             2 => Ok(Self::Tenant),
             3 => Ok(Self::Organization),
             4 => Ok(Self::ApiKey),
-            5 => Ok(Self::ChannelGroup),
+            5 => Ok(Self::UpstreamAccountGroup),
             value => Err(DomainError::new(format!(
                 "ai_routing_policy.policy_scope contains unsupported value: {value}"
             ))),
@@ -31,7 +31,7 @@ impl RoutingPolicyScope {
             Self::Tenant => 2,
             Self::Organization => 3,
             Self::ApiKey => 4,
-            Self::ChannelGroup => 5,
+            Self::UpstreamAccountGroup => 5,
         }
     }
 }
@@ -55,7 +55,7 @@ pub enum AiRouteStrategy {
     CreateThenSticky,
     ParentSticky,
     LookupSticky,
-    PrimaryChannel,
+    PrimaryAccount,
     FanoutAggregate,
 }
 
@@ -67,7 +67,7 @@ impl AiRouteStrategy {
             3 => Ok(Self::CreateThenSticky),
             4 => Ok(Self::ParentSticky),
             5 => Ok(Self::LookupSticky),
-            6 => Ok(Self::PrimaryChannel),
+            6 => Ok(Self::PrimaryAccount),
             7 => Ok(Self::FanoutAggregate),
             value => Err(DomainError::new(format!(
                 "ai_route_taxonomy.route_strategy contains unsupported value: {value}"
@@ -82,7 +82,7 @@ impl AiRouteStrategy {
             Self::CreateThenSticky => 3,
             Self::ParentSticky => 4,
             Self::LookupSticky => 5,
-            Self::PrimaryChannel => 6,
+            Self::PrimaryAccount => 6,
             Self::FanoutAggregate => 7,
         }
     }
@@ -94,7 +94,7 @@ impl AiRouteStrategy {
             | Self::CreateThenSticky
             | Self::ParentSticky
             | Self::LookupSticky
-            | Self::PrimaryChannel
+            | Self::PrimaryAccount
             | Self::FanoutAggregate => AiRouteFailureStrategy::FailClosed,
         }
     }
@@ -288,15 +288,15 @@ impl RoutingPolicy {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RouteCandidate {
-    pub channel_id: i64,
+    pub account_group_id: i64,
     pub weight: i64,
     pub region_code: Option<String>,
 }
 
 impl RouteCandidate {
-    pub fn new(channel_id: i64, weight: i64) -> Self {
+    pub fn new(account_group_id: i64, weight: i64) -> Self {
         Self {
-            channel_id,
+            account_group_id,
             weight,
             region_code: None,
         }
@@ -323,7 +323,7 @@ pub struct RoutingRule {
     pub priority: i32,
     pub match_expression: Value,
     pub target_model: Option<String>,
-    pub candidate_channels: Vec<RouteCandidate>,
+    pub candidate_account_groups: Vec<RouteCandidate>,
     pub fallback_chain: Vec<RouteCandidate>,
     pub constraints: Value,
 }
@@ -352,14 +352,17 @@ impl RoutingRule {
             } else {
                 Some(target_model.to_owned())
             },
-            candidate_channels: Vec::new(),
+            candidate_account_groups: Vec::new(),
             fallback_chain: Vec::new(),
             constraints: Value::Object(Default::default()),
         }
     }
 
-    pub fn with_candidate_channels(mut self, candidate_channels: Vec<RouteCandidate>) -> Self {
-        self.candidate_channels = candidate_channels;
+    pub fn with_candidate_account_groups(
+        mut self,
+        candidate_account_groups: Vec<RouteCandidate>,
+    ) -> Self {
+        self.candidate_account_groups = candidate_account_groups;
         self
     }
 

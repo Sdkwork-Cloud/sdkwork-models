@@ -817,8 +817,8 @@ async fn list_model_mappings(
     pool: &SqlitePool,
     query: ListAdminModelMappingsQuery,
 ) -> DomainResult<AdminModelMappingListPage> {
-    let channel_id = query.channel_id;
-    let channel_code = query.channel_code.as_deref();
+    let account_id = query.account_id;
+    let account_code = query.account_code.as_deref();
     let binding_type = query.binding_type.as_deref();
     let vendor_code = query.vendor_code.as_deref();
     let q = query.q.as_deref();
@@ -868,7 +868,7 @@ async fn list_model_mappings(
                     AND b.organization_id = r.organization_id
                     AND b.deleted_at IS NULL
                     AND b.status = 1
-                    AND b.binding_type = 'channel'
+                    AND b.binding_type = 'upstream_account'
                     AND b.binding_id = ?
               )
           )
@@ -881,7 +881,7 @@ async fn list_model_mappings(
                     AND b.organization_id = r.organization_id
                     AND b.deleted_at IS NULL
                     AND b.status = 1
-                    AND b.binding_type = 'channel'
+                    AND b.binding_type = 'upstream_account'
                     AND b.binding_code = ?
               )
           )
@@ -918,10 +918,10 @@ async fn list_model_mappings(
     .bind(vendor_code)
     .bind(vendor_code)
     .bind(vendor_code)
-    .bind(channel_id)
-    .bind(channel_id)
-    .bind(channel_code)
-    .bind(channel_code)
+    .bind(account_id)
+    .bind(account_id)
+    .bind(account_code)
+    .bind(account_code)
     .bind(q)
     .bind(q)
     .bind(q)
@@ -975,7 +975,7 @@ async fn list_model_mappings(
                     AND b.organization_id = r.organization_id
                     AND b.deleted_at IS NULL
                     AND b.status = 1
-                    AND b.binding_type = 'channel'
+                    AND b.binding_type = 'upstream_account'
                     AND b.binding_id = ?
               )
           )
@@ -988,7 +988,7 @@ async fn list_model_mappings(
                     AND b.organization_id = r.organization_id
                     AND b.deleted_at IS NULL
                     AND b.status = 1
-                    AND b.binding_type = 'channel'
+                    AND b.binding_type = 'upstream_account'
                     AND b.binding_code = ?
               )
           )
@@ -1026,9 +1026,9 @@ async fn list_model_mappings(
                 AND b.status = 1
                 AND b.enabled = 1
               ORDER BY CASE b.binding_type
-                  WHEN 'provider_account' THEN 0
-                  WHEN 'channel' THEN 1
-                  WHEN 'channel_group' THEN 2
+                  WHEN 'upstream_account' THEN 0
+                  WHEN 'upstream_account' THEN 1
+                  WHEN 'upstream_account_group' THEN 2
                   WHEN 'vendor' THEN 3
                   WHEN 'global' THEN 4
                   WHEN 'site_service' THEN 5
@@ -1037,9 +1037,9 @@ async fn list_model_mappings(
               END, b.sort_order ASC, b.id ASC
               LIMIT 1
           ), 'global')
-              WHEN 'provider_account' THEN 0
-              WHEN 'channel' THEN 1
-              WHEN 'channel_group' THEN 2
+              WHEN 'upstream_account' THEN 0
+              WHEN 'upstream_account' THEN 1
+              WHEN 'upstream_account_group' THEN 2
               WHEN 'vendor' THEN 3
               WHEN 'global' THEN 4
               WHEN 'site_service' THEN 5
@@ -1060,10 +1060,10 @@ async fn list_model_mappings(
     .bind(vendor_code)
     .bind(vendor_code)
     .bind(vendor_code)
-    .bind(channel_id)
-    .bind(channel_id)
-    .bind(channel_code)
-    .bind(channel_code)
+    .bind(account_id)
+    .bind(account_id)
+    .bind(account_code)
+    .bind(account_code)
     .bind(q)
     .bind(q)
     .bind(q)
@@ -2095,7 +2095,7 @@ async fn upsert_model_catalog_sync_run(
         sqlx::query(
             r#"
             INSERT INTO ai_model_catalog_source
-                (uuid, tenant_id, organization_id, data_scope, status, metadata, source_code, vendor_code, provider_code, source_name, source_url, source_kind, trust_level, parser_kind, refresh_interval_seconds, last_observed_at, last_success_at, catalog_version, source_hash, id)
+                (uuid, tenant_id, organization_id, data_scope, status, metadata, source_code, vendor_code, supplier_code, source_name, source_url, source_kind, trust_level, parser_kind, refresh_interval_seconds, last_observed_at, last_success_at, catalog_version, source_hash, id)
             VALUES
                 (?, ?, ?, 1, 1, ?, ?, 'mixed', NULL, ?, ?, 2, 1, 'manual_refresh', 21600, ?, ?, ?, ?, ?)
             ON CONFLICT(tenant_id, organization_id, source_code) DO UPDATE SET
@@ -2127,7 +2127,7 @@ async fn upsert_model_catalog_sync_run(
         sqlx::query(
             r#"
             INSERT INTO ai_model_catalog_source
-                (uuid, tenant_id, organization_id, data_scope, status, metadata, source_code, vendor_code, provider_code, source_name, source_url, source_kind, trust_level, parser_kind, refresh_interval_seconds, last_observed_at, last_success_at, catalog_version, source_hash, id)
+                (uuid, tenant_id, organization_id, data_scope, status, metadata, source_code, vendor_code, supplier_code, source_name, source_url, source_kind, trust_level, parser_kind, refresh_interval_seconds, last_observed_at, last_success_at, catalog_version, source_hash, id)
             VALUES
                 (?, ?, ?, 1, 1, ?, ?, 'mixed', NULL, ?, ?, 2, 1, 'manual_refresh', 21600, ?, ?, ?, ?, ?)
             ON CONFLICT(tenant_id, organization_id, source_code) DO UPDATE SET
@@ -2180,7 +2180,7 @@ async fn upsert_model_catalog_sync_run(
     sqlx::query(
         r#"
         INSERT INTO ai_model_catalog_sync_run
-            (uuid, tenant_id, organization_id, source_type, source_id, source_version, status, metadata, source_code, vendor_code, provider_code, run_status, started_at, finished_at, observed_at, catalog_version, source_hash, observed_vendor_count, observed_model_count, observed_meter_count, observed_price_count, accepted_count, rejected_count, change_summary, id)
+            (uuid, tenant_id, organization_id, source_type, source_id, source_version, status, metadata, source_code, vendor_code, supplier_code, run_status, started_at, finished_at, observed_at, catalog_version, source_hash, observed_vendor_count, observed_model_count, observed_meter_count, observed_price_count, accepted_count, rejected_count, change_summary, id)
         VALUES
             (?, ?, ?, 'manual_refresh', ?, 1, 1, ?, ?, 'mixed', NULL, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
         "#,
@@ -3263,7 +3263,7 @@ async fn find_matching_model_mapping(
          AND i.deleted_at IS NULL
          AND i.status = 1
          AND i.enabled = 1
-         AND i.source_model = ?
+         AND i.source_model = ?1
         JOIN ai_model_mapping_rule_binding b
           ON b.rule_id = r.id
          AND b.tenant_id = r.tenant_id
@@ -3271,20 +3271,28 @@ async fn find_matching_model_mapping(
          AND b.deleted_at IS NULL
          AND b.status = 1
          AND b.enabled = 1
-        WHERE r.tenant_id = ?
-          AND r.organization_id = ?
+        WHERE r.tenant_id = ?2
+          AND r.organization_id = ?3
           AND r.deleted_at IS NULL
           AND r.status = 1
           AND r.enabled = 1
           AND r.match_type = 'exact'
           AND (
-              (b.binding_type = 'provider_account' AND ((? IS NOT NULL AND b.binding_id = ?) OR (? IS NOT NULL AND b.binding_code = ?)))
-              OR (b.binding_type = 'channel' AND ((? IS NOT NULL AND b.binding_id = ?) OR (? IS NOT NULL AND b.binding_code = ?)))
-              OR (b.binding_type = 'channel_group' AND EXISTS (
+              (b.binding_type = 'upstream_account' AND ((?4 IS NOT NULL AND b.binding_id = ?4) OR (?5 IS NOT NULL AND b.binding_code = ?5)))
+              OR (b.binding_type = 'upstream_account_group' AND (
+                  (?6 IS NOT NULL AND b.binding_id = ?6)
+                  OR (?7 IS NOT NULL AND b.binding_code = ?7)
+                  OR EXISTS (
                   SELECT 1
-                  FROM ai_channel_group_member gm
-                  LEFT JOIN ai_channel_group g
-                    ON g.id = gm.channel_group_id
+                  FROM ai_upstream_account_group_member gm
+                  JOIN ai_upstream_account a
+                    ON a.id = gm.account_id
+                   AND a.tenant_id = gm.tenant_id
+                   AND a.organization_id = gm.organization_id
+                   AND a.deleted_at IS NULL
+                   AND a.status = 1
+                  LEFT JOIN ai_upstream_account_group g
+                    ON g.id = gm.account_group_id
                    AND g.tenant_id = gm.tenant_id
                    AND g.organization_id = gm.organization_id
                    AND g.deleted_at IS NULL
@@ -3293,19 +3301,35 @@ async fn find_matching_model_mapping(
                     AND gm.organization_id = r.organization_id
                     AND gm.deleted_at IS NULL
                     AND gm.status = 1
-                    AND ? IS NOT NULL
-                    AND gm.channel_id = ?
-                    AND (b.binding_id = gm.channel_group_id OR b.binding_code = g.group_code)
+                    AND ((?4 IS NOT NULL AND a.id = ?4) OR (?5 IS NOT NULL AND a.account_code = ?5))
+                    AND (b.binding_id = gm.account_group_id OR b.binding_code = g.group_code)
+                  )
               ))
-              OR (b.binding_type = 'vendor' AND ? IS NOT NULL AND b.binding_code = ?)
+              OR (b.binding_type = 'supplier_endpoint' AND ((?8 IS NOT NULL AND b.binding_id = ?8) OR (?9 IS NOT NULL AND b.binding_code = ?9)))
+              OR (b.binding_type = 'upstream_supplier' AND (
+                  (?10 IS NOT NULL AND b.binding_id = ?10)
+                  OR (?11 IS NOT NULL AND b.binding_code = ?11)
+                  OR EXISTS (
+                      SELECT 1
+                      FROM ai_upstream_account a
+                      WHERE a.tenant_id = r.tenant_id
+                        AND a.organization_id = r.organization_id
+                        AND a.deleted_at IS NULL
+                        AND a.status = 1
+                        AND ((?4 IS NOT NULL AND a.id = ?4) OR (?5 IS NOT NULL AND a.account_code = ?5))
+                        AND (b.binding_id = a.supplier_id OR b.binding_code = a.supplier_code)
+                  )
+              ))
+              OR (b.binding_type = 'vendor' AND ?12 IS NOT NULL AND b.binding_code = ?12)
               OR b.binding_type = 'global'
           )
         ORDER BY CASE b.binding_type
-              WHEN 'provider_account' THEN 0
-              WHEN 'channel' THEN 1
-              WHEN 'channel_group' THEN 2
-              WHEN 'vendor' THEN 3
-              WHEN 'global' THEN 4
+              WHEN 'upstream_account' THEN 0
+              WHEN 'upstream_account_group' THEN 1
+              WHEN 'supplier_endpoint' THEN 2
+              WHEN 'upstream_supplier' THEN 3
+              WHEN 'vendor' THEN 4
+              WHEN 'global' THEN 5
               ELSE 7
           END,
           b.sort_order ASC,
@@ -3318,17 +3342,14 @@ async fn find_matching_model_mapping(
     .bind(&query.source_model)
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
-    .bind(query.provider_account_id)
-    .bind(query.provider_account_id)
-    .bind(query.provider_account_code.as_deref())
-    .bind(query.provider_account_code.as_deref())
-    .bind(query.channel_id)
-    .bind(query.channel_id)
-    .bind(query.channel_code.as_deref())
-    .bind(query.channel_code.as_deref())
-    .bind(query.channel_id)
-    .bind(query.channel_id)
-    .bind(query.vendor_code.as_deref())
+    .bind(query.account_id)
+    .bind(query.account_code.as_deref())
+    .bind(query.account_group_id)
+    .bind(query.account_group_code.as_deref())
+    .bind(query.endpoint_id)
+    .bind(query.endpoint_code.as_deref())
+    .bind(query.supplier_id)
+    .bind(query.supplier_code.as_deref())
     .bind(query.vendor_code.as_deref())
     .fetch_optional(pool)
     .await
@@ -3520,9 +3541,9 @@ fn mapping_select_sql(predicate: &str) -> String {
                   AND b.status = 1
                   AND b.enabled = 1
                 ORDER BY CASE b.binding_type
-                    WHEN 'provider_account' THEN 0
-                    WHEN 'channel' THEN 1
-                    WHEN 'channel_group' THEN 2
+                    WHEN 'upstream_account' THEN 0
+                    WHEN 'upstream_account' THEN 1
+                    WHEN 'upstream_account_group' THEN 2
                     WHEN 'vendor' THEN 3
                     WHEN 'global' THEN 4
                     WHEN 'site_service' THEN 5

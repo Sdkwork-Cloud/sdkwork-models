@@ -53,8 +53,8 @@ where
         let api_key = self.find_api_key(&key_hash)?;
         let group = self
             .catalog
-            .find_channel_group(api_key.group_id)
-            .ok_or_else(|| DomainError::new("channel group is not available"))?;
+            .find_upstream_account_group(api_key.default_account_group_id)
+            .ok_or_else(|| DomainError::new("account group is not available"))?;
 
         Ok(AuthenticatedApiKeyContext {
             api_key_id: api_key.id,

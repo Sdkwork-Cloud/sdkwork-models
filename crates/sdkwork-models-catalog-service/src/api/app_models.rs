@@ -105,7 +105,7 @@ struct AppModelCatalogItemResponse {
     shelf_state: Option<i32>,
     routing_state: Option<i32>,
     replacement_model: Option<String>,
-    provider_codes: Vec<String>,
+    supplier_codes: Vec<String>,
     official_reference_prices: Vec<AppModelCatalogReferencePriceResponse>,
     price_availability: AppModelCatalogPriceAvailabilityResponse,
 }
@@ -292,7 +292,7 @@ fn to_item_response(item: ModelCatalogItem) -> AppModelCatalogItemResponse {
         shelf_state: item.shelf_state,
         routing_state: item.routing_state,
         replacement_model: item.replacement_model,
-        provider_codes: item.provider_codes,
+        supplier_codes: item.supplier_codes,
         official_reference_prices: item
             .official_reference_prices
             .into_iter()

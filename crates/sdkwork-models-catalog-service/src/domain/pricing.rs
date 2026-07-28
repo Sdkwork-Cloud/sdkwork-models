@@ -40,8 +40,8 @@ pub struct ModelPrice {
     pub price_side: PriceSide,
     pub billing_meter: BillingMeter,
     pub unit_price: Money,
-    pub provider_code: Option<String>,
-    pub channel_id: Option<i64>,
+    pub supplier_code: Option<String>,
+    pub account_id: Option<i64>,
     pub pricing_plan_code: Option<String>,
 }
 
@@ -59,8 +59,8 @@ impl ModelPrice {
             price_side,
             billing_meter,
             unit_price,
-            provider_code: None,
-            channel_id: None,
+            supplier_code: None,
+            account_id: None,
             pricing_plan_code: None,
         }
     }
@@ -79,8 +79,8 @@ impl ModelPrice {
             price_side,
             billing_meter,
             unit_price,
-            provider_code: None,
-            channel_id: None,
+            supplier_code: None,
+            account_id: None,
             pricing_plan_code: None,
         }
     }
@@ -95,9 +95,9 @@ impl ModelPrice {
         self
     }
 
-    pub fn for_provider(mut self, provider_code: &str, channel_id: i64) -> Self {
-        self.provider_code = Some(provider_code.to_owned());
-        self.channel_id = Some(channel_id);
+    pub fn for_upstream_account(mut self, supplier_code: &str, account_id: i64) -> Self {
+        self.supplier_code = Some(supplier_code.to_owned());
+        self.account_id = Some(account_id);
         self
     }
 

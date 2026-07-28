@@ -13,11 +13,11 @@ pub struct PricingResolver<'a, C: PricingCatalog> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolveModelPriceQuery {
     pub api_key_id: i64,
-    pub channel_group_id: Option<i64>,
+    pub account_group_id: Option<i64>,
     pub model: String,
     pub billing_meter: BillingMeter,
-    pub provider_code: Option<String>,
-    pub channel_id: Option<i64>,
+    pub supplier_code: Option<String>,
+    pub account_id: Option<i64>,
     pub region_code: Option<String>,
 }
 
@@ -33,7 +33,7 @@ pub struct ResolvedModelPrice {
     pub vendor: ModelVendor,
     pub group_code: String,
     pub pricing_plan_code: String,
-    pub provider_code: Option<String>,
+    pub supplier_code: Option<String>,
     pub billing_meter: BillingMeter,
     pub official_reference: ModelPrice,
     pub upstream_cost: Option<ModelPrice>,
@@ -52,18 +52,22 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
 
     pub fn resolve(&self, query: ResolveModelPriceQuery) -> DomainResult<ResolvedModelPrice> {
         let api_key = self.find_api_key(query.api_key_id)?;
-        let group = self.find_group(query.channel_group_id.unwrap_or(api_key.group_id))?;
-        // Verify the channel group belongs to the same tenant/organization as the API key,
+        let group = self.find_group(
+            query
+                .account_group_id
+                .unwrap_or(api_key.default_account_group_id),
+        )?;
+        // Verify the account group belongs to the same tenant/organization as the API key,
         // or is a global resource (tenant_id == 0)
         if group.tenant_id != 0 && group.tenant_id != api_key.tenant_id {
             return Err(DomainError::new(format!(
-                "channel group {} does not belong to tenant {}",
+                "account group {} does not belong to tenant {}",
                 group.id, api_key.tenant_id
             )));
         }
         if group.organization_id != 0 && group.organization_id != api_key.organization_id {
             return Err(DomainError::new(format!(
-                "channel group {} does not belong to organization {}",
+                "account group {} does not belong to organization {}",
                 group.id, api_key.organization_id
             )));
         }
@@ -78,11 +82,11 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             .region_code
             .as_deref()
             .and_then(normalized_optional_region_code);
-        let route = match query.provider_code.as_deref() {
-            Some(provider_code) => Some(self.find_provider_route(
+        let route = match query.supplier_code.as_deref() {
+            Some(supplier_code) => Some(self.find_upstream_route(
                 &query.model,
-                provider_code,
-                query.channel_id,
+                supplier_code,
+                query.account_id,
                 explicit_region_code.as_deref(),
             )?),
             None => None,
@@ -152,7 +156,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             vendor: vendor.vendor,
             group_code: group.code,
             pricing_plan_code: plan.plan_code,
-            provider_code: query.provider_code,
+            supplier_code: query.supplier_code,
             billing_meter: query.billing_meter,
             official_reference: official,
             upstream_cost: upstream,
@@ -171,10 +175,13 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             .ok_or_else(|| DomainError::new(format!("api key not found: {api_key_id}")))
     }
 
-    fn find_group(&self, group_id: i64) -> DomainResult<crate::domain::ChannelGroup> {
+    fn find_group(
+        &self,
+        account_group_id: i64,
+    ) -> DomainResult<crate::domain::UpstreamAccountGroup> {
         self.catalog
-            .find_channel_group(group_id)
-            .ok_or_else(|| DomainError::new(format!("channel group not found: {group_id}")))
+            .find_upstream_account_group(account_group_id)
+            .ok_or_else(|| DomainError::new(format!("account group not found: {account_group_id}")))
     }
 
     fn find_plan(
@@ -237,8 +244,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         organization_id: i64,
         region_code: &str,
     ) -> Option<ModelPrice> {
-        let provider_code = query.provider_code.as_deref();
-        if let Some(channel_id) = query.channel_id {
+        let supplier_code = query.supplier_code.as_deref();
+        if let Some(account_id) = query.account_id {
             return self
                 .catalog
                 .list_model_prices_for_scope(
@@ -250,8 +257,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 )
                 .into_iter()
                 .find(|price| {
-                    price.provider_code.as_deref() == provider_code
-                        && price.channel_id == Some(channel_id)
+                    price.supplier_code.as_deref() == supplier_code
+                        && price.account_id == Some(account_id)
                         && price.pricing_plan_code.is_none()
                         && same_region(&price.region_code, region_code)
                 });
@@ -267,27 +274,27 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .into_iter()
             .find(|price| {
-                price.provider_code.as_deref() == provider_code
+                price.supplier_code.as_deref() == supplier_code
                     && price.pricing_plan_code.is_none()
                     && same_region(&price.region_code, region_code)
             })
     }
 
-    fn find_provider_route(
+    fn find_upstream_route(
         &self,
         model: &str,
-        provider_code: &str,
-        channel_id: Option<i64>,
+        supplier_code: &str,
+        account_id: Option<i64>,
         region_code: Option<&str>,
-    ) -> DomainResult<crate::domain::ModelProviderRoute> {
+    ) -> DomainResult<crate::domain::ModelUpstreamRoute> {
         if let Some(route) = self
             .catalog
-            .list_provider_routes(model)
+            .list_model_upstream_routes(model)
             .into_iter()
             .find(|route| {
-                route.provider_code == provider_code
-                    && channel_id
-                        .map(|channel_id| route.channel_id == channel_id)
+                route.supplier_code == supplier_code
+                    && account_id
+                        .map(|account_id| route.account_id == account_id)
                         .unwrap_or(true)
                     && region_code
                         .map(|region_code| same_region(&route.region_code, region_code))
@@ -299,37 +306,37 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
 
         if let Some(route) = self
             .catalog
-            .list_provider_channel_routes()
+            .list_upstream_account_routes()
             .into_iter()
             .find(|route| {
-                route.provider_code == provider_code
-                    && channel_id
-                        .map(|channel_id| route.channel_id == channel_id)
+                route.supplier_code == supplier_code
+                    && account_id
+                        .map(|account_id| route.account_id == account_id)
                         .unwrap_or(true)
                     && region_code
                         .map(|region_code| same_region(&route.region_code, region_code))
                         .unwrap_or(true)
             })
         {
-            return Ok(crate::domain::ModelProviderRoute::new_for_catalog_key(
+            return Ok(crate::domain::ModelUpstreamRoute::new_for_catalog_key(
                 model,
                 model,
-                &route.provider_code,
-                route.channel_id,
+                &route.supplier_code,
+                route.account_id,
                 model,
             )
             .with_region_code(&route.region_code)
-            .with_provider_endpoint(route.base_url, route.secret_ref)
+            .with_upstream_endpoint(route.base_url, route.secret_ref)
             .with_auth_profile(route.auth_profile));
         }
 
-        Err(if let Some(channel_id) = channel_id {
+        Err(if let Some(account_id) = account_id {
             DomainError::new(format!(
-                "provider route not found for model {model}, provider {provider_code}, and channel {channel_id}"
+                "upstream route not found for model {model}, supplier {supplier_code}, and account {account_id}"
             ))
         } else {
             DomainError::new(format!(
-                "provider route not found for model {model} and provider {provider_code}"
+                "upstream route not found for model {model} and supplier {supplier_code}"
             ))
         })
     }

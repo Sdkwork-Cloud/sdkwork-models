@@ -182,7 +182,7 @@ impl PricingCatalog for JsonPricingCatalog {
     fn find_provider_route(
         &self,
         _model: &str,
-        _provider_code: &str,
+        _supplier_code: &str,
     ) -> Option<ModelProviderRoute> {
         None
     }
@@ -192,7 +192,7 @@ impl PricingCatalog for JsonPricingCatalog {
         model: &str,
         price_side: PriceSide,
         billing_meter: BillingMeter,
-        provider_code: Option<&str>,
+        supplier_code: Option<&str>,
         pricing_plan_code: Option<&str>,
     ) -> Option<ModelPrice> {
         self.prices
@@ -201,7 +201,7 @@ impl PricingCatalog for JsonPricingCatalog {
                 price.model == model
                     && price.price_side == price_side
                     && price.billing_meter == billing_meter
-                    && price.provider_code.as_deref() == provider_code
+                    && price.supplier_code.as_deref() == supplier_code
                     && price.pricing_plan_code.as_deref() == pricing_plan_code
             })
             .cloned()
@@ -271,8 +271,8 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
                 region_code: pricing.region_code.clone(),
                 price_side,
                 billing_meter,
-                provider_code: None,
-                channel_id: None,
+                supplier_code: None,
+                account_id: None,
                 pricing_plan_code: None,
                 unit_price,
             })

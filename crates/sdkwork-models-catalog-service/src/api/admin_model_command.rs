@@ -84,11 +84,11 @@ const INTEGRATION_PROVIDER_ONLY_NAME_MARKERS: &[&str] = &[
 const MAPPING_BINDING_TYPES: &[&str] = &[
     "global",
     "vendor",
-    "channel_group",
-    "channel",
-    "provider_account",
-    "site",
-    "site_service",
+    "upstream_account_group",
+    "upstream_account",
+    "upstream_account",
+    "upstream_supplier",
+    "supplier_endpoint",
 ];
 const MAPPING_MODES: &[&str] = &["alias"];
 const MAPPING_MATCH_TYPES: &[&str] = &["exact"];
@@ -199,8 +199,8 @@ struct AdminModelCatalogSyncRequest {
 struct AdminModelMappingsQuery {
     binding_type: Option<String>,
     vendor_code: Option<String>,
-    channel_id: Option<Value>,
-    channel_code: Option<String>,
+    account_id: Option<Value>,
+    account_code: Option<String>,
     q: Option<String>,
     page: Option<i64>,
     page_size: Option<i64>,
@@ -272,10 +272,14 @@ struct AdminModelMappingItemRequest {
 struct AdminModelMappingResolveRequest {
     source_model: Option<String>,
     vendor_code: Option<String>,
-    channel_id: Option<Value>,
-    channel_code: Option<String>,
-    provider_account_id: Option<Value>,
-    provider_account_code: Option<String>,
+    supplier_id: Option<Value>,
+    supplier_code: Option<String>,
+    endpoint_id: Option<Value>,
+    endpoint_code: Option<String>,
+    account_id: Option<Value>,
+    account_code: Option<String>,
+    account_group_id: Option<Value>,
+    account_group_code: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1188,10 +1192,10 @@ fn build_list_model_mappings_query(
             "vendorCode",
             MAX_VENDOR_CODE_LEN,
         )?,
-        channel_id: normalize_optional_id_value(query.channel_id.as_ref(), "channelId")?,
-        channel_code: normalize_nullable_code(
-            query.channel_code.as_deref(),
-            "channelCode",
+        account_id: normalize_optional_id_value(query.account_id.as_ref(), "accountId")?,
+        account_code: normalize_nullable_code(
+            query.account_code.as_deref(),
+            "accountCode",
             MAX_VENDOR_CODE_LEN,
         )?,
         q: normalize_mapping_optional_text(query.q.as_deref(), "q", MAX_MAPPING_QUERY_LEN)?,
@@ -1299,19 +1303,28 @@ fn build_resolve_model_mapping_query(
             "vendorCode",
             MAX_VENDOR_CODE_LEN,
         )?,
-        channel_id: normalize_optional_id_value(request.channel_id.as_ref(), "channelId")?,
-        channel_code: normalize_nullable_code(
-            request.channel_code.as_deref(),
-            "channelCode",
-            MAX_VENDOR_CODE_LEN,
+        supplier_id: normalize_optional_id_value(request.supplier_id.as_ref(), "supplierId")?,
+        supplier_code: normalize_nullable_binding_code(
+            request.supplier_code.as_deref(),
+            "supplierCode",
         )?,
-        provider_account_id: normalize_optional_id_value(
-            request.provider_account_id.as_ref(),
-            "providerAccountId",
+        endpoint_id: normalize_optional_id_value(request.endpoint_id.as_ref(), "endpointId")?,
+        endpoint_code: normalize_nullable_binding_code(
+            request.endpoint_code.as_deref(),
+            "endpointCode",
         )?,
-        provider_account_code: normalize_nullable_binding_code(
-            request.provider_account_code.as_deref(),
-            "providerAccountCode",
+        account_id: normalize_optional_id_value(request.account_id.as_ref(), "accountId")?,
+        account_code: normalize_nullable_binding_code(
+            request.account_code.as_deref(),
+            "accountCode",
+        )?,
+        account_group_id: normalize_optional_id_value(
+            request.account_group_id.as_ref(),
+            "accountGroupId",
+        )?,
+        account_group_code: normalize_nullable_binding_code(
+            request.account_group_code.as_deref(),
+            "accountGroupCode",
         )?,
     })
 }
@@ -2989,10 +3002,10 @@ mod tests {
         let query = build_list_model_mappings_query(
             test_subject(),
             AdminModelMappingsQuery {
-                binding_type: Some("channel".to_owned()),
+                binding_type: Some("upstream_account".to_owned()),
                 vendor_code: Some("openai".to_owned()),
-                channel_id: Some(Value::String("123".to_owned())),
-                channel_code: Some("primary".to_owned()),
+                account_id: Some(Value::String("123".to_owned())),
+                account_code: Some("primary".to_owned()),
                 q: Some("gpt".to_owned()),
                 page: Some(3),
                 page_size: Some(25),
@@ -3000,10 +3013,10 @@ mod tests {
         )
         .expect("model mappings query should be valid");
 
-        assert_eq!(query.binding_type.as_deref(), Some("channel"));
+        assert_eq!(query.binding_type.as_deref(), Some("upstream_account"));
         assert_eq!(query.vendor_code.as_deref(), Some("openai"));
-        assert_eq!(query.channel_id, Some(123));
-        assert_eq!(query.channel_code.as_deref(), Some("primary"));
+        assert_eq!(query.account_id, Some(123));
+        assert_eq!(query.account_code.as_deref(), Some("primary"));
         assert_eq!(query.q.as_deref(), Some("gpt"));
         assert_eq!(query.normalized_limit(), 25);
         assert_eq!(query.normalized_offset(), 50);
@@ -3016,8 +3029,8 @@ mod tests {
             AdminModelMappingsQuery {
                 binding_type: None,
                 vendor_code: None,
-                channel_id: None,
-                channel_code: None,
+                account_id: None,
+                account_code: None,
                 q: None,
                 page: Some(1),
                 page_size: Some(MAX_LIST_PAGE_SIZE + 1),

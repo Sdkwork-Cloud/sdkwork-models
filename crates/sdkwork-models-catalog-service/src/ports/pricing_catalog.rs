@@ -1,19 +1,19 @@
 use crate::domain::{
-    AiModel, BillingMeter, ChannelGroup, ChannelGroupMetricSnapshot, GatewayAccessPolicy,
-    GatewayApiKey, GatewayRiskRule, ModelMappingRule, ModelPrice, ModelProviderRoute,
-    ModelVendorDefinition, PriceSide, PricingPlan, ProviderChannelRoute, QuotaPolicy,
-    ResolveModelMappingContext, RoutingPolicy, RoutingRule,
+    AiModel, BillingMeter, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule, ModelMappingRule,
+    ModelPrice, ModelUpstreamRoute, ModelVendorDefinition, PriceSide, PricingPlan, QuotaPolicy,
+    ResolveModelMappingContext, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
+    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 
 pub trait PricingCatalog {
     fn list_models(&self, vendor_code: Option<&str>) -> Vec<AiModel>;
-    fn list_provider_routes(&self, model: &str) -> Vec<ModelProviderRoute>;
-    fn list_provider_channel_routes(&self) -> Vec<ProviderChannelRoute>;
+    fn list_model_upstream_routes(&self, model: &str) -> Vec<ModelUpstreamRoute>;
+    fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute>;
     fn list_routing_policies(&self) -> Vec<RoutingPolicy>;
     fn list_routing_rules(&self, profile_id: i64) -> Vec<RoutingRule>;
     fn list_model_mappings(&self) -> Vec<ModelMappingRule>;
     fn list_api_keys(&self) -> Vec<GatewayApiKey>;
-    fn list_channel_groups(&self) -> Vec<ChannelGroup>;
+    fn list_upstream_account_groups(&self) -> Vec<UpstreamAccountGroup>;
     fn list_model_prices(
         &self,
         model: &str,
@@ -48,14 +48,14 @@ pub trait PricingCatalog {
     }
     fn find_api_key(&self, api_key_id: i64) -> Option<GatewayApiKey>;
     fn find_api_key_by_hash(&self, key_hash: &str) -> Option<GatewayApiKey>;
-    fn find_channel_group(&self, group_id: i64) -> Option<ChannelGroup>;
+    fn find_upstream_account_group(&self, account_group_id: i64) -> Option<UpstreamAccountGroup>;
     fn find_access_policy(&self, policy_id: i64) -> Option<GatewayAccessPolicy>;
     fn find_quota_policy(&self, policy_id: i64) -> Option<QuotaPolicy>;
     fn list_gateway_risk_rules(&self) -> Vec<GatewayRiskRule>;
-    fn find_latest_channel_group_metric_snapshot(
+    fn find_latest_upstream_account_group_metric_snapshot(
         &self,
-        group_id: i64,
-    ) -> Option<ChannelGroupMetricSnapshot>;
+        account_group_id: i64,
+    ) -> Option<UpstreamAccountGroupMetricSnapshot>;
     fn find_pricing_plan(&self, plan_code: &str) -> Option<PricingPlan>;
 
     fn find_pricing_plan_for_scope(
@@ -74,13 +74,17 @@ pub trait PricingCatalog {
         source_model: &str,
         context: &ResolveModelMappingContext,
     ) -> Option<ModelMappingRule>;
-    fn find_provider_route(&self, model: &str, provider_code: &str) -> Option<ModelProviderRoute>;
+    fn find_model_upstream_route(
+        &self,
+        model: &str,
+        supplier_code: &str,
+    ) -> Option<ModelUpstreamRoute>;
     fn find_model_price(
         &self,
         model: &str,
         price_side: PriceSide,
         billing_meter: BillingMeter,
-        provider_code: Option<&str>,
+        supplier_code: Option<&str>,
         pricing_plan_code: Option<&str>,
     ) -> Option<ModelPrice>;
 
@@ -91,7 +95,7 @@ pub trait PricingCatalog {
         model: &str,
         price_side: PriceSide,
         billing_meter: BillingMeter,
-        provider_code: Option<&str>,
+        supplier_code: Option<&str>,
         pricing_plan_code: Option<&str>,
     ) -> Option<ModelPrice> {
         let _ = (tenant_id, organization_id);
@@ -99,7 +103,7 @@ pub trait PricingCatalog {
             model,
             price_side,
             billing_meter,
-            provider_code,
+            supplier_code,
             pricing_plan_code,
         )
     }

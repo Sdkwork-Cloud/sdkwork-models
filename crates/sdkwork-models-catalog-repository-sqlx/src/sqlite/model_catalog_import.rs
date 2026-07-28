@@ -1153,7 +1153,7 @@ async fn import_pricing(
                 sqlx::query(
                     r#"
                     INSERT INTO ai_model_pricing
-                        (uuid, tenant_id, organization_id, data_scope, status, metadata, model_id, catalog_key, model, vendor_code, region_code, provider_code, price_side, pricing_scope, billing_type, billing_mode, billing_meter_id, billing_meter_code, price_item_type, unit, unit_size, metering_mode, quantity_source, minimum_quantity, quantity_step, included_quantity, unit_price, currency, rounding_mode, min_charge_amount, pricing_formula_mode, price_origin, priority, price_version, source_url, observed_at, effective_from, id)
+                        (uuid, tenant_id, organization_id, data_scope, status, metadata, model_id, catalog_key, model, vendor_code, region_code, supplier_code, price_side, pricing_scope, billing_type, billing_mode, billing_meter_id, billing_meter_code, price_item_type, unit, unit_size, metering_mode, quantity_source, minimum_quantity, quantity_step, included_quantity, unit_price, currency, rounding_mode, min_charge_amount, pricing_formula_mode, price_origin, priority, price_version, source_url, observed_at, effective_from, id)
                     VALUES
                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, 1, 1, ?, 1, 1, ?, ?, 0, ?, ?, 1, 0, 1, 1, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(uuid) DO UPDATE SET
@@ -1162,7 +1162,7 @@ async fn import_pricing(
                         model = excluded.model,
                         vendor_code = excluded.vendor_code,
                         region_code = excluded.region_code,
-                        provider_code = excluded.provider_code,
+                        supplier_code = excluded.supplier_code,
                         price_side = excluded.price_side,
                         pricing_scope = excluded.pricing_scope,
                         billing_meter_id = excluded.billing_meter_id,
@@ -1210,7 +1210,7 @@ async fn import_pricing(
                 .bind(&pricing.model_id)
                 .bind(&pricing.vendor_code)
                 .bind(&pricing.region_code)
-                .bind(price_provider_code(
+                .bind(price_supplier_code(
                     &pricing.vendor_code,
                     &pricing.region_code,
                     &price.price_side,
@@ -1268,7 +1268,7 @@ async fn import_rankings(
                 sqlx::query(
                     r#"
                     INSERT INTO ai_model_rank_snapshot
-                        (uuid, tenant_id, organization_id, source_type, source_version, status, metadata, snapshot_date, snapshot_period, rank_scope, model_id, catalog_key, model, vendor_code, region_code, vendor_name_snapshot, provider_code, modality, rank_no, previous_rank_no, color_token, pricing_text, strengths, latency_p50_ms, latency_p95_ms, win_rate, trend_score, rank_payload, id)
+                        (uuid, tenant_id, organization_id, source_type, source_version, status, metadata, snapshot_date, snapshot_period, rank_scope, model_id, catalog_key, model, vendor_code, region_code, vendor_name_snapshot, supplier_code, modality, rank_no, previous_rank_no, color_token, pricing_text, strengths, latency_p50_ms, latency_p95_ms, win_rate, trend_score, rank_payload, id)
                     VALUES
                         (?, ?, ?, ?, 1, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(tenant_id, organization_id, snapshot_date, snapshot_period, rank_scope, vendor_code, region_code, catalog_key) DO UPDATE SET
@@ -1277,7 +1277,7 @@ async fn import_rankings(
                         vendor_code = excluded.vendor_code,
                         region_code = excluded.region_code,
                         vendor_name_snapshot = excluded.vendor_name_snapshot,
-                        provider_code = excluded.provider_code,
+                        supplier_code = excluded.supplier_code,
                         modality = excluded.modality,
                         rank_no = excluded.rank_no,
                         previous_rank_no = excluded.previous_rank_no,
