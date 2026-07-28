@@ -984,24 +984,22 @@ async fn list_model_mappings(
                 AND b.enabled = TRUE
               ORDER BY CASE b.binding_type
                   WHEN 'upstream_account' THEN 0
-                  WHEN 'upstream_account' THEN 1
-                  WHEN 'upstream_account_group' THEN 2
-                  WHEN 'vendor' THEN 3
-                  WHEN 'global' THEN 4
-                  WHEN 'site_service' THEN 5
-                  WHEN 'site' THEN 6
-                  ELSE 7
+                  WHEN 'upstream_account_group' THEN 1
+                  WHEN 'supplier_endpoint' THEN 2
+                  WHEN 'upstream_supplier' THEN 3
+                  WHEN 'vendor' THEN 4
+                  WHEN 'global' THEN 5
+                  ELSE 6
               END, b.sort_order ASC, b.id ASC
               LIMIT 1
           ), 'global')
               WHEN 'upstream_account' THEN 0
-              WHEN 'upstream_account' THEN 1
-              WHEN 'upstream_account_group' THEN 2
-              WHEN 'vendor' THEN 3
-              WHEN 'global' THEN 4
-              WHEN 'site_service' THEN 5
-              WHEN 'site' THEN 6
-              ELSE 7
+              WHEN 'upstream_account_group' THEN 1
+              WHEN 'supplier_endpoint' THEN 2
+              WHEN 'upstream_supplier' THEN 3
+              WHEN 'vendor' THEN 4
+              WHEN 'global' THEN 5
+              ELSE 6
           END,
           r.updated_at DESC,
           r.id DESC
@@ -3465,13 +3463,12 @@ fn mapping_select_sql(predicate: &str) -> String {
                   AND b.enabled = TRUE
                 ORDER BY CASE b.binding_type
                     WHEN 'upstream_account' THEN 0
-                    WHEN 'upstream_account' THEN 1
-                    WHEN 'upstream_account_group' THEN 2
-                    WHEN 'vendor' THEN 3
-                    WHEN 'global' THEN 4
-                    WHEN 'site_service' THEN 5
-                    WHEN 'site' THEN 6
-                    ELSE 7
+                    WHEN 'upstream_account_group' THEN 1
+                    WHEN 'supplier_endpoint' THEN 2
+                    WHEN 'upstream_supplier' THEN 3
+                    WHEN 'vendor' THEN 4
+                    WHEN 'global' THEN 5
+                    ELSE 6
                 END, b.sort_order ASC, b.id ASC
                 LIMIT 1
             ), 'global') AS binding_type,

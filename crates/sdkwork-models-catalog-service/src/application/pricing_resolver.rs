@@ -108,6 +108,20 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             api_key.organization_id,
             &region_code,
         )?;
+        let price_scope = raw_upstream_cost
+            .as_ref()
+            .map(|price| price.catalog_key.as_str())
+            .unwrap_or(query.model.as_str());
+        let official = self.find_official_reference(
+            &query,
+            api_key.tenant_id,
+            api_key.organization_id,
+            price_scope,
+            &region_code,
+        )?;
+        if query.supplier_code.is_some() && raw_upstream_cost.is_none() {
+            return Err(missing_upstream_cost_error(&query, &region_code));
+        }
         let procurement_multipliers = self.resolve_procurement_multipliers(
             &query,
             group.id,
@@ -127,17 +141,6 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 ));
             }
         };
-        let price_scope = raw_upstream_cost
-            .as_ref()
-            .map(|price| price.catalog_key.as_str())
-            .unwrap_or(query.model.as_str());
-        let official = self.find_official_reference(
-            &query,
-            api_key.tenant_id,
-            api_key.organization_id,
-            price_scope,
-            &region_code,
-        )?;
 
         let explicit_customer = self
             .catalog
@@ -286,7 +289,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         let account_id = query.account_id.ok_or_else(|| {
             DomainError::new("upstream account id is required when a supplier is selected")
         })?;
-        self.catalog
+        Ok(self
+            .catalog
             .list_model_prices_for_scope(
                 tenant_id,
                 organization_id,
@@ -300,18 +304,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     && price.account_id == Some(account_id)
                     && price.pricing_plan_code.is_none()
                     && same_region(&price.region_code, region_code)
-            })
-            .map(Some)
-            .ok_or_else(|| {
-                DomainError::new(format!(
-                    "upstream cost not found for model {}, supplier {}, account {}, meter {}, and region {}",
-                    query.model,
-                    supplier_code,
-                    account_id,
-                    query.billing_meter.code(),
-                    region_code
-                ))
-            })
+            }))
     }
 
     fn resolve_procurement_multipliers(
@@ -488,4 +481,18 @@ fn require_positive_multiplier(field: &str, value: DecimalValue) -> DomainResult
         return Err(DomainError::new(format!("{field} must be positive")));
     }
     Ok(())
+}
+
+fn missing_upstream_cost_error(query: &ResolveModelPriceQuery, region_code: &str) -> DomainError {
+    DomainError::new(format!(
+        "upstream cost not found for model {}, supplier {}, account {}, meter {}, and region {}",
+        query.model,
+        query.supplier_code.as_deref().unwrap_or("<missing>"),
+        query
+            .account_id
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "<missing>".to_owned()),
+        query.billing_meter.code(),
+        region_code
+    ))
 }

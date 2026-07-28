@@ -631,17 +631,17 @@ impl ProviderRetryPolicy {
     ) -> DomainResult<Self> {
         if max_attempts == 0 || max_attempts > MAX_PROVIDER_RETRY_ATTEMPTS {
             return Err(DomainError::new(format!(
-                "ai_channel.retry_policy max_attempts must be between 1 and {MAX_PROVIDER_RETRY_ATTEMPTS}: {max_attempts}"
+                "ai_upstream_account.retry_policy max_attempts must be between 1 and {MAX_PROVIDER_RETRY_ATTEMPTS}: {max_attempts}"
             )));
         }
         if backoff_ms > MAX_PROVIDER_RETRY_BACKOFF_MS {
             return Err(DomainError::new(format!(
-                "ai_channel.retry_policy backoff_ms must be <= {MAX_PROVIDER_RETRY_BACKOFF_MS}: {backoff_ms}"
+                "ai_upstream_account.retry_policy backoff_ms must be <= {MAX_PROVIDER_RETRY_BACKOFF_MS}: {backoff_ms}"
             )));
         }
         if max_attempts > 1 && retryable_status_codes.is_empty() {
             return Err(DomainError::new(
-                "ai_channel.retry_policy retryable_status_codes is required when max_attempts is greater than 1",
+                "ai_upstream_account.retry_policy retryable_status_codes is required when max_attempts is greater than 1",
             ));
         }
 
@@ -650,12 +650,12 @@ impl ProviderRetryPolicy {
         for status_code in retryable_status_codes {
             if !is_allowed_retryable_provider_status(status_code) {
                 return Err(DomainError::new(format!(
-                    "ai_channel.retry_policy retryable_status_codes contains unsupported status: {status_code}"
+                    "ai_upstream_account.retry_policy retryable_status_codes contains unsupported status: {status_code}"
                 )));
             }
             if !seen.insert(status_code) {
                 return Err(DomainError::new(format!(
-                    "ai_channel.retry_policy retryable_status_codes contains duplicate status: {status_code}"
+                    "ai_upstream_account.retry_policy retryable_status_codes contains duplicate status: {status_code}"
                 )));
             }
             normalized.push(status_code);
@@ -671,19 +671,19 @@ impl ProviderRetryPolicy {
     pub fn from_json_str(value: &str) -> DomainResult<Self> {
         let value: Value = serde_json::from_str(value).map_err(|error| {
             DomainError::new(format!(
-                "ai_channel.retry_policy must be valid JSON: {error}"
+                "ai_upstream_account.retry_policy must be valid JSON: {error}"
             ))
         })?;
-        let object = value
-            .as_object()
-            .ok_or_else(|| DomainError::new("ai_channel.retry_policy must be a JSON object"))?;
+        let object = value.as_object().ok_or_else(|| {
+            DomainError::new("ai_upstream_account.retry_policy must be a JSON object")
+        })?;
         for key in object.keys() {
             if !matches!(
                 key.as_str(),
                 "max_attempts" | "retryable_status_codes" | "backoff_ms"
             ) {
                 return Err(DomainError::new(format!(
-                    "ai_channel.retry_policy contains unsupported field: {key}"
+                    "ai_upstream_account.retry_policy contains unsupported field: {key}"
                 )));
             }
         }
@@ -693,14 +693,16 @@ impl ProviderRetryPolicy {
             .and_then(Value::as_u64)
             .and_then(|value| usize::try_from(value).ok())
             .ok_or_else(|| {
-                DomainError::new("ai_channel.retry_policy max_attempts must be a positive integer")
+                DomainError::new(
+                    "ai_upstream_account.retry_policy max_attempts must be a positive integer",
+                )
             })?;
         let retryable_status_codes = object
             .get("retryable_status_codes")
             .and_then(Value::as_array)
             .ok_or_else(|| {
                 DomainError::new(
-                    "ai_channel.retry_policy retryable_status_codes must be an array",
+                    "ai_upstream_account.retry_policy retryable_status_codes must be an array",
                 )
             })?
             .iter()
@@ -710,7 +712,7 @@ impl ProviderRetryPolicy {
                     .and_then(|value| u16::try_from(value).ok())
                     .ok_or_else(|| {
                         DomainError::new(
-                            "ai_channel.retry_policy retryable_status_codes must contain integer HTTP statuses",
+                            "ai_upstream_account.retry_policy retryable_status_codes must contain integer HTTP statuses",
                         )
                     })
             })
@@ -720,7 +722,7 @@ impl ProviderRetryPolicy {
             .map(|value| {
                 value.as_u64().ok_or_else(|| {
                     DomainError::new(
-                        "ai_channel.retry_policy backoff_ms must be a non-negative integer",
+                        "ai_upstream_account.retry_policy backoff_ms must be a non-negative integer",
                     )
                 })
             })
@@ -760,7 +762,7 @@ impl ProviderCircuitBreakerPolicy {
             || failure_threshold > MAX_PROVIDER_CIRCUIT_BREAKER_FAILURE_THRESHOLD
         {
             return Err(DomainError::new(format!(
-                "ai_channel.circuit_breaker_policy failure_threshold must be between 1 and {MAX_PROVIDER_CIRCUIT_BREAKER_FAILURE_THRESHOLD}: {failure_threshold}"
+                "ai_upstream_account.circuit_breaker_policy failure_threshold must be between 1 and {MAX_PROVIDER_CIRCUIT_BREAKER_FAILURE_THRESHOLD}: {failure_threshold}"
             )));
         }
         Ok(Self { failure_threshold })
@@ -769,16 +771,16 @@ impl ProviderCircuitBreakerPolicy {
     pub fn from_json_str(value: &str) -> DomainResult<Self> {
         let value: Value = serde_json::from_str(value).map_err(|error| {
             DomainError::new(format!(
-                "ai_channel.circuit_breaker_policy must be valid JSON: {error}"
+                "ai_upstream_account.circuit_breaker_policy must be valid JSON: {error}"
             ))
         })?;
         let object = value.as_object().ok_or_else(|| {
-            DomainError::new("ai_channel.circuit_breaker_policy must be a JSON object")
+            DomainError::new("ai_upstream_account.circuit_breaker_policy must be a JSON object")
         })?;
         for key in object.keys() {
             if key != "failure_threshold" {
                 return Err(DomainError::new(format!(
-                    "ai_channel.circuit_breaker_policy contains unsupported field: {key}"
+                    "ai_upstream_account.circuit_breaker_policy contains unsupported field: {key}"
                 )));
             }
         }
@@ -789,7 +791,7 @@ impl ProviderCircuitBreakerPolicy {
             .and_then(|value| usize::try_from(value).ok())
             .ok_or_else(|| {
                 DomainError::new(
-                    "ai_channel.circuit_breaker_policy failure_threshold must be a positive integer",
+                    "ai_upstream_account.circuit_breaker_policy failure_threshold must be a positive integer",
                 )
             })?;
         Self::new(failure_threshold)
