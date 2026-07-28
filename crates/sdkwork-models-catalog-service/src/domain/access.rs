@@ -1,4 +1,4 @@
-use crate::domain::DecimalValue;
+use crate::domain::{DecimalValue, DomainError, DomainResult};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GatewayApiKey {
@@ -193,8 +193,76 @@ pub struct UpstreamAccountGroup {
     pub name: String,
     pub code: String,
     pub pricing_plan_code: String,
-    pub rate_multiplier: DecimalValue,
-    pub official_price_multiplier: DecimalValue,
+    pub routing_strategy: UpstreamAccountRoutingStrategy,
+    pub fallback_mode: UpstreamAccountFallbackMode,
+    pub priority: i32,
+    pub cost_multiplier: DecimalValue,
+    pub sale_multiplier: DecimalValue,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UpstreamAccountRoutingStrategy {
+    Weighted,
+    RoundRobin,
+    LeastLatency,
+    LeastCost,
+    Failover,
+}
+
+impl UpstreamAccountRoutingStrategy {
+    pub fn from_code(value: &str) -> DomainResult<Self> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "weighted" => Ok(Self::Weighted),
+            "round_robin" => Ok(Self::RoundRobin),
+            "least_latency" => Ok(Self::LeastLatency),
+            "least_cost" => Ok(Self::LeastCost),
+            "failover" => Ok(Self::Failover),
+            value => Err(DomainError::new(format!(
+                "ai_upstream_account_group.routing_strategy contains unsupported value: {value}"
+            ))),
+        }
+    }
+
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::Weighted => "weighted",
+            Self::RoundRobin => "round_robin",
+            Self::LeastLatency => "least_latency",
+            Self::LeastCost => "least_cost",
+            Self::Failover => "failover",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UpstreamAccountFallbackMode {
+    None,
+    Sequential,
+    SameSupplier,
+    CrossSupplier,
+}
+
+impl UpstreamAccountFallbackMode {
+    pub fn from_code(value: &str) -> DomainResult<Self> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "none" => Ok(Self::None),
+            "sequential" => Ok(Self::Sequential),
+            "same_supplier" => Ok(Self::SameSupplier),
+            "cross_supplier" => Ok(Self::CrossSupplier),
+            value => Err(DomainError::new(format!(
+                "ai_upstream_account_group.fallback_mode contains unsupported value: {value}"
+            ))),
+        }
+    }
+
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::Sequential => "sequential",
+            Self::SameSupplier => "same_supplier",
+            Self::CrossSupplier => "cross_supplier",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -329,8 +397,8 @@ impl UpstreamAccountGroup {
         id: i64,
         code: &str,
         pricing_plan_code: &str,
-        rate_multiplier: DecimalValue,
-        official_price_multiplier: DecimalValue,
+        cost_multiplier: DecimalValue,
+        sale_multiplier: DecimalValue,
     ) -> Self {
         Self::new_scoped(
             id,
@@ -338,8 +406,8 @@ impl UpstreamAccountGroup {
             0,
             code,
             pricing_plan_code,
-            rate_multiplier,
-            official_price_multiplier,
+            cost_multiplier,
+            sale_multiplier,
         )
     }
 
@@ -349,8 +417,8 @@ impl UpstreamAccountGroup {
         organization_id: i64,
         code: &str,
         pricing_plan_code: &str,
-        rate_multiplier: DecimalValue,
-        official_price_multiplier: DecimalValue,
+        cost_multiplier: DecimalValue,
+        sale_multiplier: DecimalValue,
     ) -> Self {
         Self {
             id,
@@ -359,9 +427,30 @@ impl UpstreamAccountGroup {
             name: code.to_owned(),
             code: code.to_owned(),
             pricing_plan_code: pricing_plan_code.to_owned(),
-            rate_multiplier,
-            official_price_multiplier,
+            routing_strategy: UpstreamAccountRoutingStrategy::Weighted,
+            fallback_mode: UpstreamAccountFallbackMode::Sequential,
+            priority: 100,
+            cost_multiplier,
+            sale_multiplier,
         }
+    }
+
+    pub fn with_routing_strategy(
+        mut self,
+        routing_strategy: UpstreamAccountRoutingStrategy,
+    ) -> Self {
+        self.routing_strategy = routing_strategy;
+        self
+    }
+
+    pub fn with_fallback_mode(mut self, fallback_mode: UpstreamAccountFallbackMode) -> Self {
+        self.fallback_mode = fallback_mode;
+        self
+    }
+
+    pub fn with_priority(mut self, priority: i32) -> Self {
+        self.priority = priority.max(0);
+        self
     }
 
     pub fn with_name(mut self, name: &str) -> Self {

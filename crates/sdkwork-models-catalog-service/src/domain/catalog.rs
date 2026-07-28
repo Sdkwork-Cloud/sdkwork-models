@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use serde_json::Value;
 
-use crate::domain::{DomainError, DomainResult, ModelVendor};
+use crate::domain::{DecimalValue, DomainError, DomainResult, ModelVendor};
 
 pub const DEFAULT_PROVIDER_RETRY_ATTEMPTS: usize = 2;
 pub const MAX_PROVIDER_RETRY_ATTEMPTS: usize = 5;
@@ -1155,12 +1155,43 @@ pub struct ModelUpstreamRoute {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UpstreamResourceEntitlement {
+    pub resource_code: String,
+    pub resource_type: String,
+    pub vendor_code: Option<String>,
+    pub modality_code: Option<String>,
+    pub api_code: Option<String>,
+    pub catalog_key: Option<String>,
+    pub model: Option<String>,
+    pub provider_native_model: Option<String>,
+}
+
+impl UpstreamResourceEntitlement {
+    pub fn new(resource_code: impl Into<String>, resource_type: impl Into<String>) -> Self {
+        Self {
+            resource_code: resource_code.into(),
+            resource_type: resource_type.into(),
+            vendor_code: None,
+            modality_code: None,
+            api_code: None,
+            catalog_key: None,
+            model: None,
+            provider_native_model: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UpstreamAccountGroupBinding {
     pub account_group_id: i64,
     pub priority: i32,
     pub weight: i32,
+    pub cost_multiplier_override: Option<DecimalValue>,
     pub api_scope: Vec<String>,
     pub capabilities: Vec<String>,
+    /// `None` means the binding is intentionally unscoped. `Some([])` is fail-closed and
+    /// represents a configured resource scope whose supplier/group intersection is empty.
+    pub resource_entitlements: Option<Vec<UpstreamResourceEntitlement>>,
 }
 
 impl UpstreamAccountGroupBinding {
@@ -1169,8 +1200,10 @@ impl UpstreamAccountGroupBinding {
             account_group_id,
             priority,
             weight,
+            cost_multiplier_override: None,
             api_scope: Vec::new(),
             capabilities: Vec::new(),
+            resource_entitlements: None,
         }
     }
 
@@ -1191,9 +1224,27 @@ impl UpstreamAccountGroupBinding {
             account_group_id,
             priority,
             weight,
+            cost_multiplier_override: None,
             api_scope: api_scope.into_iter().map(Into::into).collect(),
             capabilities: capabilities.into_iter().map(Into::into).collect(),
+            resource_entitlements: None,
         }
+    }
+
+    pub fn with_resource_entitlements(
+        mut self,
+        resource_entitlements: Vec<UpstreamResourceEntitlement>,
+    ) -> Self {
+        self.resource_entitlements = Some(resource_entitlements);
+        self
+    }
+
+    pub fn with_cost_multiplier_override(
+        mut self,
+        cost_multiplier_override: Option<DecimalValue>,
+    ) -> Self {
+        self.cost_multiplier_override = cost_multiplier_override;
+        self
     }
 }
 
@@ -1205,11 +1256,16 @@ pub struct UpstreamAccountRoute {
     pub credential_rotation: String,
     pub credential_priority: i32,
     pub credential_weight: i32,
+    pub contract_cost_multiplier: DecimalValue,
+    pub last_latency_ms: Option<u64>,
     pub account_code: Option<String>,
     pub region_code: String,
     pub supplier_id: Option<i64>,
     pub endpoint_id: Option<i64>,
     pub endpoint_code: Option<String>,
+    pub endpoint_priority: i32,
+    pub endpoint_weight: i32,
+    pub endpoint_health_status: i32,
     pub base_url: Option<String>,
     pub secret_ref: Option<String>,
     pub auth_profile: ProviderAuthProfile,
@@ -1229,11 +1285,16 @@ impl UpstreamAccountRoute {
             credential_rotation: DEFAULT_CREDENTIAL_ROTATION.to_owned(),
             credential_priority: 100,
             credential_weight: 100,
+            contract_cost_multiplier: DecimalValue::ONE,
+            last_latency_ms: None,
             account_code: None,
             region_code: "global".to_owned(),
             supplier_id: None,
             endpoint_id: None,
             endpoint_code: None,
+            endpoint_priority: 100,
+            endpoint_weight: 100,
+            endpoint_health_status: 1,
             base_url: None,
             secret_ref: None,
             auth_profile: ProviderAuthProfile::default(),
@@ -1247,6 +1308,16 @@ impl UpstreamAccountRoute {
 
     pub fn with_account_code(mut self, account_code: &str) -> Self {
         self.account_code = normalized_optional_text(account_code);
+        self
+    }
+
+    pub fn with_contract_cost_multiplier(mut self, contract_cost_multiplier: DecimalValue) -> Self {
+        self.contract_cost_multiplier = contract_cost_multiplier;
+        self
+    }
+
+    pub fn with_last_latency_ms(mut self, last_latency_ms: Option<u64>) -> Self {
+        self.last_latency_ms = last_latency_ms;
         self
     }
 
@@ -1277,6 +1348,13 @@ impl UpstreamAccountRoute {
     pub fn with_endpoint(mut self, endpoint_id: Option<i64>, endpoint_code: Option<&str>) -> Self {
         self.endpoint_id = endpoint_id.filter(|value| *value > 0);
         self.endpoint_code = endpoint_code.and_then(normalized_optional_text);
+        self
+    }
+
+    pub fn with_endpoint_routing(mut self, priority: i32, weight: i32, health_status: i32) -> Self {
+        self.endpoint_priority = priority.max(0);
+        self.endpoint_weight = weight.max(0);
+        self.endpoint_health_status = health_status;
         self
     }
 
@@ -1355,7 +1433,9 @@ impl UpstreamAccountRoute {
 
     /// Returns true when both the account and its credential are healthy (health_status == 1).
     pub fn is_account_healthy(&self) -> bool {
-        self.account_health_status == 1 && self.credential_health_status == 1
+        self.account_health_status == 1
+            && self.credential_health_status == 1
+            && self.endpoint_health_status == 1
     }
 }
 

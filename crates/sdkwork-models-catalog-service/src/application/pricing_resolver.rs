@@ -128,9 +128,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 Some(&plan.plan_code),
             )
             .filter(|price| same_region(&price.region_code, &region_code));
-        let reference_multiplier = plan
-            .default_multiplier
-            .checked_multiply(group.official_price_multiplier)?;
+        let reference_multiplier = plan.default_multiplier;
         let (customer_charge_before_rate, source) = match explicit_customer {
             Some(price) => (
                 price.unit_price,
@@ -145,7 +143,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             ),
         };
         let customer_charge =
-            customer_charge_before_rate.checked_multiply(group.rate_multiplier)?;
+            customer_charge_before_rate.checked_multiply(group.sale_multiplier)?;
         let gross_margin_per_unit = upstream
             .as_ref()
             .map(|price| customer_charge.subtract(&price.unit_price))
@@ -161,7 +159,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             official_reference: official,
             upstream_cost: upstream,
             customer_charge_before_rate,
-            rate_multiplier: group.rate_multiplier,
+            rate_multiplier: group.sale_multiplier,
             reference_multiplier,
             customer_charge,
             gross_margin_per_unit,
