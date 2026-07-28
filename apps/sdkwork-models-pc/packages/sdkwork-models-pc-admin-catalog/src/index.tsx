@@ -1,12 +1,138 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { AdminTableShell, BottomPagination, BusinessStateTableRow, ConfirmDialog, readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
 import { MODEL_PRICING_REGIONS, createModelInputFromForm, createVendorInputFromForm, updateModelInputFromForm } from './modelForm';
 import { VendorPickerModal } from './vendorPickerModal';
+import './adminCatalog.css';
 
 type ModelModalityFilter = Model['type'];
+
+type PricePopoverPosition = {
+  left: number;
+  maxHeight: number;
+  top: number;
+  width: number;
+};
+
+const PRICE_POPOVER_GAP = 8;
+const PRICE_POPOVER_MAX_WIDTH = 480;
+const PRICE_POPOVER_VIEWPORT_PADDING = 16;
+const PRICE_POPOVER_Z_INDEX = 2_147_483_000;
+
+function ModelPricePopover({
+  anchor,
+  ariaLabel,
+  children,
+  className,
+  onDismiss,
+}: {
+  anchor: HTMLButtonElement;
+  ariaLabel: string;
+  children: React.ReactNode;
+  className: string;
+  onDismiss: () => void;
+}) {
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+  const [position, setPosition] = useState<PricePopoverPosition | null>(null);
+
+  useLayoutEffect(() => {
+    const popover = popoverRef.current;
+    if (!popover) {
+      return undefined;
+    }
+
+    const updatePosition = () => {
+      if (!anchor.isConnected) {
+        onDismiss();
+        return;
+      }
+
+      const anchorRect = anchor.getBoundingClientRect();
+      const width = Math.min(
+        PRICE_POPOVER_MAX_WIDTH,
+        Math.max(0, window.innerWidth - PRICE_POPOVER_VIEWPORT_PADDING * 2),
+      );
+      const maxHeight = Math.max(0, window.innerHeight - PRICE_POPOVER_VIEWPORT_PADDING * 2);
+      const renderedHeight = Math.min(popover.offsetHeight, maxHeight);
+      const preferredLeft = anchorRect.right - width;
+      const left = Math.min(
+        Math.max(PRICE_POPOVER_VIEWPORT_PADDING, preferredLeft),
+        window.innerWidth - width - PRICE_POPOVER_VIEWPORT_PADDING,
+      );
+      const belowTop = anchorRect.bottom + PRICE_POPOVER_GAP;
+      const aboveTop = anchorRect.top - renderedHeight - PRICE_POPOVER_GAP;
+      const fitsBelow = belowTop + renderedHeight <= window.innerHeight - PRICE_POPOVER_VIEWPORT_PADDING;
+      const top = fitsBelow || aboveTop < PRICE_POPOVER_VIEWPORT_PADDING
+        ? Math.min(belowTop, window.innerHeight - renderedHeight - PRICE_POPOVER_VIEWPORT_PADDING)
+        : aboveTop;
+
+      setPosition({
+        left,
+        maxHeight,
+        top: Math.max(PRICE_POPOVER_VIEWPORT_PADDING, top),
+        width,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    document.addEventListener('scroll', updatePosition, true);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      document.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [anchor, onDismiss]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) {
+        return;
+      }
+      if (popoverRef.current?.contains(target) || anchor.contains(target)) {
+        return;
+      }
+      onDismiss();
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onDismiss();
+        anchor.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [anchor, onDismiss]);
+
+  return createPortal(
+    <div
+      ref={popoverRef}
+      data-admin-model-price-popover
+      className={className}
+      role="dialog"
+      aria-label={ariaLabel}
+      style={{
+        left: position?.left ?? 0,
+        maxHeight: position?.maxHeight,
+        top: position?.top ?? 0,
+        visibility: position ? 'visible' : 'hidden',
+        width: position?.width,
+        zIndex: PRICE_POPOVER_Z_INDEX,
+      }}
+    >
+      {children}
+    </div>,
+    document.body,
+  );
+}
 
 export function ModelAdmin() {
   const { t } = useTranslation();
@@ -33,6 +159,7 @@ export function ModelAdmin() {
   const [statusUpdatingModelId, setStatusUpdatingModelId] = useState<string | null>(null);
   const [selectedModality, setSelectedModality] = useState<Model['type']>('Chat');
   const [openPricePopoverModelId, setOpenPricePopoverModelId] = useState<string | null>(null);
+  const [pricePopoverAnchor, setPricePopoverAnchor] = useState<HTMLButtonElement | null>(null);
   const [priceRegionByModelId, setPriceRegionByModelId] = useState<Record<string, string>>({});
 
   const [vendorSelection, setVendorSelection] = useState<string>('v_deepseek');
@@ -154,10 +281,15 @@ export function ModelAdmin() {
   const modalityFilterLabel = selectedModalityFilterLabels.length > 0
     ? selectedModalityFilterLabels.join(', ')
     : t('admin.model.filters.allModalities');
-  const modelPriceColumnClassName = "px-6 py-4 min-w-[168px] font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap";
+  const modelTableHeaderCellClassName = "sticky top-0 z-10 px-6 py-4 font-semibold";
+  const modelPriceColumnClassName = `${modelTableHeaderCellClassName} min-w-[168px] whitespace-nowrap`;
   const modelPriceCellClassName = "relative px-6 py-4 min-w-[220px] whitespace-nowrap";
   const modelPriceSummaryButtonClassName = "inline-flex min-w-[176px] items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs text-slate-600 shadow-sm transition hover:border-indigo-200 hover:bg-indigo-50/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-indigo-500/30 dark:hover:bg-indigo-500/10 whitespace-nowrap";
-  const modelPricePopoverClassName = "absolute right-6 top-[calc(100%-0.5rem)] z-[45] w-[340px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl dark:border-white/10 dark:bg-[#1a1a1a]";
+  const modelPricePopoverClassName = "fixed z-[2147483000] w-[480px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-slate-200 bg-white opacity-100 shadow-2xl isolate dark:border-white/15 dark:bg-[#1a1a1a]";
+  const dismissPricePopover = () => {
+    setOpenPricePopoverModelId(null);
+    setPricePopoverAnchor(null);
+  };
 
   const toggleModalityFilter = (value: ModelModalityFilter) => {
     setPage(1);
@@ -476,6 +608,7 @@ export function ModelAdmin() {
             {vendors.map(v => {
               const isActive = selectedVendorId === v.id;
               const count = vendorModelCounts[v.id] ?? 0;
+              const vendorAvatarAppearance = resolveVendorAvatarAppearance(v.color);
               return (
                 <button
                   key={v.id}
@@ -486,15 +619,18 @@ export function ModelAdmin() {
                     : 'hover:bg-slate-50 dark:hover:bg-white/5'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-md ${v.color} flex items-center justify-center text-white shadow-sm shrink-0 font-medium`}>
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <div
+                      className={`w-6 h-6 rounded-md ${vendorAvatarAppearance.className} flex items-center justify-center text-white shadow-sm shrink-0 font-medium`}
+                      style={vendorAvatarAppearance.style}
+                    >
                        {v.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className={`font-medium truncate ${isActive ? 'text-indigo-700 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                    <span className={`min-w-0 truncate font-medium ${isActive ? 'text-indigo-700 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-300'}`}>
                       {v.name}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300' : 'bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-400'}`}>
                       {count}
                     </span>
@@ -613,15 +749,15 @@ export function ModelAdmin() {
               )}
             >
               <table className="w-full min-w-[960px] text-left text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                        <thead className="sticky top-0 z-10 bg-slate-50/80 dark:bg-[#121212]/80 border-b border-slate-200 dark:border-white/10">
+                        <thead data-admin-model-table-header>
                           <tr>
-                            <th className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{t('admin.model.table.model')}</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{t('admin.model.table.type')}</th>
+                            <th className={modelTableHeaderCellClassName}>{t('admin.model.table.model')}</th>
+                            <th className={modelTableHeaderCellClassName}>{t('admin.model.table.type')}</th>
                             <th className={modelPriceColumnClassName}>{t('admin.model.table.price')}</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{t('admin.model.table.context')}</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{t('admin.model.table.calls')}</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{t('admin.model.table.status')}</th>
-                            <th className="px-6 py-4 font-semibold text-right text-slate-700 dark:text-slate-300">{t('admin.model.table.actions')}</th>
+                            <th className={modelTableHeaderCellClassName}>{t('admin.model.table.context')}</th>
+                            <th className={modelTableHeaderCellClassName}>{t('admin.model.table.calls')}</th>
+                            <th className={modelTableHeaderCellClassName}>{t('admin.model.table.status')}</th>
+                            <th className={`${modelTableHeaderCellClassName} text-right`}>{t('admin.model.table.actions')}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200 dark:divide-white/5">
@@ -685,10 +821,15 @@ export function ModelAdmin() {
                                     <div className="relative inline-flex">
                                       <button
                                         type="button"
+                                        data-admin-model-price-summary={m.id}
                                         className={modelPriceSummaryButtonClassName}
                                         aria-haspopup="dialog"
                                         aria-expanded={openPricePopoverModelId === m.id}
-                                        onClick={() => setOpenPricePopoverModelId(openPricePopoverModelId === m.id ? null : m.id)}
+                                        onClick={(event) => {
+                                          const isOpen = openPricePopoverModelId === m.id;
+                                          setOpenPricePopoverModelId(isOpen ? null : m.id);
+                                          setPricePopoverAnchor(isOpen ? null : event.currentTarget);
+                                        }}
                                       >
                                         <span className="min-w-0">
                                           <span className="block max-w-[190px] truncate font-mono text-[11px] text-slate-900 dark:text-slate-100">
@@ -703,8 +844,14 @@ export function ModelAdmin() {
                                         <ChevronDown className={`h-3.5 w-3.5 shrink-0 transition-transform ${openPricePopoverModelId === m.id ? 'rotate-180' : ''}`} />
                                       </button>
 
-                                      {openPricePopoverModelId === m.id ? (
-                                        <div className={modelPricePopoverClassName} role="dialog" aria-label={t('admin.model.pricing.details')}>
+                                      {openPricePopoverModelId === m.id && pricePopoverAnchor ? (
+                                        <ModelPricePopover
+                                          key={m.id}
+                                          anchor={pricePopoverAnchor}
+                                          ariaLabel={t('admin.model.pricing.details')}
+                                          className={modelPricePopoverClassName}
+                                          onDismiss={dismissPricePopover}
+                                        >
                                           <div className="border-b border-slate-200 px-3 py-2 dark:border-white/10">
                                             <div className="flex items-center justify-between gap-3">
                                               <div className="text-xs font-semibold text-slate-800 dark:text-slate-100">{t('admin.model.pricing.details')}</div>
@@ -750,7 +897,7 @@ export function ModelAdmin() {
                                               ))}
                                             </div>
                                           </div>
-                                        </div>
+                                        </ModelPricePopover>
                                       ) : null}
                                     </div>
                                   );
@@ -960,6 +1107,14 @@ export function ModelAdmin() {
 
 function modelsForVendor(models: readonly Model[], vendor: Vendor): Model[] {
   return models.filter((model) => model.vendorId === vendor.id || model.vendorCode === vendor.vendorCode);
+}
+
+function resolveVendorAvatarAppearance(color: string): { className: string; style?: React.CSSProperties } {
+  const normalized = color.trim();
+  if (/^#[0-9a-f]{3,8}$/iu.test(normalized)) {
+    return { className: '', style: { backgroundColor: normalized } };
+  }
+  return { className: normalized.startsWith('bg-') ? normalized : 'bg-slate-700' };
 }
 
 function formatPrice(value: string, currency: string): string {
@@ -1214,9 +1369,12 @@ export function ModelMappingAdmin() {
         viewportClassName="min-h-0 flex-1"
         viewportProps={{ 'data-admin-model-mapping-table-viewport': true }}
         header={(
-          <div className="border-b border-slate-200 px-5 py-4 dark:border-white/10">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <div data-admin-model-mapping-toolbar className="border-b border-slate-200 bg-white p-3 dark:border-white/10 dark:bg-[#171717]">
+            <div className="grid min-w-0 gap-3 xl:grid-cols-[auto_minmax(20rem,1fr)] xl:items-center">
+              <div
+                data-admin-model-mapping-scope-filter
+                className="flex w-full min-w-0 items-center overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-0.5 dark:border-white/10 dark:bg-[#121212] xl:w-fit"
+              >
                 {([
                   { value: 'global', label: t('admin.model.mapping.scope.global') },
                   { value: 'vendor', label: t('admin.model.mapping.scope.vendor') },
@@ -1227,20 +1385,22 @@ export function ModelMappingAdmin() {
                     key={tab.value}
                     type="button"
                     onClick={() => handleBindingFilterChange(tab.value)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    aria-pressed={bindingFilter === tab.value}
+                    className={`inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition ${
                       bindingFilter === tab.value
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10'
+                        ? 'bg-white text-slate-950 shadow-sm ring-1 ring-slate-200 dark:bg-white/10 dark:text-white dark:ring-white/10'
+                        : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                     }`}
                   >
                     {tab.label}
                   </button>
                 ))}
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="relative w-full sm:w-[22rem]">
+              <div className="flex min-w-0 items-center gap-2 xl:justify-end">
+                <div data-admin-model-mapping-search className="relative min-w-0 flex-1 xl:max-w-md">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
+                    type="search"
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     onKeyDown={(event) => {
@@ -1249,33 +1409,36 @@ export function ModelMappingAdmin() {
                       }
                     }}
                     placeholder={t('admin.model.mapping.search.placeholder')}
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                    className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/15 dark:border-white/10 dark:bg-[#121212] dark:text-white"
                   />
                 </div>
-                <button type="button" onClick={() => openCreateMappingWithBinding(bindingFilter === 'all' ? 'global' : bindingFilter)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700">
+                <button
+                  data-admin-model-mapping-primary-action
+                  type="button"
+                  onClick={() => openCreateMappingWithBinding(bindingFilter === 'all' ? 'global' : bindingFilter)}
+                  className="inline-flex h-9 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-indigo-600 px-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                >
                   <Plus className="h-4 w-4" />
                   {t('admin.model.mapping.actions.add')}
                 </button>
               </div>
             </div>
+            {(loadError || catalogError) && (
+              <div className="mt-3 border-l-2 border-rose-500 bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">
+                {loadError ?? catalogError}
+              </div>
+            )}
           </div>
         )}
       >
-        {(loadError || catalogError) && (
-          <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200">
-            {loadError ?? catalogError}
-          </div>
-        )}
-
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#171719]">
-          <table className="w-full min-w-[920px] text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-white/5 dark:text-slate-400">
+          <table data-admin-model-mapping-table className="w-full min-w-[920px] text-left text-sm">
+            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-xs text-slate-500 dark:border-white/10 dark:bg-[#121212] dark:text-slate-400">
               <tr>
-                <th className="px-5 py-3">{t('admin.model.mapping.table.scope')}</th>
-                <th className="px-5 py-3">{t('admin.model.mapping.table.binding')}</th>
-                <th className="px-5 py-3">{t('admin.model.mapping.table.relations')}</th>
-                <th className="px-5 py-3">{t('admin.model.mapping.table.status')}</th>
-                <th className="px-5 py-3 text-right">{t('admin.model.table.actions')}</th>
+                <th className="px-5 py-3 font-medium">{t('admin.model.mapping.table.scope')}</th>
+                <th className="px-5 py-3 font-medium">{t('admin.model.mapping.table.binding')}</th>
+                <th className="px-5 py-3 font-medium">{t('admin.model.mapping.table.relations')}</th>
+                <th className="px-5 py-3 font-medium">{t('admin.model.mapping.table.status')}</th>
+                <th className="px-5 py-3 text-right font-medium">{t('admin.model.table.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-white/10">
@@ -1285,23 +1448,23 @@ export function ModelMappingAdmin() {
                 <BusinessStateTableRow colSpan={5} icon={<ArrowRightLeft className="h-5 w-5" />} title={t('admin.model.mapping.state.empty')} />
               ) : filteredMappings.map((mapping) => (
                 <tr key={mapping.id} className="transition hover:bg-slate-50 dark:hover:bg-white/5">
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-3.5">
                     <div className="font-semibold text-slate-900 dark:text-white">{t(`admin.model.mapping.scope.${mapping.bindingType}`)}</div>
                     <div className="mt-1 text-xs text-slate-500">{mappingBindingIdentity(mapping)}</div>
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-3.5">
                     <ModelMappingBindingsCell mapping={mapping} />
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-3.5">
                     <ModelMappingRelationsCell mapping={mapping} onOpenEditor={openRelationEditor} />
                   </td>
-                  <td className="px-5 py-4"><StatusPill value={mapping.enabled ? 'active' : 'disabled'} /></td>
-                  <td className="px-5 py-4">
-                    <div className="flex justify-end gap-2">
-                      <button type="button" onClick={() => openEditMapping(mapping)} className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white">
+                  <td className="px-5 py-3.5"><StatusPill value={mapping.enabled ? 'active' : 'disabled'} /></td>
+                  <td className="px-5 py-3.5">
+                    <div className="flex justify-end gap-1">
+                      <button type="button" onClick={() => openEditMapping(mapping)} aria-label={t('common.actions.edit')} title={t('common.actions.edit')} className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-white/10 dark:hover:text-white">
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button type="button" onClick={() => void handleDeleteMapping(mapping)} className="rounded-lg p-2 text-rose-500 transition hover:bg-rose-50 dark:hover:bg-rose-500/10">
+                      <button type="button" onClick={() => void handleDeleteMapping(mapping)} aria-label={t('common.actions.delete')} title={t('common.actions.delete')} className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-300">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -1310,7 +1473,6 @@ export function ModelMappingAdmin() {
               ))}
             </tbody>
           </table>
-        </div>
       </AdminTableShell>
 
       {isEditorOpen && (

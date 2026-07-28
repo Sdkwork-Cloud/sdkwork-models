@@ -1,0 +1,24 @@
+[data-admin-model-price-popover] {
+  position: fixed;
+  z-index: 2147483000 !important;
+  width: min(480px, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  isolation: isolate;
+  backdrop-filter: none;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 0.24), 0 8px 20px rgb(15 23 42 / 0.14);
+  color-scheme: light;
+}
+
+html.dark [data-admin-model-price-popover] {
+  border-color: rgb(255 255 255 / 0.15);
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.56), 0 8px 20px rgb(0 0 0 / 0.36);
+  color-scheme: dark;
+}
