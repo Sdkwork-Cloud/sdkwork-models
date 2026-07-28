@@ -166,8 +166,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             ),
         };
         require_positive_multiplier("account group sale multiplier", group.sale_multiplier)?;
-        let customer_charge = customer_charge_before_sale_multiplier
-            .checked_multiply(group.sale_multiplier)?;
+        let customer_charge =
+            customer_charge_before_sale_multiplier.checked_multiply(group.sale_multiplier)?;
         let gross_margin_per_unit = procurement_cost
             .as_ref()
             .map(|cost| customer_charge.subtract(cost))
