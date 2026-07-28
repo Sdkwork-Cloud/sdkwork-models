@@ -36,9 +36,13 @@ pub struct ResolvedModelPrice {
     pub supplier_code: Option<String>,
     pub billing_meter: BillingMeter,
     pub official_reference: ModelPrice,
-    pub upstream_cost: Option<ModelPrice>,
-    pub customer_charge_before_rate: Money,
-    pub rate_multiplier: DecimalValue,
+    pub raw_upstream_cost: Option<ModelPrice>,
+    pub procurement_cost: Option<Money>,
+    pub account_contract_cost_multiplier: Option<DecimalValue>,
+    pub account_group_cost_multiplier: Option<DecimalValue>,
+    pub procurement_cost_multiplier: Option<DecimalValue>,
+    pub customer_charge_before_sale_multiplier: Money,
+    pub sale_multiplier: DecimalValue,
     pub reference_multiplier: DecimalValue,
     pub customer_charge: Money,
     pub gross_margin_per_unit: Option<crate::domain::DecimalValue>,
@@ -98,13 +102,32 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     .map(|route| normalize_region_code(&route.region_code))
             })
             .unwrap_or_else(|| DEFAULT_PRICE_REGION_CODE.to_owned());
-        let upstream = self.find_upstream_cost(
+        let raw_upstream_cost = self.find_upstream_cost(
             &query,
             api_key.tenant_id,
             api_key.organization_id,
             &region_code,
-        );
-        let price_scope = upstream
+        )?;
+        let procurement_multipliers = self.resolve_procurement_multipliers(
+            &query,
+            group.id,
+            group.cost_multiplier,
+            &region_code,
+        )?;
+        let procurement_cost = match (&raw_upstream_cost, procurement_multipliers.as_ref()) {
+            (Some(price), Some(multipliers)) => Some(
+                price
+                    .unit_price
+                    .checked_multiply(multipliers.combined_multiplier)?,
+            ),
+            (None, None) => None,
+            _ => {
+                return Err(DomainError::new(
+                    "upstream price and procurement multiplier context must be resolved together",
+                ));
+            }
+        };
+        let price_scope = raw_upstream_cost
             .as_ref()
             .map(|price| price.catalog_key.as_str())
             .unwrap_or(query.model.as_str());
@@ -129,7 +152,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .filter(|price| same_region(&price.region_code, &region_code));
         let reference_multiplier = plan.default_multiplier;
-        let (customer_charge_before_rate, source) = match explicit_customer {
+        let (customer_charge_before_sale_multiplier, source) = match explicit_customer {
             Some(price) => (
                 price.unit_price,
                 ResolvedPriceSource::ExplicitCustomerCharge,
@@ -142,11 +165,12 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 ResolvedPriceSource::DerivedFromOfficialReference,
             ),
         };
-        let customer_charge =
-            customer_charge_before_rate.checked_multiply(group.sale_multiplier)?;
-        let gross_margin_per_unit = upstream
+        require_positive_multiplier("account group sale multiplier", group.sale_multiplier)?;
+        let customer_charge = customer_charge_before_sale_multiplier
+            .checked_multiply(group.sale_multiplier)?;
+        let gross_margin_per_unit = procurement_cost
             .as_ref()
-            .map(|price| customer_charge.subtract(&price.unit_price))
+            .map(|cost| customer_charge.subtract(cost))
             .transpose()?;
 
         Ok(ResolvedModelPrice {
@@ -157,9 +181,19 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             supplier_code: query.supplier_code,
             billing_meter: query.billing_meter,
             official_reference: official,
-            upstream_cost: upstream,
-            customer_charge_before_rate,
-            rate_multiplier: group.sale_multiplier,
+            raw_upstream_cost,
+            procurement_cost,
+            account_contract_cost_multiplier: procurement_multipliers
+                .as_ref()
+                .map(|multipliers| multipliers.account_contract_multiplier),
+            account_group_cost_multiplier: procurement_multipliers
+                .as_ref()
+                .map(|multipliers| multipliers.account_group_multiplier),
+            procurement_cost_multiplier: procurement_multipliers
+                .as_ref()
+                .map(|multipliers| multipliers.combined_multiplier),
+            customer_charge_before_sale_multiplier,
+            sale_multiplier: group.sale_multiplier,
             reference_multiplier,
             customer_charge,
             gross_margin_per_unit,
@@ -241,27 +275,17 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         tenant_id: i64,
         organization_id: i64,
         region_code: &str,
-    ) -> Option<ModelPrice> {
+    ) -> DomainResult<Option<ModelPrice>> {
         let supplier_code = query.supplier_code.as_deref();
-        if let Some(account_id) = query.account_id {
-            return self
-                .catalog
-                .list_model_prices_for_scope(
-                    tenant_id,
-                    organization_id,
-                    &query.model,
-                    PriceSide::UpstreamCost,
-                    query.billing_meter.clone(),
-                )
-                .into_iter()
-                .find(|price| {
-                    price.supplier_code.as_deref() == supplier_code
-                        && price.account_id == Some(account_id)
-                        && price.pricing_plan_code.is_none()
-                        && same_region(&price.region_code, region_code)
-                });
+        if supplier_code.is_none() && query.account_id.is_none() {
+            return Ok(None);
         }
-
+        let supplier_code = supplier_code.ok_or_else(|| {
+            DomainError::new("supplier code is required when an upstream account is selected")
+        })?;
+        let account_id = query.account_id.ok_or_else(|| {
+            DomainError::new("upstream account id is required when a supplier is selected")
+        })?;
         self.catalog
             .list_model_prices_for_scope(
                 tenant_id,
@@ -272,10 +296,93 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .into_iter()
             .find(|price| {
-                price.supplier_code.as_deref() == supplier_code
+                price.supplier_code.as_deref() == Some(supplier_code)
+                    && price.account_id == Some(account_id)
                     && price.pricing_plan_code.is_none()
                     && same_region(&price.region_code, region_code)
             })
+            .map(Some)
+            .ok_or_else(|| {
+                DomainError::new(format!(
+                    "upstream cost not found for model {}, supplier {}, account {}, meter {}, and region {}",
+                    query.model,
+                    supplier_code,
+                    account_id,
+                    query.billing_meter.code(),
+                    region_code
+                ))
+            })
+    }
+
+    fn resolve_procurement_multipliers(
+        &self,
+        query: &ResolveModelPriceQuery,
+        account_group_id: i64,
+        default_group_multiplier: DecimalValue,
+        region_code: &str,
+    ) -> DomainResult<Option<ProcurementMultipliers>> {
+        if query.supplier_code.is_none() && query.account_id.is_none() {
+            return Ok(None);
+        }
+        let supplier_code = query.supplier_code.as_deref().ok_or_else(|| {
+            DomainError::new("supplier code is required when an upstream account is selected")
+        })?;
+        let account_id = query.account_id.ok_or_else(|| {
+            DomainError::new("upstream account id is required when a supplier is selected")
+        })?;
+
+        let mut resolved: Option<ProcurementMultipliers> = None;
+        for route in self
+            .catalog
+            .list_upstream_account_routes()
+            .into_iter()
+            .filter(|route| {
+                route.supplier_code == supplier_code
+                    && route.account_id == account_id
+                    && same_region(&route.region_code, region_code)
+            })
+        {
+            let Some(binding) = route
+                .account_group_bindings
+                .iter()
+                .find(|binding| binding.account_group_id == account_group_id)
+            else {
+                continue;
+            };
+            let account_group_multiplier = binding
+                .cost_multiplier_override
+                .unwrap_or(default_group_multiplier);
+            require_positive_multiplier(
+                "upstream account contract cost multiplier",
+                route.contract_cost_multiplier,
+            )?;
+            require_positive_multiplier(
+                "upstream account group cost multiplier",
+                account_group_multiplier,
+            )?;
+            let multipliers = ProcurementMultipliers {
+                account_contract_multiplier: route.contract_cost_multiplier,
+                account_group_multiplier,
+                combined_multiplier: route
+                    .contract_cost_multiplier
+                    .checked_multiply(account_group_multiplier)?,
+            };
+            if resolved
+                .as_ref()
+                .is_some_and(|current| current != &multipliers)
+            {
+                return Err(DomainError::new(format!(
+                    "inconsistent procurement multipliers for supplier {supplier_code}, account {account_id}, and account group {account_group_id}"
+                )));
+            }
+            resolved = Some(multipliers);
+        }
+
+        resolved.map(Some).ok_or_else(|| {
+            DomainError::new(format!(
+                "upstream account {account_id} is not bound to account group {account_group_id} for supplier {supplier_code} and region {region_code}"
+            ))
+        })
     }
 
     fn find_upstream_route(
@@ -340,6 +447,13 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct ProcurementMultipliers {
+    account_contract_multiplier: DecimalValue,
+    account_group_multiplier: DecimalValue,
+    combined_multiplier: DecimalValue,
+}
+
 fn normalize_region_code(value: &str) -> String {
     let value = value.trim();
     if value.is_empty() {
@@ -367,4 +481,11 @@ fn add_default_markup(base: Money, markup: &Money) -> DomainResult<Money> {
         return Ok(base);
     }
     base.add(markup)
+}
+
+fn require_positive_multiplier(field: &str, value: DecimalValue) -> DomainResult<()> {
+    if value <= DecimalValue::ZERO {
+        return Err(DomainError::new(format!("{field} must be positive")));
+    }
+    Ok(())
 }
