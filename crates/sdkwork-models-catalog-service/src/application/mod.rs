@@ -1,15 +1,16 @@
 mod api_key_authenticator;
 mod api_key_secret_generator;
+mod credential_secret_codec;
 mod model_catalog_query;
 mod model_ranking_refresh_worker;
 mod model_rankings_service;
 mod pricing_resolver;
 
 pub use api_key_authenticator::{
-    ApiKeyAuthenticator, ApiKeySecretCodec, ApiKeySecretHasher, AuthenticateApiKeyQuery,
-    AuthenticatedApiKeyContext,
+    ApiKeyAuthenticator, ApiKeySecretHasher, AuthenticateApiKeyQuery, AuthenticatedApiKeyContext,
 };
 pub use api_key_secret_generator::{ApiKeySecretGenerator, EntityUuidGenerator};
+pub use credential_secret_codec::CredentialSecretCodec;
 pub use model_catalog_query::{
     ListModelCatalogQuery, ModelCatalogGroup, ModelCatalogItem, ModelCatalogPage,
     ModelCatalogPriceView, ModelCatalogQueryService, ModelCatalogReferencePriceView,

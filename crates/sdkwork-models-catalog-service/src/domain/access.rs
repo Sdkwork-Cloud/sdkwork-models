@@ -11,7 +11,6 @@ pub struct GatewayApiKey {
     pub key_prefix: String,
     pub key_display_masked: String,
     pub key_hash: String,
-    pub copyable_key: Option<String>,
     pub policy_id: Option<i64>,
     pub quota_policy_id: Option<i64>,
     pub created_at: String,
@@ -34,7 +33,6 @@ impl GatewayApiKey {
             key_display_masked: mask_key_prefix(&key_prefix),
             key_prefix,
             key_hash: key_hash.to_owned(),
-            copyable_key: None,
             policy_id: None,
             quota_policy_id: None,
             created_at: String::new(),
@@ -67,11 +65,6 @@ impl GatewayApiKey {
         self.quota_policy_id = quota_policy_id;
         self.created_at = created_at.to_owned();
         self.expire_at = expire_at.map(str::to_owned);
-        self
-    }
-
-    pub fn with_copyable_key(mut self, copyable_key: impl Into<String>) -> Self {
-        self.copyable_key = Some(copyable_key.into());
         self
     }
 

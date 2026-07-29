@@ -5,11 +5,6 @@ pub trait ApiKeySecretHasher {
     fn hash_secret(&self, secret: &str) -> DomainResult<String>;
 }
 
-pub trait ApiKeySecretCodec {
-    fn encode_secret(&self, secret: &str) -> DomainResult<String>;
-    fn decode_secret(&self, encoded_secret: &str) -> DomainResult<String>;
-}
-
 pub struct ApiKeyAuthenticator<'a, C, H>
 where
     C: PricingCatalog,
