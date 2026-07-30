@@ -49,6 +49,12 @@ impl ModelsDatabaseHost {
 /// Loads the canonical models database module around an existing pool without
 /// creating framework tables, applying schema, or seeding catalog data.
 pub fn connect_models_database(pool: DatabasePool) -> Result<ModelsDatabaseHost, String> {
+    if pool.as_postgres().is_none() {
+        return Err(
+            "sdkwork-models is an authoritative-server database module and requires PostgreSQL"
+                .to_owned(),
+        );
+    }
     let app_root = resolve_app_root();
     let module = Arc::new(
         DefaultDatabaseModule::from_app_root(&app_root)
@@ -134,35 +140,11 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn connect_is_side_effect_free() {
-        let host = connect_models_database(memory_pool().await).expect("load models database host");
-        let sqlite = host.pool().as_sqlite().expect("SQLite pool");
-        let table_count: i64 =
-            sqlx::query_scalar("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table'")
-                .fetch_one(sqlite)
-                .await
-                .expect("inspect empty database");
-        assert_eq!(0, table_count);
-    }
-
-    #[tokio::test]
-    async fn explicit_migrate_materializes_models_schema() {
-        let host = connect_models_database(memory_pool().await).expect("load models database host");
-        host.migrate("sdkwork-models-database-host-test")
-            .await
-            .expect("migrate models database");
-
-        let sqlite = host.pool().as_sqlite().expect("SQLite pool");
-        for table in ["ai_model_vendor", "ai_model", "ai_model_pricing"] {
-            let present: i64 = sqlx::query_scalar(
-                "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?",
-            )
-            .bind(table)
-            .fetch_one(sqlite)
-            .await
-            .expect("inspect migrated models database");
-            assert_eq!(1, present, "missing {table}");
-        }
+    async fn authoritative_host_rejects_sqlite_pool() {
+        let error = connect_models_database(memory_pool().await)
+            .err()
+            .expect("SQLite pool must be rejected");
+        assert!(error.contains("requires PostgreSQL"));
     }
 
     #[test]

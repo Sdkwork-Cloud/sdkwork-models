@@ -1325,6 +1325,37 @@ function pruneUnusedComponentSchemas(document) {
   return document;
 }
 
+function gatewayPermission(operationId, method) {
+  const resourcePermission =
+    operationId?.startsWith("aiResources.") ||
+    operationId?.startsWith("aiResourceGroups.")
+      ? "intelligence.resources"
+      : "intelligence.models";
+  const readOperation = method === "get" || operationId === "modelMappings.resolve";
+  return `${resourcePermission}.${readOperation ? "read" : "manage"}`;
+}
+
+function decorateGatewayContract(document, surface) {
+  const appSurface = surface === "app-api";
+  for (const pathItem of Object.values(document.paths ?? {})) {
+    for (const [method, operation] of Object.entries(pathItem ?? {})) {
+      if (!["get", "post", "put", "patch", "delete"].includes(method)) {
+        continue;
+      }
+      operation["x-sdkwork-api-surface"] = surface;
+      operation["x-sdkwork-request-context"] = "WebRequestContext";
+      operation["x-sdkwork-auth-mode"] = appSurface ? "public" : "dual-token";
+      if (!appSurface) {
+        operation["x-sdkwork-permission"] = gatewayPermission(
+          operation.operationId,
+          method,
+        );
+      }
+    }
+  }
+  return document;
+}
+
 function serializeJson(document) {
   return `${JSON.stringify(document, null, 2)}\n`;
 }
@@ -1356,18 +1387,20 @@ const appSource = join(
   "generated/openapi/clawrouter-models-catalog-app-openapi.json",
 );
 
-const backendDocument = migrateOpenApiDocument(
-  pruneUnusedComponentSchemas(
-    standardizeBackendOperationPatterns(
-      mergeModelCatalogSyncSchema(
-        mergeVideoProfileCatalogBackendPaths(
-          mergeVoiceCatalogBackendPaths(
-            injectModelsListQueryParams(
-              extractSurface(
-                backendSource,
-                BACKEND_PATH_PREFIXES,
-                "SDKWork Models Backend API",
-                "/backend/v3/api",
+const backendDocument = decorateGatewayContract(
+  migrateOpenApiDocument(
+    pruneUnusedComponentSchemas(
+      standardizeBackendOperationPatterns(
+        mergeModelCatalogSyncSchema(
+          mergeVideoProfileCatalogBackendPaths(
+            mergeVoiceCatalogBackendPaths(
+              injectModelsListQueryParams(
+                extractSurface(
+                  backendSource,
+                  BACKEND_PATH_PREFIXES,
+                  "SDKWork Models Backend API",
+                  "/backend/v3/api",
+                ),
               ),
             ),
           ),
@@ -1375,20 +1408,24 @@ const backendDocument = migrateOpenApiDocument(
       ),
     ),
   ),
+  "backend-api",
 );
-const appDocument = migrateOpenApiDocument(
-  mergeVideoProfileCatalogAppPaths(
-    mergeVoiceCatalogAppPaths(
-      injectModelsListQueryParams(
-        extractSurface(
-          appSource,
-          APP_PATH_PREFIXES,
-          "SDKWork Models App API",
-          "/app/v3/api",
+const appDocument = decorateGatewayContract(
+  migrateOpenApiDocument(
+    mergeVideoProfileCatalogAppPaths(
+      mergeVoiceCatalogAppPaths(
+        injectModelsListQueryParams(
+          extractSurface(
+            appSource,
+            APP_PATH_PREFIXES,
+            "SDKWork Models App API",
+            "/app/v3/api",
+          ),
         ),
       ),
     ),
   ),
+  "app-api",
 );
 
 const backendTarget = join(root, "apis/backend-api/intelligence/openapi.json");

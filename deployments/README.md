@@ -11,7 +11,7 @@
 
 ## Bootstrap
 
-1. Configure database via `SDKWORK_MODELS_DATABASE_URL` (see `sdkwork-database` `MODELS` profile).
+1. Configure the shared workspace database via `SDKWORK_DATABASE_*` (or the explicit `SDKWORK_DATABASE_URL` override).
 2. Set `SDKWORK_MODELS_CATALOG_ROOT` to the catalog JSON root (defaults to repository `models/`).
 3. Enable IAM when required: `SDKWORK_MODELS_IAM_ENABLED=true`.
 4. Bind ingress: `SDKWORK_MODELS_APPLICATION_PUBLIC_INGRESS_BIND=127.0.0.1:8080`.

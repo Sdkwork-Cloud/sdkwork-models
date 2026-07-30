@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "sdkwork-models-database-host",
+    "displayName": "SDKWork Models Database Host",
+    "version": "0.1.0",
+    "type": "rust-crate",
+    "root": "crates/sdkwork-models-database-host",
+    "domain": "models",
+    "capability": "database-host",
+    "status": "active",
+    "languages": ["rust"],
+    "generated": false,
+    "private": true,
+    "manifests": ["Cargo.toml"]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "COMPONENT_SPEC.md",
+      "path": "../../../sdkwork-specs/COMPONENT_SPEC.md",
+      "purpose": "Component-local contract and discovery rules."
+    },
+    {
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../../../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Authored source and public export rules."
+    },
+    {
+      "file": "NAMING_SPEC.md",
+      "path": "../../../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical component and capability naming."
+    },
+    {
+      "file": "RUST_CODE_SPEC.md",
+      "path": "../../../sdkwork-specs/RUST_CODE_SPEC.md",
+      "purpose": "Rust crate, error, and verification rules."
+    },
+    {
+      "file": "DATABASE_SPEC.md",
+      "path": "../../../sdkwork-specs/DATABASE_SPEC.md",
+      "purpose": "PostgreSQL authoritative persistence boundaries."
+    },
+    {
+      "file": "DATABASE_FRAMEWORK_SPEC.md",
+      "path": "../../../sdkwork-specs/DATABASE_FRAMEWORK_SPEC.md",
+      "purpose": "Database lifecycle orchestration."
+    },
+    {
+      "file": "TEST_SPEC.md",
+      "path": "../../../sdkwork-specs/TEST_SPEC.md",
+      "purpose": "Database contract and lifecycle verification."
+    }
+  ],
+  "contracts": {
+    "layerRole": "runtime-service-host",
+    "providedPorts": [
+      {
+        "name": "modelsDatabaseLifecycle",
+        "export": "sdkwork_models_database_host::bootstrap_models_database"
+      },
+      {
+        "name": "modelsDatabaseEnvironmentBootstrap",
+        "export": "sdkwork_models_database_host::bootstrap_models_database_from_env"
+      }
+    ],
+    "requiredPorts": [],
+    "publicExports": [
+      "sdkwork_models_database_host::ModelsDatabaseHost",
+      "sdkwork_models_database_host::connect_models_database",
+      "sdkwork_models_database_host::bootstrap_models_database",
+      "sdkwork_models_database_host::bootstrap_models_database_from_env",
+      "sdkwork_models_database_host::migrate_models_database"
+    ],
+    "runtimeEntrypoints": [
+      "src/lib.rs#bootstrap_models_database_from_env"
+    ],
+    "routeManifest": null,
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "dependencyApiExports": [],
+    "dependencyApiSurfaces": [],
+    "events": [],
+    "configKeys": [
+      "SDKWORK_DATABASE_*",
+      "SDKWORK_MODELS_APP_ROOT",
+      "SDKWORK_MODELS_ENVIRONMENT"
+    ]
+  },
+  "integration": {
+    "authority": "The Models database host owns lifecycle orchestration for the PostgreSQL-only sdkwork-models database module.",
+    "statePolicy": "The host rejects non-PostgreSQL pools and applies only module-owned forward migrations in the shared workspace schema."
+  },
+  "verification": {
+    "commands": [
+      "cargo test -p sdkwork-models-database-host",
+      "pnpm db:validate"
+    ]
+  }
+}

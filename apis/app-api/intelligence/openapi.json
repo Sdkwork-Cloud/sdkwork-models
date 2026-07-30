@@ -13,53 +13,67 @@
   "paths": {
     "/app/v3/api/ai/model_rankings": {
       "get": {
-        "description": "List. Reads ai. Writes none. File targets none.",
+        "description": "List model rankings. Reads ai_model_rank_snapshot, ai_model. Writes none. File targets none.",
         "operationId": "modelRankings.list",
         "parameters": [
           {
-            "description": "Ranking snapshot scope.",
+            "description": "Rank scope query parameter.",
             "in": "query",
             "name": "rank_scope",
             "required": false,
             "schema": {
+              "maxLength": 64,
               "type": "string"
             }
           },
           {
-            "description": "Vendor code filter.",
+            "description": "Vendor code query parameter.",
             "in": "query",
             "name": "vendor_code",
             "required": false,
             "schema": {
+              "maxLength": 64,
               "type": "string"
             }
           },
           {
-            "description": "Model modality filter.",
+            "description": "Modality query parameter.",
             "in": "query",
             "name": "modality",
             "required": false,
             "schema": {
+              "maxLength": 32,
               "type": "string"
             }
           },
           {
-            "description": "Free-text ranking search query.",
+            "description": "Q query parameter.",
             "in": "query",
             "name": "q",
             "required": false,
             "schema": {
+              "maxLength": 200,
               "type": "string"
             }
           },
           {
-            "description": "Number of ranking rows returned in the current page.",
+            "description": "Page query parameter.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size query parameter.",
             "in": "query",
             "name": "page_size",
             "required": false,
             "schema": {
-              "default": 200,
-              "format": "int32",
+              "default": 20,
               "maximum": 200,
               "minimum": 1,
               "type": "integer"
@@ -119,29 +133,33 @@
           }
         },
         "security": [],
-        "summary": "List",
+        "summary": "List model rankings",
         "tags": [
           "ai"
         ],
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_model_rank_snapshot",
+          "ai_model"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/model_vendors": {
       "get": {
-        "description": "List. Reads ai. Writes none. File targets none.",
+        "description": "List model vendors. Reads ops_audit_log. Writes none. File targets none.",
         "operationId": "modelVendors.list",
         "parameters": [],
         "responses": {
@@ -197,144 +215,34 @@
           }
         },
         "security": [],
-        "summary": "List",
+        "summary": "List model vendors",
         "tags": [
           "ai"
         ],
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ops_audit_log"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/models": {
       "get": {
-        "description": "List. Reads ai. Writes none. File targets none.",
+        "description": "List models. Reads ai_upstream_account_group, ai_upstream_account_group_member. Writes none. File targets none.",
         "operationId": "models.list",
         "parameters": [
-          {
-            "description": "One-based page index.",
-            "in": "query",
-            "name": "page",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "format": "int32",
-              "minimum": 1,
-              "type": "integer"
-            }
-          },
-          {
-            "description": "Number of models returned in the current page.",
-            "in": "query",
-            "name": "page_size",
-            "required": false,
-            "schema": {
-              "default": 20,
-              "format": "int32",
-              "maximum": 200,
-              "minimum": 1,
-              "type": "integer"
-            }
-          },
-          {
-            "description": "Free-text model search query.",
-            "in": "query",
-            "name": "q",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Billing meter code filter.",
-            "in": "query",
-            "name": "billing_meter",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Comma-separated vendor code filter.",
-            "explode": false,
-            "in": "query",
-            "name": "vendor_codes",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated modality filter.",
-            "explode": false,
-            "in": "query",
-            "name": "modalities",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated capability filter.",
-            "explode": false,
-            "in": "query",
-            "name": "capabilities",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated model category filter.",
-            "explode": false,
-            "in": "query",
-            "name": "categories",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
-          {
-            "description": "Comma-separated channel group filter.",
-            "explode": false,
-            "in": "query",
-            "name": "groups",
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "style": "form"
-          },
           {
             "description": "Comma-separated model type labels (Chat, Image, Embedding, ...).",
             "in": "query",
@@ -398,24 +306,28 @@
           }
         },
         "security": [],
-        "summary": "List",
+        "summary": "List models",
         "tags": [
           "ai"
         ],
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_upstream_account_group",
+          "ai_upstream_account_group_member"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/voices": {
@@ -538,17 +450,21 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_model_rank_snapshot",
+          "ai_model"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "voices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/models/{modelId}/voices": {
@@ -635,17 +551,21 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_model_rank_snapshot",
+          "ai_model"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVoices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/video_profiles": {
@@ -777,17 +697,21 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_model_rank_snapshot",
+          "ai_model"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "videoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     },
     "/app/v3/api/ai/models/{modelId}/video_profiles": {
@@ -874,17 +798,21 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai"
+          "ai_model_rank_snapshot",
+          "ai_model"
         ],
-        "x-route-scope": "console",
+        "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVideoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "tools/bootstrap_frontend_contract_from_route_manifest.py",
-        "x-write-tables": []
+        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "public"
       }
     }
   },
@@ -946,132 +874,193 @@
           }
         }
       },
-      "JsonNull": {
-        "description": "JSON null value.",
-        "type": "null"
-      },
-      "JsonObject": {
-        "additionalProperties": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/JsonValue"
-            }
-          ],
-          "description": "Schema fragment used by json object."
-        },
-        "description": "JSON object with typed JSON values.",
-        "type": "object"
-      },
-      "JsonValue": {
-        "description": "JSON value accepted by flexible Claw Router metadata and extension maps.",
-        "oneOf": [
-          {
-            "description": "String JSON value.",
+      "ModelRankingHistoryEntry": {
+        "additionalProperties": false,
+        "description": "Model ranking history entry schema exposed by Claw Router.",
+        "properties": {
+          "catalogKey": {
+            "description": "Catalog key field on model ranking history entry.",
             "type": "string"
           },
-          {
-            "description": "Number JSON value.",
-            "type": "number"
+          "color": {
+            "description": "Color field on model ranking history entry.",
+            "type": "string"
           },
-          {
-            "description": "Integer JSON value.",
+          "model": {
+            "description": "Model field on model ranking history entry.",
+            "type": "string"
+          },
+          "rank": {
+            "description": "Rank field on model ranking history entry.",
+            "minimum": 1,
             "type": "integer"
           },
-          {
-            "description": "Boolean JSON value.",
-            "type": "boolean"
-          },
-          {
-            "description": "Array JSON value.",
-            "items": {
-              "$ref": "#/components/schemas/JsonValue"
-            },
-            "type": "array"
-          },
-          {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonObject"
-              }
-            ],
-            "description": "Object JSON value."
-          },
-          {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/JsonNull"
-              }
-            ],
-            "description": "Null JSON value."
-          }
-        ]
-      },
-      "ModelCatalogPage": {
-        "additionalProperties": false,
-        "description": "Model catalog page schema exposed by Claw Router.",
-        "name": "ModelCatalogPage",
-        "properties": {
-          "groups": {
-            "description": "Groups field on model catalog page.",
-            "items": {
-              "additionalProperties": false,
-              "description": "Groups field on model catalog page.",
-              "properties": {
-                "key": {
-                  "description": "Key field on model catalog page.",
-                  "type": "string"
-                },
-                "label": {
-                  "description": "Label field on model catalog page.",
-                  "type": "string"
-                },
-                "modelCount": {
-                  "description": "Model count field on model catalog page.",
-                  "format": "int64",
-                  "pattern": "^[0-9]+$",
-                  "type": "string",
-                  "x-sdkwork-int64-string": true,
-                  "x-sdkwork-rust-type": "i64"
-                }
-              },
-              "required": [
-                "key",
-                "label",
-                "modelCount"
-              ],
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "items": {
-            "description": "Items field on model catalog page.",
-            "items": {
-              "additionalProperties": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/JsonValue"
-                  }
-                ],
-                "description": "Items field on model catalog page."
-              },
-              "description": "Items field on model catalog page.",
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "pageInfo": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PageInfo"
-              }
-            ],
-            "description": "Page info field on model catalog page."
+          "volume": {
+            "description": "Volume field on model ranking history entry.",
+            "minimum": 0,
+            "type": "integer"
           }
         },
         "required": [
-          "items",
-          "groups",
-          "pageInfo"
+          "model",
+          "catalogKey",
+          "rank",
+          "volume",
+          "color"
+        ],
+        "type": "object"
+      },
+      "ModelRankingHistoryPoint": {
+        "additionalProperties": false,
+        "description": "Model ranking history point schema exposed by Claw Router.",
+        "properties": {
+          "date": {
+            "description": "Date field on model ranking history point.",
+            "type": "string"
+          },
+          "entries": {
+            "description": "Entries field on model ranking history point.",
+            "items": {
+              "$ref": "#/components/schemas/ModelRankingHistoryEntry"
+            },
+            "type": "array"
+          },
+          "index": {
+            "description": "Index field on model ranking history point.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "index",
+          "entries"
+        ],
+        "type": "object"
+      },
+      "ModelRankingItem": {
+        "additionalProperties": false,
+        "description": "Model ranking item schema exposed by Claw Router.",
+        "properties": {
+          "baseVolume": {
+            "description": "Base volume field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "color": {
+            "description": "Color field on model ranking item.",
+            "type": "string"
+          },
+          "contextSize": {
+            "description": "Context size field on model ranking item.",
+            "type": "string"
+          },
+          "cost": {
+            "description": "Cost field on model ranking item.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "costIndicator": {
+            "description": "Cost indicator field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "currency": {
+            "description": "Currency field on model ranking item.",
+            "type": "string"
+          },
+          "id": {
+            "description": "Id field on model ranking item.",
+            "type": "string"
+          },
+          "isNew": {
+            "description": "Is new field on model ranking item.",
+            "type": "boolean"
+          },
+          "latency": {
+            "description": "Latency field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "license": {
+            "description": "License field on model ranking item.",
+            "type": "string"
+          },
+          "modality": {
+            "description": "Modality field on model ranking item.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name field on model ranking item.",
+            "type": "string"
+          },
+          "prevRank": {
+            "description": "Prev rank field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "pricing": {
+            "description": "Pricing field on model ranking item.",
+            "type": "string"
+          },
+          "rank": {
+            "description": "Rank field on model ranking item.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "requests": {
+            "description": "Requests field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "strengths": {
+            "description": "Strengths field on model ranking item.",
+            "items": {
+              "description": "Strengths field on model ranking item.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "tokens": {
+            "description": "Tokens field on model ranking item.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "trendScore": {
+            "description": "Trend score field on model ranking item.",
+            "type": "number"
+          },
+          "vendor": {
+            "description": "Vendor field on model ranking item.",
+            "type": "string"
+          },
+          "vendorCode": {
+            "description": "Vendor code field on model ranking item.",
+            "type": "string"
+          },
+          "winRate": {
+            "description": "Win rate field on model ranking item.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "rank",
+          "prevRank",
+          "name",
+          "vendor",
+          "vendorCode",
+          "modality",
+          "baseVolume",
+          "costIndicator",
+          "latency",
+          "isNew",
+          "color",
+          "strengths",
+          "requests",
+          "tokens",
+          "cost",
+          "currency"
         ],
         "type": "object"
       },
@@ -1110,32 +1099,14 @@
           "history": {
             "description": "History field on model rankings page.",
             "items": {
-              "additionalProperties": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/JsonValue"
-                  }
-                ],
-                "description": "History field on model rankings page."
-              },
-              "description": "History field on model rankings page.",
-              "type": "object"
+              "$ref": "#/components/schemas/ModelRankingHistoryPoint"
             },
             "type": "array"
           },
           "items": {
             "description": "Items field on model rankings page.",
             "items": {
-              "additionalProperties": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/JsonValue"
-                  }
-                ],
-                "description": "Items field on model rankings page."
-              },
-              "description": "Items field on model rankings page.",
-              "type": "object"
+              "$ref": "#/components/schemas/ModelRankingItem"
             },
             "type": "array"
           },
@@ -1148,23 +1119,105 @@
             "description": "Page info field on model rankings page."
           },
           "source": {
-            "additionalProperties": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/JsonValue"
-                }
-              ],
-              "description": "Source field on model rankings page."
-            },
-            "description": "Source field on model rankings page.",
-            "type": "object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ModelRankingsSource"
+              }
+            ],
+            "description": "Source field on model rankings page."
           }
         },
         "required": [
+          "source",
           "items",
           "history",
-          "source",
           "pageInfo"
+        ],
+        "type": "object"
+      },
+      "ModelRankingsSource": {
+        "additionalProperties": false,
+        "description": "Model rankings source schema exposed by Claw Router.",
+        "properties": {
+          "cacheMaxAgeSeconds": {
+            "description": "Cache max age seconds field on model rankings source.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "generatedAt": {
+            "description": "Generated at field on model rankings source.",
+            "type": "string"
+          },
+          "nextRefreshAt": {
+            "description": "Next refresh at field on model rankings source.",
+            "type": "string"
+          },
+          "observedAt": {
+            "description": "Observed at field on model rankings source.",
+            "type": "string"
+          },
+          "rankScope": {
+            "description": "Rank scope field on model rankings source.",
+            "type": "string"
+          },
+          "refreshIntervalSeconds": {
+            "description": "Refresh interval seconds field on model rankings source.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "snapshotDate": {
+            "description": "Snapshot date field on model rankings source.",
+            "type": "string"
+          },
+          "snapshotPeriod": {
+            "description": "Snapshot period field on model rankings source.",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "type": "string"
+          },
+          "sourceDescription": {
+            "description": "Source description field on model rankings source.",
+            "type": "string"
+          },
+          "sourceLabel": {
+            "description": "Source label field on model rankings source.",
+            "type": "string"
+          },
+          "sourceTables": {
+            "description": "Source tables field on model rankings source.",
+            "items": {
+              "description": "Source tables field on model rankings source.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "windowEnd": {
+            "description": "Window end field on model rankings source.",
+            "type": "string"
+          },
+          "windowStart": {
+            "description": "Window start field on model rankings source.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sourceLabel",
+          "sourceDescription",
+          "observedAt",
+          "snapshotDate",
+          "snapshotPeriod",
+          "windowStart",
+          "windowEnd",
+          "generatedAt",
+          "refreshIntervalSeconds",
+          "nextRefreshAt",
+          "cacheMaxAgeSeconds",
+          "rankScope",
+          "sourceTables"
         ],
         "type": "object"
       },
@@ -1207,10 +1260,10 @@
               "data": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ModelCatalogPage"
+                    "$ref": "#/components/schemas/NoData"
                   }
                 ],
-                "description": "Data field on models list result."
+                "description": "No business data returned by this operation."
               }
             },
             "required": [

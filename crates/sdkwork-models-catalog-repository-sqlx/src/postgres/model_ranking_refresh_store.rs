@@ -761,7 +761,7 @@ fn store_error(context: &str, error: sqlx::Error) -> DomainError {
 mod tests {
     use super::*;
 
-    const POSTGRES_TEST_DATABASE_URL: &str = "SDKWORK_CLAW_POSTGRES_TEST_DATABASE_URL";
+    const POSTGRES_TEST_DATABASE_URL: &str = "SDKWORK_DATABASE_URL";
 
     #[test]
     fn ranking_sql_keeps_usage_cost_numeric_until_the_text_mapping_boundary() {
@@ -842,7 +842,7 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore = "requires SDKWORK_CLAW_POSTGRES_TEST_DATABASE_URL"]
+    #[ignore = "requires SDKWORK_DATABASE_URL for an isolated workspace test database"]
     async fn postgres_numeric_aggregation_and_snapshot_cast_preserve_exact_ranking_cost() {
         let database_url = std::env::var(POSTGRES_TEST_DATABASE_URL).unwrap_or_else(|_| {
             panic!(

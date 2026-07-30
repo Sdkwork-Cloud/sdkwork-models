@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.route.manifest",
+  "packageName": "sdkwork-routes-models-catalog-backend-api",
+  "surface": "backend-api",
+  "owner": "sdkwork-models",
+  "domain": "intelligence",
+  "capability": "models-catalog",
+  "apiAuthority": "sdkwork-models-backend-api",
+  "sdkFamily": "sdkwork-models-backend-sdk",
+  "prefix": "/backend/v3/api/ai",
+  "source": {
+    "crateRoot": "crates/sdkwork-routes-catalog-backend-api",
+    "crateImport": "sdkwork_routes_models_catalog_backend_api",
+    "openApiAuthority": "apis/backend-api/intelligence/openapi.json"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/model_mappings",
+      "operationId": "modelMappings.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/model_mappings",
+      "operationId": "modelMappings.create",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/backend/v3/api/ai/model_mappings/{mappingId}",
+      "operationId": "modelMappings.delete",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/backend/v3/api/ai/model_mappings/{mappingId}",
+      "operationId": "modelMappings.update",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/model_mappings/resolve",
+      "operationId": "modelMappings.resolve",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/model_rankings",
+      "operationId": "modelRankings.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/model_rankings/jobs",
+      "operationId": "modelRankings.jobs.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/model_rankings/refresh",
+      "operationId": "modelRankings.refresh",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": true
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/model_rankings/status",
+      "operationId": "modelRankings.status.retrieve",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/model_vendors",
+      "operationId": "modelVendors.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/model_vendors",
+      "operationId": "modelVendors.create",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/models",
+      "operationId": "models.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/models",
+      "operationId": "models.create",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/backend/v3/api/ai/models/{modelId}",
+      "operationId": "models.delete",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/backend/v3/api/ai/models/{modelId}",
+      "operationId": "models.update",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/models/{modelId}/video_profiles",
+      "operationId": "modelVideoProfiles.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/models/{modelId}/voices",
+      "operationId": "modelVoices.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/models/sync",
+      "operationId": "models.sync",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/resource_groups",
+      "operationId": "resourceGroups.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "POST",
+      "path": "/backend/v3/api/ai/resource_groups",
+      "operationId": "resourceGroups.create",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "DELETE",
+      "path": "/backend/v3/api/ai/resource_groups/{groupId}",
+      "operationId": "resourceGroups.delete",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/backend/v3/api/ai/resource_groups/{groupId}",
+      "operationId": "resourceGroups.update",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.manage",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
+      "operationId": "resourceGroups.resources.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/resources",
+      "operationId": "resources.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/video_profiles",
+      "operationId": "videoProfiles.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    },
+    {
+      "method": "GET",
+      "path": "/backend/v3/api/ai/voices",
+      "operationId": "voices.list",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.models.read",
+      "idempotent": false
+    }
+  ]
+}

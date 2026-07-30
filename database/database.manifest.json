@@ -1,17 +1,17 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "kind": "sdkwork.database.module",
+  "databaseRole": "authoritative-server",
   "moduleId": "sdkwork-models",
   "serviceCode": "SDKWORK_MODELS",
   "displayName": "SDKWork Models Catalog Database",
   "owner": "sdkwork-models-platform",
   "engines": [
-    "postgres",
-    "sqlite"
+    "postgres"
   ],
   "defaultEngine": "postgres",
-  "tablePrefix": "ai_model_",
-  "contractVersion": "1.0.0",
+  "tablePrefix": "ai_",
+  "contractVersion": "1.0.1",
   "baselineStrategy": "baseline-plus-migrations",
   "baselineAnchorTable": "ai_model_vendor",
   "modules": [],

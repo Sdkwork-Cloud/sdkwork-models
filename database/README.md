@@ -4,7 +4,7 @@ Canonical lifecycle assets for `sdkwork-models` per `DATABASE_FRAMEWORK_SPEC.md`
 
 - moduleId: `sdkwork-models`
 - serviceCode: `SDKWORK_MODELS`
-- tablePrefix: `ai_model_` (catalog dictionary tables retain legacy `ai_*` names during composed migration)
+- tablePrefix: `ai_`
 
 ## Owned Tables
 
@@ -22,11 +22,13 @@ Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway chan
 
 ## Initialization state
 
-This module is in **initialization state** for greenfield deployments:
+This module uses a baseline plus forward migrations:
 
-1. **Baseline** — `database/ddl/baseline/{engine}/0001_sdkwork-models_baseline.sql` contains the full DDL snapshot.
-2. **Migrations** — `database/migrations/{engine}/` is reserved for post-GA incremental schema changes only. It is intentionally empty at initialization.
+1. **Baseline** — `database/ddl/baseline/postgres/0001_sdkwork-models_baseline.sql` contains the full PostgreSQL DDL snapshot.
+2. **Migrations** — `database/migrations/postgres/` contains ordered, idempotent upgrades for databases created from an earlier baseline. Migration `0002_add_supplier_code` reconciles supplier ownership columns introduced after the initial baseline.
 3. **Drift** — run `pnpm db:drift:check` before release.
+
+The authoritative server contract is PostgreSQL-only. SQLite persistence, when required by a native client, must live in a separately owned `client-local` database module.
 
 ## Commands
 

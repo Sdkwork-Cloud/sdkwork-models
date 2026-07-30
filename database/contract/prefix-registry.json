@@ -3,7 +3,7 @@
   "kind": "sdkwork.database.prefix-registry",
   "prefixes": [
     {
-      "prefix": "ai_model_",
+      "prefix": "ai_",
       "owner": "sdkwork-models-platform",
       "domain": "sdkwork-models"
     }

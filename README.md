@@ -444,7 +444,7 @@ with `status`, `errorCode`, and `message`. Stable installer error codes are
 `missing_database_url`, `invalid_argument`, `invalid_state`, `database_error`,
 `catalog_error`, and `installer_error`. Installer argument validation is
 independent from database initialization: invalid commands or refresh options
-return `invalid_argument` even when `SDKWORK_CLAW_DATABASE_URL` is absent, which
+return `invalid_argument` even when `SDKWORK_DATABASE_URL` is absent, which
 lets update tooling lint invocations without provisioning a database first.
 Non-refresh commands reject unexpected extra arguments; only `refresh-catalog`
 accepts refresh-specific options.

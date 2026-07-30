@@ -16,5 +16,4 @@ sdkwork-database-spi = { workspace = true }
 sdkwork-database-sqlx = { workspace = true }
 
 [dev-dependencies]
-sqlx = { workspace = true }
 tokio = { workspace = true }

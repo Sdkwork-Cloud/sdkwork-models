@@ -1,13 +1,13 @@
 schema_version: 1
 kind: sdkwork.database.schema
+database_role: authoritative-server
 module_id: sdkwork-models
-contract_version: 1.0.0
+contract_version: 1.0.1
 owner_team: sdkwork-models-platform
 compliance_level: L2
 engines:
   - postgres
-  - sqlite
-table_prefix: ai_model_
+table_prefix: ai_
 tables:
   - name: ai_model_vendor
     lifecycle_status: active

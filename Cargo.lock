@@ -1884,6 +1884,7 @@ dependencies = [
  "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",
+ "tokio",
 ]
 
 [[package]]
@@ -1942,6 +1943,7 @@ dependencies = [
  "base64",
  "hex",
  "hmac",
+ "hyper-util",
  "prometheus",
  "sdkwork-claw-config",
  "sdkwork-claw-contract",
@@ -2017,6 +2019,7 @@ dependencies = [
  "thiserror 2.0.18",
  "toml",
  "tracing",
+ "url",
 ]
 
 [[package]]
@@ -2221,10 +2224,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sdkwork-models-database-bootstrap"
-version = "0.1.0"
-
-[[package]]
 name = "sdkwork-models-database-host"
 version = "0.1.0"
 dependencies = [
@@ -2233,7 +2232,6 @@ dependencies = [
  "sdkwork-database-lifecycle",
  "sdkwork-database-spi",
  "sdkwork-database-sqlx",
- "sqlx",
  "tokio",
 ]
 

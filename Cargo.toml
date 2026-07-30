@@ -4,7 +4,6 @@ members = [
   "crates/sdkwork-models-contract-service",
   "crates/sdkwork-models-catalog-repository-sqlx",
   "crates/sdkwork-models-catalog-service",
-  "crates/sdkwork-models-database-bootstrap",
   "crates/sdkwork-models-database-host",
   "crates/sdkwork-api-models-standalone-gateway",
   "crates/sdkwork-models-service-host",
@@ -44,7 +43,6 @@ sdkwork-models = { path = "sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust" }
 sdkwork_models_contract_service = { package = "sdkwork-models-contract-service", path = "crates/sdkwork-models-contract-service" }
 sdkwork_models_catalog_repository_sqlx = { package = "sdkwork-models-catalog-repository-sqlx", path = "crates/sdkwork-models-catalog-repository-sqlx" }
 sdkwork_models_catalog_service = { package = "sdkwork-models-catalog-service", path = "crates/sdkwork-models-catalog-service" }
-sdkwork_models_database_bootstrap = { package = "sdkwork-models-database-bootstrap", path = "crates/sdkwork-models-database-bootstrap" }
 sdkwork_models_database_host = { package = "sdkwork-models-database-host", path = "crates/sdkwork-models-database-host" }
 sdkwork_api_models_assembly = { package = "sdkwork-api-models-assembly", path = "crates/sdkwork-api-models-assembly" }
 sdkwork_models_service_host = { package = "sdkwork-models-service-host", path = "crates/sdkwork-models-service-host" }
