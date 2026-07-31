@@ -1146,7 +1146,7 @@
     },
     "/backend/v3/api/ai/model_vendors": {
       "get": {
-        "description": "List vendors. Reads ai_pricing_import_snapshot. Writes none. File targets none.",
+        "description": "List vendors. Reads ai_model_vendor. Writes none. File targets none.",
         "operationId": "modelVendors.list",
         "parameters": [],
         "responses": {
@@ -1214,7 +1214,7 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai_pricing_import_snapshot"
+          "ai_model_vendor"
         ],
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
@@ -1331,17 +1331,60 @@
     },
     "/backend/v3/api/ai/models": {
       "get": {
-        "description": "List all models. Reads ai_pricing_import_snapshot. Writes none. File targets none.",
+        "description": "List all models. Reads ai_model_vendor, ai_model, ai_model_capability, ai_model_pricing. Writes none. File targets none.",
         "operationId": "models.list",
         "parameters": [
           {
-            "description": "Comma-separated model type labels (Chat, Image, Embedding, ...).",
+            "description": "Page query parameter.",
             "in": "query",
-            "name": "model_types",
+            "name": "page",
             "required": false,
             "schema": {
+              "default": 1,
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size query parameter.",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "format": "int32",
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Q query parameter.",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 128,
               "type": "string"
             }
+          },
+          {
+            "description": "Vendor codes query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "vendor_codes",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 32,
+              "type": "array"
+            },
+            "style": "form"
           }
         ],
         "responses": {
@@ -1409,7 +1452,10 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ai_pricing_import_snapshot"
+          "ai_model_vendor",
+          "ai_model",
+          "ai_model_capability",
+          "ai_model_pricing"
         ],
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
@@ -1531,14 +1577,33 @@
         "parameters": [],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelsSyncResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/ModelCatalogSyncResult"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1608,6 +1673,17 @@
           "ai_pricing_import_snapshot",
           "ops_audit_log"
         ],
+        "requestBody": {
+          "required": true,
+          "description": "Model catalog refresh request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminModelCatalogSyncRequest"
+              }
+            }
+          }
+        },
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
@@ -1899,7 +1975,7 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.read"
+        "x-sdkwork-permission": "intelligence.resources.read"
       },
       "post": {
         "description": "Create resource group. Reads ai_resource_group, ai_resource_group_item. Writes ai_resource_group, ai_resource_group_item, ops_audit_log. File targets none.",
@@ -2000,7 +2076,7 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.manage"
+        "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
     "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources": {
@@ -2099,7 +2175,7 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.read"
+        "x-sdkwork-permission": "intelligence.resources.read"
       }
     },
     "/backend/v3/api/ai/resource_groups/{groupId}": {
@@ -2193,7 +2269,7 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.manage"
+        "x-sdkwork-permission": "intelligence.resources.manage"
       },
       "patch": {
         "description": "Update resource group. Reads ai_resource_group, ai_resource_group_item. Writes ai_resource_group, ai_resource_group_item, ops_audit_log. File targets none.",
@@ -2304,7 +2380,7 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.manage"
+        "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
     "/backend/v3/api/ai/resources": {
@@ -2392,7 +2468,217 @@
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "intelligence.models.read"
+        "x-sdkwork-permission": "intelligence.resources.read"
+      },
+      "post": {
+        "description": "Create ai resource. Reads ai_resource. Writes ai_resource, ops_audit_log. File targets none.",
+        "operationId": "resources.create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource create request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "Create ai resource",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "create",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "resources",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/admin_ai_resource.rs",
+        "x-write-tables": [
+          "ai_resource",
+          "ops_audit_log"
+        ],
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-permission": "intelligence.resources.manage"
+      }
+    },
+    "/backend/v3/api/ai/resources/{resourceId}": {
+      "put": {
+        "description": "Update ai resource. Reads ai_resource. Writes ai_resource, ops_audit_log. File targets none.",
+        "operationId": "resources.update",
+        "parameters": [
+          {
+            "description": "Resource id path parameter.",
+            "in": "path",
+            "name": "resourceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource update request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SdkWorkResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "Update ai resource",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "update",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "resources",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/admin_ai_resource.rs",
+        "x-write-tables": [
+          "ai_resource",
+          "ops_audit_log"
+        ],
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
     "/backend/v3/api/ai/voices": {
@@ -3106,6 +3392,334 @@
           "contextTokens"
         ]
       },
+      "AdminAiModelItem": {
+        "additionalProperties": false,
+        "description": "Admin ai model item schema exposed by Claw Router.",
+        "properties": {
+          "apiFormat": {
+            "description": "Api format field on admin ai model item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "calls": {
+            "description": "Calls field on admin ai model item.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "capabilityIntro": {
+            "description": "Capability intro field on admin ai model item.",
+            "maxLength": 4096,
+            "nullable": true,
+            "type": "string"
+          },
+          "contextTokens": {
+            "description": "Context tokens field on admin ai model item.",
+            "format": "int32",
+            "maximum": 100000000,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "description": {
+            "description": "Description field on admin ai model item.",
+            "maxLength": 2048,
+            "nullable": true,
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Display name field on admin ai model item.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "description": "Id field on admin ai model item.",
+            "pattern": "^[1-9][0-9]*$",
+            "type": "string"
+          },
+          "inputModalities": {
+            "description": "Input modalities field on admin ai model item.",
+            "items": {
+              "description": "Input modalities field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "limitations": {
+            "description": "Limitations field on admin ai model item.",
+            "items": {
+              "description": "Limitations field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "maxOutputTokens": {
+            "description": "Max output tokens field on admin ai model item.",
+            "format": "int32",
+            "maximum": 100000000,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "modalities": {
+            "description": "Modalities field on admin ai model item.",
+            "items": {
+              "description": "Modalities field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "model": {
+            "description": "Model field on admin ai model item.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "description": "Name field on admin ai model item.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "outputModalities": {
+            "description": "Output modalities field on admin ai model item.",
+            "items": {
+              "description": "Output modalities field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "regionPrices": {
+            "description": "Region prices field on admin ai model item.",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiModelRegionPrice"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "releaseStage": {
+            "description": "Release stage field on admin ai model item.",
+            "format": "int32",
+            "maximum": 3,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "replacementModel": {
+            "description": "Replacement model field on admin ai model item.",
+            "maxLength": 256,
+            "nullable": true,
+            "type": "string"
+          },
+          "routingState": {
+            "description": "Routing state field on admin ai model item.",
+            "format": "int32",
+            "maximum": 2,
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "shelfState": {
+            "description": "Shelf state field on admin ai model item.",
+            "format": "int32",
+            "maximum": 3,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "status": {
+            "description": "Status field on admin ai model item.",
+            "enum": [
+              "active",
+              "inactive"
+            ],
+            "type": "string"
+          },
+          "supportedLanguages": {
+            "description": "Supported languages field on admin ai model item.",
+            "items": {
+              "description": "Supported languages field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "supportsJsonSchema": {
+            "description": "Supports json schema field on admin ai model item.",
+            "type": "boolean"
+          },
+          "supportsStreaming": {
+            "description": "Supports streaming field on admin ai model item.",
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "description": "Supports tools field on admin ai model item.",
+            "type": "boolean"
+          },
+          "trainingDataCutoff": {
+            "description": "Training data cutoff field on admin ai model item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "description": "Type field on admin ai model item.",
+            "enum": [
+              "Chat",
+              "Image",
+              "Audio",
+              "Embedding",
+              "Music",
+              "SoundEffect",
+              "Video"
+            ],
+            "type": "string"
+          },
+          "useCases": {
+            "description": "Use cases field on admin ai model item.",
+            "items": {
+              "description": "Use cases field on admin ai model item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "vendorCode": {
+            "description": "Vendor code field on admin ai model item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "vendorId": {
+            "description": "Vendor id field on admin ai model item.",
+            "pattern": "^[1-9][0-9]*$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vendorId",
+          "vendorCode",
+          "model",
+          "displayName",
+          "name",
+          "type",
+          "regionPrices",
+          "status",
+          "calls",
+          "description",
+          "modalities",
+          "inputModalities",
+          "outputModalities",
+          "apiFormat",
+          "capabilityIntro",
+          "limitations",
+          "supportedLanguages",
+          "useCases",
+          "trainingDataCutoff",
+          "contextTokens",
+          "maxOutputTokens",
+          "supportsStreaming",
+          "supportsTools",
+          "supportsJsonSchema",
+          "releaseStage",
+          "shelfState",
+          "routingState",
+          "replacementModel"
+        ],
+        "type": "object"
+      },
+      "AdminAiModelPage": {
+        "additionalProperties": false,
+        "description": "Admin ai model page schema exposed by Claw Router.",
+        "name": "AdminAiModelPage",
+        "properties": {
+          "items": {
+            "description": "Items field on admin ai model page.",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiModelItem"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "Page info field on admin ai model page."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ],
+        "type": "object"
+      },
+      "AdminAiModelRegionPrice": {
+        "additionalProperties": false,
+        "description": "Admin ai model region price schema exposed by Claw Router.",
+        "properties": {
+          "cacheReadPrice": {
+            "description": "Cache read price field on admin ai model region price.",
+            "pattern": "^(?:|[0-9]+(?:\\.[0-9]{1,12})?)$",
+            "type": "string"
+          },
+          "cacheWritePrice": {
+            "description": "Cache write price field on admin ai model region price.",
+            "pattern": "^(?:|[0-9]+(?:\\.[0-9]{1,12})?)$",
+            "type": "string"
+          },
+          "currency": {
+            "description": "Currency field on admin ai model region price.",
+            "pattern": "^[A-Z]{3}$",
+            "type": "string"
+          },
+          "priceIn": {
+            "description": "Price in field on admin ai model region price.",
+            "pattern": "^[0-9]+(?:\\.[0-9]{1,12})?$",
+            "type": "string"
+          },
+          "priceOut": {
+            "description": "Price out field on admin ai model region price.",
+            "pattern": "^[0-9]+(?:\\.[0-9]{1,12})?$",
+            "type": "string"
+          },
+          "regionCode": {
+            "description": "Region code field on admin ai model region price.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "regionCode",
+          "currency",
+          "priceIn",
+          "priceOut",
+          "cacheReadPrice",
+          "cacheWritePrice"
+        ],
+        "type": "object"
+      },
       "AdminAiModelRegionPriceRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -3364,6 +3978,125 @@
           }
         }
       },
+      "AdminAiResourceCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for creating an AI resource.",
+        "properties": {
+          "resourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "compositionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "single",
+              "any",
+              "all",
+              null
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceMemberInput"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "resourceCode",
+          "resourceType",
+          "displayName"
+        ]
+      },
       "AdminAiResourceGroupCreateRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -3553,6 +4286,217 @@
               "$ref": "#/components/schemas/AdminAiResourceGroupMemberInput"
             },
             "maxItems": 512
+          }
+        }
+      },
+      "AdminAiResourceMemberInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource composition member input.",
+        "properties": {
+          "memberResourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "memberRole": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "included",
+              "optional",
+              "fallback",
+              null
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          }
+        },
+        "required": [
+          "memberResourceCode"
+        ]
+      },
+      "AdminAiResourceUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for updating an AI resource.",
+        "properties": {
+          "resourceCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle",
+              null
+            ]
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "compositionMode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "single",
+              "any",
+              "all",
+              null
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "active",
+              "disabled",
+              "inactive",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceMemberInput"
+            },
+            "maxItems": 512
+          }
+        }
+      },
+      "AdminModelCatalogSyncRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Request body for refreshing the AI model catalog.",
+        "properties": {
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "official_refresh",
+              "vendor_refresh",
+              "catalog_version_refresh",
+              "dry_run"
+            ]
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 200
+          },
+          "force": {
+            "type": "boolean"
+          },
+          "catalogRoot": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "catalogVersion": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
           }
         }
       },
@@ -3937,6 +4881,100 @@
           "name"
         ]
       },
+      "AdminModelVendorItem": {
+        "additionalProperties": false,
+        "description": "Admin model vendor item schema exposed by Claw Router.",
+        "properties": {
+          "clientApiCompatibility": {
+            "additionalProperties": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/JsonValue"
+                }
+              ],
+              "description": "Client api compatibility field on admin model vendor item."
+            },
+            "description": "Client api compatibility field on admin model vendor item.",
+            "type": "object"
+          },
+          "color": {
+            "description": "Color field on admin model vendor item.",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "description": {
+            "description": "Description field on admin model vendor item.",
+            "maxLength": 512,
+            "type": "string"
+          },
+          "id": {
+            "description": "Id field on admin model vendor item.",
+            "pattern": "^[1-9][0-9]*$",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name field on admin model vendor item.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "description": "Status field on admin model vendor item.",
+            "enum": [
+              "active",
+              "inactive"
+            ],
+            "type": "string"
+          },
+          "supportedProtocols": {
+            "description": "Supported protocols field on admin model vendor item.",
+            "items": {
+              "description": "Supported protocols field on admin model vendor item.",
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "vendorCode": {
+            "description": "Vendor code field on admin model vendor item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vendorCode",
+          "name",
+          "status",
+          "color",
+          "description",
+          "supportedProtocols",
+          "clientApiCompatibility"
+        ],
+        "type": "object"
+      },
+      "AdminModelVendorListResponse": {
+        "additionalProperties": false,
+        "description": "Admin model vendor list response schema exposed by Claw Router.",
+        "name": "AdminModelVendorListResponse",
+        "properties": {
+          "items": {
+            "description": "Items field on admin model vendor list response.",
+            "items": {
+              "$ref": "#/components/schemas/AdminModelVendorItem"
+            },
+            "maxItems": 200,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
       "FieldError": {
         "type": "object",
         "additionalProperties": false,
@@ -3980,6 +5018,201 @@
             }
           }
         }
+      },
+      "JsonNull": {
+        "description": "JSON null value.",
+        "type": "null"
+      },
+      "JsonObject": {
+        "additionalProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/JsonValue"
+            }
+          ],
+          "description": "Schema fragment used by json object."
+        },
+        "description": "JSON object with typed JSON values.",
+        "type": "object"
+      },
+      "JsonValue": {
+        "description": "JSON value accepted by flexible Claw Router metadata and extension maps.",
+        "oneOf": [
+          {
+            "description": "String JSON value.",
+            "type": "string"
+          },
+          {
+            "description": "Number JSON value.",
+            "type": "number"
+          },
+          {
+            "description": "Integer JSON value.",
+            "type": "integer"
+          },
+          {
+            "description": "Boolean JSON value.",
+            "type": "boolean"
+          },
+          {
+            "description": "Array JSON value.",
+            "items": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "type": "array"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              }
+            ],
+            "description": "Object JSON value."
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonNull"
+              }
+            ],
+            "description": "Null JSON value."
+          }
+        ]
+      },
+      "ModelCatalogSyncResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Catalog sync result returned by models.sync.",
+        "properties": {
+          "synced": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "dryRun": {
+            "type": "boolean"
+          },
+          "catalogVersion": {
+            "type": "string"
+          },
+          "requestedCatalogVersion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "catalogRoot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "meterCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "vendorCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "familyCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "modelCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "capabilityCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "priceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rankingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "voiceBindingCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "videoProfileCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "acceptedCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshotId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "syncRunId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vendors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "synced",
+          "source",
+          "mode",
+          "dryRun",
+          "catalogVersion",
+          "vendorCodes",
+          "sourceHash",
+          "meterCount",
+          "vendorCount",
+          "familyCount",
+          "modelCount",
+          "capabilityCount",
+          "priceCount",
+          "rankingCount",
+          "voiceCount",
+          "voiceBindingCount",
+          "videoProfileCount",
+          "acceptedCount",
+          "vendors",
+          "models"
+        ]
       },
       "ModelMappingsPage": {
         "type": "object",
@@ -4853,12 +6086,30 @@
             "description": "Object schema used by model vendors list result.",
             "properties": {
               "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
+                "additionalProperties": false,
+                "description": "Data field on model vendors list result.",
+                "properties": {
+                  "items": {
+                    "description": "Items field on model vendors list result.",
+                    "items": {
+                      "$ref": "#/components/schemas/AdminModelVendorListResponse"
+                    },
+                    "type": "array"
+                  },
+                  "pageInfo": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/PageInfo"
+                      }
+                    ],
+                    "description": "Page info field on model vendors list result."
                   }
+                },
+                "required": [
+                  "items",
+                  "pageInfo"
                 ],
-                "description": "No business data returned by this operation."
+                "type": "object"
               }
             },
             "required": [
@@ -4882,10 +6133,10 @@
               "data": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/NoData"
+                    "$ref": "#/components/schemas/AdminAiModelPage"
                   }
                 ],
-                "description": "No business data returned by this operation."
+                "description": "Data field on models list result."
               }
             },
             "required": [
@@ -4896,33 +6147,6 @@
         ],
         "description": "Models list result schema exposed by Claw Router.",
         "x-operation-id": "models.list"
-      },
-      "ModelsSyncResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by models sync result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Models sync result schema exposed by Claw Router.",
-        "x-operation-id": "models.sync"
       },
       "NoData": {
         "additionalProperties": false,

@@ -1,10 +1,10 @@
-import type { JsonValue } from './json-value';
+import type { AdminAiModelItem } from './admin-ai-model-item';
 import type { PageInfo } from './page-info';
 
 /** Admin ai model page schema exposed by Claw Router. */
 export interface AdminAiModelPage {
   /** Items field on admin ai model page. */
-  items: Record<string, JsonValue>[];
+  items: AdminAiModelItem[];
   /** Page info field on admin ai model page. */
   pageInfo: PageInfo;
 }

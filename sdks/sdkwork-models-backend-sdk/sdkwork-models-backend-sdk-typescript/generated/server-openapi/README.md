@@ -61,7 +61,7 @@ const client = new SdkworkBackendClient({
 ### ai
 
 ```typescript
-// List
+// List vendors
 const result = await client.ai.modelVendors.list();
 ```
 

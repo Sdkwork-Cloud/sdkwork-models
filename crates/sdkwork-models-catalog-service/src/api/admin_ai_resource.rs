@@ -46,6 +46,7 @@ const MAX_GROUP_TYPE_LEN: usize = 64;
 const MAX_SELECTION_MODE_LEN: usize = 32;
 const MAX_DESCRIPTION_LEN: usize = 512;
 const MAX_MEMBERS: usize = 512;
+const MAX_LIST_SEARCH_LEN: usize = 256;
 const DEFAULT_LIST_PAGE_SIZE: i64 = 20;
 const MAX_LIST_PAGE_SIZE: i64 = 200;
 
@@ -87,7 +88,7 @@ struct AdminAiResourceItemResponse {
     composition_mode: String,
     status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort_order: Option<i64>,
+    sort_order: Option<String>,
     members: Vec<AdminAiResourceMemberResponse>,
 }
 
@@ -99,7 +100,7 @@ struct AdminAiResourceMemberResponse {
     member_role: String,
     required: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort_order: Option<i64>,
+    sort_order: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -112,6 +113,7 @@ struct AdminAiResourceItemEnvelope {
 #[serde(rename_all = "camelCase")]
 struct AdminAiResourceGroupsResponse {
     items: Vec<AdminAiResourceGroupItemResponse>,
+    page_info: ApiPageInfo,
 }
 
 #[derive(Debug, Serialize)]
@@ -135,9 +137,9 @@ struct AdminAiResourceGroupItemResponse {
     capability: Option<String>,
     capabilities: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort_order: Option<i64>,
+    sort_order: Option<String>,
     status: String,
-    resource_count: i64,
+    resource_count: String,
     dynamic: bool,
 }
 
@@ -176,7 +178,7 @@ struct AdminAiResourceGroupResourceItemResponse {
     provider_native_model: Option<String>,
     status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    sort_order: Option<i64>,
+    sort_order: Option<String>,
     member_role: String,
 }
 
@@ -303,6 +305,10 @@ async fn fetch_ai_resources(
     _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
+    let q = match validate_list_search_query(query.q) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
     let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
         Ok(value) => value,
         Err(message) => return bad_request(&ctx, message),
@@ -312,7 +318,7 @@ async fn fetch_ai_resources(
         .store
         .list_ai_resources(ListAdminAiResourcesQuery {
             subject,
-            q: query.q,
+            q,
             limit: Some(page_size),
             offset: Some(offset),
         })
@@ -334,20 +340,35 @@ async fn fetch_ai_resources(
 async fn fetch_ai_resource_groups(
     ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
+    Query(query): Query<AiResourceListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
     let subject = map_subject(trusted);
+    let q = match validate_list_search_query(query.q) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
+    let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
 
     match state
         .store
-        .list_ai_resource_groups(ListAdminAiResourceGroupsQuery { subject })
+        .list_ai_resource_groups(ListAdminAiResourceGroupsQuery {
+            subject,
+            q,
+            limit: Some(page_size),
+            offset: Some(offset),
+        })
         .await
     {
         Ok(items) => finish_success(
             &ctx,
             AdminAiResourceGroupsResponse {
-                items: items.into_iter().map(to_group_response).collect(),
+                items: items.items.into_iter().map(to_group_response).collect(),
+                page_info: offset_page_info(page_no, page_size, items.total_count),
             },
         ),
         Err(error) => {
@@ -369,6 +390,10 @@ async fn fetch_ai_resource_group_resources(
     if group_id_or_code.is_empty() {
         return bad_request(&ctx, "AI resource group id or code is required".to_owned());
     }
+    let q = match validate_list_search_query(query.q) {
+        Ok(value) => value,
+        Err(message) => return bad_request(&ctx, message),
+    };
     let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
         Ok(value) => value,
         Err(message) => return bad_request(&ctx, message),
@@ -379,7 +404,7 @@ async fn fetch_ai_resource_group_resources(
         .list_ai_resource_group_resources(ListAdminAiResourceGroupResourcesQuery {
             subject,
             group_id_or_code,
-            q: query.q,
+            q,
             limit: Some(page_size),
             offset: Some(offset),
         })
@@ -608,7 +633,7 @@ fn to_item_response(item: AdminAiResourceItem) -> AdminAiResourceItemResponse {
         capabilities: item.capabilities,
         composition_mode: item.composition_mode,
         status: item.status,
-        sort_order: item.sort_order,
+        sort_order: item.sort_order.map(|value| value.to_string()),
         members: item.members.into_iter().map(to_member_response).collect(),
     }
 }
@@ -619,7 +644,7 @@ fn to_member_response(member: AdminAiResourceMemberItem) -> AdminAiResourceMembe
         member_resource_code: member.member_resource_code,
         member_role: member.member_role,
         required: member.required,
-        sort_order: member.sort_order,
+        sort_order: member.sort_order.map(|value| value.to_string()),
     }
 }
 
@@ -634,9 +659,9 @@ fn to_group_response(item: AdminAiResourceGroupItem) -> AdminAiResourceGroupItem
         vendor_codes: item.vendor_codes,
         capability: item.capability,
         capabilities: item.capabilities,
-        sort_order: item.sort_order,
+        sort_order: item.sort_order.map(|value| value.to_string()),
         status: item.status,
-        resource_count: item.resource_count,
+        resource_count: item.resource_count.to_string(),
         dynamic: item.dynamic,
     }
 }
@@ -656,7 +681,7 @@ fn to_group_resource_response(
         model: item.model,
         provider_native_model: item.provider_native_model,
         status: item.status,
-        sort_order: item.sort_order,
+        sort_order: item.sort_order.map(|value| value.to_string()),
         member_role: item.member_role,
     }
 }
@@ -1110,7 +1135,27 @@ fn validate_page_query(
             "page_size must be between 1 and {MAX_LIST_PAGE_SIZE}"
         ));
     }
-    Ok((page, page_size, (page - 1) * page_size))
+    let offset = page
+        .checked_sub(1)
+        .and_then(|value| value.checked_mul(page_size))
+        .ok_or_else(|| "page is too large".to_owned())?;
+    Ok((page, page_size, offset))
+}
+
+fn validate_list_search_query(q: Option<String>) -> Result<Option<String>, String> {
+    let Some(q) = q else {
+        return Ok(None);
+    };
+    let q = q.trim();
+    if q.is_empty() {
+        return Ok(None);
+    }
+    if q.chars().count() > MAX_LIST_SEARCH_LEN {
+        return Err(format!(
+            "q must not exceed {MAX_LIST_SEARCH_LEN} characters"
+        ));
+    }
+    Ok(Some(q.to_owned()))
 }
 
 fn normalize_resource_type(value: String) -> Result<String, AiResourceCommandBuildError> {
@@ -1368,5 +1413,28 @@ mod tests {
                 panic!("negative sort order should be a validation error");
             }
         }
+    }
+
+    #[test]
+    fn validate_page_query_rejects_offset_overflow() {
+        let error = validate_page_query(Some(i64::MAX), Some(MAX_LIST_PAGE_SIZE))
+            .expect_err("overflowing offset must be rejected");
+
+        assert_eq!(error, "page is too large");
+    }
+
+    #[test]
+    fn validate_list_search_query_trims_and_bounds_unicode_characters() {
+        let accepted = validate_list_search_query(Some(format!("  {}  ", "模".repeat(256))))
+            .expect("256 Unicode characters should be accepted");
+        assert_eq!(accepted, Some("模".repeat(256)));
+
+        let error = validate_list_search_query(Some("模".repeat(257)))
+            .expect_err("search queries above 256 characters must be rejected");
+        assert_eq!(error, "q must not exceed 256 characters");
+        assert_eq!(
+            validate_list_search_query(Some("   ".to_owned())).expect("blank search is valid"),
+            None
+        );
     }
 }

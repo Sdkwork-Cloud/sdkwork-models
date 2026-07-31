@@ -9,38 +9,70 @@ function readJson(relativePath) {
   return JSON.parse(readFileSync(join(root, relativePath), 'utf8'));
 }
 
+function responseDataSchemaRef(document, operation) {
+  const responseSchema = operation?.responses?.['200']?.content?.['application/json']?.schema;
+  const componentPrefix = '#/components/schemas/';
+  const envelope = responseSchema?.$ref?.startsWith(componentPrefix)
+    ? document.components?.schemas?.[responseSchema.$ref.slice(componentPrefix.length)]
+    : responseSchema;
+  return envelope?.allOf
+    ?.find((part) => part?.properties?.data)
+    ?.properties?.data?.allOf?.[0]?.$ref;
+}
+
 const backendOpenApi = readJson('apis/backend-api/intelligence/openapi.json');
+const appOpenApi = readJson('apis/app-api/intelligence/openapi.json');
 const resolveOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappings/resolve']?.post;
 const modelMappingsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappings']?.get;
+const appModelsListOperation = appOpenApi.paths?.['/app/v3/api/ai/models']?.get;
+const backendModelsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/models']?.get;
+
+for (const [path, pathItem] of Object.entries(appOpenApi.paths ?? {})) {
+  for (const [method, operation] of Object.entries(pathItem ?? {})) {
+    if (!['get', 'post', 'put', 'patch', 'delete'].includes(method)) {
+      continue;
+    }
+    assert.equal(
+      operation['x-sdkwork-auth-mode'],
+      'dual-token',
+      `${method.toUpperCase()} ${path} must declare dual-token auth`,
+    );
+    assert.deepEqual(
+      operation.security,
+      [{ AccessToken: [], AuthToken: [] }],
+      `${method.toUpperCase()} ${path} must require AuthToken and AccessToken together`,
+    );
+  }
+}
 
 const writeOperationRequestBodies = [
   ['modelVendors.create', 'post', '/backend/v3/api/ai/model_vendors', '#/components/schemas/AdminModelVendorCreateRequest'],
   ['models.create', 'post', '/backend/v3/api/ai/models', '#/components/schemas/AdminAiModelCreateRequest'],
   ['models.update', 'patch', '/backend/v3/api/ai/models/{modelId}', '#/components/schemas/AdminAiModelUpdateRequest'],
-  ['models.refresh', 'post', '/backend/v3/api/ai/models/refresh', '#/components/schemas/AdminModelCatalogSyncRequest'],
+  ['models.sync', 'post', '/backend/v3/api/ai/models/sync', '#/components/schemas/AdminModelCatalogSyncRequest'],
   ['modelMappings.create', 'post', '/backend/v3/api/ai/model_mappings', '#/components/schemas/AdminModelMappingCreateRequest'],
   ['modelMappings.update', 'patch', '/backend/v3/api/ai/model_mappings/{mappingId}', '#/components/schemas/AdminModelMappingUpdateRequest'],
   ['modelMappings.resolve', 'post', '/backend/v3/api/ai/model_mappings/resolve', '#/components/schemas/AdminModelMappingResolveRequest'],
   ['modelRankings.refresh', 'post', '/backend/v3/api/ai/model_rankings/refresh', '#/components/schemas/ModelRankingRefreshTriggerRequest'],
-  ['aiResources.create', 'post', '/backend/v3/api/ai/resources', '#/components/schemas/AdminAiResourceCreateRequest'],
-  ['aiResources.update', 'put', '/backend/v3/api/ai/resources/{resourceId}', '#/components/schemas/AdminAiResourceUpdateRequest'],
-  ['aiResourceGroups.create', 'post', '/backend/v3/api/ai/resource_groups', '#/components/schemas/AdminAiResourceGroupCreateRequest'],
-  ['aiResourceGroups.update', 'patch', '/backend/v3/api/ai/resource_groups/{groupId}', '#/components/schemas/AdminAiResourceGroupUpdateRequest'],
+  ['resources.create', 'post', '/backend/v3/api/ai/resources', '#/components/schemas/AdminAiResourceCreateRequest'],
+  ['resources.update', 'put', '/backend/v3/api/ai/resources/{resourceId}', '#/components/schemas/AdminAiResourceUpdateRequest'],
+  ['resourceGroups.create', 'post', '/backend/v3/api/ai/resource_groups', '#/components/schemas/AdminAiResourceGroupCreateRequest'],
+  ['resourceGroups.update', 'patch', '/backend/v3/api/ai/resource_groups/{groupId}', '#/components/schemas/AdminAiResourceGroupUpdateRequest'],
 ];
 
 const expectedGeneratedBodyMethods = [
-  ['modelVendors.create', /async create\(\s*body:\s*AdminModelVendorCreateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_vendors`\), body, undefined, undefined, 'application\/json'\)/],
-  ['models.create', /async create\(\s*body:\s*AdminAiModelCreateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/models`\), body, undefined, undefined, 'application\/json'\)/],
-  ['models.update', /async update\(\s*modelId:\s*string,\s*body:\s*AdminAiModelUpdateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.patch<Record<string, unknown>>\(backendApiPath\(`\/ai\/models\/\$\{serializePathParameter\(modelId,[\s\S]*?\}`\), body, undefined, undefined, 'application\/json'\)/],
-  ['models.refresh', /async refresh\(\s*body:\s*AdminModelCatalogSyncRequest\s*\): Promise<ModelCatalogSyncResult>/, /this\.client\.post<ModelCatalogSyncResult>\(backendApiPath\(`\/ai\/models\/refresh`\), body, undefined, undefined, 'application\/json'\)/],
-  ['modelMappings.create', /async create\(\s*body:\s*AdminModelMappingCreateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings`\), body, undefined, undefined, 'application\/json'\)/],
-  ['modelMappings.update', /async update\(\s*mappingId:\s*string,\s*body:\s*AdminModelMappingUpdateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.patch<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings\/\$\{serializePathParameter\(mappingId,[\s\S]*?\}`\), body, undefined, undefined, 'application\/json'\)/],
-  ['modelMappings.resolve', /async resolve\(\s*body:\s*AdminModelMappingResolveRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings\/resolve`\), body, undefined, undefined, 'application\/json'\)/],
-  ['modelRankings.refresh', /async refresh\(\s*body:\s*ModelRankingRefreshTriggerRequest\s*\): Promise<ModelRankingRefreshTriggerResponse>/, /this\.client\.post<ModelRankingRefreshTriggerResponse>\(backendApiPath\(`\/ai\/model_rankings\/refresh`\), body, undefined, undefined, 'application\/json'\)/],
-  ['aiResources.create', /async create\(\s*body:\s*AdminAiResourceCreateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/resources`\), body, undefined, undefined, 'application\/json'\)/],
-  ['aiResources.update', /async update\(\s*resourceId:\s*string,\s*body:\s*AdminAiResourceUpdateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.put<Record<string, unknown>>\(backendApiPath\(`\/ai\/resources\/\$\{serializePathParameter\(resourceId,[\s\S]*?\}`\), body, undefined, undefined, 'application\/json'\)/],
-  ['aiResourceGroups.create', /async create\(\s*body:\s*AdminAiResourceGroupCreateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.post<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups`\), body, undefined, undefined, 'application\/json'\)/],
-  ['aiResourceGroups.update', /async update\(\s*groupId:\s*string,\s*body:\s*AdminAiResourceGroupUpdateRequest\s*\): Promise<Record<string, unknown>>/, /this\.client\.patch<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups\/\$\{serializePathParameter\(groupId,[\s\S]*?\}`\), body, undefined, undefined, 'application\/json'\)/],
+  ['modelVendors.create', /async create\([^)]*body:\s*AdminModelVendorCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_vendors`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['models.create', /async create\([^)]*body:\s*AdminAiModelCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/models`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['models.update', /async update\([^)]*body:\s*AdminAiModelUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/models\/\$\{serializePathParameter\(modelId,[^\n]*\}`\), \{[^\n]*method: 'PATCH' as any,[^\n]*\bbody\b/],
+  ['models.sync', /async sync\([^)]*body:\s*AdminModelCatalogSyncRequest[^)]*\): Promise<ModelCatalogSyncResult>/, /this\.client\.request<ModelCatalogSyncResult>\(backendApiPath\(`\/ai\/models\/sync`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['modelMappings.create', /async create\([^)]*body:\s*AdminModelMappingCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['modelMappings.update', /async update\([^)]*body:\s*AdminModelMappingUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings\/\$\{serializePathParameter\(mappingId,[^\n]*\}`\), \{[^\n]*method: 'PATCH' as any,[^\n]*\bbody\b/],
+  ['modelMappings.resolve', /async resolve\([^)]*body:\s*AdminModelMappingResolveRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/model_mappings\/resolve`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['modelRankings.refresh', /async refresh\([^)]*body:\s*ModelRankingRefreshTriggerRequest[^)]*\): Promise<ModelRankingRefreshTriggerResponse>/, /this\.client\.request<ModelRankingRefreshTriggerResponse>\(backendApiPath\(`\/ai\/model_rankings\/refresh`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['resources.create', /async create\([^)]*body:\s*AdminAiResourceCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resources`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['resources.update', /async update\([^)]*body:\s*AdminAiResourceUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resources\/\$\{serializePathParameter\(resourceId,[^\n]*\}`\), \{[^\n]*method: 'PUT' as any,[^\n]*\bbody\b/],
+  ['resourceGroups.create', /async create\([^)]*body:\s*AdminAiResourceGroupCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
+  ['resourceGroups.update', /async update\([^)]*body:\s*AdminAiResourceGroupUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups\/\$\{serializePathParameter\(groupId,[^\n]*\}`\), \{[^\n]*method: 'PATCH' as any,[^\n]*\bbody\b/],
 ];
 
 for (const [operationId, method, path, schemaRef] of writeOperationRequestBodies) {
@@ -103,8 +135,47 @@ assert.ok(modelMappingsPage, 'ModelMappingsPage schema must be present');
 assert.ok(modelMappingsPage.properties?.items, 'ModelMappingsPage.items schema must be present');
 assert.ok(modelMappingsPage.properties?.pageInfo, 'ModelMappingsPage.pageInfo schema must be present');
 
+for (const [surface, document, operation, expectedPageRef] of [
+  ['app', appOpenApi, appModelsListOperation, '#/components/schemas/AppModelCatalogPage'],
+  ['backend', backendOpenApi, backendModelsListOperation, '#/components/schemas/AdminAiModelPage'],
+]) {
+  assert.ok(operation, `${surface} models.list operation must exist`);
+  const queryParams = new Map((operation.parameters ?? []).map((parameter) => [parameter.name, parameter]));
+  assert.ok(queryParams.has('page'), `${surface} models.list must expose page`);
+  assert.ok(queryParams.has('page_size'), `${surface} models.list must expose page_size`);
+  assert.equal(queryParams.get('page_size')?.schema?.maximum, 200);
+  for (const legacyName of ['pageSize', 'limit', 'page_no', 'pageNo', 'per_page', 'size', 'model_types']) {
+    assert.equal(queryParams.has(legacyName), false, `${surface} models.list must reject ${legacyName}`);
+  }
+  assert.equal(
+    responseDataSchemaRef(document, operation),
+    expectedPageRef,
+    `${surface} models.list must return a typed items/pageInfo page`,
+  );
+}
+
+const appModelCatalogPage = appOpenApi.components?.schemas?.AppModelCatalogPage;
+assert.ok(appModelCatalogPage?.properties?.items, 'AppModelCatalogPage.items must be typed');
+assert.ok(appModelCatalogPage?.properties?.pageInfo, 'AppModelCatalogPage.pageInfo must be typed');
+const appModelItemRef = appModelCatalogPage.properties.items.items?.$ref;
+assert.equal(appModelItemRef, '#/components/schemas/AppModelCatalogItem');
+const appModelItem = appOpenApi.components?.schemas?.AppModelCatalogItem;
+assert.equal(
+  appModelItem?.properties?.officialReferencePrices?.items?.$ref,
+  '#/components/schemas/AppModelCatalogReferencePrice',
+  'App model items must expose typed regional officialReferencePrices',
+);
+assert.ok(appModelItem?.properties?.providerCodes, 'App model items must expose providerCodes');
+
+const adminModelPage = backendOpenApi.components?.schemas?.AdminAiModelPage;
+assert.equal(adminModelPage?.properties?.items?.items?.$ref, '#/components/schemas/AdminAiModelItem');
+
 const generatedApiSource = readFileSync(
   join(root, 'sdks/sdkwork-models-backend-sdk/sdkwork-models-backend-sdk-typescript/generated/server-openapi/src/api/ai.ts'),
+  'utf8',
+);
+const generatedAppApiSource = readFileSync(
+  join(root, 'sdks/sdkwork-models-app-sdk/sdkwork-models-app-sdk-typescript/generated/server-openapi/src/api/ai.ts'),
   'utf8',
 );
 const catalogServiceSource = readFileSync(
@@ -130,6 +201,37 @@ for (const [operationId, signaturePattern, transportPattern] of expectedGenerate
   );
 }
 
+assert.match(
+  generatedAppApiSource,
+  /async list\([^)]*params\?: AiModelsListParams[^)]*\): Promise<AppModelCatalogPage>/,
+  'generated app SDK must return the typed app model catalog page',
+);
+assert.match(
+  generatedAppApiSource,
+  /\{ name: 'page_size', value: params\?\.pageSize/,
+  'generated app SDK must serialize pageSize as page_size',
+);
+assert.doesNotMatch(
+  generatedAppApiSource,
+  /\{ name: 'model_types'/,
+  'generated app SDK must not serialize the unsupported model_types query parameter',
+);
+assert.match(
+  generatedApiSource,
+  /async list\([^)]*params\?: AiModelsListParams[^)]*\): Promise<AdminAiModelPage>/,
+  'generated backend SDK must return the typed admin model page',
+);
+assert.match(
+  generatedApiSource,
+  /\{ name: 'page_size', value: params\?\.pageSize/,
+  'generated backend SDK must serialize pageSize as page_size',
+);
+assert.doesNotMatch(
+  generatedApiSource,
+  /\{ name: 'model_types'/,
+  'generated backend SDK must not serialize the unsupported model_types query parameter',
+);
+
 const modelMappingsListParamsBlock = generatedApiSource.match(
   /export interface AiModelMappingsListParams \{([\s\S]*?)\n\}/,
 )?.[1];
@@ -154,7 +256,7 @@ for (const fieldPattern of [
 }
 assert.match(
   generatedApiSource,
-  /async list\(params\?: AiModelMappingsListParams\): Promise<ModelMappingsPage>/,
+  /async list\([^)]*params\?: AiModelMappingsListParams[^)]*\): Promise<ModelMappingsPage>/,
   'generated TypeScript backend SDK must accept params and return ModelMappingsPage for modelMappings.list',
 );
 for (const [wireName, modelName] of [

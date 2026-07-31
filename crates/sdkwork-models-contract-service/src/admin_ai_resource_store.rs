@@ -85,9 +85,12 @@ pub struct ListAdminAiResourcesQuery {
     pub offset: Option<i64>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ListAdminAiResourceGroupsQuery {
     pub subject: AdminAiResourceSubject,
+    pub q: Option<String>,
+    pub limit: Option<i64>,
+    pub offset: Option<i64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -106,12 +109,33 @@ pub struct AdminAiResourceListPage {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AdminAiResourceGroupListPage {
+    pub items: Vec<AdminAiResourceGroupItem>,
+    pub total_count: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AdminAiResourceGroupResourcesPage {
     pub items: Vec<AdminAiResourceGroupResourceItem>,
     pub total_count: i64,
 }
 
 impl ListAdminAiResourcesQuery {
+    pub const DEFAULT_LIMIT: i64 = 20;
+    pub const MAX_LIMIT: i64 = 200;
+
+    pub fn normalized_limit(&self) -> i64 {
+        self.limit
+            .unwrap_or(Self::DEFAULT_LIMIT)
+            .clamp(1, Self::MAX_LIMIT)
+    }
+
+    pub fn normalized_offset(&self) -> i64 {
+        self.offset.unwrap_or(0).max(0)
+    }
+}
+
+impl ListAdminAiResourceGroupsQuery {
     pub const DEFAULT_LIMIT: i64 = 20;
     pub const MAX_LIMIT: i64 = 200;
 
@@ -266,7 +290,7 @@ pub trait AdminAiResourceStore {
     fn list_ai_resource_groups<'a>(
         &'a self,
         query: ListAdminAiResourceGroupsQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupItem>>;
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupListPage>;
 
     fn list_ai_resource_group_resources<'a>(
         &'a self,

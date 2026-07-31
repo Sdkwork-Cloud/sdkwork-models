@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { AdminTableShell, BottomPagination, BusinessStateTableRow, ConfirmDialog, readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons';
+import { AdminTableShell } from '@sdkwork/clawroutes-pc-commons/components/AdminTableShell';
+import { BottomPagination } from '@sdkwork/clawroutes-pc-commons/components/BottomPagination';
+import { BusinessStateTableRow } from '@sdkwork/clawroutes-pc-commons/components/BusinessState';
+import { ConfirmDialog } from '@sdkwork/clawroutes-pc-commons/components/ConfirmDialog';
+import { readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons/media-resource';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
@@ -447,7 +451,7 @@ export function ModelAdmin() {
   };
 
   const formatContextTokens = (tokens: number | null) => {
-    if (!Number.isFinite(tokens) || tokens <= 0) {
+    if (tokens === null || !Number.isFinite(tokens) || tokens <= 0) {
       return '-';
     }
     if (tokens >= 1_000_000) {
@@ -1199,11 +1203,9 @@ export function ModelMappingAdmin() {
   const { t } = useTranslation();
   const [mappings, setMappings] = useState<ModelMappingRule[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [models, setModels] = useState<ModelMappingModelOption[]>([]);
   const [bindingFilter, setBindingFilter] = useState<ModelMappingBindingFilter>('global');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [catalogLoading, setCatalogLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [catalogError, setCatalogError] = useState<string | null>(null);
@@ -1244,16 +1246,11 @@ export function ModelMappingAdmin() {
   }, []);
 
   const loadCatalog = async () => {
-    setCatalogLoading(true);
     setCatalogError(null);
     try {
-      const { vendors: vendorList, models: modelList } = await ModelMappingService.fetchModelOptionsCatalog();
-      setVendors(vendorList);
-      setModels(modelList);
+      setVendors(await ModelService.fetchVendors());
     } catch (error) {
       setCatalogError(error instanceof Error ? error.message : 'Failed to load model catalog');
-    } finally {
-      setCatalogLoading(false);
     }
   };
 
@@ -1479,8 +1476,6 @@ export function ModelMappingAdmin() {
         <ModelMappingFormModal
           mapping={editingMapping}
           vendors={vendors}
-          models={models}
-          catalogLoading={catalogLoading}
           saving={saving}
           error={editorError}
           defaultBindingType={bindingFilter === 'all' ? 'global' : bindingFilter}
@@ -1493,8 +1488,6 @@ export function ModelMappingAdmin() {
       {editingRelationMapping && (
         <ModelMappingRelationEditorModal
           mapping={editingRelationMapping}
-          models={models}
-          catalogLoading={catalogLoading}
           saving={saving}
           error={editorError}
           onClearRowError={clearEditorRowError}
@@ -1517,8 +1510,6 @@ export function ModelMappingAdmin() {
 function ModelMappingFormModal({
   mapping,
   vendors,
-  models,
-  catalogLoading,
   saving,
   error,
   defaultBindingType,
@@ -1529,8 +1520,6 @@ function ModelMappingFormModal({
 }: {
   mapping: ModelMappingRule | null;
   vendors: readonly Vendor[];
-  models: readonly ModelMappingModelOption[];
-  catalogLoading: boolean;
   saving: boolean;
   error: ModelMappingFormErrors | null;
   defaultBindingType: ModelMappingRule['bindingType'];
@@ -1551,8 +1540,6 @@ function ModelMappingFormModal({
   const fieldErrors = error?.fieldErrors ?? {};
   const rowErrors = error?.rowErrors ?? {};
   const firstErrorKey = error?.firstErrorKey ?? null;
-  const sourceModels = useMemo(() => models.filter((model) => !sourceVendorCode || model.vendorCode === sourceVendorCode), [models, sourceVendorCode]);
-  const targetModels = useMemo(() => models.filter((model) => !targetVendorCode || model.vendorCode === targetVendorCode), [models, targetVendorCode]);
 
   const syncBindingFields = (nextBinding: ModelMappingRule['bindingType']) => {
     setBindingType(nextBinding);
@@ -1591,7 +1578,6 @@ function ModelMappingFormModal({
     if (kind === 'source') {
       setSourceVendorCode(vendor.vendorCode);
       clearFieldError('sourceVendorCode');
-      setMappingRows((current) => syncRowsForVendor(current, 'sourceModel', vendor.vendorCode, models));
       setMappingBindings((current) => current.map((binding) => (
         binding.bindingType === 'vendor' && !binding.bindingCode.trim()
           ? { ...binding, bindingCode: vendor.vendorCode, bindingName: vendor.name }
@@ -1601,7 +1587,6 @@ function ModelMappingFormModal({
     }
     setTargetVendorCode(vendor.vendorCode);
     clearFieldError('targetVendorCode');
-    setMappingRows((current) => syncRowsForVendor(current, 'targetModel', vendor.vendorCode, models));
   };
 
   return (
@@ -1783,9 +1768,8 @@ function ModelMappingFormModal({
               </div>
               <ModelMappingRowsTable
                 rows={mappingRows}
-                sourceModels={sourceModels}
-                targetModels={targetModels}
-                loading={catalogLoading}
+                sourceVendorCode={sourceVendorCode}
+                targetVendorCode={targetVendorCode}
                 searchPlaceholder={t('admin.model.mapping.form.modelPicker.searchPlaceholder')}
                 inputPlaceholder={t('admin.model.mapping.form.modelInputPlaceholder')}
                 fieldErrors={fieldErrors}
@@ -1831,9 +1815,8 @@ function ModelMappingFormModal({
 
 function ModelMappingRowsTable({
   rows,
-  sourceModels,
-  targetModels,
-  loading,
+  sourceVendorCode,
+  targetVendorCode,
   searchPlaceholder,
   inputPlaceholder,
   fieldErrors,
@@ -1842,9 +1825,8 @@ function ModelMappingRowsTable({
   onChange,
 }: {
   rows: readonly ModelMappingRowDraft[];
-  sourceModels: readonly ModelMappingModelOption[];
-  targetModels: readonly ModelMappingModelOption[];
-  loading: boolean;
+  sourceVendorCode: string;
+  targetVendorCode: string;
   searchPlaceholder: string;
   inputPlaceholder: string;
   fieldErrors: Partial<Record<ModelMappingFieldErrorKey, string>>;
@@ -1883,8 +1865,7 @@ function ModelMappingRowsTable({
               <td className="px-3 py-2 align-top">
                 <ModelComboboxCell
                   value={row.sourceModel}
-                  models={sourceModels}
-                  loading={loading}
+                  vendorCode={sourceVendorCode}
                   searchPlaceholder={searchPlaceholder}
                   inputPlaceholder={inputPlaceholder}
                   errorMessage={rowErrors[row.id]?.sourceModel}
@@ -1895,8 +1876,7 @@ function ModelMappingRowsTable({
               <td className="px-3 py-2 align-top">
                 <ModelComboboxCell
                   value={row.targetModel}
-                  models={targetModels}
-                  loading={loading}
+                  vendorCode={targetVendorCode}
                   searchPlaceholder={searchPlaceholder}
                   inputPlaceholder={inputPlaceholder}
                   errorMessage={rowErrors[row.id]?.targetModel}
@@ -1914,8 +1894,7 @@ function ModelMappingRowsTable({
 
 function ModelComboboxCell({
   value,
-  models,
-  loading,
+  vendorCode,
   searchPlaceholder,
   inputPlaceholder,
   errorMessage,
@@ -1923,8 +1902,7 @@ function ModelComboboxCell({
   onChange,
 }: {
   value: string;
-  models: readonly ModelMappingModelOption[];
-  loading: boolean;
+  vendorCode: string;
   searchPlaceholder: string;
   inputPlaceholder: string;
   errorMessage?: string;
@@ -1934,19 +1912,46 @@ function ModelComboboxCell({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [models, setModels] = useState<ModelMappingModelOption[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const filteredModels = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    if (!query) {
-      return models;
+  const requestSequenceRef = useRef(0);
+
+  useEffect(() => {
+    if (!open) {
+      return undefined;
     }
-    return models.filter((model) => [
-      model.model,
-      model.displayName,
-      model.vendorCode,
-      model.name,
-    ].some((item) => item.toLowerCase().includes(query)));
-  }, [models, search, value]);
+    const requestSequence = requestSequenceRef.current + 1;
+    requestSequenceRef.current = requestSequence;
+    const timeout = window.setTimeout(() => {
+      setLoading(true);
+      setLoadError(null);
+      void ModelMappingService.fetchModelOptionsPage({
+        vendorCode: vendorCode.trim() || undefined,
+        q: search.trim() || undefined,
+        page: 1,
+        pageSize: 50,
+      }).then((page) => {
+        if (requestSequenceRef.current === requestSequence) {
+          setModels(page.items);
+        }
+      }).catch((error: unknown) => {
+        if (requestSequenceRef.current === requestSequence) {
+          setModels([]);
+          setLoadError(error instanceof Error ? error.message : 'Failed to load model options');
+        }
+      }).finally(() => {
+        if (requestSequenceRef.current === requestSequence) {
+          setLoading(false);
+        }
+      });
+    }, 200);
+    return () => {
+      window.clearTimeout(timeout);
+      requestSequenceRef.current += 1;
+    };
+  }, [open, search, vendorCode]);
 
   useEffect(() => {
     if (!open) {
@@ -1995,9 +2000,11 @@ function ModelComboboxCell({
           <div className="max-h-64 space-y-1 overflow-y-auto">
             {loading ? (
               <div className="px-3 py-4 text-sm text-slate-500">{t('admin.model.mapping.form.loadingCatalog')}</div>
-            ) : filteredModels.length === 0 ? (
+            ) : loadError ? (
+              <div className="px-3 py-4 text-sm text-rose-600 dark:text-rose-300">{loadError}</div>
+            ) : models.length === 0 ? (
               <div className="px-3 py-4 text-sm text-slate-500">{t('admin.model.mapping.form.noModels')}</div>
-            ) : filteredModels.map((model) => {
+            ) : models.map((model) => {
               const checked = model.model === value;
               const optionClassName = [
                 'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm transition',
@@ -2067,8 +2074,6 @@ function ModelMappingRelationsCell({
 
 function ModelMappingRelationEditorModal({
   mapping,
-  models,
-  catalogLoading,
   saving,
   error,
   onClearRowError,
@@ -2078,8 +2083,6 @@ function ModelMappingRelationEditorModal({
   onClose,
 }: {
   mapping: ModelMappingRule;
-  models: readonly ModelMappingModelOption[];
-  catalogLoading: boolean;
   saving: boolean;
   error: ModelMappingFormErrors | null;
   onClearRowError: (rowId: string, field: ModelMappingRowFieldKey) => void;
@@ -2166,9 +2169,8 @@ function ModelMappingRelationEditorModal({
             </div>
             <ModelMappingRowsTable
               rows={mappingRows}
-              sourceModels={modelsForMappingSide(models, mapping, 'source')}
-              targetModels={modelsForMappingSide(models, mapping, 'target')}
-              loading={catalogLoading}
+              sourceVendorCode={mapping.sourceVendorCode ?? ''}
+              targetVendorCode={mapping.targetVendorCode ?? ''}
               searchPlaceholder={t('admin.model.mapping.form.modelPicker.searchPlaceholder')}
               inputPlaceholder={t('admin.model.mapping.form.modelInputPlaceholder')}
               fieldErrors={fieldErrors}
@@ -2612,37 +2614,6 @@ function persistedChildId(value: string | null | undefined): string | null {
     return null;
   }
   return value;
-}
-
-function syncRowsForVendor(
-  rows: readonly ModelMappingRowDraft[],
-  field: 'sourceModel' | 'targetModel',
-  vendorCode: string,
-  models: readonly ModelMappingModelOption[],
-): ModelMappingRowDraft[] {
-  const vendorModels = models.filter((model) => model.vendorCode === vendorCode);
-  return rows.map((row) => {
-    const value = row[field].trim();
-    if (value && vendorModels.some((model) => model.model === value)) {
-      return row;
-    }
-    if (value && !models.some((model) => model.model === value)) {
-      return row;
-    }
-    return {
-      ...row,
-      [field]: vendorModels[0]?.model ?? '',
-    };
-  });
-}
-
-function modelsForMappingSide(
-  models: readonly ModelMappingModelOption[],
-  mapping: ModelMappingRule,
-  side: 'source' | 'target',
-): ModelMappingModelOption[] {
-  const code = side === 'source' ? mapping.sourceVendorCode : mapping.targetVendorCode;
-  return code ? models.filter((model) => model.vendorCode === code) : [...models];
 }
 
 function writeHiddenFormValue(form: HTMLFormElement, name: string, value: string): void {

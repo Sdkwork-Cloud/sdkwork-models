@@ -44,7 +44,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "1656c2d0e1a86c909e5d2320f5baa97a23c89bb3ebf378bf19e872895e320662"
+      "sha256": "c5cb36f1638975f70eb7bb93b74d3a8dac56ca93b81a42156925170471df9a08"
     },
     {
       "path": "sdkwork-sdk.json",
@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "45271bc0e760e729ac13c1c946e8303ad1dd42dbb09a22413e1c695aaddf6327"
+      "sha256": "4a3a316f738a392b00fd0d2c852b909f8d46e5249f80a669bcac0e56ceea9451"
     },
     {
       "path": "src/api/base.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "902ecbf9b15072c147ac9716f22209cd50b770e517b55d1ce1583671ab4d2c3e"
+      "sha256": "a04a08a939fa910f73d5af99fe47ddf56b39ee3c7e0e3839ca6d5b34f5c5fca2"
     },
     {
       "path": "src/http/index.ts",
@@ -87,6 +87,34 @@
       "sha256": "b6ab2e9fe170114dbef41c55f0d62fe8eb24b69555e9c96793c0a0c5edd77520"
     },
     {
+      "path": "src/types/app-model-catalog-group.ts",
+      "sha256": "eb6346d44454fb70953c8e843ec1e774fc9ab77ac135c390572ed0fb1d65b500"
+    },
+    {
+      "path": "src/types/app-model-catalog-item.ts",
+      "sha256": "3320a7c73f4e1908cd33b1237084ed09073b2d9f664f6a04b0bbc123f6a1399d"
+    },
+    {
+      "path": "src/types/app-model-catalog-page.ts",
+      "sha256": "99a09931b427a4d7ae840ab3891ab807119c6c24f0ef1604ebf0bee0534e1d6f"
+    },
+    {
+      "path": "src/types/app-model-catalog-price-availability.ts",
+      "sha256": "81ebf5aa604d2b12159ca1805d8364a38c425cf0957e345a0ec162fac49d973a"
+    },
+    {
+      "path": "src/types/app-model-catalog-reference-price.ts",
+      "sha256": "b4ff714de69282dc3df1d6baec526d3c9f15ac3eb43e0ac3f87314c0287c5dde"
+    },
+    {
+      "path": "src/types/app-model-vendor-catalog-response.ts",
+      "sha256": "fa2183bd74474f5f2668fb0947717063366721d4205a1a999361a4acf69b5c81"
+    },
+    {
+      "path": "src/types/app-model-vendor-option.ts",
+      "sha256": "01511425bb91f8af963f257f4de0fea7a8446d77ab07e5aa5e47c3497cd4c165"
+    },
+    {
       "path": "src/types/common.ts",
       "sha256": "d2506be8c4bdbe8e7059393467e6e71d75ef1d8c018dbf997bb0ab2a77b6c7b6"
     },
@@ -96,23 +124,19 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "b46e2fd0da8bc719f09a0640980ba534908faf322666e10a820b981ca65dd893"
+      "sha256": "9d28dff9e72462fa56b411fb1c4c3ca3f9356d19c8c56551fbc432394db07c4d"
     },
     {
-      "path": "src/types/json-null.ts",
-      "sha256": "2ef891ef2a54f476c457aeca7ec7d3d5d2cbdca19343fdefd8dfcbcd2767d856"
+      "path": "src/types/model-ranking-history-entry.ts",
+      "sha256": "e6fc945f2790cc97c39c2cb3fb1665f6f0c7a2e806aba20b0a43413e8ff02a41"
     },
     {
-      "path": "src/types/json-object.ts",
-      "sha256": "04704abb01de7d5513b15123d50250ec48306f6ef07a2e239d83de3357642529"
+      "path": "src/types/model-ranking-history-point.ts",
+      "sha256": "813a4055676558feb8535a16ce6b21b6b28d10e6f54926b56a8246b75fc41aef"
     },
     {
-      "path": "src/types/json-value.ts",
-      "sha256": "22654cfefd5c2d5b7d4055c69738f83a6ec78e22cf28435ee38e04224788116d"
-    },
-    {
-      "path": "src/types/model-catalog-page.ts",
-      "sha256": "4826ed773da6b331cac3244aa931cbe48f5f3be7ba983dc88843efcc16b0ce6e"
+      "path": "src/types/model-ranking-item.ts",
+      "sha256": "16d136b818f464dfa39f623c62845a11891f57bd53a8d59debfab54618c6bd2f"
     },
     {
       "path": "src/types/model-rankings-list-result.ts",
@@ -120,19 +144,19 @@
     },
     {
       "path": "src/types/model-rankings-page.ts",
-      "sha256": "a38c85802c55fabe906e386422733a3025d9d364c72b1de4043776906474f97f"
+      "sha256": "489f899d46ac6cb8d2e06c896d5a911818bac021ff89a32448b4deff3b445031"
+    },
+    {
+      "path": "src/types/model-rankings-source.ts",
+      "sha256": "a3ab43f40f2422f64b945d5ab0348f307b9fc80e17af8ad367a98f670ef15231"
     },
     {
       "path": "src/types/model-vendors-list-result.ts",
-      "sha256": "17548b3d0304001e0c55616b683b2541d98bb34dabfdac8a7d108e132c9fe39f"
+      "sha256": "66ff62c2e7abf23538e72ab6e50576caba0d78d56a68b84e8f616c597848a2ee"
     },
     {
       "path": "src/types/models-list-result.ts",
-      "sha256": "e106597630f8aee81d9505a5907bf005302ccccab1ba6674e050964486e7ff56"
-    },
-    {
-      "path": "src/types/no-data.ts",
-      "sha256": "85014112e547cd24ccb577486023c163abaf5e8c9b98dae6d6f1c1bb3dd25836"
+      "sha256": "3fc757d89e60273ac1da8f7c0eb096c376f79c4ed9404b614f18678190920cb9"
     },
     {
       "path": "src/types/page-info.ts",

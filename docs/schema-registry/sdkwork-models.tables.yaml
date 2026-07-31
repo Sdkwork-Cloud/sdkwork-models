@@ -1,6 +1,6 @@
 schema_registry:
   name: sdkwork-models
-  version: 0.1.0
+  version: 0.2.0
   standard: ../../../sdkwork-specs/DATABASE_SPEC.md
   source_docs:
   - ../database/README.md

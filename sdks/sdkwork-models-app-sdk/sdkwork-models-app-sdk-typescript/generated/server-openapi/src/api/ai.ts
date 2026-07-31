@@ -1,7 +1,7 @@
 import { appApiPath } from './paths';
-import type { HttpClient } from '../http/client';
+import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { ModelCatalogPage, ModelRankingsPage, NoData } from '../types';
+import type { AppModelCatalogPage, AppModelVendorCatalogResponse, ModelRankingsPage, PageInfo } from '../types';
 
 
 export interface AiModelVideoProfilesListParams {
@@ -17,11 +17,11 @@ export class AiModelVideoProfilesApi {
 
 
 /** List model video generation profiles */
-  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<ModelRankingsPage> {
+  async list(modelId: string, params?: AiModelVideoProfilesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -44,7 +44,7 @@ export class AiVideoProfilesApi {
 
 
 /** List video generation profiles */
-  async list(params?: AiVideoProfilesListParams): Promise<ModelRankingsPage> {
+  async list(params?: AiVideoProfilesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -54,7 +54,7 @@ export class AiVideoProfilesApi {
       { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
       { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/video_profiles`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -71,11 +71,11 @@ export class AiModelVoicesApi {
 
 
 /** List model TTS voices */
-  async list(modelId: string, params?: AiModelVoicesListParams): Promise<ModelRankingsPage> {
+  async list(modelId: string, params?: AiModelVoicesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -97,7 +97,7 @@ export class AiVoicesApi {
 
 
 /** List TTS voices */
-  async list(params?: AiVoicesListParams): Promise<ModelRankingsPage> {
+  async list(params?: AiVoicesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -106,7 +106,7 @@ export class AiVoicesApi {
       { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/voices`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -115,12 +115,12 @@ export interface AiModelsListParams {
   pageSize?: number;
   q?: string;
   billingMeter?: string;
+  vendorCode?: string;
   vendorCodes?: string[];
   modalities?: string[];
   capabilities?: string[];
   categories?: string[];
   groups?: string[];
-  modelTypes?: string;
 }
 
 export class AiModelsApi {
@@ -131,21 +131,21 @@ export class AiModelsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelsListParams): Promise<ModelCatalogPage> {
+/** List models */
+  async list(params?: AiModelsListParams, requestOptions?: ApiRequestOptions): Promise<AppModelCatalogPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
       { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
       { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
       { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
       { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
-      { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelCatalogPage>(appendQueryString(appApiPath(`/ai/models`), query));
+    return this.client.request<AppModelCatalogPage>(appendQueryString(appApiPath(`/ai/models`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -157,9 +157,9 @@ export class AiModelVendorsApi {
   }
 
 
-/** List */
-  async list(): Promise<NoData> {
-    return this.client.get<NoData>(appApiPath(`/ai/model_vendors`));
+/** List model vendors */
+  async list(requestOptions?: ApiRequestOptions): Promise<{ items: AppModelVendorCatalogResponse[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: AppModelVendorCatalogResponse[]; pageInfo: PageInfo; }>(appApiPath(`/ai/model_vendors`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -168,6 +168,7 @@ export interface AiModelRankingsListParams {
   vendorCode?: string;
   modality?: string;
   q?: string;
+  page?: number;
   pageSize?: number;
 }
 
@@ -179,16 +180,17 @@ export class AiModelRankingsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelRankingsListParams): Promise<ModelRankingsPage> {
+/** List model rankings */
+  async list(params?: AiModelRankingsListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'modality', value: params?.modality, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/model_rankings`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/model_rankings`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 

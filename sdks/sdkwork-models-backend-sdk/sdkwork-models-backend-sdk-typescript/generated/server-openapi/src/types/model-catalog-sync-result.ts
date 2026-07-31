@@ -1,4 +1,4 @@
-/** Catalog sync result returned by models.refresh. */
+/** Catalog sync result returned by models.sync. */
 export interface ModelCatalogSyncResult {
   synced: boolean;
   source: string;

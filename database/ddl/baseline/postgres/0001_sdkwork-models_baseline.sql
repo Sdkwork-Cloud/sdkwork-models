@@ -615,7 +615,7 @@ CREATE TABLE IF NOT EXISTS ai_model_pricing (
     region_code VARCHAR(64) NOT NULL,
     supplier_code VARCHAR(64),
     provider_code VARCHAR(64),
-    channel_id BIGINT,
+    account_id BIGINT,
     provider_model VARCHAR(256),
     platform_code VARCHAR(64),
     service_tier VARCHAR(64),
@@ -664,7 +664,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_model_pricing_uuid ON ai_model_pricing (
 CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_tenant_status_effective ON ai_model_pricing (tenant_id, organization_id, status, effective_from, effective_to, id);
 CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_lookup ON ai_model_pricing (tenant_id, organization_id, catalog_key, price_side, pricing_scope, pricing_scope_id, billing_mode, billing_meter_code, status, effective_from, effective_to);
 CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_vendor_region_model ON ai_model_pricing (tenant_id, organization_id, vendor_code, region_code, catalog_key, price_side, status, effective_from, id);
-CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_provider_channel ON ai_model_pricing (tenant_id, organization_id, provider_code, channel_id, catalog_key, price_side, status, effective_from, id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_supplier_account ON ai_model_pricing (tenant_id, organization_id, supplier_code, account_id, catalog_key, price_side, status, effective_from, id);
 CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_plan_effective ON ai_model_pricing (tenant_id, organization_id, pricing_plan_id, catalog_key, price_side, status, effective_from, id);
 CREATE INDEX IF NOT EXISTS idx_ai_model_pricing_meter_effective ON ai_model_pricing (tenant_id, organization_id, billing_meter_code, price_side, status, effective_from, id);
 

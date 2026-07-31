@@ -15,13 +15,13 @@
     "@sdkwork/models-pc-catalog": "workspace:*",
     "@sdkwork/models-pc-core": "workspace:*",
     "@sdkwork/utils": "workspace:*",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^4.3.0",
     "typescript": "^5.9.0",
     "vite": "^5.4.0"

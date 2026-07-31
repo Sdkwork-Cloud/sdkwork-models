@@ -33,9 +33,9 @@ const HTTP_ROUTES: &[HttpRoute] = &[
     .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
         HttpMethod::Post,
-        "/backend/v3/api/ai/models/refresh",
+        "/backend/v3/api/ai/models/sync",
         SDK_DOMAIN,
-        "models.refresh",
+        "models.sync",
     )
     .with_required_permission("intelligence.models.manage"),
     HttpRoute::dual_token(
@@ -147,56 +147,56 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         HttpMethod::Get,
         "/backend/v3/api/ai/resources",
         SDK_DOMAIN,
-        "aiResources.list",
+        "resources.list",
     )
     .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/resources",
         SDK_DOMAIN,
-        "aiResources.create",
+        "resources.create",
     )
     .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Put,
         "/backend/v3/api/ai/resources/{resourceId}",
         SDK_DOMAIN,
-        "aiResources.update",
+        "resources.update",
     )
     .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/resource_groups",
         SDK_DOMAIN,
-        "aiResourceGroups.list",
+        "resourceGroups.list",
     )
     .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Post,
         "/backend/v3/api/ai/resource_groups",
         SDK_DOMAIN,
-        "aiResourceGroups.create",
+        "resourceGroups.create",
     )
     .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
         SDK_DOMAIN,
-        "aiResourceGroups.resources.list",
+        "resourceGroups.resources.list",
     )
     .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
         HttpMethod::Patch,
         "/backend/v3/api/ai/resource_groups/{groupId}",
         SDK_DOMAIN,
-        "aiResourceGroups.update",
+        "resourceGroups.update",
     )
     .with_required_permission("intelligence.resources.manage"),
     HttpRoute::dual_token(
         HttpMethod::Delete,
         "/backend/v3/api/ai/resource_groups/{groupId}",
         SDK_DOMAIN,
-        "aiResourceGroups.delete",
+        "resourceGroups.delete",
     )
     .with_required_permission("intelligence.resources.manage"),
 ];

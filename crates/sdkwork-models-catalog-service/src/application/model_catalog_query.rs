@@ -5,7 +5,7 @@ use sdkwork_utils_rust::{is_blank, snake_case};
 use crate::application::{PricingResolver, ResolveModelPriceQuery};
 use crate::domain::{
     AiModel, BillingMeter, DomainResult, ModelPrice, ModelVendor, PriceSide, UpstreamAccountGroup,
-    UpstreamAccountGroupBinding,
+    UpstreamAccountGroupBinding, UpstreamAccountRoute,
 };
 use crate::ports::PricingCatalog;
 
@@ -138,11 +138,17 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
 
     pub fn list_models(&self, query: ListModelCatalogQuery) -> DomainResult<ModelCatalogPage> {
         let resolver = PricingResolver::new(self.catalog);
-        let (price_tenant_id, price_organization_id) = query
+        let (price_tenant_id, price_organization_id, price_account_group_id) = query
             .api_key_id
             .and_then(|api_key_id| self.catalog.find_api_key(api_key_id))
-            .map(|api_key| (api_key.tenant_id, api_key.organization_id))
-            .unwrap_or((0, 0));
+            .map(|api_key| {
+                (
+                    api_key.tenant_id,
+                    api_key.organization_id,
+                    Some(api_key.default_account_group_id),
+                )
+            })
+            .unwrap_or((0, 0, None));
         let vendor_codes = query.normalized_vendor_codes();
         let modalities = normalize_modality_filter_values(&query.modalities);
         let capabilities = normalize_capability_filter_values(&query.capabilities);
@@ -152,121 +158,130 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         let limit = query
             .page_size
             .unwrap_or(DEFAULT_MODEL_CATALOG_PAGE_SIZE)
-            .min(MAX_MODEL_CATALOG_PAGE_SIZE);
+            .clamp(1, MAX_MODEL_CATALOG_PAGE_SIZE);
         let offset = query.normalized_offset();
-        let all_items = self
-            .catalog
-            .list_models(None)
-            .into_iter()
-            .filter(|model| model.is_publicly_active())
-            .map(|model| {
-                let vendor = self
-                    .catalog
-                    .find_vendor(&model.vendor_code)
-                    .map(|vendor| vendor.vendor)
-                    .unwrap_or(ModelVendor::Unknown);
-                let model_lookup_key = model.catalog_key.as_str();
-                let supplier_codes = self.supplier_codes(model_lookup_key);
-                let official_reference_prices = self.official_reference_prices(
-                    price_tenant_id,
-                    price_organization_id,
-                    model_lookup_key,
-                );
-                let lowest_upstream_cost = self.lowest_upstream_cost(
-                    price_tenant_id,
-                    price_organization_id,
-                    model_lookup_key,
-                    query.billing_meter.clone(),
-                );
-                let provider_for_resolve = lowest_upstream_cost
-                    .as_ref()
-                    .and_then(|price| price.supplier_code.clone())
-                    .or_else(|| supplier_codes.first().cloned());
-                let price_availability = query
-                    .api_key_id
-                    .map(|api_key_id| {
-                        resolver.resolve(ResolveModelPriceQuery {
-                            api_key_id,
-                            account_group_id: None,
-                            model: model_lookup_key.to_owned(),
-                            billing_meter: query.billing_meter.clone(),
-                            supplier_code: provider_for_resolve,
-                            account_id: None,
-                            region_code: lowest_upstream_cost
-                                .as_ref()
-                                .map(|price| price.region_code.clone()),
-                        })
+        let group_index = ConfiguredModelGroupIndex::from_catalog(self.catalog);
+        let mut model_counts_by_group = BTreeMap::new();
+        let mut total_items = 0_usize;
+        let mut models = Vec::with_capacity(limit);
+
+        self.catalog.visit_models(None, &mut |model| {
+            if !model.is_publicly_active() {
+                return true;
+            }
+
+            let model_groups = group_index.groups_for(model);
+            count_model_groups(&mut model_counts_by_group, &model_groups);
+            let vendor = self
+                .catalog
+                .find_vendor(&model.vendor_code)
+                .map(|vendor| vendor.vendor)
+                .unwrap_or(ModelVendor::Unknown);
+            let model_lookup_key = model.catalog_key.as_str();
+            let official_reference_prices = self.official_reference_prices(
+                price_tenant_id,
+                price_organization_id,
+                model_lookup_key,
+            );
+            let model_categories =
+                derive_model_categories(model, &vendor, &official_reference_prices);
+
+            if !model_matches_filter(
+                model,
+                &model_groups,
+                &model_categories,
+                &vendor_codes,
+                &modalities,
+                &capabilities,
+                &categories,
+                &groups,
+                search_query.as_deref(),
+            ) {
+                return true;
+            }
+
+            let matched_index = total_items;
+            total_items = total_items.saturating_add(1);
+            if matched_index < offset || models.len() >= limit {
+                return true;
+            }
+
+            let supplier_codes = self.supplier_codes(model_lookup_key);
+            let lowest_upstream_cost = self.lowest_upstream_cost(
+                price_tenant_id,
+                price_organization_id,
+                price_account_group_id,
+                model_lookup_key,
+                query.billing_meter.clone(),
+                &group_index,
+            );
+            let provider_for_resolve = lowest_upstream_cost
+                .as_ref()
+                .and_then(|price| price.supplier_code.clone())
+                .or_else(|| supplier_codes.first().cloned());
+            let price_availability = query
+                .api_key_id
+                .map(|api_key_id| {
+                    resolver.resolve(ResolveModelPriceQuery {
+                        api_key_id,
+                        account_group_id: None,
+                        model: model_lookup_key.to_owned(),
+                        billing_meter: query.billing_meter.clone(),
+                        supplier_code: provider_for_resolve,
+                        account_id: lowest_upstream_cost
+                            .as_ref()
+                            .and_then(|price| price.account_id),
+                        region_code: lowest_upstream_cost
+                            .as_ref()
+                            .map(|price| price.region_code.clone()),
                     })
-                    .map(to_price_availability)
-                    .unwrap_or_else(|| PriceAvailability::Unavailable {
-                        reason: "api key context is required for customer price".to_owned(),
-                    });
+                })
+                .map(to_price_availability)
+                .unwrap_or_else(|| PriceAvailability::Unavailable {
+                    reason: "api key context is required for customer price".to_owned(),
+                });
 
-                let groups = configured_model_groups(self.catalog, &model);
-                let categories =
-                    derive_model_categories(&model, &vendor, &official_reference_prices);
-
-                ModelCatalogItem {
-                    catalog_key: model.catalog_key,
-                    model: model.model,
-                    display_name: model.display_name,
-                    vendor_code: model.vendor_code,
-                    vendor,
-                    capabilities: model.capabilities,
-                    groups,
-                    categories,
-                    description: model.description,
-                    modalities: model.modalities,
-                    input_modalities: model.input_modalities,
-                    output_modalities: model.output_modalities,
-                    api_format: model.api_format,
-                    capability_intro: model.capability_intro,
-                    limitations: model.limitations,
-                    supported_languages: model.supported_languages,
-                    use_cases: model.use_cases,
-                    training_data_cutoff: model.training_data_cutoff,
-                    context_tokens: model.context_tokens,
-                    max_output_tokens: model.max_output_tokens,
-                    supports_streaming: model.supports_streaming,
-                    supports_tools: model.supports_tools,
-                    supports_json_schema: model.supports_json_schema,
-                    release_stage: model.release_stage,
-                    shelf_state: model.shelf_state,
-                    routing_state: model.routing_state,
-                    replacement_model: model.replacement_model,
-                    supplier_codes,
-                    official_reference_prices,
-                    lowest_upstream_cost_unit_price: lowest_upstream_cost
-                        .as_ref()
-                        .map(|price| price.unit_price.to_fixed_string(6)),
-                    lowest_upstream_cost_currency: lowest_upstream_cost
-                        .as_ref()
-                        .map(|price| price.unit_price.currency.clone()),
-                    price_availability,
-                }
-            })
-            .collect::<Vec<_>>();
-        let group_catalog = configured_model_group_catalog(self.catalog, &all_items);
-        let filtered_models = all_items
-            .into_iter()
-            .filter(|item| {
-                model_matches_filter(
-                    item,
-                    &vendor_codes,
-                    &modalities,
-                    &capabilities,
-                    &categories,
-                    &groups,
-                    search_query.as_deref(),
-                )
-            })
-            .collect::<Vec<_>>();
-        let total_items = filtered_models.len();
-        let models = filtered_models
-            .into_iter()
-            .skip(offset)
-            .take(limit)
-            .collect();
+            models.push(ModelCatalogItem {
+                catalog_key: model.catalog_key.clone(),
+                model: model.model.clone(),
+                display_name: model.display_name.clone(),
+                vendor_code: model.vendor_code.clone(),
+                vendor,
+                capabilities: model.capabilities.clone(),
+                groups: model_groups,
+                categories: model_categories,
+                description: model.description.clone(),
+                modalities: model.modalities.clone(),
+                input_modalities: model.input_modalities.clone(),
+                output_modalities: model.output_modalities.clone(),
+                api_format: model.api_format.clone(),
+                capability_intro: model.capability_intro.clone(),
+                limitations: model.limitations.clone(),
+                supported_languages: model.supported_languages.clone(),
+                use_cases: model.use_cases.clone(),
+                training_data_cutoff: model.training_data_cutoff.clone(),
+                context_tokens: model.context_tokens,
+                max_output_tokens: model.max_output_tokens,
+                supports_streaming: model.supports_streaming,
+                supports_tools: model.supports_tools,
+                supports_json_schema: model.supports_json_schema,
+                release_stage: model.release_stage,
+                shelf_state: model.shelf_state,
+                routing_state: model.routing_state,
+                replacement_model: model.replacement_model.clone(),
+                supplier_codes,
+                official_reference_prices,
+                lowest_upstream_cost_unit_price: lowest_upstream_cost
+                    .as_ref()
+                    .map(|price| price.unit_price.to_fixed_string(6)),
+                lowest_upstream_cost_currency: lowest_upstream_cost
+                    .as_ref()
+                    .map(|price| price.unit_price.currency.clone()),
+                price_availability,
+            });
+            true
+        });
+        let group_catalog = group_index.catalog(&model_counts_by_group);
 
         Ok(ModelCatalogPage {
             items: models,
@@ -336,8 +351,10 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
         &self,
         tenant_id: i64,
         organization_id: i64,
+        account_group_id: Option<i64>,
         model: &str,
         billing_meter: BillingMeter,
+        group_index: &ConfiguredModelGroupIndex,
     ) -> Option<ModelPrice> {
         self.catalog
             .list_model_prices_for_scope(
@@ -348,103 +365,146 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                 billing_meter,
             )
             .into_iter()
+            .filter(|price| group_index.price_is_visible_to_group(price, account_group_id))
             .min_by_key(|price| price.unit_price.unit_price)
     }
 }
 
-fn configured_model_group_catalog<C: PricingCatalog>(
-    catalog: &C,
-    items: &[ModelCatalogItem],
-) -> Vec<ModelCatalogGroup> {
-    let mut model_counts_by_group = BTreeMap::new();
-    for item in items {
-        let mut counted_groups = BTreeSet::new();
-        for group in &item.groups {
-            let normalized = normalize_semantic_token(group);
-            if !normalized.is_empty() && counted_groups.insert(normalized.clone()) {
-                *model_counts_by_group.entry(normalized).or_insert(0) += 1;
-            }
+struct ConfiguredModelGroupDefinition {
+    key: String,
+    label: String,
+}
+
+struct ConfiguredModelGroupIndex {
+    definitions: Vec<ConfiguredModelGroupDefinition>,
+    groups_by_id: BTreeMap<i64, String>,
+    account_routes: Vec<UpstreamAccountRoute>,
+}
+
+impl ConfiguredModelGroupIndex {
+    fn from_catalog<C: PricingCatalog>(catalog: &C) -> Self {
+        let mut definitions = Vec::new();
+        let mut groups_by_id = BTreeMap::new();
+        for group in catalog.list_upstream_account_groups() {
+            let Some(key) = configured_group_code(&group) else {
+                continue;
+            };
+            definitions.push(ConfiguredModelGroupDefinition {
+                key: key.clone(),
+                label: group.display_name(),
+            });
+            groups_by_id.insert(group.id, key);
+        }
+        let account_routes = catalog.list_upstream_account_routes();
+        Self {
+            definitions,
+            groups_by_id,
+            account_routes,
         }
     }
 
-    let mut groups = catalog
-        .list_upstream_account_groups()
-        .into_iter()
-        .filter_map(|group| {
-            let key = configured_group_code(&group)?;
-            let label = group.display_name();
-            let model_count = model_counts_by_group
-                .get(&normalize_semantic_token(&key))
-                .copied()
-                .unwrap_or(0);
-            Some(ModelCatalogGroup {
-                key,
-                label,
-                model_count,
-            })
-        })
-        .collect::<Vec<_>>();
+    fn groups_for(&self, model: &AiModel) -> Vec<String> {
+        if self.groups_by_id.is_empty() {
+            return Vec::new();
+        }
 
-    groups.sort_by(|left, right| {
-        group_has_models_sort_key(right)
-            .cmp(&group_has_models_sort_key(left))
-            .then_with(|| model_group_sort_key(&left.key).cmp(&model_group_sort_key(&right.key)))
-            .then_with(|| {
-                normalize_semantic_token(&left.key).cmp(&normalize_semantic_token(&right.key))
+        let mut selected_group_ids = BTreeSet::new();
+        if self
+            .account_routes
+            .iter()
+            .all(|route| route.account_group_bindings.is_empty())
+        {
+            selected_group_ids.extend(self.groups_by_id.keys().copied());
+        } else {
+            let model_capability_codes = model_group_capability_codes(model);
+            for route in &self.account_routes {
+                for binding in &route.account_group_bindings {
+                    if self.groups_by_id.contains_key(&binding.account_group_id)
+                        && binding_matches_model_capability(binding, &model_capability_codes)
+                    {
+                        selected_group_ids.insert(binding.account_group_id);
+                    }
+                }
+            }
+        }
+
+        let mut groups = selected_group_ids
+            .into_iter()
+            .filter_map(|group_id| self.groups_by_id.get(&group_id).cloned())
+            .collect::<Vec<_>>();
+        groups.sort_by(|left, right| {
+            model_group_sort_key(left)
+                .cmp(&model_group_sort_key(right))
+                .then_with(|| normalize_semantic_token(left).cmp(&normalize_semantic_token(right)))
+        });
+        groups.dedup_by(|left, right| {
+            normalize_semantic_token(left) == normalize_semantic_token(right)
+        });
+        groups
+    }
+
+    fn price_is_visible_to_group(&self, price: &ModelPrice, account_group_id: Option<i64>) -> bool {
+        let Some(account_group_id) = account_group_id else {
+            return true;
+        };
+        let (Some(supplier_code), Some(account_id)) =
+            (price.supplier_code.as_deref(), price.account_id)
+        else {
+            return false;
+        };
+        self.account_routes.iter().any(|route| {
+            route.supplier_code == supplier_code
+                && route.account_id == account_id
+                && same_model_region(&route.region_code, &price.region_code)
+                && route
+                    .account_group_bindings
+                    .iter()
+                    .any(|binding| binding.account_group_id == account_group_id)
+        })
+    }
+
+    fn catalog(&self, model_counts_by_group: &BTreeMap<String, usize>) -> Vec<ModelCatalogGroup> {
+        let mut groups = self
+            .definitions
+            .iter()
+            .map(|definition| ModelCatalogGroup {
+                key: definition.key.clone(),
+                label: definition.label.clone(),
+                model_count: model_counts_by_group
+                    .get(&normalize_semantic_token(&definition.key))
+                    .copied()
+                    .unwrap_or(0),
             })
-    });
-    groups.dedup_by(|left, right| {
-        normalize_semantic_token(&left.key) == normalize_semantic_token(&right.key)
-    });
-    groups
+            .collect::<Vec<_>>();
+        groups.sort_by(|left, right| {
+            group_has_models_sort_key(right)
+                .cmp(&group_has_models_sort_key(left))
+                .then_with(|| {
+                    model_group_sort_key(&left.key).cmp(&model_group_sort_key(&right.key))
+                })
+                .then_with(|| {
+                    normalize_semantic_token(&left.key).cmp(&normalize_semantic_token(&right.key))
+                })
+        });
+        groups.dedup_by(|left, right| {
+            normalize_semantic_token(&left.key) == normalize_semantic_token(&right.key)
+        });
+        groups
+    }
+}
+
+fn count_model_groups(counts: &mut BTreeMap<String, usize>, groups: &[String]) {
+    let mut counted_groups = BTreeSet::new();
+    for group in groups {
+        let normalized = normalize_semantic_token(group);
+        if !normalized.is_empty() && counted_groups.insert(normalized.clone()) {
+            *counts.entry(normalized).or_insert(0) += 1;
+        }
+    }
 }
 
 fn group_has_models_sort_key(group: &ModelCatalogGroup) -> usize {
     usize::from(group.model_count > 0)
-}
-
-fn configured_model_groups<C: PricingCatalog>(catalog: &C, model: &AiModel) -> Vec<String> {
-    let groups_by_id = catalog
-        .list_upstream_account_groups()
-        .into_iter()
-        .filter_map(|group| configured_group_code(&group).map(|code| (group.id, code)))
-        .collect::<BTreeMap<_, _>>();
-    if groups_by_id.is_empty() {
-        return Vec::new();
-    }
-
-    let account_routes = catalog.list_upstream_account_routes();
-    let any_account_group_bindings = account_routes
-        .iter()
-        .any(|route| !route.account_group_bindings.is_empty());
-    let mut selected_group_ids = BTreeSet::new();
-    if any_account_group_bindings {
-        let model_capability_codes = model_group_capability_codes(model);
-        for route in account_routes {
-            for binding in route.account_group_bindings {
-                if groups_by_id.contains_key(&binding.account_group_id)
-                    && binding_matches_model_capability(&binding, &model_capability_codes)
-                {
-                    selected_group_ids.insert(binding.account_group_id);
-                }
-            }
-        }
-    } else {
-        selected_group_ids.extend(groups_by_id.keys().copied());
-    }
-
-    let mut groups = selected_group_ids
-        .into_iter()
-        .filter_map(|group_id| groups_by_id.get(&group_id).cloned())
-        .collect::<Vec<_>>();
-    groups.sort_by(|left, right| {
-        model_group_sort_key(left)
-            .cmp(&model_group_sort_key(right))
-            .then_with(|| normalize_semantic_token(left).cmp(&normalize_semantic_token(right)))
-    });
-    groups
-        .dedup_by(|left, right| normalize_semantic_token(left) == normalize_semantic_token(right));
-    groups
 }
 
 fn configured_group_code(group: &UpstreamAccountGroup) -> Option<String> {
@@ -584,7 +644,9 @@ fn model_is_free(reference_prices: &[ModelCatalogReferencePriceView]) -> bool {
 }
 
 fn model_matches_filter(
-    item: &ModelCatalogItem,
+    model: &AiModel,
+    model_groups: &[String],
+    model_categories: &[String],
     vendor_codes: &[String],
     modalities: &[String],
     capabilities: &[String],
@@ -595,63 +657,46 @@ fn model_matches_filter(
     (vendor_codes.is_empty()
         || vendor_codes
             .iter()
-            .any(|value| value == &normalize_semantic_token(&item.vendor_code)))
+            .any(|value| value == &normalize_semantic_token(&model.vendor_code)))
         && (modalities.is_empty()
-            || normalized_item_modalities(item)
+            || normalized_model_modalities(model)
                 .iter()
                 .any(|value| modalities.contains(value)))
         && (capabilities.is_empty()
             || capabilities
                 .iter()
-                .all(|capability| normalized_item_capabilities(item).contains(capability)))
+                .all(|capability| normalized_model_capabilities(model).contains(capability)))
         && (categories.is_empty()
             || categories
                 .iter()
-                .all(|category| item.categories.iter().any(|value| value == category)))
+                .all(|category| model_categories.iter().any(|value| value == category)))
         && (groups.is_empty()
             || groups.iter().any(|group| {
-                item.groups
+                model_groups
                     .iter()
                     .any(|value| normalize_semantic_token(value) == *group)
             }))
-        && search_query_matches(item, search_query)
+        && search_query_matches(model, search_query)
 }
 
-fn search_query_matches(item: &ModelCatalogItem, search_query: Option<&str>) -> bool {
+fn search_query_matches(model: &AiModel, search_query: Option<&str>) -> bool {
     let Some(search_query) = search_query else {
         return true;
     };
     let haystack = [
-        item.catalog_key.as_str(),
-        item.model.as_str(),
-        item.display_name.as_str(),
-        item.vendor_code.as_str(),
-        item.description.as_deref().unwrap_or_default(),
+        model.catalog_key.as_str(),
+        model.model.as_str(),
+        model.display_name.as_str(),
+        model.vendor_code.as_str(),
+        model.description.as_deref().unwrap_or_default(),
     ]
     .join(" ")
     .to_ascii_lowercase();
     haystack.contains(search_query)
 }
 
-fn normalized_item_modalities(item: &ModelCatalogItem) -> Vec<String> {
-    let mut values = item
-        .modalities
-        .iter()
-        .chain(item.input_modalities.iter())
-        .chain(item.output_modalities.iter())
-        .flat_map(|value| normalize_modality_token(value))
-        .filter(|value| !value.is_empty())
-        .collect::<Vec<_>>();
-    if values.is_empty() {
-        values = normalized_item_capabilities(item);
-    }
-    values.sort();
-    values.dedup();
-    values
-}
-
-fn normalized_item_capabilities(item: &ModelCatalogItem) -> Vec<String> {
-    let mut values = item
+fn normalized_model_capabilities(model: &AiModel) -> Vec<String> {
+    let mut values = model
         .capabilities
         .iter()
         .map(|value| normalize_semantic_token(value))
@@ -827,6 +872,19 @@ fn model_region_sort_key(region_code: &str) -> usize {
         "global" => 0,
         "cn" | "china" | "mainland" => 10,
         _ => 20,
+    }
+}
+
+fn same_model_region(left: &str, right: &str) -> bool {
+    normalized_model_region(left).eq_ignore_ascii_case(normalized_model_region(right))
+}
+
+fn normalized_model_region(value: &str) -> &str {
+    let value = value.trim();
+    if value.is_empty() {
+        "global"
+    } else {
+        value
     }
 }
 

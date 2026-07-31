@@ -896,8 +896,9 @@
     model: string(256)
     vendor_code: string(64)
     region_code: string(64)
+    supplier_code: string(64)
     provider_code: string(64)
-    channel_id: int64
+    account_id: int64
     provider_model: string(256)
     platform_code: string(64)
     service_tier: string(64)
@@ -973,12 +974,12 @@
     - status
     - effective_from
     - id
-  - name: idx_ai_model_pricing_provider_channel
+  - name: idx_ai_model_pricing_supplier_account
     columns:
     - tenant_id
     - organization_id
-    - provider_code
-    - channel_id
+    - supplier_code
+    - account_id
     - catalog_key
     - price_side
     - status
@@ -1535,4 +1536,3 @@
     - sort_order
     - id
   generated_by_this_project: true
-

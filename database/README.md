@@ -25,7 +25,7 @@ Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway chan
 This module uses a baseline plus forward migrations:
 
 1. **Baseline** — `database/ddl/baseline/postgres/0001_sdkwork-models_baseline.sql` contains the full PostgreSQL DDL snapshot.
-2. **Migrations** — `database/migrations/postgres/` contains ordered, idempotent upgrades for databases created from an earlier baseline. Migration `0002_add_supplier_code` reconciles supplier ownership columns introduced after the initial baseline.
+2. **Migrations** — `database/migrations/postgres/` contains ordered, idempotent upgrades for databases created from an earlier baseline. Migration `0002_add_supplier_code` reconciles supplier ownership columns introduced after the initial baseline. Migration `0003_align_pricing_account_identity` replaces the retired pricing `channel_id` identity with the canonical supplier `account_id` contract.
 3. **Drift** — run `pnpm db:drift:check` before release.
 
 The authoritative server contract is PostgreSQL-only. SQLite persistence, when required by a native client, must live in a separately owned `client-local` database module.

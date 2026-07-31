@@ -10,7 +10,7 @@
 - Expanded video generation profiles to **all 35 video models** (`primaryCapability: video`); added `tools/seed-video-profiles.mjs` for vendor-default scaffolding.
 - Added catalog validation requiring every video model to declare `model-video-profiles/{modelId}.json`.
 - Added `ai_model_video_profile` baseline table, contract registry entry, and catalog import sync (SQLite + Postgres).
-- Exposed `videoProfileCount` on admin `models.refresh` sync result (`ModelCatalogSyncResult`); PC admin parser aligned.
+- Exposed `videoProfileCount` on admin `models.sync` result (`ModelCatalogSyncResult`); PC admin parser aligned.
 
 ## 2026.07.05.1
 

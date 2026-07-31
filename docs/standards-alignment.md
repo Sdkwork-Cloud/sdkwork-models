@@ -50,9 +50,9 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Video generation profiles | Aligned | `specs/video-generation-profile.spec.json`; full coverage for all `primaryCapability: video` models; DB import sync (`ai_model_video_profile`); SDK helpers all languages; app + backend read APIs |
 | Voice SDK parity | Aligned | `listVoices`, `listVoicesForModel`, `listModelsForVoice` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled voice catalog |
 | Video profile SDK parity | Aligned | `listVideoProfiles`, `listVideoProfilesForModel`, `findVideoProfile` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled video profiles |
-| Catalog sync observability | Aligned | `models.refresh` returns `voiceCount`, `voiceBindingCount`, and `videoProfileCount` in `ModelCatalogSyncResult` |
+| Catalog sync observability | Aligned | `models.sync` returns `voiceCount`, `voiceBindingCount`, and `videoProfileCount` in `ModelCatalogSyncResult` |
 | Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
-| App read API | Aligned | App catalog list routes are public (`RouteAuth::Public`); voice list uses `SdkWorkPageData` list envelope |
+| App read API | Aligned | App catalog list routes require dual-token authentication; voice list uses `SdkWorkPageData` list envelope |
 | Database module | Aligned | Baseline DDL includes voice and video profile tables; contract materialized; `pnpm run db:validate` and `db:drift:check` pass |
 | Readiness probe | Aligned | `/healthz` and `/readyz` are infra probes (not business API envelope); `/readyz` probes DB |
 | Gateway production template | Aligned | Restricted CORS via `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS`; cloud gateway configs validated |

@@ -37,7 +37,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 ## 4. Security
 
 - Backend routes: `with_required_permission(...)` on every operation
-- App routes: public catalog list endpoints (`models.list`, `modelVendors.list`, `modelRankings.list`, `voices.list`, `modelVoices.list`, `videoProfiles.list`, `modelVideoProfiles.list`) plus IAM web framework layer for protected surfaces
+- App catalog routes require a complete dual-token IAM session (`AuthToken` and `AccessToken` in the same security requirement). Anonymous catalog publication, if introduced later, must use a separately reviewed open-api authority rather than weakening app-api authentication.
 - Backend voice and video profile routes require `intelligence.models.read`
 - `/readyz`: fails closed; no internal error strings in response body
 - Production gateway: restricted CORS, upstream readiness checks
@@ -45,7 +45,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 ## 5. Data
 
 - L2 database module: `database/database.manifest.json`
-- Catalog sync from JSON via admin `models.refresh` (imports models, pricing, voices, voice bindings, and video generation profiles)
+- Catalog sync from JSON via admin `models.sync` (imports models, pricing, voices, voice bindings, and video generation profiles)
 - App catalog read uses in-memory `ModelCatalog` JSON snapshot in standalone mode
 - TTS voice catalog: `voices.json` + `model-voices/` per vendor region; persisted to `ai_model_voice` / `ai_model_voice_binding`
 - Video generation profiles: `model-video-profiles/{modelId}.json` per video model; persisted to `ai_model_video_profile`

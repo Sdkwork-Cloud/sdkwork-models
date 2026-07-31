@@ -111,34 +111,6 @@ function extractSurface(sourcePath, pathPrefixes, title, serverUrl) {
   };
 }
 
-function injectModelsListQueryParams(document) {
-  for (const pathKey of Object.keys(document.paths || {})) {
-    if (!pathKey.endsWith("/ai/models")) {
-      continue;
-    }
-    const operation = document.paths[pathKey]?.get;
-    if (!operation) {
-      continue;
-    }
-    const parameters = operation.parameters || [];
-    if (parameters.some((parameter) => parameter.name === "model_types")) {
-      continue;
-    }
-    parameters.push({
-      description:
-        "Comma-separated model type labels (Chat, Image, Embedding, ...).",
-      in: "query",
-      name: "model_types",
-      required: false,
-      schema: {
-        type: "string",
-      },
-    });
-    operation.parameters = parameters;
-  }
-  return document;
-}
-
 function cloneJson(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -260,7 +232,7 @@ function modelCatalogSyncResultSchema() {
   return {
     type: "object",
     additionalProperties: false,
-    description: "Catalog sync result returned by models.refresh.",
+    description: "Catalog sync result returned by models.sync.",
     properties: {
       synced: { type: "boolean" },
       source: { type: "string" },
@@ -323,8 +295,8 @@ function mergeModelCatalogSyncSchema(document) {
   document.components.schemas.ModelCatalogSyncResult = modelCatalogSyncResultSchema();
   delete document.components.schemas.ModelsRefreshResult;
 
-  const refreshPath = document.paths?.["/backend/v3/api/ai/models/refresh"];
-  const successSchema = refreshPath?.post?.responses?.["200"]?.content?.["application/json"]?.schema;
+  const syncPath = document.paths?.["/backend/v3/api/ai/models/sync"];
+  const successSchema = syncPath?.post?.responses?.["200"]?.content?.["application/json"]?.schema;
   if (successSchema?.allOf) {
     for (const part of successSchema.allOf) {
       if (part?.properties?.data?.properties?.item) {
@@ -455,8 +427,10 @@ function int64StringSchema(nullable = true, minimum = 0, description = undefined
   const pattern = minimum > 0 ? "^[1-9][0-9]*$" : "^(0|[1-9][0-9]*)$";
   return {
     type: nullable ? ["string", "null"] : "string",
+    format: "int64",
     pattern,
     "x-sdkwork-int64-string": true,
+    "x-sdkwork-rust-type": "i64",
     ...(description ? { description } : {}),
   };
 }
@@ -862,6 +836,123 @@ function adminAiResourceUpdateRequestSchema() {
   );
 }
 
+function adminAiResourceMemberItemSchema() {
+  return objectSchema(
+    {
+      parentResourceCode: safeCodeSchema(192, false),
+      memberResourceCode: safeCodeSchema(192, false),
+      memberRole: enumStringSchema(["included", "optional", "fallback"], false),
+      required: booleanSchema(),
+      sortOrder: int64StringSchema(true, 0),
+    },
+    ["parentResourceCode", "memberResourceCode", "memberRole", "required"],
+    "AI resource composition member returned by the management API.",
+  );
+}
+
+function adminAiResourceItemSchema() {
+  return objectSchema(
+    {
+      id: int64StringSchema(false, 1),
+      resourceCode: safeCodeSchema(192, false),
+      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], false),
+      displayName: stringSchema(128, 1),
+      vendorCode: safeCodeSchema(64, true),
+      modalityCode: safeCodeSchema(64, true),
+      apiEndpointCode: safeCodeSchema(128, true),
+      catalogKey: visibleAsciiStringSchema(256, true),
+      model: visibleAsciiStringSchema(128, true),
+      providerNativeModel: visibleAsciiStringSchema(256, true),
+      capability: safeCodeSchema(128, true),
+      capabilities: arraySchema(safeCodeSchema(128, false), 128),
+      compositionMode: enumStringSchema(["single", "any", "all"], false),
+      status: enumStringSchema(["active", "disabled", "inactive"], false),
+      sortOrder: int64StringSchema(true, 0),
+      members: arraySchema(schemaRef("AdminAiResourceMemberItem"), 512),
+    },
+    [
+      "id",
+      "resourceCode",
+      "resourceType",
+      "displayName",
+      "capabilities",
+      "compositionMode",
+      "status",
+      "members",
+    ],
+    "AI resource returned by the management API.",
+  );
+}
+
+function adminAiResourceGroupItemSchema() {
+  return objectSchema(
+    {
+      id: int64StringSchema(false, 1),
+      groupCode: safeCodeSchema(128, false),
+      groupName: stringSchema(128, 1),
+      groupType: enumStringSchema(["api_group"], false),
+      selectionMode: enumStringSchema(["manual", "all", "any", "dynamic_all_api"], false),
+      description: nullableStringSchema(512),
+      vendorCodes: arraySchema(safeCodeSchema(64, false), 128),
+      capability: safeCodeSchema(128, true),
+      capabilities: arraySchema(safeCodeSchema(128, false), 128),
+      sortOrder: int64StringSchema(true, 0),
+      status: enumStringSchema(["active", "disabled", "inactive"], false),
+      resourceCount: int64StringSchema(false, 0),
+      dynamic: booleanSchema(),
+    },
+    [
+      "id",
+      "groupCode",
+      "groupName",
+      "groupType",
+      "selectionMode",
+      "vendorCodes",
+      "capabilities",
+      "status",
+      "resourceCount",
+      "dynamic",
+    ],
+    "AI resource group returned by the management API.",
+  );
+}
+
+function adminAiResourceGroupResourceItemSchema() {
+  return objectSchema(
+    {
+      id: int64StringSchema(false, 1),
+      resourceCode: safeCodeSchema(192, false),
+      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], false),
+      displayName: stringSchema(128, 1),
+      vendorCode: safeCodeSchema(64, true),
+      modalityCode: safeCodeSchema(64, true),
+      apiEndpointCode: safeCodeSchema(128, true),
+      catalogKey: visibleAsciiStringSchema(256, true),
+      model: visibleAsciiStringSchema(128, true),
+      providerNativeModel: visibleAsciiStringSchema(256, true),
+      status: enumStringSchema(["active", "disabled", "inactive"], false),
+      sortOrder: int64StringSchema(true, 0),
+      memberRole: enumStringSchema(["included", "optional", "fallback"], false),
+    },
+    ["id", "resourceCode", "resourceType", "displayName", "status", "memberRole"],
+    "AI resource projected through a resource-group membership.",
+  );
+}
+
+function offsetPageSchema(itemSchemaName, description) {
+  return objectSchema(
+    {
+      items: arraySchema(schemaRef(itemSchemaName), 200),
+      pageInfo: {
+        allOf: [schemaRef("PageInfo")],
+        description: "Offset pagination metadata.",
+      },
+    },
+    ["items", "pageInfo"],
+    description,
+  );
+}
+
 function adminAiResourceGroupMemberInputSchema() {
   return objectSchema(
     {
@@ -999,8 +1090,24 @@ function ensureBackendWriteSchemas(document) {
     ModelRankingRefreshTriggerRequest: modelRankingRefreshTriggerRequestSchema(),
     ModelRankingRefreshTriggerResponse: modelRankingRefreshTriggerResponseSchema(),
     AdminAiResourceMemberInput: adminAiResourceMemberInputSchema(),
+    AdminAiResourceMemberItem: adminAiResourceMemberItemSchema(),
+    AdminAiResourceItem: adminAiResourceItemSchema(),
+    AiResourcesPage: offsetPageSchema(
+      "AdminAiResourceItem",
+      "Paginated AI resources returned by resources.list.",
+    ),
     AdminAiResourceCreateRequest: adminAiResourceCreateRequestSchema(),
     AdminAiResourceUpdateRequest: adminAiResourceUpdateRequestSchema(),
+    AdminAiResourceGroupItem: adminAiResourceGroupItemSchema(),
+    AiResourceGroupsPage: offsetPageSchema(
+      "AdminAiResourceGroupItem",
+      "Paginated AI resource groups returned by resourceGroups.list.",
+    ),
+    AdminAiResourceGroupResourceItem: adminAiResourceGroupResourceItemSchema(),
+    AiResourceGroupResourcesPage: offsetPageSchema(
+      "AdminAiResourceGroupResourceItem",
+      "Paginated resources returned by resourceGroups.resources.list.",
+    ),
     AdminAiResourceGroupMemberInput: adminAiResourceGroupMemberInputSchema(),
     AdminAiResourceGroupCreateRequest: adminAiResourceGroupCreateRequestSchema(),
     AdminAiResourceGroupUpdateRequest: adminAiResourceGroupUpdateRequestSchema(),
@@ -1119,17 +1226,8 @@ function standardizeModelMappingsListOperation(document) {
   standardizeDataOperation(operation, "ModelMappingsPage", "OK");
 }
 
-function standardizeAiResourceGroupsListOperation(document) {
-  const operation = operationAt(document, "/backend/v3/api/ai/resource_groups", "get");
-  const sourcePageSchema = document.components?.schemas?.AiResourcesPage;
-  if (!operation || !sourcePageSchema) {
-    return;
-  }
-  document.components.schemas.AiResourceGroupsPage = {
-    ...structuredClone(sourcePageSchema),
-    description: "Paginated AI resource groups returned by aiResourceGroups.list.",
-  };
-  operation.parameters = [
+function offsetListQueryParameters(searchDescription) {
+  return [
     {
       in: "query",
       name: "page",
@@ -1148,11 +1246,57 @@ function standardizeAiResourceGroupsListOperation(document) {
       in: "query",
       name: "q",
       required: false,
-      schema: { type: "string", maxLength: 128 },
-      description: "Free-text resource group search query.",
+      schema: { type: "string", maxLength: 256 },
+      description: searchDescription,
     },
   ];
-  standardizeDataOperation(operation, "AiResourceGroupsPage", "OK");
+}
+
+function standardizeAiResourceListOperation(
+  document,
+  pathKey,
+  schemaName,
+  description,
+  searchDescription,
+) {
+  const operation = operationAt(document, pathKey, "get");
+  if (!operation) {
+    return;
+  }
+  const pathParameters = (operation.parameters ?? []).filter(
+    (parameter) => parameter?.in === "path",
+  );
+  operation.description = description;
+  operation.parameters = [
+    ...pathParameters,
+    ...offsetListQueryParameters(searchDescription),
+  ];
+  operation["x-sdkwork-pagination-mode"] = "offset";
+  standardizeDataOperation(operation, schemaName, "OK");
+}
+
+function standardizeAiResourceListOperations(document) {
+  standardizeAiResourceListOperation(
+    document,
+    "/backend/v3/api/ai/resources",
+    "AiResourcesPage",
+    "List tenant-visible AI resources with SQL-backed offset pagination. The default stable sort is tenant override, sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
+    "Free-text search on resource code, display name, vendor, modality, endpoint, catalog key, and model fields.",
+  );
+  standardizeAiResourceListOperation(
+    document,
+    "/backend/v3/api/ai/resource_groups",
+    "AiResourceGroupsPage",
+    "List tenant-visible AI resource groups with SQL-backed offset pagination. The default stable sort is tenant override, sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
+    "Free-text search on resource-group code, name, and description.",
+  );
+  standardizeAiResourceListOperation(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
+    "AiResourceGroupResourcesPage",
+    "List resources in a tenant-visible AI resource group with SQL-backed offset pagination. The default stable sort is membership or resource sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
+    "Free-text search on resource code, display name, vendor, modality, endpoint, catalog key, and model fields.",
+  );
 }
 
 function standardizeBackendWriteOperations(document) {
@@ -1181,7 +1325,7 @@ function standardizeBackendWriteOperations(document) {
   );
   setRequestBody(
     document,
-    "/backend/v3/api/ai/models/refresh",
+    "/backend/v3/api/ai/models/sync",
     "post",
     "AdminModelCatalogSyncRequest",
     "Model catalog refresh request.",
@@ -1254,7 +1398,7 @@ function standardizeBackendWriteOperations(document) {
     operationAt(document, "/backend/v3/api/ai/resource_groups/{groupId}", "patch"),
   );
   standardizeDataOperation(
-    operationAt(document, "/backend/v3/api/ai/models/refresh", "post"),
+    operationAt(document, "/backend/v3/api/ai/models/sync", "post"),
     "ModelCatalogSyncResult",
     "OK",
   );
@@ -1308,7 +1452,7 @@ function standardizeBackendOperationPatterns(document) {
     }
   }
   standardizeBackendWriteOperations(document);
-  standardizeAiResourceGroupsListOperation(document);
+  standardizeAiResourceListOperations(document);
   standardizeModelMappingsListOperation(document);
   standardizeModelMappingsResolveOperation(document);
   return document;
@@ -1327,8 +1471,8 @@ function pruneUnusedComponentSchemas(document) {
 
 function gatewayPermission(operationId, method) {
   const resourcePermission =
-    operationId?.startsWith("aiResources.") ||
-    operationId?.startsWith("aiResourceGroups.")
+    operationId?.startsWith("resources.") ||
+    operationId?.startsWith("resourceGroups.")
       ? "intelligence.resources"
       : "intelligence.models";
   const readOperation = method === "get" || operationId === "modelMappings.resolve";
@@ -1344,7 +1488,8 @@ function decorateGatewayContract(document, surface) {
       }
       operation["x-sdkwork-api-surface"] = surface;
       operation["x-sdkwork-request-context"] = "WebRequestContext";
-      operation["x-sdkwork-auth-mode"] = appSurface ? "public" : "dual-token";
+      operation["x-sdkwork-auth-mode"] = "dual-token";
+      operation.security = [{ AccessToken: [], AuthToken: [] }];
       if (!appSurface) {
         operation["x-sdkwork-permission"] = gatewayPermission(
           operation.operationId,
@@ -1394,13 +1539,11 @@ const backendDocument = decorateGatewayContract(
         mergeModelCatalogSyncSchema(
           mergeVideoProfileCatalogBackendPaths(
             mergeVoiceCatalogBackendPaths(
-              injectModelsListQueryParams(
-                extractSurface(
-                  backendSource,
-                  BACKEND_PATH_PREFIXES,
-                  "SDKWork Models Backend API",
-                  "/backend/v3/api",
-                ),
+              extractSurface(
+                backendSource,
+                BACKEND_PATH_PREFIXES,
+                "SDKWork Models Backend API",
+                "/backend/v3/api",
               ),
             ),
           ),
@@ -1414,13 +1557,11 @@ const appDocument = decorateGatewayContract(
   migrateOpenApiDocument(
     mergeVideoProfileCatalogAppPaths(
       mergeVoiceCatalogAppPaths(
-        injectModelsListQueryParams(
-          extractSurface(
-            appSource,
-            APP_PATH_PREFIXES,
-            "SDKWork Models App API",
-            "/app/v3/api",
-          ),
+        extractSurface(
+          appSource,
+          APP_PATH_PREFIXES,
+          "SDKWork Models App API",
+          "/app/v3/api",
         ),
       ),
     ),

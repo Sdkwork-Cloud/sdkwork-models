@@ -61,7 +61,7 @@ const client = new SdkworkAppClient({
 ### ai
 
 ```typescript
-// List
+// List model vendors
 const result = await client.ai.modelVendors.list();
 ```
 

@@ -6,7 +6,9 @@ use crate::domain::{
 };
 
 pub trait PricingCatalog {
-    fn list_models(&self, vendor_code: Option<&str>) -> Vec<AiModel>;
+    /// Visits the catalog's maintained model index without cloning the full
+    /// collection. Return `false` from the visitor to stop early.
+    fn visit_models(&self, vendor_code: Option<&str>, visitor: &mut dyn FnMut(&AiModel) -> bool);
     fn list_model_upstream_routes(&self, model: &str) -> Vec<ModelUpstreamRoute>;
     fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute>;
     fn list_routing_policies(&self) -> Vec<RoutingPolicy>;

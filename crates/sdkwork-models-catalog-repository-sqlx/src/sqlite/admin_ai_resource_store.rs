@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 use sdkwork_models_contract_service::{
-    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceGroupResourcesPage,
-    AdminAiResourceItem, AdminAiResourceListPage, AdminAiResourceMemberCommand,
-    AdminAiResourceMemberItem, AdminAiResourceReadFuture, AdminAiResourceStore,
-    CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
+    AdminAiResourceGroupItem, AdminAiResourceGroupListPage, AdminAiResourceGroupResourceItem,
+    AdminAiResourceGroupResourcesPage, AdminAiResourceItem, AdminAiResourceListPage,
+    AdminAiResourceMemberCommand, AdminAiResourceMemberItem, AdminAiResourceReadFuture,
+    AdminAiResourceStore, CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
     DeleteAdminAiResourceGroupCommand, DomainError, DomainResult,
     ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
     ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
@@ -225,7 +225,7 @@ impl AdminAiResourceStore for SqliteAdminAiResourceStore {
     fn list_ai_resource_groups<'a>(
         &'a self,
         query: ListAdminAiResourceGroupsQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupListPage> {
         Box::pin(async move { list_ai_resource_groups(&self.pool, query).await })
     }
 
@@ -270,44 +270,39 @@ async fn list_ai_resources(
         SELECT COUNT(1)
         FROM ai_resource
         WHERE (
-                (tenant_id = ? AND organization_id = ?)
+                (tenant_id = ?1 AND organization_id = ?2)
                 OR (tenant_id = 0 AND organization_id = 0)
               )
           AND deleted_at IS NULL
           AND NOT (
               tenant_id = 0
               AND organization_id = 0
-              AND (? <> 0 OR ? <> 0)
+              AND (?1 <> 0 OR ?2 <> 0)
               AND EXISTS (
                   SELECT 1
                   FROM ai_resource tenant_resource
-                  WHERE tenant_resource.tenant_id = ?
-                    AND tenant_resource.organization_id = ?
+                  WHERE tenant_resource.tenant_id = ?1
+                    AND tenant_resource.organization_id = ?2
                     AND tenant_resource.resource_code = ai_resource.resource_code
                     AND tenant_resource.deleted_at IS NULL
               )
           )
           AND (
-              ? IS NULL
-              OR resource_code LIKE ?
-              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?
-              OR COALESCE(resource_type, '') LIKE ?
-              OR COALESCE(vendor_code, '') LIKE ?
-              OR COALESCE(modality_code, '') LIKE ?
+              ?3 IS NULL
+              OR resource_code LIKE ?3
+              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?3
+              OR COALESCE(resource_type, '') LIKE ?3
+              OR COALESCE(vendor_code, '') LIKE ?3
+              OR COALESCE(modality_code, '') LIKE ?3
+              OR COALESCE(api_code, '') LIKE ?3
+              OR COALESCE(catalog_key, '') LIKE ?3
+              OR COALESCE(model, '') LIKE ?3
+              OR COALESCE(provider_native_model, '') LIKE ?3
           )
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
     .bind(search.as_deref())
     .fetch_one(pool)
     .await
@@ -344,46 +339,41 @@ async fn list_ai_resources(
             sort_order
         FROM ai_resource
         WHERE (
-                (tenant_id = ? AND organization_id = ?)
+                (tenant_id = ?1 AND organization_id = ?2)
                 OR (tenant_id = 0 AND organization_id = 0)
               )
           AND deleted_at IS NULL
           AND NOT (
               tenant_id = 0
               AND organization_id = 0
-              AND (? <> 0 OR ? <> 0)
+              AND (?1 <> 0 OR ?2 <> 0)
               AND EXISTS (
                   SELECT 1
                   FROM ai_resource tenant_resource
-                  WHERE tenant_resource.tenant_id = ?
-                    AND tenant_resource.organization_id = ?
+                  WHERE tenant_resource.tenant_id = ?1
+                    AND tenant_resource.organization_id = ?2
                     AND tenant_resource.resource_code = ai_resource.resource_code
                     AND tenant_resource.deleted_at IS NULL
               )
           )
           AND (
-              ? IS NULL
-              OR resource_code LIKE ?
-              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?
-              OR COALESCE(resource_type, '') LIKE ?
-              OR COALESCE(vendor_code, '') LIKE ?
-              OR COALESCE(modality_code, '') LIKE ?
+              ?3 IS NULL
+              OR resource_code LIKE ?3
+              OR COALESCE(NULLIF(display_name, ''), resource_code) LIKE ?3
+              OR COALESCE(resource_type, '') LIKE ?3
+              OR COALESCE(vendor_code, '') LIKE ?3
+              OR COALESCE(modality_code, '') LIKE ?3
+              OR COALESCE(api_code, '') LIKE ?3
+              OR COALESCE(catalog_key, '') LIKE ?3
+              OR COALESCE(model, '') LIKE ?3
+              OR COALESCE(provider_native_model, '') LIKE ?3
           )
         ORDER BY COALESCE(sort_order, 100000) ASC, id ASC
-        LIMIT ? OFFSET ?
+        LIMIT ?4 OFFSET ?5
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
-    .bind(search.as_deref())
     .bind(search.as_deref())
     .bind(query.normalized_limit())
     .bind(query.normalized_offset())
@@ -401,7 +391,46 @@ async fn list_ai_resources(
 async fn list_ai_resource_groups(
     pool: &SqlitePool,
     query: ListAdminAiResourceGroupsQuery,
-) -> DomainResult<Vec<AdminAiResourceGroupItem>> {
+) -> DomainResult<AdminAiResourceGroupListPage> {
+    let search = resource_search_pattern(query.q.as_deref());
+    let total_count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(1)
+        FROM ai_resource_group g
+        WHERE (
+                (g.tenant_id = ?1 AND g.organization_id = ?2)
+                OR (g.tenant_id = 0 AND g.organization_id = 0)
+              )
+          AND g.deleted_at IS NULL
+          AND COALESCE(NULLIF(g.group_type, ''), 'api_group') = 'api_group'
+          AND NOT (
+              g.tenant_id = 0
+              AND g.organization_id = 0
+              AND EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group tenant_group
+                  WHERE tenant_group.tenant_id = ?1
+                    AND tenant_group.organization_id = ?2
+                    AND tenant_group.group_code = g.group_code
+                    AND tenant_group.deleted_at IS NULL
+                    AND COALESCE(NULLIF(tenant_group.group_type, ''), 'api_group') = 'api_group'
+              )
+          )
+          AND (
+              ?3 IS NULL
+              OR LOWER(g.group_code) LIKE LOWER(?3)
+              OR LOWER(g.group_name) LIKE LOWER(?3)
+              OR LOWER(COALESCE(g.description, '')) LIKE LOWER(?3)
+          )
+        "#,
+    )
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count AI resource groups", error))?;
+
     let rows = sqlx::query(
         r#"
         SELECT
@@ -471,7 +500,7 @@ async fn list_ai_resource_groups(
             CASE WHEN g.selection_mode = 'dynamic_all_api' THEN 1 ELSE 0 END AS dynamic
         FROM ai_resource_group g
         WHERE (
-                (g.tenant_id = ? AND g.organization_id = ?)
+                (g.tenant_id = ?1 AND g.organization_id = ?2)
                 OR (g.tenant_id = 0 AND g.organization_id = 0)
               )
           AND g.deleted_at IS NULL
@@ -482,25 +511,30 @@ async fn list_ai_resource_groups(
               AND EXISTS (
                   SELECT 1
                   FROM ai_resource_group tenant_group
-                  WHERE tenant_group.tenant_id = ?
-                    AND tenant_group.organization_id = ?
+                  WHERE tenant_group.tenant_id = ?1
+                    AND tenant_group.organization_id = ?2
                     AND tenant_group.group_code = g.group_code
                     AND tenant_group.deleted_at IS NULL
                     AND COALESCE(NULLIF(tenant_group.group_type, ''), 'api_group') = 'api_group'
               )
           )
-        ORDER BY CASE WHEN g.tenant_id = ? AND g.organization_id = ? THEN 0 ELSE 1 END,
+          AND (
+              ?3 IS NULL
+              OR LOWER(g.group_code) LIKE LOWER(?3)
+              OR LOWER(g.group_name) LIKE LOWER(?3)
+              OR LOWER(COALESCE(g.description, '')) LIKE LOWER(?3)
+          )
+        ORDER BY CASE WHEN g.tenant_id = ?1 AND g.organization_id = ?2 THEN 0 ELSE 1 END,
                  COALESCE(g.sort_order, 100000) ASC,
                  g.id ASC
-        LIMIT 1000
+        LIMIT ?4 OFFSET ?5
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
-    .bind(query.subject.tenant_id)
-    .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .bind(query.normalized_limit())
+    .bind(query.normalized_offset())
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list AI resource groups", error))?;
@@ -515,7 +549,10 @@ async fn list_ai_resource_groups(
         &mut groups,
     )
     .await?;
-    Ok(groups)
+    Ok(AdminAiResourceGroupListPage {
+        items: groups,
+        total_count,
+    })
 }
 
 async fn list_ai_resource_group_resources(
@@ -540,7 +577,7 @@ async fn list_ai_resource_group_resources(
                 SELECT COUNT(1)
                 FROM ai_resource r
                 WHERE (
-                        (r.tenant_id = ? AND r.organization_id = ?)
+                        (r.tenant_id = ?1 AND r.organization_id = ?2)
                         OR (r.tenant_id = 0 AND r.organization_id = 0)
                       )
                   AND r.resource_type = 'api_endpoint'
@@ -548,37 +585,32 @@ async fn list_ai_resource_group_resources(
                   AND NOT (
                       r.tenant_id = 0
                       AND r.organization_id = 0
-                      AND (? <> 0 OR ? <> 0)
+                      AND (?1 <> 0 OR ?2 <> 0)
                       AND EXISTS (
                           SELECT 1
                           FROM ai_resource tenant_resource
-                          WHERE tenant_resource.tenant_id = ?
-                            AND tenant_resource.organization_id = ?
+                          WHERE tenant_resource.tenant_id = ?1
+                            AND tenant_resource.organization_id = ?2
                             AND tenant_resource.resource_code = r.resource_code
                             AND tenant_resource.deleted_at IS NULL
                       )
                   )
                   AND (
-                      ? IS NULL
-                      OR r.resource_code LIKE ?
-                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
-                      OR COALESCE(r.resource_type, '') LIKE ?
-                      OR COALESCE(r.vendor_code, '') LIKE ?
-                      OR COALESCE(r.modality_code, '') LIKE ?
+                      ?3 IS NULL
+                      OR r.resource_code LIKE ?3
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?3
+                      OR COALESCE(r.resource_type, '') LIKE ?3
+                      OR COALESCE(r.vendor_code, '') LIKE ?3
+                      OR COALESCE(r.modality_code, '') LIKE ?3
+                      OR COALESCE(r.api_code, '') LIKE ?3
+                      OR COALESCE(r.catalog_key, '') LIKE ?3
+                      OR COALESCE(r.model, '') LIKE ?3
+                      OR COALESCE(r.provider_native_model, '') LIKE ?3
                   )
                 "#,
             )
             .bind(group.tenant_id)
             .bind(group.organization_id)
-            .bind(group.tenant_id)
-            .bind(group.organization_id)
-            .bind(group.tenant_id)
-            .bind(group.organization_id)
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
             .bind(search.as_deref())
             .fetch_one(pool)
             .await
@@ -601,7 +633,7 @@ async fn list_ai_resource_group_resources(
                     'included' AS member_role
                 FROM ai_resource r
                 WHERE (
-                        (r.tenant_id = ? AND r.organization_id = ?)
+                        (r.tenant_id = ?1 AND r.organization_id = ?2)
                         OR (r.tenant_id = 0 AND r.organization_id = 0)
                       )
                   AND r.resource_type = 'api_endpoint'
@@ -609,39 +641,34 @@ async fn list_ai_resource_group_resources(
                   AND NOT (
                       r.tenant_id = 0
                       AND r.organization_id = 0
-                      AND (? <> 0 OR ? <> 0)
+                      AND (?1 <> 0 OR ?2 <> 0)
                       AND EXISTS (
                           SELECT 1
                           FROM ai_resource tenant_resource
-                          WHERE tenant_resource.tenant_id = ?
-                            AND tenant_resource.organization_id = ?
+                          WHERE tenant_resource.tenant_id = ?1
+                            AND tenant_resource.organization_id = ?2
                             AND tenant_resource.resource_code = r.resource_code
                             AND tenant_resource.deleted_at IS NULL
                       )
                   )
                   AND (
-                      ? IS NULL
-                      OR r.resource_code LIKE ?
-                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
-                      OR COALESCE(r.resource_type, '') LIKE ?
-                      OR COALESCE(r.vendor_code, '') LIKE ?
-                      OR COALESCE(r.modality_code, '') LIKE ?
+                      ?3 IS NULL
+                      OR r.resource_code LIKE ?3
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?3
+                      OR COALESCE(r.resource_type, '') LIKE ?3
+                      OR COALESCE(r.vendor_code, '') LIKE ?3
+                      OR COALESCE(r.modality_code, '') LIKE ?3
+                      OR COALESCE(r.api_code, '') LIKE ?3
+                      OR COALESCE(r.catalog_key, '') LIKE ?3
+                      OR COALESCE(r.model, '') LIKE ?3
+                      OR COALESCE(r.provider_native_model, '') LIKE ?3
                   )
                 ORDER BY COALESCE(r.sort_order, 100000) ASC, r.id ASC
-                LIMIT ? OFFSET ?
+                LIMIT ?4 OFFSET ?5
                 "#,
             )
             .bind(group.tenant_id)
             .bind(group.organization_id)
-            .bind(group.tenant_id)
-            .bind(group.organization_id)
-            .bind(group.tenant_id)
-            .bind(group.organization_id)
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
             .bind(search.as_deref())
             .bind(limit)
             .bind(offset)
@@ -674,30 +701,29 @@ async fn list_ai_resource_group_resources(
                             AND tenant_resource.deleted_at IS NULL
                       )
                  )
-                WHERE i.tenant_id = ?
-                  AND i.organization_id = ?
-                  AND i.resource_group_id = ?
+                WHERE i.tenant_id = ?1
+                  AND i.organization_id = ?2
+                  AND i.resource_group_id = ?3
                   AND i.item_type = 'resource'
                   AND i.deleted_at IS NULL
                   AND i.status = 1
                   AND (
-                      ? IS NULL
-                      OR r.resource_code LIKE ?
-                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
-                      OR COALESCE(r.resource_type, '') LIKE ?
-                      OR COALESCE(r.vendor_code, '') LIKE ?
-                      OR COALESCE(r.modality_code, '') LIKE ?
+                      ?4 IS NULL
+                      OR r.resource_code LIKE ?4
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?4
+                      OR COALESCE(r.resource_type, '') LIKE ?4
+                      OR COALESCE(r.vendor_code, '') LIKE ?4
+                      OR COALESCE(r.modality_code, '') LIKE ?4
+                      OR COALESCE(r.api_code, '') LIKE ?4
+                      OR COALESCE(r.catalog_key, '') LIKE ?4
+                      OR COALESCE(r.model, '') LIKE ?4
+                      OR COALESCE(r.provider_native_model, '') LIKE ?4
                   )
                 "#,
             )
             .bind(group.tenant_id)
             .bind(group.organization_id)
             .bind(group.id)
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
             .bind(search.as_deref())
             .fetch_one(pool)
             .await
@@ -739,32 +765,31 @@ async fn list_ai_resource_group_resources(
                             AND tenant_resource.deleted_at IS NULL
                       )
                  )
-                WHERE i.tenant_id = ?
-                  AND i.organization_id = ?
-                  AND i.resource_group_id = ?
+                WHERE i.tenant_id = ?1
+                  AND i.organization_id = ?2
+                  AND i.resource_group_id = ?3
                   AND i.item_type = 'resource'
                   AND i.deleted_at IS NULL
                   AND i.status = 1
                   AND (
-                      ? IS NULL
-                      OR r.resource_code LIKE ?
-                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?
-                      OR COALESCE(r.resource_type, '') LIKE ?
-                      OR COALESCE(r.vendor_code, '') LIKE ?
-                      OR COALESCE(r.modality_code, '') LIKE ?
+                      ?4 IS NULL
+                      OR r.resource_code LIKE ?4
+                      OR COALESCE(NULLIF(r.display_name, ''), r.resource_code) LIKE ?4
+                      OR COALESCE(r.resource_type, '') LIKE ?4
+                      OR COALESCE(r.vendor_code, '') LIKE ?4
+                      OR COALESCE(r.modality_code, '') LIKE ?4
+                      OR COALESCE(r.api_code, '') LIKE ?4
+                      OR COALESCE(r.catalog_key, '') LIKE ?4
+                      OR COALESCE(r.model, '') LIKE ?4
+                      OR COALESCE(r.provider_native_model, '') LIKE ?4
                   )
                 ORDER BY COALESCE(i.sort_order, r.sort_order, 100000) ASC, i.id ASC
-                LIMIT ? OFFSET ?
+                LIMIT ?5 OFFSET ?6
                 "#,
             )
             .bind(group.tenant_id)
             .bind(group.organization_id)
             .bind(group.id)
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
-            .bind(search.as_deref())
             .bind(search.as_deref())
             .bind(limit)
             .bind(offset)

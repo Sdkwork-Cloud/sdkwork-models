@@ -1884,6 +1884,7 @@ dependencies = [
  "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",
+ "sdkwork-web-bootstrap",
  "tokio",
 ]
 
@@ -1912,6 +1913,7 @@ version = "0.3.0"
 dependencies = [
  "sdkwork-claw-provider-adapter-contract",
  "sdkwork-claw-provider-adapter-registry",
+ "sdkwork-database-config",
  "serde",
  "serde_json",
  "toml",
@@ -2314,6 +2316,7 @@ dependencies = [
  "async-trait",
  "axum",
  "http",
+ "sdkwork-database-sqlx",
  "sdkwork-web-axum",
  "sdkwork-web-contract",
  "sdkwork-web-core",

@@ -1,9 +1,9 @@
-import type { ModelCatalogPage } from './model-catalog-page';
+import type { ModelRankingRefreshStatus } from './model-ranking-refresh-status';
 
 /** Model rankings status retrieve result schema exposed by Claw Router. */
 export interface ModelRankingsStatusRetrieveResult {
   code: 0;
-  data: unknown & ModelCatalogPage;
+  data: unknown & ModelRankingRefreshStatus;
   /** Server-owned request correlation id. */
   traceId: string;
 }

@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
-import type { HttpClient } from '../http/client';
+import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { AdminAiModelCreateRequest, AdminAiModelPage, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AiResourceGroupResourcesPage, AiResourceGroupsPage, AiResourcesPage, ModelCatalogPage, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, NoData } from '../types';
+import type { AdminAiModelCreateRequest, AdminAiModelPage, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AdminModelVendorListResponse, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshStatus, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, NoData, PageInfo } from '../types';
 
 
 export interface AiModelVideoProfilesListParams {
@@ -17,11 +17,11 @@ export class AiModelVideoProfilesApi {
 
 
 /** List model video generation profiles */
-  async list(modelId: string, params?: AiModelVideoProfilesListParams): Promise<ModelRankingsPage> {
+  async list(modelId: string, params?: AiModelVideoProfilesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -44,7 +44,7 @@ export class AiVideoProfilesApi {
 
 
 /** List video generation profiles */
-  async list(params?: AiVideoProfilesListParams): Promise<ModelRankingsPage> {
+  async list(params?: AiVideoProfilesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -54,7 +54,7 @@ export class AiVideoProfilesApi {
       { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
       { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/video_profiles`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -71,11 +71,11 @@ export class AiModelVoicesApi {
 
 
 /** List model TTS voices */
-  async list(modelId: string, params?: AiModelVoicesListParams): Promise<ModelRankingsPage> {
+  async list(modelId: string, params?: AiModelVoicesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -97,7 +97,7 @@ export class AiVoicesApi {
 
 
 /** List TTS voices */
-  async list(params?: AiVoicesListParams): Promise<ModelRankingsPage> {
+  async list(params?: AiVoicesListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'region_code', value: params?.regionCode, style: 'form', explode: true, allowReserved: false },
@@ -106,17 +106,11 @@ export class AiVoicesApi {
       { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/voices`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
-export interface AiAiResourcesListParams {
-  page?: number;
-  pageSize?: number;
-  q?: string;
-}
-
-export class AiAiResourcesApi {
+export class AiResourcesApi {
   private client: HttpClient;
 
   constructor(client: HttpClient) {
@@ -124,34 +118,23 @@ export class AiAiResourcesApi {
   }
 
 
-/** List */
-  async list(params?: AiAiResourcesListParams): Promise<AiResourcesPage> {
-    const query = buildQueryString([
-      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
-      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-    ]);
-    return this.client.get<AiResourcesPage>(appendQueryString(backendApiPath(`/ai/resources`), query));
+/** List assignable resources */
+  async list(requestOptions?: ApiRequestOptions): Promise<NoData> {
+    return this.client.request<NoData>(backendApiPath(`/ai/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
   }
 
-/** Create */
-  async create(body: AdminAiResourceCreateRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/resources`), body, undefined, undefined, 'application/json');
+/** Create ai resource */
+  async create(body: AdminAiResourceCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
-/** Update */
-  async update(resourceId: string, body: AdminAiResourceUpdateRequest): Promise<Record<string, unknown>> {
-    return this.client.put<Record<string, unknown>>(backendApiPath(`/ai/resources/${serializePathParameter(resourceId, { name: 'resourceId', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+/** Update ai resource */
+  async update(resourceId: string, body: AdminAiResourceUpdateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resources/${serializePathParameter(resourceId, { name: 'resourceId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
-export interface AiAiResourceGroupsResourcesListParams {
-  page?: number;
-  pageSize?: number;
-  q?: string;
-}
-
-export class AiAiResourceGroupsResourcesApi {
+export class AiResourceGroupsResourcesApi {
   private client: HttpClient;
 
   constructor(client: HttpClient) {
@@ -159,56 +142,40 @@ export class AiAiResourceGroupsResourcesApi {
   }
 
 
-/** List */
-  async list(groupIdOrCode: string, params?: AiAiResourceGroupsResourcesListParams): Promise<AiResourceGroupResourcesPage> {
-    const query = buildQueryString([
-      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
-      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-    ]);
-    return this.client.get<AiResourceGroupResourcesPage>(appendQueryString(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`), query));
+/** List resource group resources */
+  async list(groupIdOrCode: string, requestOptions?: ApiRequestOptions): Promise<NoData> {
+    return this.client.request<NoData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
   }
 }
 
-export interface AiAiResourceGroupsListParams {
-  page?: number;
-  pageSize?: number;
-  q?: string;
-}
-
-export class AiAiResourceGroupsApi {
+export class AiResourceGroupsApi {
   private client: HttpClient;
-  public readonly resources: AiAiResourceGroupsResourcesApi;
+  public readonly resources: AiResourceGroupsResourcesApi;
 
   constructor(client: HttpClient) {
     this.client = client;
-    this.resources = new AiAiResourceGroupsResourcesApi(client);
+    this.resources = new AiResourceGroupsResourcesApi(client);
   }
 
 
-/** List */
-  async list(params?: AiAiResourceGroupsListParams): Promise<AiResourceGroupsPage> {
-    const query = buildQueryString([
-      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
-      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-    ]);
-    return this.client.get<AiResourceGroupsPage>(appendQueryString(backendApiPath(`/ai/resource_groups`), query));
+/** List resource groups */
+  async list(requestOptions?: ApiRequestOptions): Promise<NoData> {
+    return this.client.request<NoData>(backendApiPath(`/ai/resource_groups`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
   }
 
-/** Create */
-  async create(body: AdminAiResourceGroupCreateRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/resource_groups`), body, undefined, undefined, 'application/json');
+/** Create resource group */
+  async create(body: AdminAiResourceGroupCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resource_groups`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
-/** Delete */
-  async delete(groupId: string): Promise<void> {
-    return this.client.delete<void>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`));
+/** Delete resource group */
+  async delete(groupId: string, requestOptions?: ApiRequestOptions): Promise<void> {
+    return this.client.request<void>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
   }
 
-/** Update */
-  async update(groupId: string, body: AdminAiResourceGroupUpdateRequest): Promise<Record<string, unknown>> {
-    return this.client.patch<Record<string, unknown>>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+/** Update resource group */
+  async update(groupId: string, body: AdminAiResourceGroupUpdateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PATCH' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
@@ -217,7 +184,6 @@ export interface AiModelsListParams {
   pageSize?: number;
   q?: string;
   vendorCodes?: string[];
-  modelTypes?: string;
 }
 
 export class AiModelsApi {
@@ -228,36 +194,35 @@ export class AiModelsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelsListParams): Promise<AdminAiModelPage> {
+/** List all models */
+  async list(params?: AiModelsListParams, requestOptions?: ApiRequestOptions): Promise<AdminAiModelPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
-      { name: 'model_types', value: params?.modelTypes, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<AdminAiModelPage>(appendQueryString(backendApiPath(`/ai/models`), query));
+    return this.client.request<AdminAiModelPage>(appendQueryString(backendApiPath(`/ai/models`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
-/** Create */
-  async create(body: AdminAiModelCreateRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/models`), body, undefined, undefined, 'application/json');
+/** Create model */
+  async create(body: AdminAiModelCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/models`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
-/** Refresh */
-  async refresh(body: AdminModelCatalogSyncRequest): Promise<ModelCatalogSyncResult> {
-    return this.client.post<ModelCatalogSyncResult>(backendApiPath(`/ai/models/refresh`), body, undefined, undefined, 'application/json');
+/** Sync vendors and models */
+  async sync(body: AdminModelCatalogSyncRequest, requestOptions?: ApiRequestOptions): Promise<ModelCatalogSyncResult> {
+    return this.client.request<ModelCatalogSyncResult>(backendApiPath(`/ai/models/sync`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'data' });
   }
 
-/** Delete */
-  async delete(modelId: string): Promise<void> {
-    return this.client.delete<void>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`));
+/** Delete model */
+  async delete(modelId: string, requestOptions?: ApiRequestOptions): Promise<void> {
+    return this.client.request<void>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
   }
 
-/** Update */
-  async update(modelId: string, body: AdminAiModelUpdateRequest): Promise<Record<string, unknown>> {
-    return this.client.patch<Record<string, unknown>>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+/** Update model */
+  async update(modelId: string, body: AdminAiModelUpdateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PATCH' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
@@ -269,27 +234,19 @@ export class AiModelVendorsApi {
   }
 
 
-/** List */
-  async list(): Promise<NoData> {
-    return this.client.get<NoData>(backendApiPath(`/ai/model_vendors`));
+/** List vendors */
+  async list(requestOptions?: ApiRequestOptions): Promise<{ items: AdminModelVendorListResponse[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: AdminModelVendorListResponse[]; pageInfo: PageInfo; }>(backendApiPath(`/ai/model_vendors`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
-/** Create */
-  async create(body: AdminModelVendorCreateRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/model_vendors`), body, undefined, undefined, 'application/json');
+/** Create vendor */
+  async create(body: AdminModelVendorCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/model_vendors`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
 export interface AiModelRankingsStatusRetrieveParams {
-  page?: number;
-  pageSize?: number;
-  q?: string;
-  billingMeter?: string;
-  vendorCodes?: string[];
-  modalities?: string[];
-  capabilities?: string[];
-  categories?: string[];
-  groups?: string[];
+  rankScope?: string;
 }
 
 export class AiModelRankingsStatusApi {
@@ -300,25 +257,18 @@ export class AiModelRankingsStatusApi {
   }
 
 
-/** Retrieve */
-  async retrieve(params?: AiModelRankingsStatusRetrieveParams): Promise<ModelCatalogPage> {
+/** Retrieve model ranking refresh status */
+  async retrieve(params?: AiModelRankingsStatusRetrieveParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingRefreshStatus> {
     const query = buildQueryString([
-      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
-      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
-      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
-      { name: 'billing_meter', value: params?.billingMeter, style: 'form', explode: true, allowReserved: false },
-      { name: 'vendor_codes', value: params?.vendorCodes, style: 'form', explode: false, allowReserved: false },
-      { name: 'modalities', value: params?.modalities, style: 'form', explode: false, allowReserved: false },
-      { name: 'capabilities', value: params?.capabilities, style: 'form', explode: false, allowReserved: false },
-      { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
-      { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
+      { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelCatalogPage>(appendQueryString(backendApiPath(`/ai/model_rankings/status`), query));
+    return this.client.request<ModelRankingRefreshStatus>(appendQueryString(backendApiPath(`/ai/model_rankings/status`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
   }
 }
 
 export interface AiModelRankingsJobsListParams {
   rankScope?: string;
+  page?: number;
   pageSize?: number;
 }
 
@@ -330,13 +280,14 @@ export class AiModelRankingsJobsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelRankingsJobsListParams): Promise<ModelRankingRefreshJobHistoryPage> {
+/** List model ranking refresh jobs */
+  async list(params?: AiModelRankingsJobsListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingRefreshJobHistoryPage> {
     const query = buildQueryString([
       { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingRefreshJobHistoryPage>(appendQueryString(backendApiPath(`/ai/model_rankings/jobs`), query));
+    return this.client.request<ModelRankingRefreshJobHistoryPage>(appendQueryString(backendApiPath(`/ai/model_rankings/jobs`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -345,7 +296,12 @@ export interface AiModelRankingsListParams {
   vendorCode?: string;
   modality?: string;
   q?: string;
+  page?: number;
   pageSize?: number;
+}
+
+export interface AiModelRankingsRefreshParams {
+  idempotencyKey: string;
 }
 
 export class AiModelRankingsApi {
@@ -360,21 +316,28 @@ export class AiModelRankingsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelRankingsListParams): Promise<ModelRankingsPage> {
+/** List model rankings */
+  async list(params?: AiModelRankingsListParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingsPage> {
     const query = buildQueryString([
       { name: 'rank_scope', value: params?.rankScope, style: 'form', explode: true, allowReserved: false },
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'modality', value: params?.modality, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/model_rankings`), query));
+    return this.client.request<ModelRankingsPage>(appendQueryString(backendApiPath(`/ai/model_rankings`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
-/** Refresh */
-  async refresh(body: ModelRankingRefreshTriggerRequest): Promise<ModelRankingRefreshTriggerResponse> {
-    return this.client.post<ModelRankingRefreshTriggerResponse>(backendApiPath(`/ai/model_rankings/refresh`), body, undefined, undefined, 'application/json');
+/** Trigger model ranking refresh */
+  async refresh(body: ModelRankingRefreshTriggerRequest, params: AiModelRankingsRefreshParams, requestOptions?: ApiRequestOptions): Promise<ModelRankingRefreshTriggerResponse> {
+    const requestHeaders = buildRequestHeaders(
+      {
+        'Idempotency-Key': { value: params.idempotencyKey, style: 'simple', explode: false },
+      },
+      {}
+    );
+    return this.client.request<ModelRankingRefreshTriggerResponse>(backendApiPath(`/ai/model_rankings/refresh`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, headers: requestHeaders, contentType: 'application/json', sdkworkUnwrapKind: 'data' });
   }
 }
 
@@ -396,8 +359,8 @@ export class AiModelMappingsApi {
   }
 
 
-/** List */
-  async list(params?: AiModelMappingsListParams): Promise<ModelMappingsPage> {
+/** List model mappings */
+  async list(params?: AiModelMappingsListParams, requestOptions?: ApiRequestOptions): Promise<ModelMappingsPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
@@ -407,27 +370,27 @@ export class AiModelMappingsApi {
       { name: 'channel_code', value: params?.channelCode, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<ModelMappingsPage>(appendQueryString(backendApiPath(`/ai/model_mappings`), query));
+    return this.client.request<ModelMappingsPage>(appendQueryString(backendApiPath(`/ai/model_mappings`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
-/** Create */
-  async create(body: AdminModelMappingCreateRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/model_mappings`), body, undefined, undefined, 'application/json');
+/** Create model mapping */
+  async create(body: AdminModelMappingCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/model_mappings`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
-/** Create */
-  async resolve(body: AdminModelMappingResolveRequest): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/ai/model_mappings/resolve`), body, undefined, undefined, 'application/json');
+/** Resolve model mapping */
+  async resolve(body: AdminModelMappingResolveRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/model_mappings/resolve`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'data' });
   }
 
-/** Delete */
-  async delete(mappingId: string): Promise<void> {
-    return this.client.delete<void>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`));
+/** Delete model mapping */
+  async delete(mappingId: string, requestOptions?: ApiRequestOptions): Promise<void> {
+    return this.client.request<void>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
   }
 
-/** Update */
-  async update(mappingId: string, body: AdminModelMappingUpdateRequest): Promise<Record<string, unknown>> {
-    return this.client.patch<Record<string, unknown>>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+/** Update model mapping */
+  async update(mappingId: string, body: AdminModelMappingUpdateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
+    return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PATCH' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
@@ -437,8 +400,8 @@ export class AiApi {
   public readonly modelRankings: AiModelRankingsApi;
   public readonly modelVendors: AiModelVendorsApi;
   public readonly models: AiModelsApi;
-  public readonly aiResourceGroups: AiAiResourceGroupsApi;
-  public readonly aiResources: AiAiResourcesApi;
+  public readonly resourceGroups: AiResourceGroupsApi;
+  public readonly resources: AiResourcesApi;
   public readonly voices: AiVoicesApi;
   public readonly modelVoices: AiModelVoicesApi;
   public readonly videoProfiles: AiVideoProfilesApi;
@@ -450,8 +413,8 @@ export class AiApi {
     this.modelRankings = new AiModelRankingsApi(client);
     this.modelVendors = new AiModelVendorsApi(client);
     this.models = new AiModelsApi(client);
-    this.aiResourceGroups = new AiAiResourceGroupsApi(client);
-    this.aiResources = new AiAiResourcesApi(client);
+    this.resourceGroups = new AiResourceGroupsApi(client);
+    this.resources = new AiResourcesApi(client);
     this.voices = new AiVoicesApi(client);
     this.modelVoices = new AiModelVoicesApi(client);
     this.videoProfiles = new AiVideoProfilesApi(client);
@@ -694,4 +657,79 @@ function encodeQueryValue(value: string, allowReserved: boolean): string {
     .replace(/%2C/gi, ',')
     .replace(/%3B/gi, ';')
     .replace(/%3D/gi, '=');
+}
+function buildRequestHeaders(
+  headers: Record<string, HeaderParameterSpec | undefined>,
+  cookies: Record<string, HeaderParameterSpec | undefined> = {},
+): Record<string, string> | undefined {
+  const requestHeaders: Record<string, string> = {};
+
+  for (const [name, parameter] of Object.entries(headers)) {
+    const serialized = serializeParameterValue(parameter);
+    if (serialized !== undefined) {
+      requestHeaders[name] = serialized;
+    }
+  }
+
+  const cookieHeader = buildCookieHeader(cookies);
+  if (cookieHeader) {
+    requestHeaders.Cookie = requestHeaders.Cookie
+      ? `${requestHeaders.Cookie}; ${cookieHeader}`
+      : cookieHeader;
+  }
+
+  return Object.keys(requestHeaders).length > 0 ? requestHeaders : undefined;
+}
+
+interface HeaderParameterSpec {
+  value: unknown;
+  style: string;
+  explode: boolean;
+  contentType?: string;
+}
+
+function buildCookieHeader(cookies: Record<string, HeaderParameterSpec | undefined>): string | undefined {
+  const pairs: string[] = [];
+  for (const [name, parameter] of Object.entries(cookies)) {
+    const serialized = serializeParameterValue(parameter);
+    if (serialized !== undefined) {
+      pairs.push(`${encodeURIComponent(name)}=${encodeURIComponent(serialized)}`);
+    }
+  }
+  return pairs.length > 0 ? pairs.join('; ') : undefined;
+}
+
+function serializeParameterValue(parameter: HeaderParameterSpec | undefined): string | undefined {
+  const value = parameter?.value;
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (parameter?.contentType) {
+    return JSON.stringify(value);
+  }
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => serializeHeaderPrimitive(item)).join(',');
+  }
+  if (typeof value === 'object' && value !== null) {
+    return serializeHeaderObject(value as Record<string, unknown>, parameter?.explode === true);
+  }
+  return serializeHeaderPrimitive(value);
+}
+
+function serializeHeaderObject(value: Record<string, unknown>, explode: boolean): string {
+  const entries = Object.entries(value).filter(([, entryValue]) => entryValue !== undefined && entryValue !== null);
+  if (explode) {
+    return entries.map(([key, entryValue]) => `${key}=${serializeHeaderPrimitive(entryValue)}`).join(',');
+  }
+  return entries.flatMap(([key, entryValue]) => [key, serializeHeaderPrimitive(entryValue)]).join(',');
+}
+
+function serializeHeaderPrimitive(value: unknown): string {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+  return String(value);
 }

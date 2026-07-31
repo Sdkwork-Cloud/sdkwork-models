@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 use sdkwork_models_contract_service::{
-    AdminAiResourceGroupItem, AdminAiResourceGroupResourceItem, AdminAiResourceGroupResourcesPage,
-    AdminAiResourceItem, AdminAiResourceListPage, AdminAiResourceMemberCommand,
-    AdminAiResourceMemberItem, AdminAiResourceReadFuture, AdminAiResourceStore,
-    CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
+    AdminAiResourceGroupItem, AdminAiResourceGroupListPage, AdminAiResourceGroupResourceItem,
+    AdminAiResourceGroupResourcesPage, AdminAiResourceItem, AdminAiResourceListPage,
+    AdminAiResourceMemberCommand, AdminAiResourceMemberItem, AdminAiResourceReadFuture,
+    AdminAiResourceStore, CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
     DeleteAdminAiResourceGroupCommand, DomainError, DomainResult,
     ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
     ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
@@ -227,7 +227,7 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
     fn list_ai_resource_groups<'a>(
         &'a self,
         query: ListAdminAiResourceGroupsQuery,
-    ) -> AdminAiResourceReadFuture<'a, Vec<AdminAiResourceGroupItem>> {
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceGroupListPage> {
         Box::pin(async move { list_ai_resource_groups(&self.pool, query).await })
     }
 
@@ -296,6 +296,10 @@ async fn list_ai_resources(
               OR COALESCE(resource_type, '') ILIKE $3
               OR COALESCE(vendor_code, '') ILIKE $3
               OR COALESCE(modality_code, '') ILIKE $3
+              OR COALESCE(api_code, '') ILIKE $3
+              OR COALESCE(catalog_key, '') ILIKE $3
+              OR COALESCE(model, '') ILIKE $3
+              OR COALESCE(provider_native_model, '') ILIKE $3
           )
         "#,
     )
@@ -361,6 +365,10 @@ async fn list_ai_resources(
               OR COALESCE(resource_type, '') ILIKE $3
               OR COALESCE(vendor_code, '') ILIKE $3
               OR COALESCE(modality_code, '') ILIKE $3
+              OR COALESCE(api_code, '') ILIKE $3
+              OR COALESCE(catalog_key, '') ILIKE $3
+              OR COALESCE(model, '') ILIKE $3
+              OR COALESCE(provider_native_model, '') ILIKE $3
           )
         ORDER BY COALESCE(sort_order, 100000) ASC, id ASC
         LIMIT $4 OFFSET $5
@@ -385,7 +393,46 @@ async fn list_ai_resources(
 async fn list_ai_resource_groups(
     pool: &PgPool,
     query: ListAdminAiResourceGroupsQuery,
-) -> DomainResult<Vec<AdminAiResourceGroupItem>> {
+) -> DomainResult<AdminAiResourceGroupListPage> {
+    let search = resource_search_pattern(query.q.as_deref());
+    let total_count: i64 = sqlx::query_scalar(
+        r#"
+        SELECT COUNT(1)
+        FROM ai_resource_group g
+        WHERE (
+                (g.tenant_id = $1 AND g.organization_id = $2)
+                OR (g.tenant_id = 0 AND g.organization_id = 0)
+              )
+          AND g.deleted_at IS NULL
+          AND COALESCE(NULLIF(g.group_type, ''), 'api_group') = 'api_group'
+          AND NOT (
+              g.tenant_id = 0
+              AND g.organization_id = 0
+              AND EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group tenant_group
+                  WHERE tenant_group.tenant_id = $1
+                    AND tenant_group.organization_id = $2
+                    AND tenant_group.group_code = g.group_code
+                    AND tenant_group.deleted_at IS NULL
+                    AND COALESCE(NULLIF(tenant_group.group_type, ''), 'api_group') = 'api_group'
+              )
+          )
+          AND (
+              $3::text IS NULL
+              OR g.group_code ILIKE $3
+              OR g.group_name ILIKE $3
+              OR COALESCE(g.description, '') ILIKE $3
+          )
+        "#,
+    )
+    .bind(query.subject.tenant_id)
+    .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .fetch_one(pool)
+    .await
+    .map_err(|error| store_error("failed to count AI resource groups", error))?;
+
     let rows = sqlx::query(
         r#"
         SELECT
@@ -473,14 +520,23 @@ async fn list_ai_resource_groups(
                     AND COALESCE(NULLIF(tenant_group.group_type, ''), 'api_group') = 'api_group'
               )
           )
+          AND (
+              $3::text IS NULL
+              OR g.group_code ILIKE $3
+              OR g.group_name ILIKE $3
+              OR COALESCE(g.description, '') ILIKE $3
+          )
         ORDER BY CASE WHEN g.tenant_id = $1 AND g.organization_id = $2 THEN 0 ELSE 1 END,
                  COALESCE(g.sort_order, 100000) ASC,
                  g.id ASC
-        LIMIT 1000
+        LIMIT $4 OFFSET $5
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
+    .bind(search.as_deref())
+    .bind(query.normalized_limit())
+    .bind(query.normalized_offset())
     .fetch_all(pool)
     .await
     .map_err(|error| store_error("failed to list AI resource groups", error))?;
@@ -496,7 +552,10 @@ async fn list_ai_resource_groups(
         &mut groups,
     )
     .await?;
-    Ok(groups)
+    Ok(AdminAiResourceGroupListPage {
+        items: groups,
+        total_count,
+    })
 }
 
 async fn list_ai_resource_group_resources(
@@ -547,6 +606,10 @@ async fn list_ai_resource_group_resources(
                   OR COALESCE(r.resource_type, '') ILIKE $3
                   OR COALESCE(r.vendor_code, '') ILIKE $3
                   OR COALESCE(r.modality_code, '') ILIKE $3
+                  OR COALESCE(r.api_code, '') ILIKE $3
+                  OR COALESCE(r.catalog_key, '') ILIKE $3
+                  OR COALESCE(r.model, '') ILIKE $3
+                  OR COALESCE(r.provider_native_model, '') ILIKE $3
               )
             "#,
         )
@@ -599,6 +662,10 @@ async fn list_ai_resource_group_resources(
                   OR COALESCE(r.resource_type, '') ILIKE $3
                   OR COALESCE(r.vendor_code, '') ILIKE $3
                   OR COALESCE(r.modality_code, '') ILIKE $3
+                  OR COALESCE(r.api_code, '') ILIKE $3
+                  OR COALESCE(r.catalog_key, '') ILIKE $3
+                  OR COALESCE(r.model, '') ILIKE $3
+                  OR COALESCE(r.provider_native_model, '') ILIKE $3
               )
             ORDER BY COALESCE(r.sort_order, 100000) ASC, r.id ASC
             LIMIT $4 OFFSET $5
@@ -651,6 +718,10 @@ async fn list_ai_resource_group_resources(
                   OR COALESCE(r.resource_type, '') ILIKE $4
                   OR COALESCE(r.vendor_code, '') ILIKE $4
                   OR COALESCE(r.modality_code, '') ILIKE $4
+                  OR COALESCE(r.api_code, '') ILIKE $4
+                  OR COALESCE(r.catalog_key, '') ILIKE $4
+                  OR COALESCE(r.model, '') ILIKE $4
+                  OR COALESCE(r.provider_native_model, '') ILIKE $4
               )
             "#,
         )
@@ -711,6 +782,10 @@ async fn list_ai_resource_group_resources(
                   OR COALESCE(r.resource_type, '') ILIKE $4
                   OR COALESCE(r.vendor_code, '') ILIKE $4
                   OR COALESCE(r.modality_code, '') ILIKE $4
+                  OR COALESCE(r.api_code, '') ILIKE $4
+                  OR COALESCE(r.catalog_key, '') ILIKE $4
+                  OR COALESCE(r.model, '') ILIKE $4
+                  OR COALESCE(r.provider_native_model, '') ILIKE $4
               )
             ORDER BY COALESCE(item.sort_order, r.sort_order, 100000) ASC, item.id ASC
             LIMIT $5 OFFSET $6

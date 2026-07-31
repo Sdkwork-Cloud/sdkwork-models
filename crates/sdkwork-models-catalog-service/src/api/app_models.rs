@@ -105,6 +105,7 @@ struct AppModelCatalogItemResponse {
     shelf_state: Option<i32>,
     routing_state: Option<i32>,
     replacement_model: Option<String>,
+    #[serde(rename = "providerCodes")]
     supplier_codes: Vec<String>,
     official_reference_prices: Vec<AppModelCatalogReferencePriceResponse>,
     price_availability: AppModelCatalogPriceAvailabilityResponse,
@@ -231,10 +232,13 @@ fn to_vendor_response(
     catalog: &(impl PricingCatalog + Send + Sync),
 ) -> AppModelVendorCatalogResponse {
     let mut vendors_by_code: BTreeMap<String, AppModelVendorOptionResponse> = BTreeMap::new();
-    for model in catalog.list_models(None) {
+    catalog.visit_models(None, &mut |model| {
+        if !model.is_publicly_active() {
+            return true;
+        }
         let code = model.vendor_code.trim();
         if code.is_empty() {
-            continue;
+            return true;
         }
         let entry = vendors_by_code.entry(code.to_owned()).or_insert_with(|| {
             AppModelVendorOptionResponse {
@@ -247,7 +251,8 @@ fn to_vendor_response(
             }
         });
         entry.model_count += 1;
-    }
+        true
+    });
 
     let mut items: Vec<_> = vendors_by_code.into_values().collect();
     items.sort_by(|first, second| {

@@ -1,6 +1,5 @@
 import {
   ensureSdkworkApiSuccess,
-  getModelsBackendSdkClient,
   isRecord,
   readApiRecord,
   readBoolean,
@@ -8,12 +7,14 @@ import {
   readNumber,
   readRequiredApiItems,
   readRequiredApiItem,
-  requiredSafePathSegment,
   readRequiredString,
   readString,
   readStringArray,
   type ApiRecord,
-} from '@sdkwork/clawroutes-pc-commons/runtime';
+} from '@sdkwork/clawroutes-pc-commons/api-result';
+import { createIdempotencyParams } from '@sdkwork/clawroutes-pc-commons/idempotency';
+import { getModelsBackendSdkClient } from '@sdkwork/clawroutes-pc-commons/sdk-clients';
+import { requiredSafePathSegment } from '@sdkwork/clawroutes-pc-commons/sdk-request-boundary';
 import type {
   AdminAiModelCreateRequest,
   AdminAiModelUpdateRequest,
@@ -119,9 +120,10 @@ export interface ModelMappingModelOption {
   status: Model['status'];
 }
 
-export type ModelMappingModelOptionsCatalog = {
-  vendors: Vendor[];
-  models: ModelMappingModelOption[];
+export type ModelMappingModelOptionsPage = {
+  items: ModelMappingModelOption[];
+  totalCount: number;
+  hasMore: boolean;
 };
 
 export type ModelRankingRefreshStatusView = {
@@ -400,27 +402,6 @@ export class ModelService {
     };
   }
 
-  static async fetchAllModels(): Promise<Model[]> {
-    const pageSize = 200;
-    let pageNumber = 1;
-    let hasMore = true;
-    const models: Model[] = [];
-    while (hasMore) {
-      const page = await ModelService.fetchModelsPage({ page: pageNumber, pageSize });
-      models.push(...page.items);
-      hasMore = page.hasMore;
-      pageNumber += 1;
-      if (page.items.length === 0) {
-        break;
-      }
-    }
-    return models;
-  }
-
-  static async fetchModels(): Promise<Model[]> {
-    return ModelService.fetchAllModels();
-  }
-
   static async fetchVendors(): Promise<Vendor[]> {
     const result = await getModelsBackendSdkClient().ai.modelVendors.list();
     ensureSdkworkApiSuccess(result, 'Failed to fetch vendors');
@@ -474,13 +455,14 @@ export class ModelService {
   static async triggerModelRankingRefresh(): Promise<ModelRankingRefreshTriggerView> {
     const result = await getModelsBackendSdkClient().ai.modelRankings.refresh(
       toModelRankingRefreshTriggerRequest(),
+      createIdempotencyParams('model-ranking-refresh'),
     );
     ensureSdkworkApiSuccess(result, 'Failed to trigger model ranking refresh');
     return normalizeModelRankingRefreshTrigger(readApiRecord(result));
   }
 
   static async syncVendorsAndModels(): Promise<ModelCatalogSyncReport> {
-    const result = await getModelsBackendSdkClient().ai.models.refresh(
+    const result = await getModelsBackendSdkClient().ai.models.sync(
       toSyncCatalogRequest(),
     );
     ensureSdkworkApiSuccess(result, 'Failed to sync vendors and models');
@@ -560,16 +542,14 @@ export class ModelService {
 
 
 export class ModelMappingService {
-  static async fetchModelOptionsCatalog(): Promise<ModelMappingModelOptionsCatalog> {
-    const [vendorsResult, models] = await Promise.all([
-      getModelsBackendSdkClient().ai.modelVendors.list(),
-      ModelService.fetchAllModels(),
-    ]);
-    ensureSdkworkApiSuccess(vendorsResult, 'Failed to fetch model mapping vendors');
+  static async fetchModelOptionsPage(
+    query: ModelListQuery = {},
+  ): Promise<ModelMappingModelOptionsPage> {
+    const page = await ModelService.fetchModelsPage(query);
     return {
-      vendors: readRequiredApiItems(vendorsResult, 'Failed to fetch model mapping vendors')
-        .map(normalizeVendor),
-      models: models.map(normalizeModelMappingModelOption),
+      items: page.items.map(normalizeModelMappingModelOption),
+      totalCount: page.totalCount,
+      hasMore: page.hasMore,
     };
   }
 

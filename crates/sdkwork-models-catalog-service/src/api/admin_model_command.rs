@@ -536,7 +536,7 @@ pub fn admin_model_management_router_with_store(
             "/backend/v3/api/ai/models",
             get(fetch_models).post(create_model),
         )
-        .route("/backend/v3/api/ai/models/refresh", post(sync_catalog))
+        .route("/backend/v3/api/ai/models/sync", post(sync_catalog))
         .route(
             "/backend/v3/api/ai/model_mappings",
             get(fetch_model_mappings).post(create_model_mapping),

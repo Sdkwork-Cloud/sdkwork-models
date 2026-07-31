@@ -2,6 +2,7 @@
   "schemaVersion": 5,
   "kind": "sdkwork.app.topology",
   "appId": "sdkwork-models",
+  "applicationCode": "models",
   "archetype": "application-http-gateway",
   "profileRoot": "configs/topology",
   "profilePattern": "{deploymentProfile}.{environment}.env",
@@ -68,9 +69,6 @@
     "platform.api-gateway": {
       "httpHost": "api.sdkwork.com"
     }
-  },
-  "database": {
-    "appPrefix": "SDKWORK_MODELS"
   },
   "components": {
     "applicationServer": {

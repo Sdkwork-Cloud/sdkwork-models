@@ -132,7 +132,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List model rankings",
         "tags": [
           "ai"
@@ -146,6 +151,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
@@ -153,13 +159,12 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/model_vendors": {
       "get": {
-        "description": "List model vendors. Reads ops_audit_log. Writes none. File targets none.",
+        "description": "List model vendors. Reads ai_model_vendor, ai_model. Writes none. File targets none.",
         "operationId": "modelVendors.list",
         "parameters": [],
         "responses": {
@@ -214,7 +219,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List model vendors",
         "tags": [
           "ai"
@@ -222,11 +232,13 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
-          "ops_audit_log"
+          "ai_model_vendor",
+          "ai_model"
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
@@ -234,23 +246,153 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/models": {
       "get": {
-        "description": "List models. Reads ai_upstream_account_group, ai_upstream_account_group_member. Writes none. File targets none.",
+        "description": "List models. Reads ai_model_vendor, ai_model, ai_model_capability, ai_model_pricing, ai_upstream_supplier, ai_upstream_account, ai_upstream_account_group, ai_upstream_account_group_member, ai_upstream_account_group_resource. Writes none. File targets none.",
         "operationId": "models.list",
         "parameters": [
           {
-            "description": "Comma-separated model type labels (Chat, Image, Embedding, ...).",
+            "description": "Page query parameter.",
             "in": "query",
-            "name": "model_types",
+            "name": "page",
             "required": false,
             "schema": {
+              "default": 1,
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size query parameter.",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "format": "int32",
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Q query parameter.",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 200,
               "type": "string"
             }
+          },
+          {
+            "description": "Billing meter query parameter.",
+            "in": "query",
+            "name": "billing_meter",
+            "required": false,
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            }
+          },
+          {
+            "description": "Vendor code query parameter.",
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            }
+          },
+          {
+            "description": "Vendor codes query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "vendor_codes",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 200,
+              "type": "array"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Modalities query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "modalities",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 128,
+              "type": "array"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Capabilities query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "capabilities",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 128,
+              "type": "array"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Categories query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "categories",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 128,
+              "type": "array"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Groups query parameter.",
+            "explode": false,
+            "in": "query",
+            "name": "groups",
+            "required": false,
+            "schema": {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 128,
+              "type": "array"
+            },
+            "style": "form"
           }
         ],
         "responses": {
@@ -305,7 +447,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List models",
         "tags": [
           "ai"
@@ -313,12 +460,20 @@
         "x-contract-kind": "read",
         "x-file-targets": [],
         "x-read-sources": [
+          "ai_model_vendor",
+          "ai_model",
+          "ai_model_capability",
+          "ai_model_pricing",
+          "ai_upstream_supplier",
+          "ai_upstream_account",
           "ai_upstream_account_group",
-          "ai_upstream_account_group_member"
+          "ai_upstream_account_group_member",
+          "ai_upstream_account_group_resource"
         ],
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -326,8 +481,7 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/voices": {
@@ -442,7 +596,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List TTS voices",
         "tags": [
           "ai"
@@ -456,6 +615,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "voices",
@@ -463,8 +623,7 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/models/{modelId}/voices": {
@@ -543,7 +702,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List model TTS voices",
         "tags": [
           "ai"
@@ -557,6 +721,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVoices",
@@ -564,8 +729,7 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/video_profiles": {
@@ -689,7 +853,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List video generation profiles",
         "tags": [
           "ai"
@@ -703,6 +872,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "videoProfiles",
@@ -710,8 +880,7 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     },
     "/app/v3/api/ai/models/{modelId}/video_profiles": {
@@ -790,7 +959,12 @@
             "description": "Error response."
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
         "summary": "List model video generation profiles",
         "tags": [
           "ai"
@@ -804,6 +978,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVideoProfiles",
@@ -811,8 +986,7 @@
         "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
-        "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "public"
+        "x-sdkwork-request-context": "WebRequestContext"
       }
     }
   },
@@ -830,6 +1004,459 @@
       }
     },
     "schemas": {
+      "AppModelCatalogGroup": {
+        "additionalProperties": false,
+        "description": "App model catalog group schema exposed by Claw Router.",
+        "properties": {
+          "key": {
+            "description": "Key field on app model catalog group.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "label": {
+            "description": "Label field on app model catalog group.",
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "modelCount": {
+            "description": "Model count field on app model catalog group.",
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "modelCount"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogItem": {
+        "additionalProperties": false,
+        "description": "App model catalog item schema exposed by Claw Router.",
+        "properties": {
+          "apiFormat": {
+            "description": "Api format field on app model catalog item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "capabilities": {
+            "description": "Capabilities field on app model catalog item.",
+            "items": {
+              "description": "Capabilities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "capabilityIntro": {
+            "description": "Capability intro field on app model catalog item.",
+            "maxLength": 4096,
+            "nullable": true,
+            "type": "string"
+          },
+          "catalogKey": {
+            "description": "Catalog key field on app model catalog item.",
+            "maxLength": 512,
+            "minLength": 3,
+            "type": "string"
+          },
+          "categories": {
+            "description": "Categories field on app model catalog item.",
+            "items": {
+              "description": "Categories field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "contextTokens": {
+            "description": "Context tokens field on app model catalog item.",
+            "format": "int32",
+            "maximum": 100000000,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "description": {
+            "description": "Description field on app model catalog item.",
+            "maxLength": 2048,
+            "nullable": true,
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Display name field on app model catalog item.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "groups": {
+            "description": "Groups field on app model catalog item.",
+            "items": {
+              "description": "Groups field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "inputModalities": {
+            "description": "Input modalities field on app model catalog item.",
+            "items": {
+              "description": "Input modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "limitations": {
+            "description": "Limitations field on app model catalog item.",
+            "items": {
+              "description": "Limitations field on app model catalog item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "maxOutputTokens": {
+            "description": "Max output tokens field on app model catalog item.",
+            "format": "int32",
+            "maximum": 100000000,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "modalities": {
+            "description": "Modalities field on app model catalog item.",
+            "items": {
+              "description": "Modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "model": {
+            "description": "Model field on app model catalog item.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "officialReferencePrices": {
+            "description": "Official reference prices field on app model catalog item.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogReferencePrice"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "outputModalities": {
+            "description": "Output modalities field on app model catalog item.",
+            "items": {
+              "description": "Output modalities field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "priceAvailability": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AppModelCatalogPriceAvailability"
+              }
+            ],
+            "description": "Price availability field on app model catalog item."
+          },
+          "providerCodes": {
+            "description": "Provider codes field on app model catalog item.",
+            "items": {
+              "description": "Provider codes field on app model catalog item.",
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "releaseStage": {
+            "description": "Release stage field on app model catalog item.",
+            "format": "int32",
+            "maximum": 3,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "replacementModel": {
+            "description": "Replacement model field on app model catalog item.",
+            "maxLength": 256,
+            "nullable": true,
+            "type": "string"
+          },
+          "routingState": {
+            "description": "Routing state field on app model catalog item.",
+            "format": "int32",
+            "maximum": 2,
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "shelfState": {
+            "description": "Shelf state field on app model catalog item.",
+            "format": "int32",
+            "maximum": 3,
+            "minimum": 1,
+            "nullable": true,
+            "type": "integer"
+          },
+          "supportedLanguages": {
+            "description": "Supported languages field on app model catalog item.",
+            "items": {
+              "description": "Supported languages field on app model catalog item.",
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "supportsJsonSchema": {
+            "description": "Supports json schema field on app model catalog item.",
+            "type": "boolean"
+          },
+          "supportsStreaming": {
+            "description": "Supports streaming field on app model catalog item.",
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "description": "Supports tools field on app model catalog item.",
+            "type": "boolean"
+          },
+          "trainingDataCutoff": {
+            "description": "Training data cutoff field on app model catalog item.",
+            "maxLength": 128,
+            "nullable": true,
+            "type": "string"
+          },
+          "useCases": {
+            "description": "Use cases field on app model catalog item.",
+            "items": {
+              "description": "Use cases field on app model catalog item.",
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 128,
+            "type": "array"
+          },
+          "vendor": {
+            "description": "Vendor field on app model catalog item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "vendorCode": {
+            "description": "Vendor code field on app model catalog item.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "catalogKey",
+          "model",
+          "displayName",
+          "vendorCode",
+          "vendor",
+          "capabilities",
+          "groups",
+          "categories",
+          "description",
+          "modalities",
+          "inputModalities",
+          "outputModalities",
+          "apiFormat",
+          "capabilityIntro",
+          "limitations",
+          "supportedLanguages",
+          "useCases",
+          "trainingDataCutoff",
+          "contextTokens",
+          "maxOutputTokens",
+          "supportsStreaming",
+          "supportsTools",
+          "supportsJsonSchema",
+          "releaseStage",
+          "shelfState",
+          "routingState",
+          "replacementModel",
+          "providerCodes",
+          "officialReferencePrices",
+          "priceAvailability"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogPage": {
+        "additionalProperties": false,
+        "description": "App model catalog page schema exposed by Claw Router.",
+        "name": "AppModelCatalogPage",
+        "properties": {
+          "groups": {
+            "description": "Groups field on app model catalog page.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogGroup"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "items": {
+            "description": "Items field on app model catalog page.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelCatalogItem"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "Page info field on app model catalog page."
+          }
+        },
+        "required": [
+          "items",
+          "groups",
+          "pageInfo"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogPriceAvailability": {
+        "additionalProperties": false,
+        "description": "App model catalog price availability schema exposed by Claw Router.",
+        "properties": {
+          "reason": {
+            "description": "Reason field on app model catalog price availability.",
+            "maxLength": 256,
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "description": "Status field on app model catalog price availability.",
+            "enum": [
+              "reference",
+              "unavailable"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "AppModelCatalogReferencePrice": {
+        "additionalProperties": false,
+        "description": "App model catalog reference price schema exposed by Claw Router.",
+        "properties": {
+          "billingMeter": {
+            "description": "Billing meter field on app model catalog reference price.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "currency": {
+            "description": "Currency field on app model catalog reference price.",
+            "pattern": "^[A-Z]{3}$",
+            "type": "string"
+          },
+          "regionCode": {
+            "description": "Region code field on app model catalog reference price.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "unitPrice": {
+            "description": "Unit price field on app model catalog reference price.",
+            "pattern": "^[0-9]+(?:\\.[0-9]{1,12})?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "regionCode",
+          "billingMeter",
+          "unitPrice",
+          "currency"
+        ],
+        "type": "object"
+      },
+      "AppModelVendorCatalogResponse": {
+        "additionalProperties": false,
+        "description": "App model vendor catalog response schema exposed by Claw Router.",
+        "name": "AppModelVendorCatalogResponse",
+        "properties": {
+          "items": {
+            "description": "Items field on app model vendor catalog response.",
+            "items": {
+              "$ref": "#/components/schemas/AppModelVendorOption"
+            },
+            "maxItems": 200,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "AppModelVendorOption": {
+        "additionalProperties": false,
+        "description": "App model vendor option schema exposed by Claw Router.",
+        "properties": {
+          "code": {
+            "description": "Code field on app model vendor option.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "label": {
+            "description": "Label field on app model vendor option.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "modelCount": {
+            "description": "Model count field on app model vendor option.",
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "code",
+          "modelCount"
+        ],
+        "type": "object"
+      },
       "FieldError": {
         "type": "object",
         "additionalProperties": false,
@@ -1231,12 +1858,30 @@
             "description": "Object schema used by model vendors list result.",
             "properties": {
               "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
+                "additionalProperties": false,
+                "description": "Data field on model vendors list result.",
+                "properties": {
+                  "items": {
+                    "description": "Items field on model vendors list result.",
+                    "items": {
+                      "$ref": "#/components/schemas/AppModelVendorCatalogResponse"
+                    },
+                    "type": "array"
+                  },
+                  "pageInfo": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/PageInfo"
+                      }
+                    ],
+                    "description": "Page info field on model vendors list result."
                   }
+                },
+                "required": [
+                  "items",
+                  "pageInfo"
                 ],
-                "description": "No business data returned by this operation."
+                "type": "object"
               }
             },
             "required": [
@@ -1260,10 +1905,10 @@
               "data": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/NoData"
+                    "$ref": "#/components/schemas/AppModelCatalogPage"
                   }
                 ],
-                "description": "No business data returned by this operation."
+                "description": "Data field on models list result."
               }
             },
             "required": [
@@ -1274,12 +1919,6 @@
         ],
         "description": "Models list result schema exposed by Claw Router.",
         "x-operation-id": "models.list"
-      },
-      "NoData": {
-        "additionalProperties": false,
-        "description": "Closed empty payload for operations that complete without business data.",
-        "properties": {},
-        "type": "object"
       },
       "PageInfo": {
         "type": "object",

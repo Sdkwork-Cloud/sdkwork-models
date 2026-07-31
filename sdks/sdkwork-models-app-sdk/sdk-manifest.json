@@ -66,5 +66,18 @@
   "standardProfile": "sdkwork-v3",
   "fixedSdkVersion": "0.1.0",
   "ownerOnlyOperationCount": 7,
-  "managedBy": "tools/models_sdk_generator_runner.mjs"
+  "managedBy": "tools/models_sdk_generator_runner.mjs",
+  "workspace": "sdkwork-models-app-sdk",
+  "authoritySpec": "openapi/sdkwork-models-app-api.openapi.json",
+  "derivedSpecs": {
+    "default": "openapi/sdkwork-models-app-api.openapi.json"
+  },
+  "discoverySurface": {
+    "sdkTarget": "app",
+    "apiPrefix": "/app/v3/api",
+    "generatedProtocols": [
+      "http-openapi"
+    ],
+    "manualTransports": []
+  }
 }

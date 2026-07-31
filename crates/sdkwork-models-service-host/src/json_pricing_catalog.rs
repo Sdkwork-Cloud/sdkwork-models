@@ -5,10 +5,11 @@ use std::sync::Arc;
 use sdkwork_models::{load_catalog, ModelCatalog, ModelInfo, ModelPricing, VendorCatalog};
 use sdkwork_models_catalog_repository_sqlx::model_catalog_import::public_catalog_identity_models;
 use sdkwork_models_catalog_service::domain::{
-    AiModel, AiModelPublicMetadata, BillingMeter, ChannelGroup, ChannelGroupMetricSnapshot,
-    GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule, ModelMappingRule, ModelPrice,
-    ModelProviderRoute, ModelVendor, ModelVendorDefinition, Money, PriceSide, PricingPlan,
-    ProviderChannelRoute, QuotaPolicy, ResolveModelMappingContext, RoutingPolicy, RoutingRule,
+    AiModel, AiModelPublicMetadata, BillingMeter, GatewayAccessPolicy, GatewayApiKey,
+    GatewayRiskRule, ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor,
+    ModelVendorDefinition, Money, PriceSide, PricingPlan, QuotaPolicy, ResolveModelMappingContext,
+    RoutingPolicy, RoutingRule, UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot,
+    UpstreamAccountRoute,
 };
 use sdkwork_models_catalog_service::ports::PricingCatalog;
 
@@ -56,24 +57,24 @@ impl JsonPricingCatalog {
 }
 
 impl PricingCatalog for JsonPricingCatalog {
-    fn list_models(&self, vendor_code: Option<&str>) -> Vec<AiModel> {
-        self.models
-            .iter()
-            .filter(|model| {
-                model.is_publicly_active()
-                    && vendor_code
-                        .map(|code| model.vendor_code == code)
-                        .unwrap_or(true)
-            })
-            .cloned()
-            .collect()
+    fn visit_models(&self, vendor_code: Option<&str>, visitor: &mut dyn FnMut(&AiModel) -> bool) {
+        for model in self.models.iter().filter(|model| {
+            model.is_publicly_active()
+                && vendor_code
+                    .map(|code| model.vendor_code == code)
+                    .unwrap_or(true)
+        }) {
+            if !visitor(model) {
+                break;
+            }
+        }
     }
 
-    fn list_provider_routes(&self, _model: &str) -> Vec<ModelProviderRoute> {
+    fn list_model_upstream_routes(&self, _model: &str) -> Vec<ModelUpstreamRoute> {
         Vec::new()
     }
 
-    fn list_provider_channel_routes(&self) -> Vec<ProviderChannelRoute> {
+    fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute> {
         Vec::new()
     }
 
@@ -93,7 +94,7 @@ impl PricingCatalog for JsonPricingCatalog {
         Vec::new()
     }
 
-    fn list_channel_groups(&self) -> Vec<ChannelGroup> {
+    fn list_upstream_account_groups(&self) -> Vec<UpstreamAccountGroup> {
         Vec::new()
     }
 
@@ -130,7 +131,7 @@ impl PricingCatalog for JsonPricingCatalog {
         None
     }
 
-    fn find_channel_group(&self, _group_id: i64) -> Option<ChannelGroup> {
+    fn find_upstream_account_group(&self, _group_id: i64) -> Option<UpstreamAccountGroup> {
         None
     }
 
@@ -146,10 +147,10 @@ impl PricingCatalog for JsonPricingCatalog {
         Vec::new()
     }
 
-    fn find_latest_channel_group_metric_snapshot(
+    fn find_latest_upstream_account_group_metric_snapshot(
         &self,
         _group_id: i64,
-    ) -> Option<ChannelGroupMetricSnapshot> {
+    ) -> Option<UpstreamAccountGroupMetricSnapshot> {
         None
     }
 
@@ -179,11 +180,11 @@ impl PricingCatalog for JsonPricingCatalog {
         None
     }
 
-    fn find_provider_route(
+    fn find_model_upstream_route(
         &self,
         _model: &str,
         _supplier_code: &str,
-    ) -> Option<ModelProviderRoute> {
+    ) -> Option<ModelUpstreamRoute> {
         None
     }
 

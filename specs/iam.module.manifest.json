@@ -56,23 +56,23 @@
           { "operationId": "modelRankings.list", "permission": "intelligence.models.read" },
           { "operationId": "modelRankings.status.retrieve", "permission": "intelligence.models.read" },
           { "operationId": "modelRankings.jobs.list", "permission": "intelligence.models.read" },
-          { "operationId": "aiResources.list", "permission": "intelligence.resources.read" },
-          { "operationId": "aiResourceGroups.list", "permission": "intelligence.resources.read" },
-          { "operationId": "aiResourceGroups.resources.list", "permission": "intelligence.resources.read" },
+          { "operationId": "resources.list", "permission": "intelligence.resources.read" },
+          { "operationId": "resourceGroups.list", "permission": "intelligence.resources.read" },
+          { "operationId": "resourceGroups.resources.list", "permission": "intelligence.resources.read" },
           { "operationId": "modelVendors.create", "permission": "intelligence.models.manage" },
           { "operationId": "models.create", "permission": "intelligence.models.manage" },
-          { "operationId": "models.refresh", "permission": "intelligence.models.manage" },
+          { "operationId": "models.sync", "permission": "intelligence.models.manage" },
           { "operationId": "models.update", "permission": "intelligence.models.manage" },
           { "operationId": "models.delete", "permission": "intelligence.models.manage" },
           { "operationId": "modelMappings.create", "permission": "intelligence.models.manage" },
           { "operationId": "modelMappings.update", "permission": "intelligence.models.manage" },
           { "operationId": "modelMappings.delete", "permission": "intelligence.models.manage" },
           { "operationId": "modelRankings.refresh", "permission": "intelligence.models.manage" },
-          { "operationId": "aiResources.create", "permission": "intelligence.resources.manage" },
-          { "operationId": "aiResources.update", "permission": "intelligence.resources.manage" },
-          { "operationId": "aiResourceGroups.create", "permission": "intelligence.resources.manage" },
-          { "operationId": "aiResourceGroups.update", "permission": "intelligence.resources.manage" },
-          { "operationId": "aiResourceGroups.delete", "permission": "intelligence.resources.manage" }
+          { "operationId": "resources.create", "permission": "intelligence.resources.manage" },
+          { "operationId": "resources.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "resourceGroups.create", "permission": "intelligence.resources.manage" },
+          { "operationId": "resourceGroups.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "resourceGroups.delete", "permission": "intelligence.resources.manage" }
         ]
       }
     ]
