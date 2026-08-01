@@ -108,7 +108,9 @@ pub struct ModelRankingsSnapshot {
 #[serde(rename_all = "camelCase")]
 pub struct ModelRankingRefreshStatus {
     pub status: String,
+    #[serde(with = "sdkwork_utils_rust::serde_int64")]
     pub tenant_id: i64,
+    #[serde(with = "sdkwork_utils_rust::serde_int64")]
     pub organization_id: i64,
     pub rank_scope: String,
     pub snapshot_date: String,
@@ -137,7 +139,9 @@ pub struct ModelRankingRefreshJobItem {
     pub id: String,
     pub job_name: String,
     pub status: String,
+    #[serde(with = "sdkwork_utils_rust::serde_int64")]
     pub tenant_id: i64,
+    #[serde(with = "sdkwork_utils_rust::serde_int64")]
     pub organization_id: i64,
     pub rank_scope: String,
     pub snapshot_date: String,
@@ -298,4 +302,33 @@ impl<T> ModelRankingsReadModelStore for T where
         + ModelRankingRefreshJobHistoryReadStore
         + ModelRankingsCacheInvalidator
 {
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{ModelRankingRefreshJobItem, ModelRankingRefreshStatus};
+
+    #[test]
+    fn refresh_status_serializes_scope_ids_as_int64_strings() {
+        let status = ModelRankingRefreshStatus {
+            tenant_id: i64::MAX,
+            organization_id: i64::MAX - 1,
+            generated_count: 2,
+            latest_job: Some(ModelRankingRefreshJobItem {
+                tenant_id: i64::MAX,
+                organization_id: i64::MAX - 1,
+                duration_ms: 25,
+                ..ModelRankingRefreshJobItem::default()
+            }),
+            ..ModelRankingRefreshStatus::default()
+        };
+
+        let payload = serde_json::to_value(status).expect("serialize refresh status");
+
+        assert_eq!("9223372036854775807", payload["tenantId"]);
+        assert_eq!("9223372036854775806", payload["organizationId"]);
+        assert_eq!(2, payload["generatedCount"]);
+        assert_eq!("9223372036854775807", payload["latestJob"]["tenantId"]);
+        assert_eq!(25, payload["latestJob"]["durationMs"]);
+    }
 }

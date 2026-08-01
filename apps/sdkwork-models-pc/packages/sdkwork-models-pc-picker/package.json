@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Reusable grouped model picker UI for PC surfaces.",
+  "description": "Reusable grouped and unified Agent model selection UI for PC surfaces.",
   "exports": {
     ".": {
       "types": "./src/index.ts",

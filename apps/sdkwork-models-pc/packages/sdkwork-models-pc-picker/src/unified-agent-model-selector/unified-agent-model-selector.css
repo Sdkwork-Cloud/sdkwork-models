@@ -1,0 +1,593 @@
+.sdkwork-unified-model-selector {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.sdkwork-unified-model-trigger {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #d9d9de;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  height: 32px;
+  justify-content: flex-end;
+  max-width: 240px;
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.sdkwork-unified-model-trigger:hover,
+.sdkwork-unified-model-trigger[aria-expanded='true'] {
+  background: rgb(255 255 255 / 7%);
+}
+
+.sdkwork-unified-model-trigger:focus-visible,
+.sdkwork-unified-model-menu button:focus-visible,
+.sdkwork-unified-model-dialog button:focus-visible,
+.sdkwork-unified-model-dialog input:focus-visible,
+.sdkwork-unified-model-dialog textarea:focus-visible {
+  outline: 2px solid #5b8def;
+  outline-offset: 2px;
+}
+
+.sdkwork-unified-model-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.sdkwork-unified-model-trigger-label {
+  font-size: 12px;
+  font-weight: 650;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sdkwork-unified-model-trigger svg {
+  flex: 0 0 auto;
+  transition: transform 140ms ease;
+}
+
+.sdkwork-unified-model-trigger svg[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+.sdkwork-unified-model-menu {
+  background: #171719;
+  border: 1px solid #343438;
+  border-radius: 8px;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 48%);
+  color: #e6e6e9;
+  max-height: min(520px, calc(100vh - 24px));
+  overflow: hidden;
+  position: fixed;
+  z-index: 1300;
+}
+
+.sdkwork-unified-model-scroll {
+  max-height: min(430px, calc(100vh - 112px));
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 12px 10px 8px;
+  scrollbar-color: #3e3e43 transparent;
+  scrollbar-width: thin;
+}
+
+.sdkwork-unified-model-section + .sdkwork-unified-model-section {
+  margin-top: 12px;
+}
+
+.sdkwork-unified-model-section-title {
+  color: #77777f;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 0 10px 6px;
+}
+
+.sdkwork-unified-model-options {
+  display: grid;
+  gap: 2px;
+}
+
+.sdkwork-unified-model-option {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 24px minmax(0, 1fr) auto 18px;
+  min-height: 46px;
+  padding: 7px 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.sdkwork-unified-model-option:hover,
+.sdkwork-unified-model-option:focus-visible,
+.sdkwork-unified-model-option[data-selected='true'] {
+  background: #242427;
+}
+
+.sdkwork-unified-model-option:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.sdkwork-unified-model-option-icon {
+  align-items: center;
+  color: #d7d7dc;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.sdkwork-unified-model-option-copy,
+.sdkwork-unified-model-option-heading {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+}
+
+.sdkwork-unified-model-option-copy {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sdkwork-unified-model-option-heading {
+  gap: 7px;
+  width: 100%;
+}
+
+.sdkwork-unified-model-option-label {
+  font-size: 14px;
+  font-weight: 590;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.sdkwork-unified-model-option-tag {
+  background: #26372e;
+  border: 1px solid #365342;
+  border-radius: 4px;
+  color: #8fd1a9;
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 16px;
+  padding: 0 5px;
+}
+
+.sdkwork-unified-model-option-description,
+.sdkwork-unified-model-option-meta {
+  color: #83838b;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.sdkwork-unified-model-option-description {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sdkwork-unified-model-option-meta {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sdkwork-unified-model-option-check {
+  color: #7ca5ff;
+}
+
+.sdkwork-unified-model-spinner,
+.sdkwork-unified-model-dialog-footer svg {
+  animation: sdkwork-unified-model-spin 900ms linear infinite;
+}
+
+.sdkwork-unified-model-empty {
+  color: #8e8e95;
+  font-size: 13px;
+  padding: 28px 12px;
+  text-align: center;
+}
+
+.sdkwork-unified-model-selection-error,
+.sdkwork-unified-model-submit-error {
+  color: #f19b9b;
+  font-size: 12px;
+  margin: 0;
+}
+
+.sdkwork-unified-model-selection-error {
+  border-top: 1px solid #303034;
+  padding: 9px 14px;
+}
+
+.sdkwork-unified-model-menu-footer {
+  border-top: 1px solid #303034;
+  padding: 9px 10px;
+}
+
+.sdkwork-unified-model-add {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: #dedee2;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 10px;
+  height: 42px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.sdkwork-unified-model-add:hover {
+  background: #242427;
+}
+
+.sdkwork-unified-model-dialog-backdrop {
+  align-items: center;
+  background: rgb(0 0 0 / 68%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 1400;
+}
+
+.sdkwork-unified-model-dialog {
+  background: #202123;
+  border: 1px solid #3a3b3f;
+  border-radius: 8px;
+  box-shadow: 0 22px 70px rgb(0 0 0 / 58%);
+  color: #e7e7ea;
+  display: flex;
+  flex-direction: column;
+  max-height: min(860px, calc(100vh - 40px));
+  overflow: hidden;
+  width: min(720px, calc(100vw - 40px));
+}
+
+.sdkwork-unified-model-dialog-header {
+  align-items: center;
+  border-bottom: 1px solid #35363a;
+  display: flex;
+  flex: 0 0 64px;
+  justify-content: space-between;
+  padding: 0 22px;
+}
+
+.sdkwork-unified-model-dialog-header h2 {
+  font-size: 19px;
+  font-weight: 680;
+  line-height: 26px;
+  margin: 0;
+}
+
+.sdkwork-unified-model-icon-button,
+.sdkwork-unified-model-secret-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #b7b7bd;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.sdkwork-unified-model-icon-button {
+  border-radius: 6px;
+  height: 34px;
+  width: 34px;
+}
+
+.sdkwork-unified-model-icon-button:hover,
+.sdkwork-unified-model-secret-toggle:hover {
+  background: rgb(255 255 255 / 7%);
+  color: #fff;
+}
+
+.sdkwork-unified-model-dialog form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sdkwork-unified-model-dialog-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 19px;
+  min-height: 0;
+  overflow: auto;
+  padding: 20px 26px 26px;
+  scrollbar-color: #4b4b50 transparent;
+  scrollbar-width: thin;
+}
+
+.sdkwork-unified-model-field-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.sdkwork-unified-model-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.sdkwork-unified-model-field > span,
+.sdkwork-unified-model-provider-fieldset legend,
+.sdkwork-unified-model-multimodal legend {
+  color: #d8d8dc;
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 20px;
+}
+
+.sdkwork-unified-model-field strong {
+  color: #ef6868;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.sdkwork-unified-model-field-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sdkwork-unified-model-field input,
+.sdkwork-unified-model-field textarea {
+  background: #292a2d;
+  border: 1px solid #414247;
+  border-radius: 6px;
+  color: #eeeeef;
+  font: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 0;
+  padding: 10px 13px;
+  width: 100%;
+}
+
+.sdkwork-unified-model-field input {
+  height: 42px;
+}
+
+.sdkwork-unified-model-field textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.sdkwork-unified-model-field input::placeholder,
+.sdkwork-unified-model-field textarea::placeholder {
+  color: #71727a;
+}
+
+.sdkwork-unified-model-field small,
+.sdkwork-unified-model-provider-fieldset small {
+  color: #f19b9b;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.sdkwork-unified-model-link-button {
+  background: transparent;
+  border: 0;
+  color: #c9d9ff;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sdkwork-unified-model-link-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.sdkwork-unified-model-secret-input {
+  display: block;
+  position: relative;
+}
+
+.sdkwork-unified-model-secret-input input {
+  padding-right: 44px;
+}
+
+.sdkwork-unified-model-secret-toggle {
+  border-radius: 5px;
+  height: 32px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 32px;
+}
+
+.sdkwork-unified-model-provider-fieldset,
+.sdkwork-unified-model-multimodal {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.sdkwork-unified-model-provider-fieldset p {
+  color: #85858d;
+  font-size: 11px;
+  line-height: 17px;
+  margin: 3px 0 10px;
+}
+
+.sdkwork-unified-model-provider-grid {
+  display: grid;
+  gap: 8px 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sdkwork-unified-model-provider-grid label,
+.sdkwork-unified-model-multimodal label {
+  align-items: center;
+  color: #c9c9ce;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 7px;
+  min-width: 0;
+}
+
+.sdkwork-unified-model-provider-grid input,
+.sdkwork-unified-model-multimodal input {
+  accent-color: #4ba981;
+  height: 15px;
+  margin: 0;
+  width: 15px;
+}
+
+.sdkwork-unified-model-advanced {
+  border-top: 1px solid #3a3b3f;
+  padding-top: 4px;
+}
+
+.sdkwork-unified-model-advanced-trigger {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #dedee2;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-weight: 590;
+  height: 42px;
+  justify-content: space-between;
+  padding: 0;
+  width: 100%;
+}
+
+.sdkwork-unified-model-advanced-trigger svg {
+  transition: transform 140ms ease;
+}
+
+.sdkwork-unified-model-advanced-trigger svg[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+.sdkwork-unified-model-advanced-content {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-top: 8px;
+}
+
+.sdkwork-unified-model-multimodal {
+  align-items: center;
+  display: flex;
+  gap: 13px;
+  grid-column: 1 / -1;
+}
+
+.sdkwork-unified-model-multimodal legend {
+  float: left;
+  margin-right: 5px;
+}
+
+.sdkwork-unified-model-dialog-footer {
+  align-items: center;
+  border-top: 1px solid #35363a;
+  display: flex;
+  flex: 0 0 66px;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 0 22px;
+}
+
+.sdkwork-unified-model-dialog-footer button {
+  align-items: center;
+  background: #303136;
+  border: 1px solid #404146;
+  border-radius: 6px;
+  color: #dedee2;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  gap: 7px;
+  height: 38px;
+  justify-content: center;
+  min-width: 82px;
+  padding: 0 16px;
+}
+
+.sdkwork-unified-model-dialog-footer button:last-child {
+  background: #e7e9ee;
+  border-color: #e7e9ee;
+  color: #202124;
+  font-weight: 650;
+}
+
+.sdkwork-unified-model-dialog-footer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+@keyframes sdkwork-unified-model-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .sdkwork-unified-model-dialog-backdrop {
+    align-items: stretch;
+    padding: 8px;
+  }
+
+  .sdkwork-unified-model-dialog {
+    max-height: calc(100vh - 16px);
+    width: calc(100vw - 16px);
+  }
+
+  .sdkwork-unified-model-dialog-body {
+    padding: 18px;
+  }
+
+  .sdkwork-unified-model-field-grid,
+  .sdkwork-unified-model-provider-grid,
+  .sdkwork-unified-model-advanced-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sdkwork-unified-model-multimodal {
+    grid-column: 1;
+  }
+
+  .sdkwork-unified-model-option {
+    grid-template-columns: 24px minmax(0, 1fr) 18px;
+  }
+
+  .sdkwork-unified-model-option-meta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sdkwork-unified-model-trigger svg,
+  .sdkwork-unified-model-advanced-trigger svg {
+    transition: none;
+  }
+}

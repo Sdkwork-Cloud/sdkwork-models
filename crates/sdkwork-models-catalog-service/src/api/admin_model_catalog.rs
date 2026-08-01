@@ -247,7 +247,7 @@ where
             .map(|context| Some(context.api_key_id))
             .map_err(|_| {
                 (
-                    SdkWorkResultCode::AuthenticationRequired,
+                    SdkWorkResultCode::InvalidToken,
                     "api key credential is invalid",
                 )
             });
