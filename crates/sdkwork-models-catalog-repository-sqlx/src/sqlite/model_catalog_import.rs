@@ -175,9 +175,9 @@ async fn deactivate_removed_catalog_rows(
 
 async fn deactivate_sqlite_rows_not_in(
     conn: &mut SqliteConnection,
-    table_name: &str,
+    table_name: &'static str,
     vendor_codes: &[String],
-    key_column: &str,
+    key_column: &'static str,
     active_keys: &[String],
 ) -> Result<(), sqlx::Error> {
     let vendor_placeholders = sqlite_placeholders(vendor_codes.len());
@@ -191,7 +191,7 @@ async fn deactivate_sqlite_rows_not_in(
         sql.push_str(sqlite_placeholders(active_keys.len()).as_str());
         sql.push(')');
     }
-    let mut query = sqlx::query(sql.as_str());
+    let mut query = sqlx::query(sqlx::AssertSqlSafe(sql));
     for vendor_code in vendor_codes {
         query = query.bind(vendor_code);
     }

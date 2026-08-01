@@ -696,9 +696,8 @@ async fn list_vendors(
     pool: &PgPool,
     query: ListAdminModelVendorsQuery,
 ) -> DomainResult<Vec<AdminModelVendorItem>> {
-    let rows = sqlx::query(
-        vendor_select_sql(
-            r#"
+    let rows = sqlx::query(vendor_select_sql(
+        r#"
         WHERE (tenant_id IS NULL OR tenant_id = 0 OR tenant_id = $1)
           AND (organization_id IS NULL OR organization_id = 0 OR organization_id = $2)
           AND deleted_at IS NULL
@@ -708,9 +707,7 @@ async fn list_vendors(
           display_name ASC NULLS LAST,
           id ASC
         "#,
-        )
-        .as_str(),
-    )
+    ))
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
     .bind(query.subject.tenant_id)
@@ -732,9 +729,9 @@ async fn list_models(
     let limit = query.normalized_limit();
     let offset = query.normalized_offset();
 
-    let count_row = sqlx::query(&format!(
+    let count_row = sqlx::query(sqlx::AssertSqlSafe(format!(
         "SELECT COUNT(*)::bigint AS total_count FROM ai_model m {LIST_MODELS_COUNT_WHERE_POSTGRES}"
-    ))
+    )))
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
     .bind(query.subject.tenant_id)
@@ -753,7 +750,7 @@ async fn list_models(
         query.subject.tenant_id,
         query.subject.organization_id,
     );
-    let list_query = sqlx::query(list_sql.as_str())
+    let list_query = sqlx::query(list_sql)
         .bind(query.subject.tenant_id)
         .bind(query.subject.organization_id)
         .bind(query.subject.tenant_id)
@@ -890,7 +887,7 @@ async fn list_model_mappings(
     .await
     .map_err(|error| store_error("failed to count model mappings", error))?;
     let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
-    let rows = sqlx::query(&mapping_select_sql(
+    let rows = sqlx::query(mapping_select_sql(
         r#"
         WHERE r.tenant_id = $1
           AND r.organization_id = $2
@@ -1032,9 +1029,8 @@ async fn list_vendors_tx(
     tenant_id: i64,
     organization_id: i64,
 ) -> DomainResult<Vec<AdminModelVendorItem>> {
-    let rows = sqlx::query(
-        vendor_select_sql(
-            r#"
+    let rows = sqlx::query(vendor_select_sql(
+        r#"
         WHERE (tenant_id IS NULL OR tenant_id = 0 OR tenant_id = $1)
           AND (organization_id IS NULL OR organization_id = 0 OR organization_id = $2)
           AND deleted_at IS NULL
@@ -1044,9 +1040,7 @@ async fn list_vendors_tx(
           display_name ASC NULLS LAST,
           id ASC
         "#,
-        )
-        .as_str(),
-    )
+    ))
     .bind(tenant_id)
     .bind(organization_id)
     .bind(tenant_id)
@@ -1062,9 +1056,8 @@ async fn list_models_tx(
     tenant_id: i64,
     organization_id: i64,
 ) -> DomainResult<Vec<AdminAiModelItem>> {
-    let rows = sqlx::query(
-        model_select_sql(
-            r#"
+    let rows = sqlx::query(model_select_sql(
+        r#"
         WHERE (m.tenant_id IS NULL OR m.tenant_id = 0 OR m.tenant_id = $1)
           AND (m.organization_id IS NULL OR m.organization_id = 0 OR m.organization_id = $2)
           AND m.deleted_at IS NULL
@@ -1083,11 +1076,9 @@ async fn list_models_tx(
           m.display_name ASC NULLS LAST,
           m.id ASC
         "#,
-            tenant_id,
-            organization_id,
-        )
-        .as_str(),
-    )
+        tenant_id,
+        organization_id,
+    ))
     .bind(tenant_id)
     .bind(organization_id)
     .bind(tenant_id)
@@ -2140,17 +2131,14 @@ async fn load_vendor_by_id(
     tenant_id: i64,
     organization_id: i64,
 ) -> DomainResult<Option<AdminModelVendorItem>> {
-    let row = sqlx::query(
-        vendor_select_sql(
-            r#"
+    let row = sqlx::query(vendor_select_sql(
+        r#"
         WHERE id = $1
           AND (tenant_id IS NULL OR tenant_id = 0 OR tenant_id = $2)
           AND (organization_id IS NULL OR organization_id = 0 OR organization_id = $3)
         LIMIT 1
         "#,
-        )
-        .as_str(),
-    )
+    ))
     .bind(vendor_id)
     .bind(tenant_id)
     .bind(organization_id)
@@ -2166,19 +2154,16 @@ async fn load_model_by_id(
     tenant_id: i64,
     organization_id: i64,
 ) -> DomainResult<Option<AdminAiModelItem>> {
-    let row = sqlx::query(
-        model_select_sql(
-            r#"
+    let row = sqlx::query(model_select_sql(
+        r#"
         WHERE m.id = $1
           AND (m.tenant_id IS NULL OR m.tenant_id = 0 OR m.tenant_id = $2)
           AND (m.organization_id IS NULL OR m.organization_id = 0 OR m.organization_id = $3)
         LIMIT 1
         "#,
-            tenant_id,
-            organization_id,
-        )
-        .as_str(),
-    )
+        tenant_id,
+        organization_id,
+    ))
     .bind(model_id)
     .bind(tenant_id)
     .bind(organization_id)
@@ -2231,7 +2216,7 @@ async fn load_model_region_prices(
     pool: &PgPool,
     model_id: i64,
 ) -> DomainResult<Vec<AdminAiModelRegionPriceCommand>> {
-    let rows = sqlx::query(region_pricing_select_sql().as_str())
+    let rows = sqlx::query(region_pricing_select_sql())
         .bind(model_id)
         .fetch_all(pool)
         .await
@@ -2243,7 +2228,7 @@ async fn load_model_region_prices_tx(
     tx: &mut Transaction<'_, Postgres>,
     model_id: i64,
 ) -> DomainResult<Vec<AdminAiModelRegionPriceCommand>> {
-    let rows = sqlx::query(region_pricing_select_sql().as_str())
+    let rows = sqlx::query(region_pricing_select_sql())
         .bind(model_id)
         .fetch_all(&mut **tx)
         .await
@@ -2251,8 +2236,8 @@ async fn load_model_region_prices_tx(
     region_prices_from_rows(rows)
 }
 
-fn region_pricing_select_sql() -> String {
-    format!(
+fn region_pricing_select_sql() -> sqlx::AssertSqlSafe<String> {
+    sqlx::AssertSqlSafe(format!(
         r#"
         SELECT
             COALESCE(NULLIF(region_code, ''), 'global') AS region_code,
@@ -2287,7 +2272,7 @@ fn region_pricing_select_sql() -> String {
           priority ASC,
           id ASC
         "#
-    )
+    ))
 }
 
 fn region_prices_from_rows(
@@ -2365,9 +2350,8 @@ async fn find_model_for_delete(
     command: &DeleteAdminAiModelCommand,
 ) -> DomainResult<AdminAiModelItem> {
     let numeric_id = command.model_id.trim().parse::<i64>().ok();
-    let row = sqlx::query(
-        model_select_sql(
-            r#"
+    let row = sqlx::query(model_select_sql(
+        r#"
         WHERE (m.tenant_id IS NULL OR m.tenant_id = 0 OR m.tenant_id = $1)
           AND (m.organization_id IS NULL OR m.organization_id = 0 OR m.organization_id = $2)
           AND m.deleted_at IS NULL
@@ -2378,11 +2362,9 @@ async fn find_model_for_delete(
           m.id ASC
         LIMIT 1
         "#,
-            command.subject.tenant_id,
-            command.subject.organization_id,
-        )
-        .as_str(),
-    )
+        command.subject.tenant_id,
+        command.subject.organization_id,
+    ))
     .bind(command.subject.tenant_id)
     .bind(command.subject.organization_id)
     .bind(numeric_id)
@@ -2404,9 +2386,8 @@ async fn find_model_for_update(
     command: &UpdateAdminAiModelCommand,
 ) -> DomainResult<AdminAiModelItem> {
     let numeric_id = command.model_id.trim().parse::<i64>().ok();
-    let row = sqlx::query(
-        model_select_sql(
-            r#"
+    let row = sqlx::query(model_select_sql(
+        r#"
         WHERE (m.tenant_id IS NULL OR m.tenant_id = 0 OR m.tenant_id = $1)
           AND (m.organization_id IS NULL OR m.organization_id = 0 OR m.organization_id = $2)
           AND m.deleted_at IS NULL
@@ -2417,11 +2398,9 @@ async fn find_model_for_update(
           m.id ASC
         LIMIT 1
         "#,
-            command.subject.tenant_id,
-            command.subject.organization_id,
-        )
-        .as_str(),
-    )
+        command.subject.tenant_id,
+        command.subject.organization_id,
+    ))
     .bind(command.subject.tenant_id)
     .bind(command.subject.organization_id)
     .bind(numeric_id)
@@ -2444,7 +2423,7 @@ async fn load_model_mapping_by_id(
     tenant_id: i64,
     organization_id: i64,
 ) -> DomainResult<Option<AdminModelMappingRuleItem>> {
-    let row = sqlx::query(&mapping_select_sql(
+    let row = sqlx::query(mapping_select_sql(
         r#"
         WHERE r.id = $1
           AND r.tenant_id = $2
@@ -2471,7 +2450,7 @@ async fn find_model_mapping_for_update(
     command: &UpdateAdminModelMappingCommand,
 ) -> DomainResult<AdminModelMappingRuleItem> {
     let numeric_id = command.mapping_id.trim().parse::<i64>().ok();
-    let row = sqlx::query(&mapping_select_sql(
+    let row = sqlx::query(mapping_select_sql(
         r#"
         WHERE r.tenant_id = $1
           AND r.organization_id = $2
@@ -2503,7 +2482,7 @@ async fn find_model_mapping_for_delete(
     command: &DeleteAdminModelMappingCommand,
 ) -> DomainResult<AdminModelMappingRuleItem> {
     let numeric_id = command.mapping_id.trim().parse::<i64>().ok();
-    let row = sqlx::query(&mapping_select_sql(
+    let row = sqlx::query(mapping_select_sql(
         r#"
         WHERE r.tenant_id = $1
           AND r.organization_id = $2
@@ -3175,7 +3154,7 @@ async fn find_matching_model_mapping(
     pool: &PgPool,
     query: &ResolveAdminModelMappingQuery,
 ) -> DomainResult<Option<ResolvedModelMappingMatch>> {
-    let row = sqlx::query(&mapping_match_select_sql(
+    let row = sqlx::query(mapping_match_select_sql(
         r#"
         JOIN ai_model_mapping_rule_item i
           ON i.rule_id = r.id
@@ -3328,8 +3307,8 @@ async fn insert_audit_log(
     Ok(())
 }
 
-fn vendor_select_sql(predicate: &str) -> String {
-    format!(
+fn vendor_select_sql(predicate: &'static str) -> sqlx::AssertSqlSafe<String> {
+    sqlx::AssertSqlSafe(format!(
         r#"
         SELECT
             id,
@@ -3347,15 +3326,15 @@ fn vendor_select_sql(predicate: &str) -> String {
         FROM ai_model_vendor
         {predicate}
         "#
-    )
+    ))
 }
 
 fn model_select_sql(
     predicate: &str,
     ranking_tenant_id: i64,
     ranking_organization_id: i64,
-) -> String {
-    format!(
+) -> sqlx::AssertSqlSafe<String> {
+    sqlx::AssertSqlSafe(format!(
         r#"
         WITH selected_rank_snapshot AS (
             SELECT
@@ -3441,11 +3420,11 @@ fn model_select_sql(
         LEFT JOIN selected_rank_calls rc ON rc.model = m.model
         {predicate}
         "#
-    )
+    ))
 }
 
-fn mapping_select_sql(predicate: &str) -> String {
-    format!(
+fn mapping_select_sql(predicate: &'static str) -> sqlx::AssertSqlSafe<String> {
+    sqlx::AssertSqlSafe(format!(
         r#"
         SELECT
             r.id,
@@ -3485,11 +3464,11 @@ fn mapping_select_sql(predicate: &str) -> String {
         FROM ai_model_mapping_rule r
         {predicate}
         "#
-    )
+    ))
 }
 
-fn mapping_match_select_sql(predicate: &str) -> String {
-    format!(
+fn mapping_match_select_sql(predicate: &'static str) -> sqlx::AssertSqlSafe<String> {
+    sqlx::AssertSqlSafe(format!(
         r#"
         SELECT
             r.id,
@@ -3524,7 +3503,7 @@ fn mapping_match_select_sql(predicate: &str) -> String {
         FROM ai_model_mapping_rule r
         {predicate}
         "#
-    )
+    ))
 }
 
 async fn attach_model_mapping_children(

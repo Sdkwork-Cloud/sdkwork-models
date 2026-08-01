@@ -175,15 +175,15 @@ async fn deactivate_removed_catalog_rows(
 
 async fn deactivate_postgres_rows_not_in(
     conn: &mut PgConnection,
-    table_name: &str,
+    table_name: &'static str,
     vendor_codes: &[String],
-    key_column: &str,
+    key_column: &'static str,
     active_keys: &[String],
 ) -> Result<(), sqlx::Error> {
     let sql = format!(
         "UPDATE {table_name} SET status = 0, updated_at = CURRENT_TIMESTAMP WHERE tenant_id = 0 AND organization_id = 0 AND vendor_code = ANY($1) AND status = 1 AND ($2::text[] = '{{}}' OR NOT ({key_column} = ANY($2)))"
     );
-    sqlx::query(sql.as_str())
+    sqlx::query(sqlx::AssertSqlSafe(sql))
         .bind(vendor_codes)
         .bind(active_keys)
         .execute(&mut *conn)

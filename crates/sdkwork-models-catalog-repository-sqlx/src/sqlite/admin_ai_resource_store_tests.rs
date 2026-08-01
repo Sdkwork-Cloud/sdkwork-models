@@ -193,7 +193,7 @@ async fn member_test_pool() -> SqlitePool {
         .connect("sqlite::memory:")
         .await
         .expect("connect in-memory SQLite");
-    for statement in MEMBER_TEST_SCHEMA {
+    for &statement in MEMBER_TEST_SCHEMA {
         sqlx::query(statement)
             .execute(&pool)
             .await
