@@ -19,4 +19,4 @@ pub use sqlite::{
     SqliteModelRankingsReadStore,
 };
 
-pub use model_catalog_import::DEFAULT_CATALOG_REFRESH_SOURCE;
+pub use sdkwork_models_contract_service::DEFAULT_CATALOG_REFRESH_SOURCE;

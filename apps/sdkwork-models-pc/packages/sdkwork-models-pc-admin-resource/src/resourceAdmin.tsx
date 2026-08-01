@@ -1,14 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AiResourceSelectorModal,
-  BottomPagination,
-  ConfirmDialog,
   type AiResourceSelectorOption,
-} from '@sdkwork/clawroutes-pc-commons';
+} from '@sdkwork/clawroutes-pc-commons/components/AiResourceSelectorModal';
+import { BottomPagination } from '@sdkwork/clawroutes-pc-commons/components/BottomPagination';
+import { ConfirmDialog } from '@sdkwork/clawroutes-pc-commons/components/ConfirmDialog';
 import { Edit, Loader2, Plus, RefreshCw, Search, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   ResourceGroupService,
+  type ResourceGroupAssignableResourceItem,
   type ResourceGroupCreateInput,
   type ResourceGroupItem,
   type ResourcePageInfo,
@@ -21,25 +22,31 @@ type GroupFormState = {
   groupCode: string;
   groupName: string;
   description: string;
-  sortOrder: number;
+  sortOrder: string;
   status: 'active' | 'disabled';
   memberCodes: string[];
 };
+
+type ResourceSelectorContext = 'create' | 'assignment';
+
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_SEARCH_LENGTH = 256;
 
 const emptyForm = (): GroupFormState => ({
   id: '',
   groupCode: '',
   groupName: '',
   description: '',
-  sortOrder: 100,
+  sortOrder: '100',
   status: 'active',
   memberCodes: [],
 });
 
 const emptyPageInfo = (pageSize: number): ResourcePageInfo => ({
+  mode: 'offset',
   page: 1,
   pageSize,
-  totalItems: 0,
+  totalItems: '0',
   totalPages: 0,
   hasMore: false,
 });
@@ -49,174 +56,281 @@ export function ResourceAdmin() {
   const [groups, setGroups] = useState<ResourceGroupItem[]>([]);
   const [selectedGroupCode, setSelectedGroupCode] = useState<string | null>(null);
   const [groupResources, setGroupResources] = useState<ResourceGroupResourceItem[]>([]);
-  const [allResources, setAllResources] = useState<AiResourceSelectorOption[]>([]);
-  const [resourceSearch, setResourceSearch] = useState('');
+  const [groupSearchInput, setGroupSearchInput] = useState('');
+  const groupSearch = useDebouncedValue(groupSearchInput, 250);
+  const [groupPage, setGroupPage] = useState(1);
+  const [groupPageSize, setGroupPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [groupPageInfo, setGroupPageInfo] = useState<ResourcePageInfo>(() => emptyPageInfo(DEFAULT_PAGE_SIZE));
+  const [resourceSearchInput, setResourceSearchInput] = useState('');
+  const resourceSearch = useDebouncedValue(resourceSearchInput, 250);
   const [resourcePage, setResourcePage] = useState(1);
-  const [resourcePageSize, setResourcePageSize] = useState(20);
-  const [resourcePageInfo, setResourcePageInfo] = useState<ResourcePageInfo>(() => emptyPageInfo(20));
+  const [resourcePageSize, setResourcePageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [resourcePageInfo, setResourcePageInfo] = useState<ResourcePageInfo>(() => emptyPageInfo(DEFAULT_PAGE_SIZE));
+  const [selectorContext, setSelectorContext] = useState<ResourceSelectorContext | null>(null);
+  const [selectorDraftCodes, setSelectorDraftCodes] = useState<string[]>([]);
+  const [selectorOptions, setSelectorOptions] = useState<AiResourceSelectorOption[]>([]);
+  const [selectorOptionCache, setSelectorOptionCache] = useState<Map<string, AiResourceSelectorOption>>(
+    () => new Map(),
+  );
+  const [selectorSearchInput, setSelectorSearchInput] = useState('');
+  const selectorSearch = useDebouncedValue(selectorSearchInput, 250);
+  const [selectorPage, setSelectorPage] = useState(1);
+  const [selectorPageSize, setSelectorPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [selectorPageInfo, setSelectorPageInfo] = useState<ResourcePageInfo>(() => emptyPageInfo(DEFAULT_PAGE_SIZE));
   const [loadingGroups, setLoadingGroups] = useState(true);
   const [loadingResources, setLoadingResources] = useState(false);
+  const [loadingSelector, setLoadingSelector] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [groupError, setGroupError] = useState<string | null>(null);
+  const [resourceError, setResourceError] = useState<string | null>(null);
+  const [selectorError, setSelectorError] = useState<string | null>(null);
+  const [mutationError, setMutationError] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState<GroupFormState>(emptyForm());
-  const [resourceSelectorOpen, setResourceSelectorOpen] = useState(false);
-  const [resourceAssignmentSelectorOpen, setResourceAssignmentSelectorOpen] = useState(false);
-  const [resourceAssignmentDraftCodes, setResourceAssignmentDraftCodes] = useState<string[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<ResourceGroupItem | null>(null);
+  const [groupRefreshKey, setGroupRefreshKey] = useState(0);
+  const [resourceRefreshKey, setResourceRefreshKey] = useState(0);
+  const [selectorRefreshKey, setSelectorRefreshKey] = useState(0);
+  const groupRequestSequence = useRef(0);
+  const resourceRequestSequence = useRef(0);
+  const selectorRequestSequence = useRef(0);
+  const formMemberCodesRef = useRef<string[]>([]);
+  const selectorDraftCodesRef = useRef<string[]>([]);
 
   const selectedGroup = groups.find((group) => group.groupCode === selectedGroupCode) ?? null;
   const canManageSelectedGroupResources =
     Boolean(selectedGroup) && !selectedGroup?.dynamic && selectedGroup?.groupCode !== 'api.all';
 
-  const allResourceOptions = allResources;
-  const resourceOptionsByCode = useMemo(
-    () => new Map(allResourceOptions.map((option) => [option.resourceCode, option])),
-    [allResourceOptions],
-  );
-
-  const loadGroups = async () => {
-    setLoadingGroups(true);
-    setLoadError(null);
-    try {
-      const nextGroups = await ResourceGroupService.fetchResourceGroups();
-      setGroups(nextGroups);
-      setSelectedGroupCode(nextGroups.find(group => group.groupCode === 'api.all')?.groupCode ?? nextGroups[0]?.groupCode ?? null);
-      setResourcePage(1);
-    } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadGroups'));
-    } finally {
-      setLoadingGroups(false);
-    }
-  };
-
-  const loadAllResources = async () => {
-    try {
-      const items = await ResourceGroupService.fetchAssignableResources();
-      setAllResources(
-        items.map((item) => ({
-          id: item.id,
-          resourceCode: item.resourceCode,
-          displayName: item.displayName,
-          resourceType: item.resourceType,
-          vendorCode: item.vendorCode,
-          modalityCode: item.modalityCode,
-          apiEndpointCode: item.apiEndpointCode,
-          catalogKey: item.catalogKey,
-          model: item.model,
-          providerNativeModel: item.providerNativeModel,
-          status: item.status,
-        })),
-      );
-    } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadAssignableResources'));
-    }
-  };
-
-  const loadSelectedGroupResources = async (
-    group: ResourceGroupItem | null,
-    query = {
-      page: resourcePage,
-      pageSize: resourcePageSize,
-      q: resourceSearch,
-    },
-  ) => {
-    if (!group) {
-      setGroupResources([]);
-      setResourcePageInfo(emptyPageInfo(resourcePageSize));
-      return;
-    }
-    setLoadingResources(true);
-    setLoadError(null);
-    try {
-      const resources = await ResourceGroupService.fetchResourceGroupResourcesPage(group.groupCode, query);
-      setGroupResources(resources.items);
-      setResourcePageInfo(resources.pageInfo);
-    } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
-      setGroupResources([]);
-      setResourcePageInfo(emptyPageInfo(resourcePageSize));
-    } finally {
-      setLoadingResources(false);
-    }
-  };
+  useEffect(() => {
+    formMemberCodesRef.current = form.memberCodes;
+  }, [form.memberCodes]);
 
   useEffect(() => {
-    void loadGroups();
-    void loadAllResources();
-  }, []);
+    selectorDraftCodesRef.current = selectorDraftCodes;
+  }, [selectorDraftCodes]);
+
+  useEffect(() => {
+    const requestSequence = ++groupRequestSequence.current;
+    setLoadingGroups(true);
+    setGroupError(null);
+    void ResourceGroupService.fetchResourceGroupsPage({
+      page: groupPage,
+      pageSize: groupPageSize,
+      q: groupSearch,
+    })
+      .then((page) => {
+        if (requestSequence !== groupRequestSequence.current) {
+          return;
+        }
+        if (groupPage > 1 && page.items.length === 0 && page.pageInfo.totalPages < groupPage) {
+          setGroupPage(Math.max(1, page.pageInfo.totalPages));
+          return;
+        }
+        setGroups(page.items);
+        setGroupPageInfo(page.pageInfo);
+        setSelectedGroupCode((current) => {
+          if (current && page.items.some((group) => group.groupCode === current)) {
+            return current;
+          }
+          return page.items.find((group) => group.groupCode === 'api.all')?.groupCode ?? page.items[0]?.groupCode ?? null;
+        });
+      })
+      .catch((error: unknown) => {
+        if (requestSequence !== groupRequestSequence.current) {
+          return;
+        }
+        setGroups([]);
+        setGroupPageInfo(emptyPageInfo(groupPageSize));
+        setSelectedGroupCode(null);
+        setGroupError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadGroups'));
+      })
+      .finally(() => {
+        if (requestSequence === groupRequestSequence.current) {
+          setLoadingGroups(false);
+        }
+      });
+  }, [groupPage, groupPageSize, groupRefreshKey, groupSearch, t]);
 
   useEffect(() => {
     if (!selectedGroup) {
+      ++resourceRequestSequence.current;
       setGroupResources([]);
       setResourcePageInfo(emptyPageInfo(resourcePageSize));
+      setLoadingResources(false);
       return;
     }
-    void loadSelectedGroupResources(selectedGroup, {
+    const requestSequence = ++resourceRequestSequence.current;
+    setLoadingResources(true);
+    setResourceError(null);
+    void ResourceGroupService.fetchResourceGroupResourcesPage(selectedGroup.groupCode, {
       page: resourcePage,
       pageSize: resourcePageSize,
       q: resourceSearch,
-    });
-  }, [selectedGroup?.id, selectedGroup?.groupCode, resourcePage, resourcePageSize, resourceSearch, t]);
+    })
+      .then((page) => {
+        if (requestSequence !== resourceRequestSequence.current) {
+          return;
+        }
+        if (resourcePage > 1 && page.items.length === 0 && page.pageInfo.totalPages < resourcePage) {
+          setResourcePage(Math.max(1, page.pageInfo.totalPages));
+          return;
+        }
+        setGroupResources(page.items);
+        setResourcePageInfo(page.pageInfo);
+      })
+      .catch((error: unknown) => {
+        if (requestSequence !== resourceRequestSequence.current) {
+          return;
+        }
+        setGroupResources([]);
+        setResourcePageInfo(emptyPageInfo(resourcePageSize));
+        setResourceError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
+      })
+      .finally(() => {
+        if (requestSequence === resourceRequestSequence.current) {
+          setLoadingResources(false);
+        }
+      });
+  }, [
+    selectedGroup?.id,
+    selectedGroup?.groupCode,
+    resourcePage,
+    resourcePageSize,
+    resourceRefreshKey,
+    resourceSearch,
+    t,
+  ]);
+
+  useEffect(() => {
+    if (!selectorContext) {
+      ++selectorRequestSequence.current;
+      setLoadingSelector(false);
+      return;
+    }
+    const requestSequence = ++selectorRequestSequence.current;
+    setLoadingSelector(true);
+    setSelectorError(null);
+    void ResourceGroupService.fetchAssignableResourcesPage({
+      page: selectorPage,
+      pageSize: selectorPageSize,
+      q: selectorSearch,
+      resourceType: 'api_endpoint',
+    })
+      .then((page) => {
+        if (requestSequence !== selectorRequestSequence.current) {
+          return;
+        }
+        if (selectorPage > 1 && page.items.length === 0 && page.pageInfo.totalPages < selectorPage) {
+          setSelectorPage(Math.max(1, page.pageInfo.totalPages));
+          return;
+        }
+        const options = page.items.map(toSelectorOption);
+        setSelectorOptions(options);
+        setSelectorPageInfo(page.pageInfo);
+        setSelectorOptionCache((current) => mergeSelectorOptionCache(
+          current,
+          options,
+          [...formMemberCodesRef.current, ...selectorDraftCodesRef.current],
+        ));
+      })
+      .catch((error: unknown) => {
+        if (requestSequence !== selectorRequestSequence.current) {
+          return;
+        }
+        setSelectorOptions([]);
+        setSelectorPageInfo(emptyPageInfo(selectorPageSize));
+        setSelectorError(
+          error instanceof Error ? error.message : t('admin.model.resources.errors.loadAssignableResources'),
+        );
+      })
+      .finally(() => {
+        if (requestSequence === selectorRequestSequence.current) {
+          setLoadingSelector(false);
+        }
+      });
+  }, [selectorContext, selectorPage, selectorPageSize, selectorRefreshKey, selectorSearch, t]);
+
+  useEffect(() => () => {
+    ++groupRequestSequence.current;
+    ++resourceRequestSequence.current;
+    ++selectorRequestSequence.current;
+  }, []);
+
+  const loadError = mutationError ?? groupError ?? resourceError;
+  const formSelectedResources = useMemo(
+    () => form.memberCodes
+      .map((code) => selectorOptionCache.get(code))
+      .filter((item): item is AiResourceSelectorOption => Boolean(item)),
+    [form.memberCodes, selectorOptionCache],
+  );
+
+  const refreshPage = () => {
+    setMutationError(null);
+    setGroupError(null);
+    setResourceError(null);
+    setGroupRefreshKey((current) => current + 1);
+    setResourceRefreshKey((current) => current + 1);
+  };
 
   const startCreate = () => {
     setForm(emptyForm());
+    setSelectorOptionCache(new Map());
     setFormOpen(true);
   };
 
   const startEdit = (group: ResourceGroupItem) => {
-    void (async () => {
-      setLoadError(null);
-      try {
-        const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(group.groupCode);
-        setForm({
-          id: group.id,
-          groupCode: group.groupCode,
-          groupName: group.groupName,
-          description: group.description ?? '',
-          sortOrder: group.sortOrder,
-          status: group.status === 'disabled' ? 'disabled' : 'active',
-          memberCodes: resources.map((resource) => resource.resourceCode),
-        });
-        setFormOpen(true);
-      } catch (error) {
-        setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
-      }
-    })();
+    setMutationError(null);
+    setForm({
+      id: group.id,
+      groupCode: group.groupCode,
+      groupName: group.groupName,
+      description: group.description ?? '',
+      sortOrder: group.sortOrder,
+      status: group.status === 'disabled' ? 'disabled' : 'active',
+      memberCodes: [],
+    });
+    setFormOpen(true);
   };
 
   const saveGroupForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSaving(true);
-    setLoadError(null);
+    setMutationError(null);
     try {
-      const input = {
-        groupCode: form.groupCode,
+      const metadataInput: ResourceGroupUpdateInput = {
         groupName: form.groupName,
-        groupType: 'api_group' as const,
-        selectionMode: (form.groupCode === 'api.all' ? 'all' : 'manual') as ResourceGroupUpdateInput['selectionMode'],
         description: form.description || null,
         sortOrder: form.sortOrder,
         status: form.status,
-        members: form.memberCodes.map((resourceCode, index) => ({
-          resourceCode,
-          itemRole: 'included' as const,
-          sortOrder: index + 1,
-        })),
       };
       if (form.id) {
-        const updated = await ResourceGroupService.updateResourceGroup(form.id, input);
+        const updated = await ResourceGroupService.updateResourceGroup(form.id, metadataInput);
         setGroups((current) => current.map((group) => (group.id === updated.id ? updated : group)));
         setSelectedGroupCode(updated.groupCode);
       } else {
-        const created = await ResourceGroupService.createResourceGroup(input as ResourceGroupCreateInput);
-        setGroups((current) => [...current, created]);
+        const input: ResourceGroupCreateInput = {
+          groupCode: form.groupCode,
+          groupName: form.groupName,
+          groupType: 'api_group',
+          selectionMode: 'manual',
+          description: form.description || null,
+          sortOrder: form.sortOrder,
+          status: form.status,
+          members: form.memberCodes.map((resourceCode, index) => ({
+            resourceCode,
+            itemRole: 'included',
+            sortOrder: String(index + 1),
+          })),
+        };
+        const created = await ResourceGroupService.createResourceGroup(input);
+        setGroupSearchInput(created.groupCode);
+        setGroupPage(1);
         setSelectedGroupCode(created.groupCode);
       }
       setFormOpen(false);
-      await loadGroups();
+      setGroupRefreshKey((current) => current + 1);
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
+      setMutationError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
     } finally {
       setSaving(false);
     }
@@ -227,43 +341,15 @@ export function ResourceAdmin() {
       return;
     }
     setSaving(true);
-    setLoadError(null);
+    setMutationError(null);
     try {
-      const deleted = await ResourceGroupService.deleteResourceGroup(deleteTarget.id);
-      if (deleted) {
-        setGroups((current) => current.filter((group) => group.id !== deleteTarget.id));
-        setSelectedGroupCode((current) => (current === deleteTarget.groupCode ? null : current));
-      }
+      await ResourceGroupService.deleteResourceGroup(deleteTarget.id);
+      setGroups((current) => current.filter((group) => group.id !== deleteTarget.id));
+      setSelectedGroupCode((current) => (current === deleteTarget.groupCode ? null : current));
       setDeleteTarget(null);
-      await loadGroups();
+      setGroupRefreshKey((current) => current + 1);
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.deleteGroup'));
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const saveResourceAssignmentDraft = async () => {
-    if (!selectedGroup) {
-      setResourceAssignmentSelectorOpen(false);
-      return;
-    }
-    setSaving(true);
-    setLoadError(null);
-    try {
-      const memberCodes = resourceAssignmentDraftCodes;
-      await ResourceGroupService.updateResourceGroup(selectedGroup.id, {
-        members: memberCodes.map((resourceCode, index) => ({
-          resourceCode,
-          itemRole: 'included' as const,
-          sortOrder: index + 1,
-        })),
-      });
-      setResourceAssignmentSelectorOpen(false);
-      await loadSelectedGroupResources(selectedGroup);
-      await loadGroups();
-    } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
+      setMutationError(error instanceof Error ? error.message : t('admin.model.resources.errors.deleteGroup'));
     } finally {
       setSaving(false);
     }
@@ -274,23 +360,13 @@ export function ResourceAdmin() {
       return;
     }
     setSaving(true);
-    setLoadError(null);
+    setMutationError(null);
     try {
-      const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(selectedGroup.groupCode);
-      const memberCodes = resources
-        .map((resource) => resource.resourceCode)
-        .filter((code) => code !== resourceCode);
-      await ResourceGroupService.updateResourceGroup(selectedGroup.id, {
-        members: memberCodes.map((code, index) => ({
-          resourceCode: code,
-          itemRole: 'included' as const,
-          sortOrder: index + 1,
-        })),
-      });
-      await loadSelectedGroupResources(selectedGroup);
-      await loadGroups();
+      await ResourceGroupService.deleteResourceGroupMember(selectedGroup.id, resourceCode);
+      setResourceRefreshKey((current) => current + 1);
+      setGroupRefreshKey((current) => current + 1);
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
+      setMutationError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
     } finally {
       setSaving(false);
     }
@@ -300,29 +376,67 @@ export function ResourceAdmin() {
     if (!selectedGroup) {
       return;
     }
-    void (async () => {
-      setLoadingResources(true);
-      setLoadError(null);
-      try {
-        const resources = await ResourceGroupService.fetchResourceGroupResourcesForUpdate(selectedGroup.groupCode);
-        setResourceAssignmentDraftCodes(resources.map(resource => resource.resourceCode));
-        setResourceAssignmentSelectorOpen(true);
-      } catch (error) {
-        setLoadError(error instanceof Error ? error.message : t('admin.model.resources.errors.loadResources'));
-      } finally {
-        setLoadingResources(false);
-      }
-    })();
+    openResourceSelector('assignment', []);
   };
 
-  const formSelectedResources = form.memberCodes
-    .map((code) => resourceOptionsByCode.get(code))
-    .filter((item): item is AiResourceSelectorOption => Boolean(item));
+  const openResourceSelector = (context: ResourceSelectorContext, selectedCodes: string[]) => {
+    selectorDraftCodesRef.current = selectedCodes;
+    setSelectorDraftCodes(selectedCodes);
+    setSelectorSearchInput('');
+    setSelectorPage(1);
+    setSelectorError(null);
+    setSelectorContext(context);
+  };
+
+  const closeResourceSelector = () => {
+    selectorDraftCodesRef.current = [];
+    setSelectorDraftCodes([]);
+    setSelectorContext(null);
+    setSelectorError(null);
+  };
+
+  const changeSelectorDraft = (codes: string[]) => {
+    selectorDraftCodesRef.current = codes;
+    setSelectorDraftCodes(codes);
+    setSelectorOptionCache((current) => mergeSelectorOptionCache(
+      current,
+      selectorOptions,
+      [...formMemberCodesRef.current, ...codes],
+    ));
+  };
+
+  const confirmResourceSelector = async () => {
+    if (selectorContext === 'create') {
+      setForm((current) => ({ ...current, memberCodes: selectorDraftCodes }));
+      closeResourceSelector();
+      return;
+    }
+    const resourceCode = selectorDraftCodes[0];
+    if (!selectedGroup || !resourceCode) {
+      closeResourceSelector();
+      return;
+    }
+    setSaving(true);
+    setMutationError(null);
+    try {
+      await ResourceGroupService.upsertResourceGroupMember(selectedGroup.id, {
+        resourceCode,
+        itemRole: 'included',
+      });
+      closeResourceSelector();
+      setResourceRefreshKey((current) => current + 1);
+      setGroupRefreshKey((current) => current + 1);
+    } catch (error) {
+      setMutationError(error instanceof Error ? error.message : t('admin.model.resources.errors.saveGroup'));
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div
       data-admin-model-resource-page
-      className="flex min-h-0 h-full w-full flex-col bg-slate-50 dark:bg-[#121212] rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-white/5"
+      className="flex min-h-0 h-full w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm dark:border-white/5 dark:bg-[#121212]"
     >
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <aside data-admin-model-resource-sidebar className="flex w-72 min-w-72 flex-col border-r border-slate-200 dark:border-white/10">
@@ -343,10 +457,7 @@ export function ResourceAdmin() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    void loadGroups();
-                    void loadAllResources();
-                  }}
+                  onClick={refreshPage}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-100 dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5"
                   title={t('admin.model.resources.actions.refresh')}
                 >
@@ -354,12 +465,31 @@ export function ResourceAdmin() {
                 </button>
               </div>
             </div>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="search"
+                value={groupSearchInput}
+                maxLength={MAX_SEARCH_LENGTH}
+                onChange={(event) => {
+                  setGroupSearchInput(event.currentTarget.value);
+                  setGroupPage(1);
+                }}
+                aria-label={t('admin.model.resources.groupSearch')}
+                placeholder={t('admin.model.resources.groupSearch')}
+                className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-indigo-500 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
+              />
+            </div>
           </div>
           <div data-admin-model-resource-sidebar-list className="min-h-0 flex-1 overflow-y-auto p-2">
             {loadingGroups ? (
               <div className="flex items-center justify-center py-8 text-sm text-slate-500">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 {t('admin.model.resources.loading')}
+              </div>
+            ) : groups.length === 0 ? (
+              <div className="px-3 py-8 text-center text-sm text-slate-500">
+                {t('admin.model.resources.emptyGroups')}
               </div>
             ) : (
               groups.map((group) => (
@@ -387,6 +517,23 @@ export function ResourceAdmin() {
               ))
             )}
           </div>
+          <BottomPagination
+            page={groupPage}
+            pageSize={groupPageSize}
+            itemCount={groups.length}
+            hasNextPage={groupPageInfo.hasMore}
+            showingLabel={t('admin.model.resources.pagination.showingGroups')}
+            pageLabel={t('admin.model.resources.pagination.page', { page: groupPage })}
+            pageSizeLabel={t('admin.model.resources.pagination.groupsPageSize')}
+            pageSizeOptions={[10, 20, 50]}
+            disabled={loadingGroups || saving}
+            onPreviousPage={() => setGroupPage((current) => Math.max(1, current - 1))}
+            onNextPage={() => setGroupPage((current) => current + 1)}
+            onPageSizeChange={(nextPageSize) => {
+              setGroupPageSize(nextPageSize);
+              setGroupPage(1);
+            }}
+          />
         </aside>
 
         <main data-admin-model-resource-main className="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -403,11 +550,14 @@ export function ResourceAdmin() {
                   <div className="relative">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <input
-                      value={resourceSearch}
+                      type="search"
+                      value={resourceSearchInput}
+                      maxLength={MAX_SEARCH_LENGTH}
                       onChange={(event) => {
-                        setResourceSearch(event.target.value);
+                        setResourceSearchInput(event.currentTarget.value);
                         setResourcePage(1);
                       }}
+                      aria-label={t('admin.model.resources.resourceSearch')}
                       placeholder={t('admin.model.resources.resourceSearch')}
                       className="h-10 w-64 rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none focus:border-indigo-500 dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
                     />
@@ -556,6 +706,8 @@ export function ResourceAdmin() {
                   <span className="mb-1 block font-medium text-slate-700 dark:text-slate-200">{t('admin.model.resources.form.groupCode')}</span>
                   <input
                     value={form.groupCode}
+                    required
+                    maxLength={128}
                     disabled={Boolean(form.id) || form.groupCode === 'api.all'}
                     onChange={(event) => setForm({ ...form, groupCode: event.target.value })}
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white disabled:opacity-60"
@@ -565,6 +717,8 @@ export function ResourceAdmin() {
                   <span className="mb-1 block font-medium text-slate-700 dark:text-slate-200">{t('admin.model.resources.form.groupName')}</span>
                   <input
                     value={form.groupName}
+                    required
+                    maxLength={128}
                     onChange={(event) => setForm({ ...form, groupName: event.target.value })}
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
                   />
@@ -572,9 +726,13 @@ export function ResourceAdmin() {
                 <label className="block text-sm">
                   <span className="mb-1 block font-medium text-slate-700 dark:text-slate-200">{t('admin.model.resources.form.sortOrder')}</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]+"
+                    maxLength={19}
+                    required
                     value={form.sortOrder}
-                    onChange={(event) => setForm({ ...form, sortOrder: Number(event.target.value) || 0 })}
+                    onChange={(event) => setForm({ ...form, sortOrder: event.currentTarget.value })}
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
                   />
                 </label>
@@ -593,6 +751,7 @@ export function ResourceAdmin() {
                   <span className="mb-1 block font-medium text-slate-700 dark:text-slate-200">{t('admin.model.resources.form.description')}</span>
                   <textarea
                     value={form.description}
+                    maxLength={512}
                     onChange={(event) => setForm({ ...form, description: event.target.value })}
                     rows={3}
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
@@ -600,6 +759,7 @@ export function ResourceAdmin() {
                 </label>
               </div>
 
+              {!form.id ? (
               <div data-admin-model-resource-group-drawer-resources className="flex min-h-0 flex-1 flex-col overflow-hidden px-5 py-4">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -608,7 +768,7 @@ export function ResourceAdmin() {
                   <button
                     type="button"
                     disabled={form.groupCode === 'api.all'}
-                    onClick={() => setResourceSelectorOpen(true)}
+                    onClick={() => openResourceSelector('create', form.memberCodes)}
                     className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
                   >
                     {t('admin.model.resources.form.selectResources')}
@@ -658,6 +818,9 @@ export function ResourceAdmin() {
                   </div>
                 )}
               </div>
+              ) : (
+                <div className="min-h-0 flex-1" />
+              )}
 
               <div className="flex shrink-0 justify-end gap-3 border-t border-slate-200 px-5 py-4 dark:border-white/10">
                 <button
@@ -680,41 +843,37 @@ export function ResourceAdmin() {
         </div>
       ) : null}
 
-      {resourceSelectorOpen ? (
+      {selectorContext ? (
         <AiResourceSelectorModal
-          loading={false}
-          options={allResourceOptions}
-          selectedCodes={form.memberCodes}
-          selectionMode="multiple"
-          onChange={(codes) => setForm({ ...form, memberCodes: codes })}
-          onClose={() => setResourceSelectorOpen(false)}
-          labels={{
-            title: t('admin.model.resources.form.resourceSelectorTitle'),
-            searchPlaceholder: t('admin.model.resources.resourceSearch'),
-            loading: t('admin.model.resources.loading'),
-            empty: t('admin.model.resources.form.emptyAssignableResources'),
-            emptySearch: t('admin.model.resources.form.emptyAssignableResourceSearch'),
-            selectedCount: (count) => t('admin.model.resources.form.selectedResources', { count }),
-            done: t('admin.model.resources.actions.save'),
-            close: t('admin.model.resources.actions.cancel'),
-            columns: {
-              resource: t('admin.model.resources.columns.resource'),
-              kind: t('admin.model.resources.columns.kind'),
-              vendor: t('admin.model.resources.columns.vendor'),
-              status: t('admin.model.resources.columns.status'),
+          loading={loadingSelector || saving}
+          error={selectorError}
+          options={selectorOptions}
+          selectedCodes={selectorDraftCodes}
+          selectionMode={selectorContext === 'assignment' ? 'single' : 'multiple'}
+          confirmDisabled={selectorDraftCodes.length === 0}
+          onChange={changeSelectorDraft}
+          onClose={closeResourceSelector}
+          onConfirm={() => void confirmResourceSelector()}
+          onRetry={() => setSelectorRefreshKey((current) => current + 1)}
+          searchQuery={selectorSearchInput}
+          onSearchQueryChange={(query) => {
+            setSelectorSearchInput(query.slice(0, MAX_SEARCH_LENGTH));
+            setSelectorPage(1);
+          }}
+          pagination={{
+            page: selectorPage,
+            pageSize: selectorPageSize,
+            hasNextPage: selectorPageInfo.hasMore,
+            showingLabel: t('admin.model.resources.pagination.showing'),
+            pageLabel: t('admin.model.resources.pagination.page', { page: selectorPage }),
+            pageSizeLabel: t('admin.model.resources.pagination.pageSize'),
+            onPreviousPage: () => setSelectorPage((current) => Math.max(1, current - 1)),
+            onNextPage: () => setSelectorPage((current) => current + 1),
+            onPageSizeChange: (nextPageSize) => {
+              setSelectorPageSize(nextPageSize);
+              setSelectorPage(1);
             },
           }}
-        />
-      ) : null}
-
-      {resourceAssignmentSelectorOpen ? (
-        <AiResourceSelectorModal
-          loading={loadingResources}
-          options={allResourceOptions}
-          selectedCodes={resourceAssignmentDraftCodes}
-          selectionMode="multiple"
-          onChange={setResourceAssignmentDraftCodes}
-          onClose={() => void saveResourceAssignmentDraft()}
           labels={{
             title: t('admin.model.resources.form.resourceSelectorTitle'),
             searchPlaceholder: t('admin.model.resources.resourceSearch'),
@@ -724,6 +883,7 @@ export function ResourceAdmin() {
             selectedCount: (count) => t('admin.model.resources.form.selectedResources', { count }),
             done: t('admin.model.resources.actions.save'),
             close: t('admin.model.resources.actions.cancel'),
+            retry: t('admin.model.resources.actions.retry'),
             columns: {
               resource: t('admin.model.resources.columns.resource'),
               kind: t('admin.model.resources.columns.kind'),
@@ -748,4 +908,46 @@ export function ResourceAdmin() {
       )}
     </div>
   );
+}
+
+function toSelectorOption(item: ResourceGroupAssignableResourceItem): AiResourceSelectorOption {
+  return {
+    id: item.id,
+    resourceCode: item.resourceCode,
+    displayName: item.displayName,
+    resourceType: item.resourceType,
+    vendorCode: item.vendorCode,
+    modalityCode: item.modalityCode,
+    apiEndpointCode: item.apiEndpointCode,
+    catalogKey: item.catalogKey,
+    model: item.model,
+    providerNativeModel: item.providerNativeModel,
+    status: item.status,
+  };
+}
+
+function mergeSelectorOptionCache(
+  current: Map<string, AiResourceSelectorOption>,
+  pageOptions: AiResourceSelectorOption[],
+  selectedCodes: string[],
+): Map<string, AiResourceSelectorOption> {
+  const next = new Map(pageOptions.map((option) => [option.resourceCode, option]));
+  for (const code of new Set(selectedCodes)) {
+    const selected = current.get(code);
+    if (selected) {
+      next.set(code, selected);
+    }
+  }
+  return next;
+}
+
+function useDebouncedValue<T>(value: T, delayMs: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedValue(value), delayMs);
+    return () => window.clearTimeout(timeout);
+  }, [delayMs, value]);
+
+  return debouncedValue;
 }

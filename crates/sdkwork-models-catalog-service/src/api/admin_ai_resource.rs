@@ -25,8 +25,9 @@ use crate::ports::{
     AdminAiResourceItem, AdminAiResourceMemberCommand, AdminAiResourceMemberItem,
     AdminAiResourceStore, AdminAiResourceSubject, CreateAdminAiResourceCommand,
     CreateAdminAiResourceGroupCommand, DeleteAdminAiResourceGroupCommand,
-    ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
-    ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
+    DeleteAdminAiResourceGroupMemberCommand, ListAdminAiResourceGroupResourcesQuery,
+    ListAdminAiResourceGroupsQuery, ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand,
+    UpdateAdminAiResourceGroupCommand, UpsertAdminAiResourceGroupMemberCommand,
 };
 use sdkwork_web_core::WebRequestContext;
 
@@ -153,6 +154,14 @@ struct AdminAiResourceGroupResourcesResponse {
 #[derive(Debug, Default, Deserialize)]
 struct AiResourceListQuery {
     q: Option<String>,
+    resource_type: Option<String>,
+    page: Option<i64>,
+    page_size: Option<i64>,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct AiResourceGroupListQuery {
+    q: Option<String>,
     page: Option<i64>,
     page_size: Option<i64>,
 }
@@ -182,8 +191,15 @@ struct AdminAiResourceGroupResourceItemResponse {
     member_role: String,
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct AdminAiResourceGroupResourceItemEnvelope {
+    item: AdminAiResourceGroupResourceItemResponse,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceMemberRequest {
     member_resource_code: Option<String>,
     member_role: Option<String>,
@@ -193,6 +209,7 @@ struct AiResourceMemberRequest {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceCreateRequest {
     resource_code: Option<String>,
     resource_type: Option<String>,
@@ -211,6 +228,7 @@ struct AiResourceCreateRequest {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceUpdateRequest {
     resource_code: Option<String>,
     resource_type: Option<String>,
@@ -229,6 +247,7 @@ struct AiResourceUpdateRequest {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceGroupMemberRequest {
     resource_code: Option<String>,
     item_role: Option<String>,
@@ -237,6 +256,15 @@ struct AiResourceGroupMemberRequest {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
+struct AiResourceGroupMemberUpdateRequest {
+    item_role: Option<String>,
+    sort_order: Option<Value>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceGroupCreateRequest {
     group_code: Option<String>,
     group_name: Option<String>,
@@ -250,6 +278,7 @@ struct AiResourceGroupCreateRequest {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
 struct AiResourceGroupUpdateRequest {
     group_code: Option<String>,
     group_name: Option<String>,
@@ -288,6 +317,10 @@ pub fn admin_ai_resource_router_with_store(
             get(fetch_ai_resource_group_resources),
         )
         .route(
+            "/backend/v3/api/ai/resource_groups/{group_id}/resources/{resource_code}",
+            put(upsert_ai_resource_group_member).delete(delete_ai_resource_group_member),
+        )
+        .route(
             "/backend/v3/api/ai/resource_groups/{group_id}",
             patch(update_ai_resource_group).delete(delete_ai_resource_group),
         )
@@ -309,6 +342,10 @@ async fn fetch_ai_resources(
         Ok(value) => value,
         Err(message) => return bad_request(&ctx, message),
     };
+    let resource_type = match query.resource_type.map(normalize_resource_type).transpose() {
+        Ok(value) => value,
+        Err(error) => return command_build_error_response(&ctx, error),
+    };
     let (page_no, page_size, offset) = match validate_page_query(query.page, query.page_size) {
         Ok(value) => value,
         Err(message) => return bad_request(&ctx, message),
@@ -319,6 +356,7 @@ async fn fetch_ai_resources(
         .list_ai_resources(ListAdminAiResourcesQuery {
             subject,
             q,
+            resource_type,
             limit: Some(page_size),
             offset: Some(offset),
         })
@@ -340,7 +378,7 @@ async fn fetch_ai_resources(
 async fn fetch_ai_resource_groups(
     ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
-    Query(query): Query<AiResourceListQuery>,
+    Query(query): Query<AiResourceGroupListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
@@ -381,7 +419,7 @@ async fn fetch_ai_resource_group_resources(
     ctx: WebRequestContext,
     State(state): State<AdminAiResourceState>,
     Path(group_id_or_code): Path<String>,
-    Query(query): Query<AiResourceListQuery>,
+    Query(query): Query<AiResourceGroupListQuery>,
     trusted: TrustedRequestSubject,
     _headers: HeaderMap,
 ) -> Response {
@@ -425,6 +463,104 @@ async fn fetch_ai_resource_group_resources(
         Err(error) => ai_resource_system_response(
             &ctx,
             "AI resource group resource read model is unavailable",
+            error,
+        ),
+    }
+}
+
+async fn upsert_ai_resource_group_member(
+    ctx: WebRequestContext,
+    State(state): State<AdminAiResourceState>,
+    Path((group_id, resource_code)): Path<(String, String)>,
+    trusted: TrustedRequestSubject,
+    _headers: HeaderMap,
+    body: Bytes,
+) -> Response {
+    let subject = map_subject(trusted);
+    let group_id = match parse_positive_id(&group_id, "AI resource group id") {
+        Ok(group_id) => group_id,
+        Err(message) => return bad_request(&ctx, message),
+    };
+    let resource_code = match required_resource_code(
+        Some(resource_code),
+        "resourceCode",
+        "AI resource code",
+        MAX_RESOURCE_CODE_LEN,
+    ) {
+        Ok(resource_code) => resource_code,
+        Err(error) => return command_build_error_response(&ctx, error),
+    };
+    let request = match parse_json_body::<AiResourceGroupMemberUpdateRequest>(
+        &body,
+        "AI resource group member update",
+    ) {
+        Ok(request) => request,
+        Err(message) => return bad_request(&ctx, message),
+    };
+    let command = match build_group_member_upsert_command(
+        state.clone(),
+        subject,
+        group_id,
+        resource_code,
+        request,
+    ) {
+        Ok(command) => command,
+        Err(error) => return command_build_error_response(&ctx, error),
+    };
+
+    match state.store.upsert_ai_resource_group_member(command).await {
+        Ok(Some(item)) => finish_success(
+            &ctx,
+            AdminAiResourceGroupResourceItemEnvelope {
+                item: to_group_resource_response(item),
+            },
+        ),
+        Ok(None) => not_found_response(&ctx, "AI resource group was not found"),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
+        Err(error) => ai_resource_system_response(
+            &ctx,
+            "AI resource group member command store is unavailable",
+            error,
+        ),
+    }
+}
+
+async fn delete_ai_resource_group_member(
+    ctx: WebRequestContext,
+    State(state): State<AdminAiResourceState>,
+    Path((group_id, resource_code)): Path<(String, String)>,
+    trusted: TrustedRequestSubject,
+    _headers: HeaderMap,
+) -> Response {
+    let subject = map_subject(trusted);
+    let group_id = match parse_positive_id(&group_id, "AI resource group id") {
+        Ok(group_id) => group_id,
+        Err(message) => return bad_request(&ctx, message),
+    };
+    let resource_code = match required_resource_code(
+        Some(resource_code),
+        "resourceCode",
+        "AI resource code",
+        MAX_RESOURCE_CODE_LEN,
+    ) {
+        Ok(resource_code) => resource_code,
+        Err(error) => return command_build_error_response(&ctx, error),
+    };
+    let command =
+        match build_group_member_delete_command(state.clone(), subject, group_id, resource_code) {
+            Ok(command) => command,
+            Err(error) => return command_build_error_response(&ctx, error),
+        };
+
+    match state.store.delete_ai_resource_group_member(command).await {
+        Ok(true) => finish_no_content(&ctx),
+        Ok(false) => not_found_response(&ctx, "AI resource group was not found"),
+        Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
+        Err(error) if error.is_conflict() => conflict_response(&ctx, error),
+        Err(error) => ai_resource_system_response(
+            &ctx,
+            "AI resource group member command store is unavailable",
             error,
         ),
     }
@@ -786,6 +922,47 @@ fn build_group_update_command(
     })
 }
 
+fn build_group_member_upsert_command(
+    state: AdminAiResourceState,
+    subject: AdminAiResourceSubject,
+    group_id: i64,
+    resource_code: String,
+    request: AiResourceGroupMemberUpdateRequest,
+) -> Result<UpsertAdminAiResourceGroupMemberCommand, AiResourceCommandBuildError> {
+    Ok(UpsertAdminAiResourceGroupMemberCommand {
+        subject,
+        group_id,
+        member_uuid: generate_entity_uuid(&state)?,
+        audit_log_uuid: generate_entity_uuid(&state)?,
+        member: AdminAiResourceGroupMemberCommand {
+            resource_code,
+            item_role: normalize_group_item_role(
+                optional_text(request.item_role, "itemRole", 64)?
+                    .unwrap_or_else(|| "included".to_owned()),
+            )?,
+            sort_order: optional_non_negative(request.sort_order.as_ref(), "sortOrder")?,
+        },
+        request_id: generate_server_request_id().map_err(request_id_error)?,
+        requested_at: current_timestamp_string(),
+    })
+}
+
+fn build_group_member_delete_command(
+    state: AdminAiResourceState,
+    subject: AdminAiResourceSubject,
+    group_id: i64,
+    resource_code: String,
+) -> Result<DeleteAdminAiResourceGroupMemberCommand, AiResourceCommandBuildError> {
+    Ok(DeleteAdminAiResourceGroupMemberCommand {
+        subject,
+        group_id,
+        resource_code,
+        audit_log_uuid: generate_entity_uuid(&state)?,
+        request_id: generate_server_request_id().map_err(request_id_error)?,
+        requested_at: current_timestamp_string(),
+    })
+}
+
 fn build_group_delete_command(
     state: AdminAiResourceState,
     subject: AdminAiResourceSubject,
@@ -1097,7 +1274,7 @@ fn optional_text(
     if value.is_empty() {
         return Ok(None);
     }
-    if value.len() > max_len {
+    if value.chars().count() > max_len {
         return Err(AiResourceCommandBuildError::BadRequest(format!(
             "{field_name} must be at most {max_len} characters"
         )));
@@ -1424,6 +1601,29 @@ mod tests {
     }
 
     #[test]
+    fn validate_page_query_applies_defaults_and_rejects_invalid_bounds() {
+        assert_eq!(
+            validate_page_query(None, None).expect("default page query should be valid"),
+            (1, DEFAULT_LIST_PAGE_SIZE, 0)
+        );
+        assert_eq!(
+            validate_page_query(Some(3), Some(25)).expect("bounded page query should be valid"),
+            (3, 25, 50)
+        );
+        assert_eq!(
+            validate_page_query(Some(0), Some(20)).expect_err("page zero must be rejected"),
+            "page must be greater than or equal to 1"
+        );
+        for page_size in [0, MAX_LIST_PAGE_SIZE + 1] {
+            assert_eq!(
+                validate_page_query(Some(1), Some(page_size))
+                    .expect_err("out-of-range page_size must be rejected"),
+                "page_size must be between 1 and 200"
+            );
+        }
+    }
+
+    #[test]
     fn validate_list_search_query_trims_and_bounds_unicode_characters() {
         let accepted = validate_list_search_query(Some(format!("  {}  ", "模".repeat(256))))
             .expect("256 Unicode characters should be accepted");
@@ -1436,5 +1636,47 @@ mod tests {
             validate_list_search_query(Some("   ".to_owned())).expect("blank search is valid"),
             None
         );
+    }
+
+    #[test]
+    fn optional_text_counts_unicode_characters_instead_of_utf8_bytes() {
+        let accepted = match optional_text(Some("模".repeat(128)), "groupName", 128) {
+            Ok(value) => value,
+            Err(_) => panic!("128 Unicode characters should be accepted"),
+        };
+        assert_eq!(accepted, Some("模".repeat(128)));
+        assert!(optional_text(Some("模".repeat(129)), "groupName", 128).is_err());
+    }
+
+    #[test]
+    fn resource_group_members_are_bounded_to_512_items() {
+        let members = (0..=MAX_MEMBERS)
+            .map(|index| AiResourceGroupMemberRequest {
+                resource_code: Some(format!("resource.{index}")),
+                item_role: None,
+                sort_order: None,
+            })
+            .collect();
+        let error = normalize_group_members(members)
+            .expect_err("resource groups above the member limit must be rejected");
+        match error {
+            AiResourceCommandBuildError::BadRequest(message) => {
+                assert_eq!(message, "members must contain at most 512 items");
+            }
+            AiResourceCommandBuildError::System(_) => {
+                panic!("member limit must be a validation error");
+            }
+        }
+    }
+
+    #[test]
+    fn member_update_rejects_unknown_json_fields() {
+        let error = parse_json_body::<AiResourceGroupMemberUpdateRequest>(
+            br#"{"itemRole":"included","legacyRole":"fallback"}"#,
+            "AI resource group member update",
+        )
+        .expect_err("unknown request fields must be rejected");
+
+        assert!(error.contains("unknown field `legacyRole`"));
     }
 }

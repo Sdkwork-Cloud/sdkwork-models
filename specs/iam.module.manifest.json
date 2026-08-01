@@ -72,6 +72,8 @@
           { "operationId": "resources.update", "permission": "intelligence.resources.manage" },
           { "operationId": "resourceGroups.create", "permission": "intelligence.resources.manage" },
           { "operationId": "resourceGroups.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "resourceGroups.resources.update", "permission": "intelligence.resources.manage" },
+          { "operationId": "resourceGroups.resources.delete", "permission": "intelligence.resources.manage" },
           { "operationId": "resourceGroups.delete", "permission": "intelligence.resources.manage" }
         ]
       }

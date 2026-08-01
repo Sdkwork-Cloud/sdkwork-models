@@ -8,6 +8,8 @@ pub mod model_rankings_read_store;
 pub mod ops_audit_log_recorder;
 pub mod routing_config_change_recorder;
 
+pub const DEFAULT_CATALOG_REFRESH_SOURCE: &str = "sdkwork_models";
+
 pub use admin_ai_resource_store::*;
 pub use decimal::DecimalValue;
 pub use entity_uuid_generator::*;

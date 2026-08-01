@@ -228,6 +228,63 @@ function mergeVideoProfileCatalogBackendPaths(document) {
   });
 }
 
+function mergeAiResourceGroupMemberPaths(document) {
+  const updateTemplate = operationAt(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupId}",
+    "patch",
+  );
+  const deleteTemplate = operationAt(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupId}",
+    "delete",
+  );
+  if (!updateTemplate || !deleteTemplate) {
+    return document;
+  }
+  const pathParameters = [
+    {
+      in: "path",
+      name: "groupId",
+      required: true,
+      schema: int64StringSchema(false, 1),
+      description: "Tenant-owned AI resource group id.",
+    },
+    {
+      in: "path",
+      name: "resourceCode",
+      required: true,
+      schema: safeCodeSchema(192, false),
+      description: "AI API resource code.",
+    },
+  ];
+  const updateOperation = cloneJson(updateTemplate);
+  updateOperation.operationId = "resourceGroups.resources.update";
+  updateOperation.summary = "Assign or update a resource-group member";
+  updateOperation.description =
+    "Idempotently assign one API resource to a tenant-owned manual resource group, or update its role and sort order. The group row is locked and the membership mutation and audit event commit in one transaction.";
+  updateOperation.parameters = pathParameters;
+  updateOperation["x-contract-kind"] = "update";
+  updateOperation["x-sdkwork-resource"] = "resourceGroups.resources";
+
+  const deleteOperation = cloneJson(deleteTemplate);
+  deleteOperation.operationId = "resourceGroups.resources.delete";
+  deleteOperation.summary = "Detach a resource-group member";
+  deleteOperation.description =
+    "Idempotently detach one API resource from a tenant-owned manual resource group in the same transaction as its audit event.";
+  deleteOperation.parameters = cloneJson(pathParameters);
+  deleteOperation["x-contract-kind"] = "delete";
+  deleteOperation["x-sdkwork-resource"] = "resourceGroups.resources";
+
+  document.paths[
+    "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}"
+  ] = {
+    put: updateOperation,
+    delete: deleteOperation,
+  };
+  return document;
+}
+
 function modelCatalogSyncResultSchema() {
   return {
     type: "object",
@@ -337,6 +394,36 @@ function operationDataSuccessResponse(schemaRef, description) {
               properties: {
                 data: {
                   allOf: [{ $ref: schemaRef }],
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+  };
+}
+
+function operationResourceItemSuccessResponse(itemSchemaName, description) {
+  return {
+    description,
+    content: {
+      "application/json": {
+        schema: {
+          allOf: [
+            { $ref: "#/components/schemas/SdkWorkApiResponse" },
+            {
+              type: "object",
+              additionalProperties: false,
+              required: ["data"],
+              properties: {
+                data: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: ["item"],
+                  properties: {
+                    item: schemaRef(itemSchemaName),
+                  },
                 },
               },
             },
@@ -944,12 +1031,27 @@ function offsetPageSchema(itemSchemaName, description) {
     {
       items: arraySchema(schemaRef(itemSchemaName), 200),
       pageInfo: {
-        allOf: [schemaRef("PageInfo")],
+        allOf: [schemaRef("OffsetPageInfo")],
         description: "Offset pagination metadata.",
       },
     },
     ["items", "pageInfo"],
     description,
+  );
+}
+
+function offsetPageInfoSchema() {
+  return objectSchema(
+    {
+      mode: enumStringSchema(["offset"], false),
+      page: int32Schema(1),
+      pageSize: int32Schema(1, 200),
+      totalItems: int64StringSchema(false, 0),
+      totalPages: int32Schema(0),
+      hasMore: booleanSchema(),
+    },
+    ["mode", "page", "pageSize", "totalItems", "totalPages", "hasMore"],
+    "Required metadata for an offset-paginated SDKWork list response.",
   );
 }
 
@@ -962,6 +1064,17 @@ function adminAiResourceGroupMemberInputSchema() {
     },
     ["resourceCode"],
     "AI resource group member input.",
+  );
+}
+
+function adminAiResourceGroupMemberUpdateRequestSchema() {
+  return objectSchema(
+    {
+      itemRole: enumStringSchema(["included", "optional", "fallback"], true),
+      sortOrder: int64StringSchema(true, 0),
+    },
+    [],
+    "Full request body for assigning or updating one AI resource-group member.",
   );
 }
 
@@ -1090,6 +1203,7 @@ function ensureBackendWriteSchemas(document) {
     ModelRankingRefreshTriggerRequest: modelRankingRefreshTriggerRequestSchema(),
     ModelRankingRefreshTriggerResponse: modelRankingRefreshTriggerResponseSchema(),
     AdminAiResourceMemberInput: adminAiResourceMemberInputSchema(),
+    OffsetPageInfo: offsetPageInfoSchema(),
     AdminAiResourceMemberItem: adminAiResourceMemberItemSchema(),
     AdminAiResourceItem: adminAiResourceItemSchema(),
     AiResourcesPage: offsetPageSchema(
@@ -1109,6 +1223,8 @@ function ensureBackendWriteSchemas(document) {
       "Paginated resources returned by resourceGroups.resources.list.",
     ),
     AdminAiResourceGroupMemberInput: adminAiResourceGroupMemberInputSchema(),
+    AdminAiResourceGroupMemberUpdateRequest:
+      adminAiResourceGroupMemberUpdateRequestSchema(),
     AdminAiResourceGroupCreateRequest: adminAiResourceGroupCreateRequestSchema(),
     AdminAiResourceGroupUpdateRequest: adminAiResourceGroupUpdateRequestSchema(),
   });
@@ -1258,6 +1374,7 @@ function standardizeAiResourceListOperation(
   schemaName,
   description,
   searchDescription,
+  additionalQueryParameters = [],
 ) {
   const operation = operationAt(document, pathKey, "get");
   if (!operation) {
@@ -1270,6 +1387,7 @@ function standardizeAiResourceListOperation(
   operation.parameters = [
     ...pathParameters,
     ...offsetListQueryParameters(searchDescription),
+    ...additionalQueryParameters,
   ];
   operation["x-sdkwork-pagination-mode"] = "offset";
   standardizeDataOperation(operation, schemaName, "OK");
@@ -1282,6 +1400,18 @@ function standardizeAiResourceListOperations(document) {
     "AiResourcesPage",
     "List tenant-visible AI resources with SQL-backed offset pagination. The default stable sort is tenant override, sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
     "Free-text search on resource code, display name, vendor, modality, endpoint, catalog key, and model fields.",
+    [
+      {
+        in: "query",
+        name: "resource_type",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["vendor", "modality", "api_endpoint", "model_api", "bundle"],
+        },
+        description: "Filter by the canonical AI resource type.",
+      },
+    ],
   );
   standardizeAiResourceListOperation(
     document,
@@ -1386,6 +1516,13 @@ function standardizeBackendWriteOperations(document) {
     "AdminAiResourceGroupUpdateRequest",
     "AI resource group update request.",
   );
+  setRequestBody(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+    "put",
+    "AdminAiResourceGroupMemberUpdateRequest",
+    "AI resource-group member assignment request.",
+  );
 
   standardizeUpdateOperation(operationAt(document, "/backend/v3/api/ai/models/{modelId}", "patch"));
   standardizeUpdateOperation(
@@ -1397,6 +1534,20 @@ function standardizeBackendWriteOperations(document) {
   standardizeUpdateOperation(
     operationAt(document, "/backend/v3/api/ai/resource_groups/{groupId}", "patch"),
   );
+  const memberUpdateOperation = operationAt(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+    "put",
+  );
+  if (memberUpdateOperation?.responses) {
+    memberUpdateOperation.responses = {
+      "200": operationResourceItemSuccessResponse(
+        "AdminAiResourceGroupResourceItem",
+        "OK",
+      ),
+      ...keepProblemResponses(memberUpdateOperation.responses),
+    };
+  }
   standardizeDataOperation(
     operationAt(document, "/backend/v3/api/ai/models/sync", "post"),
     "ModelCatalogSyncResult",
@@ -1539,11 +1690,13 @@ const backendDocument = decorateGatewayContract(
         mergeModelCatalogSyncSchema(
           mergeVideoProfileCatalogBackendPaths(
             mergeVoiceCatalogBackendPaths(
-              extractSurface(
-                backendSource,
-                BACKEND_PATH_PREFIXES,
-                "SDKWork Models Backend API",
-                "/backend/v3/api",
+              mergeAiResourceGroupMemberPaths(
+                extractSurface(
+                  backendSource,
+                  BACKEND_PATH_PREFIXES,
+                  "SDKWork Models Backend API",
+                  "/backend/v3/api",
+                ),
               ),
             ),
           ),

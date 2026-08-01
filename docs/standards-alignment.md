@@ -1,7 +1,7 @@
 # SDKWork Models — Standards Alignment
 
 Status: active  
-Updated: 2026-07-05  
+Updated: 2026-07-31
 Authority: `../sdkwork-specs/README.md`
 
 This document records the **verified** alignment posture for `sdkwork-models`. It must match evidence from `pnpm run verify`, `cargo test --workspace`, and topology validation.
@@ -51,9 +51,11 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Voice SDK parity | Aligned | `listVoices`, `listVoicesForModel`, `listModelsForVoice` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled voice catalog |
 | Video profile SDK parity | Aligned | `listVideoProfiles`, `listVideoProfilesForModel`, `findVideoProfile` in Rust/TS/Python/Java/Flutter; Rust + TS + Python tests cover bundled video profiles |
 | Catalog sync observability | Aligned | `models.sync` returns `voiceCount`, `voiceBindingCount`, and `videoProfileCount` in `ModelCatalogSyncResult` |
-| Backend admin API | Aligned | IAM permissions on all backend routes; server-side pagination |
+| Backend admin API | Aligned | IAM permissions on all backend routes; SDKWork offset envelopes; SQL-backed pagination with default `20` and max `200` |
+| Resource-group capacity | Aligned | Manual groups are capped at `512` members; page hydration reads only resource codes selected by the current page |
+| Member mutation transaction | Aligned | PostgreSQL group-row lock / SQLite write lock; membership, audit, and routing config change commit atomically; repeated delete emits no false event |
 | App read API | Aligned | App catalog list routes require dual-token authentication; voice list uses `SdkWorkPageData` list envelope |
-| Database module | Aligned | Baseline DDL includes voice and video profile tables; contract materialized; `pnpm run db:validate` and `db:drift:check` pass |
+| Database module | Aligned | PostgreSQL is the authoritative server engine; SQLite remains a local adapter; baseline DDL includes voice and video profile tables |
 | Readiness probe | Aligned | `/healthz` and `/readyz` are infra probes (not business API envelope); `/readyz` probes DB |
 | Gateway production template | Aligned | Restricted CORS via `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS`; cloud gateway configs validated |
 | CI dependency closure | Aligned | `.github/workflows/verify.yml` checks out platform crates |
@@ -61,6 +63,7 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Supply-chain SBOM | Deferred | `security.sbomRequired: false` in `sdkwork.workflow.json` until release gate enables evidence |
 | PC browser catalog | Aligned | `apps/sdkwork-models-pc/` standalone catalog explorer via `@sdkwork/models` |
 | PC admin UI | Composed | Admin packages (`sdkwork-models-pc-admin-*`) mount in Claw Router host per `APP_PC_ARCHITECTURE_SPEC` |
+| PostgreSQL contention evidence | Open | Requires an isolated `SDKWORK_DATABASE_URL` to retain concurrent writer, retryable SQLSTATE, deadlock/serialization, and pool saturation evidence |
 
 ## Composed Host Integration
 
@@ -76,7 +79,9 @@ pnpm run api:check:route-manifest
 pnpm run db:validate
 pnpm run topology:validate
 cargo check -p sdkwork-api-models-standalone-gateway
+cargo test -p sdkwork-models-catalog-repository-sqlx
+node ../sdkwork-specs/tools/check-pagination.mjs --workspace .
 pnpm run verify
 ```
 
-Expected: route manifests match handlers, database module validates, Rust workspace compiles, catalog checks pass, API envelope check passes, and `pnpm run verify` exits 0.
+Expected: route manifests match handlers, database module validates, Rust workspace compiles, repository tests pass (`21` passed and the isolated PostgreSQL numeric test may remain ignored without `SDKWORK_DATABASE_URL`), catalog checks pass, API and pagination gates pass, and `pnpm run verify` exits 0. Commercial release additionally requires the open PostgreSQL contention evidence above.

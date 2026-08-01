@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "88ba471298a72e10727a1847e2a067f5e0b1b81431612188600f316314519e22"
+      "sha256": "ca57ccb50e2d08e9f6231197c05c391b80be500ddef87c59390c90a361fc0cb0"
     },
     {
       "path": "src/api/base.ts",
@@ -119,16 +119,36 @@
       "sha256": "86de5b893f7edf05a09065dd9225169821db86cad97950270aaf9a2d34f947d2"
     },
     {
+      "path": "src/types/admin-ai-resource-group-item.ts",
+      "sha256": "69c1c63f4fcd7b74b1bcff76097471e1e9f4cb35751dfe0e58e62cabf5d63a1f"
+    },
+    {
       "path": "src/types/admin-ai-resource-group-member-input.ts",
       "sha256": "6aa0fd0db4d28d8123383b1dc0fd23cfb31d22f7816067e653dd6f492f69bf84"
+    },
+    {
+      "path": "src/types/admin-ai-resource-group-member-update-request.ts",
+      "sha256": "8893bf317a744a8c4d1f9c8d6a17e92e72d276d134b50b6e7657f980af497861"
+    },
+    {
+      "path": "src/types/admin-ai-resource-group-resource-item.ts",
+      "sha256": "b245d8774a0320e42c8a16755126c2c9d654bd254206ff85662facf82848ed2e"
     },
     {
       "path": "src/types/admin-ai-resource-group-update-request.ts",
       "sha256": "3fd37a46748575b3e2fac460d9a82671bb003ed1f9dcab7c7caaf4ba1e15349e"
     },
     {
+      "path": "src/types/admin-ai-resource-item.ts",
+      "sha256": "36fb484ae3ae728f051b1d2f96a646ced875ab102da354ab43076b8bf5d4bdaf"
+    },
+    {
       "path": "src/types/admin-ai-resource-member-input.ts",
       "sha256": "1e2e4d4e1345c290b3d456a2dfdf94eda657986933eee2f897ba58efa0680dea"
+    },
+    {
+      "path": "src/types/admin-ai-resource-member-item.ts",
+      "sha256": "f895a229d611e093bc1c5c96ed57d98fcd4d70383f3c8da4962701ac5f1ece97"
     },
     {
       "path": "src/types/admin-ai-resource-update-request.ts",
@@ -171,6 +191,18 @@
       "sha256": "325d00cfa372fd174e4aa79dc6b76378b1e58d1d72593318983cca482f8a4fc1"
     },
     {
+      "path": "src/types/ai-resource-group-resources-page.ts",
+      "sha256": "44f18367a4cf8f11b0dc0c82f33e23ea401e146af94455d2f8d562666ee97275"
+    },
+    {
+      "path": "src/types/ai-resource-groups-page.ts",
+      "sha256": "a75c3c0bf8510d726d5072e7ca11f46871738bbc1c28a7f5a74345b64cb8c4dd"
+    },
+    {
+      "path": "src/types/ai-resources-page.ts",
+      "sha256": "46bbaf9153ce90addf756670dd509a61224a9f449d765b5fa9133266559a49d4"
+    },
+    {
       "path": "src/types/common.ts",
       "sha256": "351d721c3c6f48f4453f92276856105120d72eb8d2fa9cd28de8e3854bf10f6c"
     },
@@ -180,7 +212,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "609ac397860db08457b086295ae3413ac1b831f6cbaa98f928a9a97e8a8776a5"
+      "sha256": "755af198dcdb4a9a3356b9fe573657457d7134da75774ffd315349585bd1f7c8"
     },
     {
       "path": "src/types/json-null.ts",
@@ -279,8 +311,8 @@
       "sha256": "9657233a372b7cb480b418dc25726957119f302adefe1eb271dc6b51cd3e81b2"
     },
     {
-      "path": "src/types/no-data.ts",
-      "sha256": "85014112e547cd24ccb577486023c163abaf5e8c9b98dae6d6f1c1bb3dd25836"
+      "path": "src/types/offset-page-info.ts",
+      "sha256": "a8d6b0c56064ea0bc744e8ae5f3095370439b6d2224b1d4c27b4b3916acf224d"
     },
     {
       "path": "src/types/page-info.ts",
@@ -291,16 +323,20 @@
       "sha256": "c41fdf6433e1167d2fb1f3ac38fd13eb77178f4c0633c9e27824f1e1687ee4f6"
     },
     {
-      "path": "src/types/resource-groups-list-result.ts",
-      "sha256": "8631eacb327c0f28a7c8267a378463ad4c04ceb600e7611480aee044e72fd2ea"
+      "path": "src/types/resource-groups-list-get-response.ts",
+      "sha256": "852613ea25f097d5f767f7c17e85cc6fce63b28a7497f1d13622f6b875d7044a"
     },
     {
-      "path": "src/types/resource-groups-resources-list-result.ts",
-      "sha256": "684fef686161652b8e4e2d67ffa84a9fd4a33447cc6a31145be1f0ab2891874f"
+      "path": "src/types/resource-groups-list-response.ts",
+      "sha256": "88558e1d4504580ab42ba0e397ecdcabdd294747ec4b092c9a8c4214df11cedf"
     },
     {
-      "path": "src/types/resources-list-result.ts",
-      "sha256": "cee21502699190053672fcc338ec9b0f50a470b9f68c5ec37bb9edc5bfa44078"
+      "path": "src/types/resource-groups-update-response.ts",
+      "sha256": "0193399936c0c446572d121ee56a14bcbb024c95fb668b2aea3821bd55e473ab"
+    },
+    {
+      "path": "src/types/resources-list-response.ts",
+      "sha256": "428368645d706cd7cf3059a4dd232032138bdddbae557016e771f305a62fb7c0"
     },
     {
       "path": "src/types/sdk-work-api-response.ts",

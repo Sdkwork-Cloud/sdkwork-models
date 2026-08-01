@@ -74,8 +74,10 @@
             "required": false,
             "schema": {
               "type": "string",
+              "format": "int64",
               "pattern": "^[1-9][0-9]*$",
-              "x-sdkwork-int64-string": true
+              "x-sdkwork-int64-string": true,
+              "x-sdkwork-rust-type": "i64"
             },
             "description": "Filter mappings by channel binding id encoded as int64 string."
           },
@@ -1892,19 +1894,72 @@
     },
     "/backend/v3/api/ai/resource_groups": {
       "get": {
-        "description": "List resource groups. Reads ai_resource_group, ai_resource_group_item. Writes none. File targets none.",
+        "description": "List tenant-visible AI resource groups with SQL-backed offset pagination. The default stable sort is tenant override, sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
         "operationId": "resourceGroups.list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "description": "Free-text search on resource-group code, name, and description."
+          }
+        ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceGroupsListResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/AiResourceGroupsPage"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -1972,6 +2027,7 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
+        "x-sdkwork-pagination-mode": "offset",
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
@@ -2081,7 +2137,7 @@
     },
     "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources": {
       "get": {
-        "description": "List resource group resources. Reads ai_resource_group, ai_resource_group_item, ai_resource. Writes none. File targets none.",
+        "description": "List resources in a tenant-visible AI resource group with SQL-backed offset pagination. The default stable sort is membership or resource sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
         "operationId": "resourceGroups.resources.list",
         "parameters": [
           {
@@ -2092,18 +2148,70 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "description": "Free-text search on resource code, display name, vendor, modality, endpoint, catalog key, and model fields."
           }
         ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourceGroupsResourcesListResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/AiResourceGroupResourcesPage"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2172,6 +2280,7 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
+        "x-sdkwork-pagination-mode": "offset",
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
@@ -2385,19 +2494,88 @@
     },
     "/backend/v3/api/ai/resources": {
       "get": {
-        "description": "List assignable resources. Reads ai_resource, ai_resource_group_item. Writes none. File targets none.",
+        "description": "List tenant-visible AI resources with SQL-backed offset pagination. The default stable sort is tenant override, sortOrder, then id; page_size defaults to 20 and is capped at 200. This is a P1 administrative list.",
         "operationId": "resources.list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "description": "Free-text search on resource code, display name, vendor, modality, endpoint, catalog key, and model fields."
+          },
+          {
+            "in": "query",
+            "name": "resource_type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "vendor",
+                "modality",
+                "api_endpoint",
+                "model_api",
+                "bundle"
+              ]
+            },
+            "description": "Filter by the canonical AI resource type."
+          }
+        ],
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResourcesListResult"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/AiResourcesPage"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
-            },
-            "description": "OK"
+            }
           },
           "400": {
             "content": {
@@ -2465,6 +2643,7 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
+        "x-sdkwork-pagination-mode": "offset",
         "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-auth-mode": "dual-token",
@@ -2673,6 +2852,266 @@
         "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/admin_ai_resource.rs",
         "x-write-tables": [
           "ai_resource",
+          "ops_audit_log"
+        ],
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-permission": "intelligence.resources.manage"
+      }
+    },
+    "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}": {
+      "put": {
+        "description": "Idempotently assign one API resource to a tenant-owned manual resource group, or update its role and sort order. The group row is locked and the membership mutation and audit event commit in one transaction.",
+        "operationId": "resourceGroups.resources.update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "pattern": "^[1-9][0-9]*$",
+              "x-sdkwork-int64-string": true,
+              "x-sdkwork-rust-type": "i64"
+            },
+            "description": "Tenant-owned AI resource group id."
+          },
+          {
+            "in": "path",
+            "name": "resourceCode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 192,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "AI API resource code."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "item"
+                          ],
+                          "properties": {
+                            "item": {
+                              "$ref": "#/components/schemas/AdminAiResourceGroupResourceItem"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "Assign or update a resource-group member",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "update",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource_group",
+          "ai_resource_group_item"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "resourceGroups.resources",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
+        "x-write-tables": [
+          "ai_resource_group",
+          "ai_resource_group_item",
+          "ops_audit_log"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "AI resource-group member assignment request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAiResourceGroupMemberUpdateRequest"
+              }
+            }
+          }
+        },
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-permission": "intelligence.resources.manage"
+      },
+      "delete": {
+        "description": "Idempotently detach one API resource from a tenant-owned manual resource group in the same transaction as its audit event.",
+        "operationId": "resourceGroups.resources.delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "int64",
+              "pattern": "^[1-9][0-9]*$",
+              "x-sdkwork-int64-string": true,
+              "x-sdkwork-rust-type": "i64"
+            },
+            "description": "Tenant-owned AI resource group id."
+          },
+          {
+            "in": "path",
+            "name": "resourceCode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 192,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "AI API resource code."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "Detach a resource-group member",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "delete",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource_group"
+        ],
+        "x-route-scope": "admin",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "resourceGroups.resources",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
+        "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
+        "x-write-tables": [
+          "ai_resource_group",
+          "ai_resource_group_item",
           "ops_audit_log"
         ],
         "x-sdkwork-api-surface": "backend-api",
@@ -3212,8 +3651,10 @@
         "properties": {
           "vendorId": {
             "type": "string",
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "model": {
             "type": "string",
@@ -3248,8 +3689,10 @@
           },
           "contextTokens": {
             "type": "string",
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "description": {
             "type": [
@@ -3345,8 +3788,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "supportsStreaming": {
             "type": "boolean"
@@ -3783,8 +4228,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "model": {
             "type": [
@@ -3841,8 +4288,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "description": {
             "type": [
@@ -3938,8 +4387,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "supportsStreaming": {
             "type": "boolean"
@@ -4080,8 +4531,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "members": {
             "type": "array",
@@ -4147,8 +4600,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "status": {
             "type": [
@@ -4173,6 +4628,118 @@
         "required": [
           "groupCode",
           "groupName"
+        ]
+      },
+      "AdminAiResourceGroupItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource group returned by the management API.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "groupCode": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "groupName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "groupType": {
+            "type": "string",
+            "enum": [
+              "api_group"
+            ]
+          },
+          "selectionMode": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "all",
+              "any",
+              "dynamic_all_api"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "vendorCodes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128
+          },
+          "capability": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled",
+              "inactive"
+            ]
+          },
+          "resourceCount": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "dynamic": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "groupCode",
+          "groupName",
+          "groupType",
+          "selectionMode",
+          "vendorCodes",
+          "capabilities",
+          "status",
+          "resourceCount",
+          "dynamic"
         ]
       },
       "AdminAiResourceGroupMemberInput": {
@@ -4202,12 +4769,159 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           }
         },
         "required": [
           "resourceCode"
+        ]
+      },
+      "AdminAiResourceGroupMemberUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Full request body for assigning or updating one AI resource-group member.",
+        "properties": {
+          "itemRole": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "included",
+              "optional",
+              "fallback",
+              null
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          }
+        }
+      },
+      "AdminAiResourceGroupResourceItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource projected through a resource-group membership.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "resourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled",
+              "inactive"
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "memberRole": {
+            "type": "string",
+            "enum": [
+              "included",
+              "optional",
+              "fallback"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "resourceCode",
+          "resourceType",
+          "displayName",
+          "status",
+          "memberRole"
         ]
       },
       "AdminAiResourceGroupUpdateRequest": {
@@ -4265,8 +4979,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "status": {
             "type": [
@@ -4288,6 +5004,148 @@
             "maxItems": 512
           }
         }
+      },
+      "AdminAiResourceItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource returned by the management API.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "resourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "vendor",
+              "modality",
+              "api_endpoint",
+              "model_api",
+              "bundle"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "vendorCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "modalityCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "apiEndpointCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "catalogKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "providerNativeModel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "capability": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128
+          },
+          "compositionMode": {
+            "type": "string",
+            "enum": [
+              "single",
+              "any",
+              "all"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled",
+              "inactive"
+            ]
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceMemberItem"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "id",
+          "resourceCode",
+          "resourceType",
+          "displayName",
+          "capabilities",
+          "compositionMode",
+          "status",
+          "members"
+        ]
       },
       "AdminAiResourceMemberInput": {
         "type": "object",
@@ -4319,12 +5177,58 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           }
         },
         "required": [
           "memberResourceCode"
+        ]
+      },
+      "AdminAiResourceMemberItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "AI resource composition member returned by the management API.",
+        "properties": {
+          "parentResourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "memberResourceCode": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "memberRole": {
+            "type": "string",
+            "enum": [
+              "included",
+              "optional",
+              "fallback"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          }
+        },
+        "required": [
+          "parentResourceCode",
+          "memberResourceCode",
+          "memberRole",
+          "required"
         ]
       },
       "AdminAiResourceUpdateRequest": {
@@ -4438,8 +5342,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "members": {
             "type": "array",
@@ -4510,8 +5416,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "sourceVendorCode": {
             "type": "string",
@@ -4523,8 +5431,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "targetVendorCode": {
             "type": "string",
@@ -4645,8 +5555,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "bindingType": {
             "type": "string",
@@ -4658,8 +5570,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "bindingCode": {
             "type": [
@@ -4694,8 +5608,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "sourceModel": {
             "type": [
@@ -4764,8 +5680,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "sourceVendorCode": {
             "type": [
@@ -4780,8 +5698,10 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "targetVendorCode": {
             "type": [
@@ -4974,6 +5894,84 @@
           "items"
         ],
         "type": "object"
+      },
+      "AiResourceGroupResourcesPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Paginated resources returned by resourceGroups.resources.list.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceGroupResourceItem"
+            },
+            "maxItems": 200
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OffsetPageInfo"
+              }
+            ],
+            "description": "Offset pagination metadata."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ]
+      },
+      "AiResourceGroupsPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Paginated AI resource groups returned by resourceGroups.list.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceGroupItem"
+            },
+            "maxItems": 200
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OffsetPageInfo"
+              }
+            ],
+            "description": "Offset pagination metadata."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ]
+      },
+      "AiResourcesPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Paginated AI resources returned by resources.list.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAiResourceItem"
+            },
+            "maxItems": 200
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OffsetPageInfo"
+              }
+            ],
+            "description": "Offset pagination metadata."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ]
       },
       "FieldError": {
         "type": "object",
@@ -5739,32 +6737,40 @@
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "lookbackDays": {
             "type": [
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "refreshIntervalSeconds": {
             "type": [
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "cacheMaxAgeSeconds": {
             "type": [
               "string",
               "null"
             ],
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           }
         }
       },
@@ -5785,13 +6791,17 @@
           },
           "tenantId": {
             "type": "string",
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "organizationId": {
             "type": "string",
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "rankScope": {
             "type": "string",
@@ -5824,23 +6834,31 @@
           },
           "generatedCount": {
             "type": "string",
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "sourceCount": {
             "type": "string",
+            "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "refreshIntervalSeconds": {
             "type": "string",
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "cacheMaxAgeSeconds": {
             "type": "string",
+            "format": "int64",
             "pattern": "^[1-9][0-9]*$",
-            "x-sdkwork-int64-string": true
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
           },
           "nextRefreshAt": {
             "type": "string",
@@ -6148,11 +7166,52 @@
         "description": "Models list result schema exposed by Claw Router.",
         "x-operation-id": "models.list"
       },
-      "NoData": {
+      "OffsetPageInfo": {
+        "type": "object",
         "additionalProperties": false,
-        "description": "Closed empty payload for operations that complete without business data.",
-        "properties": {},
-        "type": "object"
+        "description": "Required metadata for an offset-paginated SDKWork list response.",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "offset"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "totalItems": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mode",
+          "page",
+          "pageSize",
+          "totalItems",
+          "totalPages",
+          "hasMore"
+        ]
       },
       "PageInfo": {
         "type": "object",
@@ -6248,87 +7307,6 @@
             }
           }
         }
-      },
-      "ResourceGroupsListResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by resource groups list result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Resource groups list result schema exposed by Claw Router.",
-        "x-operation-id": "resourceGroups.list"
-      },
-      "ResourceGroupsResourcesListResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by resource groups resources list result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Resource groups resources list result schema exposed by Claw Router.",
-        "x-operation-id": "resourceGroups.resources.list"
-      },
-      "ResourcesListResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SdkWorkApiResponse"
-          },
-          {
-            "additionalProperties": false,
-            "description": "Object schema used by resources list result.",
-            "properties": {
-              "data": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NoData"
-                  }
-                ],
-                "description": "No business data returned by this operation."
-              }
-            },
-            "required": [
-              "data"
-            ],
-            "type": "object"
-          }
-        ],
-        "description": "Resources list result schema exposed by Claw Router.",
-        "x-operation-id": "resources.list"
       },
       "SdkWorkApiResponse": {
         "type": "object",

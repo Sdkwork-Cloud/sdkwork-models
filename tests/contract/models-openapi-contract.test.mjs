@@ -26,6 +26,26 @@ const resolveOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappin
 const modelMappingsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappings']?.get;
 const appModelsListOperation = appOpenApi.paths?.['/app/v3/api/ai/models']?.get;
 const backendModelsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/models']?.get;
+const aiResourceListOperations = [
+  [
+    'resources.list',
+    '/backend/v3/api/ai/resources',
+    '#/components/schemas/AiResourcesPage',
+    '#/components/schemas/AdminAiResourceItem',
+  ],
+  [
+    'resourceGroups.list',
+    '/backend/v3/api/ai/resource_groups',
+    '#/components/schemas/AiResourceGroupsPage',
+    '#/components/schemas/AdminAiResourceGroupItem',
+  ],
+  [
+    'resourceGroups.resources.list',
+    '/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources',
+    '#/components/schemas/AiResourceGroupResourcesPage',
+    '#/components/schemas/AdminAiResourceGroupResourceItem',
+  ],
+];
 
 for (const [path, pathItem] of Object.entries(appOpenApi.paths ?? {})) {
   for (const [method, operation] of Object.entries(pathItem ?? {})) {
@@ -58,6 +78,7 @@ const writeOperationRequestBodies = [
   ['resources.update', 'put', '/backend/v3/api/ai/resources/{resourceId}', '#/components/schemas/AdminAiResourceUpdateRequest'],
   ['resourceGroups.create', 'post', '/backend/v3/api/ai/resource_groups', '#/components/schemas/AdminAiResourceGroupCreateRequest'],
   ['resourceGroups.update', 'patch', '/backend/v3/api/ai/resource_groups/{groupId}', '#/components/schemas/AdminAiResourceGroupUpdateRequest'],
+  ['resourceGroups.resources.update', 'put', '/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}', '#/components/schemas/AdminAiResourceGroupMemberUpdateRequest'],
 ];
 
 const expectedGeneratedBodyMethods = [
@@ -73,6 +94,7 @@ const expectedGeneratedBodyMethods = [
   ['resources.update', /async update\([^)]*body:\s*AdminAiResourceUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resources\/\$\{serializePathParameter\(resourceId,[^\n]*\}`\), \{[^\n]*method: 'PUT' as any,[^\n]*\bbody\b/],
   ['resourceGroups.create', /async create\([^)]*body:\s*AdminAiResourceGroupCreateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups`\), \{[^\n]*method: 'POST' as any,[^\n]*\bbody\b/],
   ['resourceGroups.update', /async update\([^)]*body:\s*AdminAiResourceGroupUpdateRequest[^)]*\): Promise<Record<string, unknown>>/, /this\.client\.request<Record<string, unknown>>\(backendApiPath\(`\/ai\/resource_groups\/\$\{serializePathParameter\(groupId,[^\n]*\}`\), \{[^\n]*method: 'PATCH' as any,[^\n]*\bbody\b/],
+  ['resourceGroups.resources.update', /async update\(groupId: string, resourceCode: string, body:\s*AdminAiResourceGroupMemberUpdateRequest[^)]*\): Promise<AdminAiResourceGroupResourceItem>/, /this\.client\.request<AdminAiResourceGroupResourceItem>\(backendApiPath\(`\/ai\/resource_groups\/\$\{serializePathParameter\(groupId,[^\n]*\/resources\/\$\{serializePathParameter\(resourceCode,[^\n]*\}`\), \{[^\n]*method: 'PUT' as any,[^\n]*\bbody\b/],
 ];
 
 for (const [operationId, method, path, schemaRef] of writeOperationRequestBodies) {
@@ -170,6 +192,81 @@ assert.ok(appModelItem?.properties?.providerCodes, 'App model items must expose 
 const adminModelPage = backendOpenApi.components?.schemas?.AdminAiModelPage;
 assert.equal(adminModelPage?.properties?.items?.items?.$ref, '#/components/schemas/AdminAiModelItem');
 
+for (const [operationId, path, expectedPageRef, expectedItemRef] of aiResourceListOperations) {
+  const operation = backendOpenApi.paths?.[path]?.get;
+  assert.ok(operation, `${operationId} operation must exist`);
+  assert.equal(operation.operationId, operationId);
+  assert.equal(operation['x-sdkwork-pagination-mode'], 'offset');
+  const queryParams = new Map(
+    (operation.parameters ?? [])
+      .filter((parameter) => parameter.in === 'query')
+      .map((parameter) => [parameter.name, parameter]),
+  );
+  const expectedQueryParams = operationId === 'resources.list'
+    ? ['page', 'page_size', 'q', 'resource_type']
+    : ['page', 'page_size', 'q'];
+  assert.deepEqual([...queryParams.keys()], expectedQueryParams);
+  assert.equal(queryParams.get('page')?.schema?.default, 1);
+  assert.equal(queryParams.get('page_size')?.schema?.default, 20);
+  assert.equal(queryParams.get('page_size')?.schema?.maximum, 200);
+  assert.equal(queryParams.get('q')?.schema?.maxLength, 256);
+  for (const legacyName of ['pageSize', 'limit', 'page_no', 'pageNo', 'per_page', 'size']) {
+    assert.equal(queryParams.has(legacyName), false, `${operationId} must reject ${legacyName}`);
+  }
+  assert.equal(responseDataSchemaRef(backendOpenApi, operation), expectedPageRef);
+  const pageName = expectedPageRef.slice('#/components/schemas/'.length);
+  const pageSchema = backendOpenApi.components?.schemas?.[pageName];
+  assert.equal(pageSchema?.properties?.items?.items?.$ref, expectedItemRef);
+  assert.equal(
+    pageSchema?.properties?.pageInfo?.allOf?.[0]?.$ref,
+    '#/components/schemas/OffsetPageInfo',
+  );
+}
+
+const offsetPageInfo = backendOpenApi.components?.schemas?.OffsetPageInfo;
+assert.deepEqual(
+  offsetPageInfo?.required,
+  ['mode', 'page', 'pageSize', 'totalItems', 'totalPages', 'hasMore'],
+);
+assert.equal(offsetPageInfo?.properties?.mode?.enum?.[0], 'offset');
+assert.equal(offsetPageInfo?.properties?.totalItems?.type, 'string');
+assert.equal(offsetPageInfo?.properties?.totalItems?.format, 'int64');
+assert.equal(offsetPageInfo?.properties?.totalItems?.['x-sdkwork-int64-string'], true);
+
+for (const [schemaName, fields] of [
+  ['AdminAiResourceItem', ['id', 'sortOrder']],
+  ['AdminAiResourceGroupItem', ['id', 'sortOrder', 'resourceCount']],
+  ['AdminAiResourceGroupResourceItem', ['id', 'sortOrder']],
+]) {
+  const schema = backendOpenApi.components?.schemas?.[schemaName];
+  for (const field of fields) {
+    const property = schema?.properties?.[field];
+    assert.ok(property, `${schemaName}.${field} must exist`);
+    assert.equal(property.format, 'int64');
+    assert.equal(property['x-sdkwork-int64-string'], true);
+  }
+}
+
+const memberPath = '/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}';
+const memberUpdateOperation = backendOpenApi.paths?.[memberPath]?.put;
+const memberDeleteOperation = backendOpenApi.paths?.[memberPath]?.delete;
+const memberUpdateRequest = backendOpenApi.components?.schemas?.AdminAiResourceGroupMemberUpdateRequest;
+assert.equal(memberUpdateRequest?.type, 'object');
+assert.equal(memberUpdateRequest?.additionalProperties, false);
+assert.deepEqual(Object.keys(memberUpdateRequest?.properties ?? {}), ['itemRole', 'sortOrder']);
+assert.equal(memberUpdateRequest?.properties?.sortOrder?.format, 'int64');
+assert.equal(memberUpdateRequest?.properties?.sortOrder?.['x-sdkwork-int64-string'], true);
+assert.equal(
+  memberUpdateOperation?.responses?.['200']?.content?.['application/json']?.schema
+    ?.allOf?.[1]?.properties?.data?.properties?.item?.$ref,
+  '#/components/schemas/AdminAiResourceGroupResourceItem',
+);
+assert.equal(memberDeleteOperation?.responses?.['204']?.content, undefined);
+assert.equal(memberDeleteOperation?.responses?.['200'], undefined);
+for (const operation of [memberUpdateOperation, memberDeleteOperation]) {
+  assert.equal(operation?.['x-sdkwork-permission'], 'intelligence.resources.manage');
+}
+
 const generatedApiSource = readFileSync(
   join(root, 'sdks/sdkwork-models-backend-sdk/sdkwork-models-backend-sdk-typescript/generated/server-openapi/src/api/ai.ts'),
   'utf8',
@@ -221,6 +318,60 @@ assert.match(
   /async list\([^)]*params\?: AiModelsListParams[^)]*\): Promise<AdminAiModelPage>/,
   'generated backend SDK must return the typed admin model page',
 );
+
+for (const [paramsName, pageName] of [
+  ['AiResourcesListParams', 'AiResourcesPage'],
+  ['AiResourceGroupsListParams', 'AiResourceGroupsPage'],
+]) {
+  assert.match(
+    generatedApiSource,
+    new RegExp(`async list\\([^)]*params\\?: ${paramsName}[^)]*\\): Promise<${pageName}>`),
+  );
+}
+assert.match(
+  generatedApiSource,
+  /async list\(groupIdOrCode: string, params\?: AiResourceGroupsResourcesListParams[^)]*\): Promise<AiResourceGroupResourcesPage>/,
+);
+for (const paramsName of [
+  'AiResourcesListParams',
+  'AiResourceGroupsListParams',
+  'AiResourceGroupsResourcesListParams',
+]) {
+  const paramsBlock = generatedApiSource.match(
+    new RegExp(`export interface ${paramsName} \\{([\\s\\S]*?)\\n\\}`),
+  )?.[1];
+  assert.ok(paramsBlock, `${paramsName} must be generated`);
+  assert.match(paramsBlock, /page\?: number;/);
+  assert.match(paramsBlock, /pageSize\?: number;/);
+  assert.match(paramsBlock, /q\?: string;/);
+}
+const resourcesListParamsBlock = generatedApiSource.match(
+  /export interface AiResourcesListParams \{([\s\S]*?)\n\}/,
+)?.[1];
+assert.ok(resourcesListParamsBlock, 'AiResourcesListParams must be generated');
+assert.match(
+  resourcesListParamsBlock,
+  /resourceType\?: 'vendor' \| 'modality' \| 'api_endpoint' \| 'model_api' \| 'bundle';/,
+);
+for (const paramsName of ['AiResourceGroupsListParams', 'AiResourceGroupsResourcesListParams']) {
+  const paramsBlock = generatedApiSource.match(
+    new RegExp(`export interface ${paramsName} \\{([\\s\\S]*?)\\n\\}`),
+  )?.[1];
+  assert.doesNotMatch(paramsBlock ?? '', /resourceType\?:/, `${paramsName} must not expose resourceType`);
+}
+assert.match(
+  generatedApiSource,
+  /\{ name: 'resource_type', value: params\?\.resourceType/,
+  'generated backend SDK must serialize resourceType as resource_type',
+);
+assert.match(
+  generatedApiSource,
+  /async delete\(groupId: string, resourceCode: string,[^)]*\): Promise<void>/,
+  'generated backend SDK must expose resourceGroups.resources.delete as a void operation',
+);
+assert.doesNotMatch(generatedApiSource, /Promise<NoData>/);
+assert.doesNotMatch(resourceGroupServiceSource, /\.ai\.aiResourceGroups\b|\.ai\.aiResources\b/);
+assert.doesNotMatch(resourceGroupServiceSource, /while\s*\(hasMore\)|fetchResourceGroupResourcesForUpdate/);
 assert.match(
   generatedApiSource,
   /\{ name: 'page_size', value: params\?\.pageSize/,
@@ -350,7 +501,7 @@ assert.doesNotMatch(
 );
 assert.match(
   resourceGroupServiceSource,
-  /function toSdkListParams\(query: ResourceListQuery\): \{ page\?: number; pageSize\?: number; q\?: string \}/,
+  /function toSdkListParams\(query: ResourceListQuery\): \{\s*page\?: number;\s*pageSize\?: number;\s*q\?: string;\s*resourceType\?: ResourceListQuery\['resourceType'\];\s*\}/,
   'resource group service must pass numeric pagination params to generated SDK list methods',
 );
 assert.doesNotMatch(
@@ -365,5 +516,12 @@ const backendPermissions = iamModuleManifest.permissions?.openapiAuthorities
 const operationIds = new Set(backendPermissions.map((permission) => permission.operationId));
 assert.ok(operationIds.has('modelMappings.resolve'), 'IAM manifest must grant modelMappings.resolve');
 assert.ok(!operationIds.has('modelMappings.resolve.create'), 'IAM manifest must not keep stale modelMappings.resolve.create');
+for (const operationId of ['resourceGroups.resources.update', 'resourceGroups.resources.delete']) {
+  assert.equal(
+    backendPermissions.find((permission) => permission.operationId === operationId)?.permission,
+    'intelligence.resources.manage',
+    `IAM manifest must grant ${operationId}`,
+  );
+}
 
 process.stdout.write('models-openapi-contract.test.mjs passed\n');

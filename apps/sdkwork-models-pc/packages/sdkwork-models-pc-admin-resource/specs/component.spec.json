@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/models-pc-admin-resource",
+    "displayName": "SDKWork Models Resource Administration",
+    "version": "0.1.0",
+    "type": "react-package",
+    "root": "sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource",
+    "domain": "intelligence",
+    "capability": "resource-admin",
+    "surface": "backend-admin",
+    "status": "standardizing",
+    "languages": [
+      "typescript",
+      "react"
+    ],
+    "generated": false,
+    "private": true,
+    "manifests": [
+      "package.json"
+    ]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "COMPONENT_SPEC.md",
+      "path": "../../../../../sdkwork-specs/COMPONENT_SPEC.md",
+      "purpose": "Module-local component contract requirements."
+    },
+    {
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Authored source structure and generated-code boundaries."
+    },
+    {
+      "file": "NAMING_SPEC.md",
+      "path": "../../../../../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical package, API, SDK, and component naming."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "Strict TypeScript service and package boundaries."
+    },
+    {
+      "file": "FRONTEND_CODE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/FRONTEND_CODE_SPEC.md",
+      "purpose": "React component and frontend state implementation rules."
+    },
+    {
+      "file": "FRONTEND_SPEC.md",
+      "path": "../../../../../sdkwork-specs/FRONTEND_SPEC.md",
+      "purpose": "UI-service-SDK layering, state, errors, and pagination."
+    },
+    {
+      "file": "UI_ARCHITECTURE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/UI_ARCHITECTURE_SPEC.md",
+      "purpose": "UI architecture selection and ownership boundaries."
+    },
+    {
+      "file": "APP_PC_ARCHITECTURE_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_PC_ARCHITECTURE_SPEC.md",
+      "purpose": "PC application package composition."
+    },
+    {
+      "file": "BACKEND_UI_SPEC.md",
+      "path": "../../../../../sdkwork-specs/BACKEND_UI_SPEC.md",
+      "purpose": "Backend-admin React and backend SDK boundary."
+    },
+    {
+      "file": "APP_SDK_INTEGRATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/APP_SDK_INTEGRATION_SPEC.md",
+      "purpose": "Generated backend SDK consumption and token-manager integration."
+    },
+    {
+      "file": "SDK_SPEC.md",
+      "path": "../../../../../sdkwork-specs/SDK_SPEC.md",
+      "purpose": "Generated SDK method semantics and composed facade rules."
+    },
+    {
+      "file": "PAGINATION_SPEC.md",
+      "path": "../../../../../sdkwork-specs/PAGINATION_SPEC.md",
+      "purpose": "Server-side list and search pagination requirements."
+    },
+    {
+      "file": "I18N_SPEC.md",
+      "path": "../../../../../sdkwork-specs/I18N_SPEC.md",
+      "purpose": "Operator-facing localized message ownership."
+    },
+    {
+      "file": "TEST_SPEC.md",
+      "path": "../../../../../sdkwork-specs/TEST_SPEC.md",
+      "purpose": "Frontend, SDK, contract, and pagination verification."
+    }
+  ],
+  "contracts": {
+    "layerRole": "frontend-feature",
+    "publicExports": [
+      ".",
+      "./resourceGroupService"
+    ],
+    "providedPorts": [
+      {
+        "name": "models.resourceAdmin",
+        "export": "."
+      }
+    ],
+    "requiredPorts": [
+      {
+        "name": "models.backendSdk",
+        "export": "@sdkwork/models-backend-sdk",
+        "provider": "@sdkwork/models-backend-sdk"
+      },
+      {
+        "name": "clawrouter.resourceAdminPrimitives",
+        "export": "@sdkwork/clawroutes-pc-commons/components/AiResourceSelectorModal",
+        "provider": "@sdkwork/clawroutes-pc-commons"
+      }
+    ],
+    "runtimeEntrypoints": [
+      "package.json#scripts.typecheck"
+    ],
+    "sdkClients": [],
+    "sdkDependencies": [
+      {
+        "workspace": "sdkwork-models-backend-sdk",
+        "surface": "backend-api",
+        "credentialMode": "authenticated-backend-admin"
+      }
+    ],
+    "permissionComposition": {
+      "inheritanceMode": "module-catalog-with-overrides",
+      "applicationModule": {
+        "manifestRef": "../../../../../specs/iam.module.manifest.json"
+      },
+      "routePermissionHints": {
+        "inheritFromOpenApi": true,
+        "inheritFromModuleManifests": true,
+        "overrides": []
+      }
+    },
+    "dependencyApiExports": [],
+    "dependencyApiSurfaces": [],
+    "events": [],
+    "configKeys": [],
+    "routeManifest": null
+  },
+  "integration": {
+    "authority": "Root SDKWork specs remain authoritative; this contract narrows the Models backend-admin resource feature only.",
+    "dependencyPolicy": "The feature consumes public package exports and generated backend SDK resources only.",
+    "sdkPolicy": "Interactive resource lists request one server page at a time; member mutations use generated single-resource update and delete methods.",
+    "languagePolicy": "TypeScript and React source follows strict package and frontend boundaries."
+  },
+  "verification": {
+    "commands": [
+      "pnpm --filter @sdkwork/models-pc-admin-resource run typecheck",
+      "node tests/contract/models-openapi-contract.test.mjs"
+    ]
+  },
+  "metadata": {
+    "managedBy": "sdkwork-models maintainers",
+    "standardVersion": "2026-07-31"
+  }
+}

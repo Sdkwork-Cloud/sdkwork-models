@@ -18,7 +18,6 @@ tokio.workspace = true
 sdkwork-claw-http.workspace = true
 sdkwork-models.workspace = true
 sdkwork_models_contract_service.workspace = true
-sdkwork_models_catalog_repository_sqlx.workspace = true
 sdkwork-utils-rust.workspace = true
 sdkwork-web-core.workspace = true
 tracing.workspace = true

@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
 import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { AdminAiModelCreateRequest, AdminAiModelPage, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AdminModelVendorListResponse, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshStatus, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, NoData, PageInfo } from '../types';
+import type { AdminAiModelCreateRequest, AdminAiModelPage, AdminAiModelUpdateRequest, AdminAiResourceCreateRequest, AdminAiResourceGroupCreateRequest, AdminAiResourceGroupMemberUpdateRequest, AdminAiResourceGroupResourceItem, AdminAiResourceGroupUpdateRequest, AdminAiResourceUpdateRequest, AdminModelCatalogSyncRequest, AdminModelMappingCreateRequest, AdminModelMappingResolveRequest, AdminModelMappingUpdateRequest, AdminModelVendorCreateRequest, AdminModelVendorListResponse, AiResourceGroupResourcesPage, AiResourceGroupsPage, AiResourcesPage, ModelCatalogSyncResult, ModelMappingsPage, ModelRankingRefreshJobHistoryPage, ModelRankingRefreshStatus, ModelRankingRefreshTriggerRequest, ModelRankingRefreshTriggerResponse, ModelRankingsPage, PageInfo } from '../types';
 
 
 export interface AiModelVideoProfilesListParams {
@@ -110,6 +110,13 @@ export class AiVoicesApi {
   }
 }
 
+export interface AiResourcesListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  resourceType?: 'vendor' | 'modality' | 'api_endpoint' | 'model_api' | 'bundle';
+}
+
 export class AiResourcesApi {
   private client: HttpClient;
 
@@ -119,8 +126,14 @@ export class AiResourcesApi {
 
 
 /** List assignable resources */
-  async list(requestOptions?: ApiRequestOptions): Promise<NoData> {
-    return this.client.request<NoData>(backendApiPath(`/ai/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
+  async list(params?: AiResourcesListParams, requestOptions?: ApiRequestOptions): Promise<AiResourcesPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'resource_type', value: params?.resourceType, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<AiResourcesPage>(appendQueryString(backendApiPath(`/ai/resources`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** Create ai resource */
@@ -134,6 +147,12 @@ export class AiResourcesApi {
   }
 }
 
+export interface AiResourceGroupsResourcesListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+}
+
 export class AiResourceGroupsResourcesApi {
   private client: HttpClient;
 
@@ -143,9 +162,30 @@ export class AiResourceGroupsResourcesApi {
 
 
 /** List resource group resources */
-  async list(groupIdOrCode: string, requestOptions?: ApiRequestOptions): Promise<NoData> {
-    return this.client.request<NoData>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
+  async list(groupIdOrCode: string, params?: AiResourceGroupsResourcesListParams, requestOptions?: ApiRequestOptions): Promise<AiResourceGroupResourcesPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<AiResourceGroupResourcesPage>(appendQueryString(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupIdOrCode, { name: 'groupIdOrCode', style: 'simple', explode: false })}/resources`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
+
+/** Assign or update a resource-group member */
+  async update(groupId: string, resourceCode: string, body: AdminAiResourceGroupMemberUpdateRequest, requestOptions?: ApiRequestOptions): Promise<AdminAiResourceGroupResourceItem> {
+    return this.client.request<AdminAiResourceGroupResourceItem>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}/resources/${serializePathParameter(resourceCode, { name: 'resourceCode', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
+  }
+
+/** Detach a resource-group member */
+  async delete(groupId: string, resourceCode: string, requestOptions?: ApiRequestOptions): Promise<void> {
+    return this.client.request<void>(backendApiPath(`/ai/resource_groups/${serializePathParameter(groupId, { name: 'groupId', style: 'simple', explode: false })}/resources/${serializePathParameter(resourceCode, { name: 'resourceCode', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
+  }
+}
+
+export interface AiResourceGroupsListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
 }
 
 export class AiResourceGroupsApi {
@@ -159,8 +199,13 @@ export class AiResourceGroupsApi {
 
 
 /** List resource groups */
-  async list(requestOptions?: ApiRequestOptions): Promise<NoData> {
-    return this.client.request<NoData>(backendApiPath(`/ai/resource_groups`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
+  async list(params?: AiResourceGroupsListParams, requestOptions?: ApiRequestOptions): Promise<AiResourceGroupsPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<AiResourceGroupsPage>(appendQueryString(backendApiPath(`/ai/resource_groups`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** Create resource group */

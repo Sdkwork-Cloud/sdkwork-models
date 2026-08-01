@@ -186,6 +186,20 @@ const HTTP_ROUTES: &[HttpRoute] = &[
     )
     .with_required_permission("intelligence.resources.read"),
     HttpRoute::dual_token(
+        HttpMethod::Put,
+        "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+        SDK_DOMAIN,
+        "resourceGroups.resources.update",
+    )
+    .with_required_permission("intelligence.resources.manage"),
+    HttpRoute::dual_token(
+        HttpMethod::Delete,
+        "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+        SDK_DOMAIN,
+        "resourceGroups.resources.delete",
+    )
+    .with_required_permission("intelligence.resources.manage"),
+    HttpRoute::dual_token(
         HttpMethod::Patch,
         "/backend/v3/api/ai/resource_groups/{groupId}",
         SDK_DOMAIN,

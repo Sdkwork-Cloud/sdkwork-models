@@ -33,7 +33,7 @@ use crate::ports::{
     ListAdminModelVendorsQuery, ResolveAdminModelMappingQuery, ResolveAdminModelMappingResult,
     SyncAdminModelCatalogCommand, UpdateAdminAiModelCommand, UpdateAdminModelMappingCommand,
 };
-use sdkwork_models_catalog_repository_sqlx::DEFAULT_CATALOG_REFRESH_SOURCE;
+use sdkwork_models_contract_service::DEFAULT_CATALOG_REFRESH_SOURCE;
 use sdkwork_web_core::WebRequestContext;
 
 const MAX_VENDOR_CODE_LEN: usize = 64;

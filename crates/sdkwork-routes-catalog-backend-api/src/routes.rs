@@ -193,6 +193,20 @@ pub const ROUTES: &[RouteDefinition] = &[
         service_method: "list_ai_resource_group_resources",
     },
     RouteDefinition {
+        method: "PUT",
+        path: "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+        operation_id: "resourceGroups.resources.update",
+        handler: "upsert_ai_resource_group_member",
+        service_method: "upsert_ai_resource_group_member",
+    },
+    RouteDefinition {
+        method: "DELETE",
+        path: "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+        operation_id: "resourceGroups.resources.delete",
+        handler: "delete_ai_resource_group_member",
+        service_method: "delete_ai_resource_group_member",
+    },
+    RouteDefinition {
         method: "PATCH",
         path: "/backend/v3/api/ai/resource_groups/{groupId}",
         operation_id: "resourceGroups.update",

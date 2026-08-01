@@ -544,6 +544,54 @@
       "idempotent": false
     },
     {
+      "method": "DELETE",
+      "path": "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+      "operationId": "resourceGroups.resources.delete",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.resources.manage",
+      "idempotent": false
+    },
+    {
+      "method": "PUT",
+      "path": "/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}",
+      "operationId": "resourceGroups.resources.update",
+      "tags": [
+        "ai"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true
+      },
+      "handler": {
+        "module": "crate::routes",
+        "name": null
+      },
+      "ownership": {
+        "owner": "sdkwork-models",
+        "apiAuthority": "sdkwork-models-backend-api"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api",
+      "permission": "intelligence.resources.manage",
+      "idempotent": false
+    },
+    {
       "method": "GET",
       "path": "/backend/v3/api/ai/resource_groups/{groupIdOrCode}/resources",
       "operationId": "resourceGroups.resources.list",

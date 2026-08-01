@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "sdkwork-models-backend-sdk",
+    "displayName": "SDKWork Models Backend SDK",
+    "version": "0.1.0",
+    "type": "sdk-family",
+    "root": "sdks/sdkwork-models-backend-sdk",
+    "domain": "intelligence",
+    "capability": "catalog-backend-sdk",
+    "surface": "backend-admin",
+    "status": "ready",
+    "languages": [
+      "typescript",
+      "rust",
+      "java",
+      "python",
+      "go"
+    ],
+    "generated": true,
+    "private": false,
+    "manifests": [
+      "sdk-manifest.json"
+    ]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "SDK_SPEC.md",
+      "path": "../../../sdkwork-specs/SDK_SPEC.md",
+      "purpose": "SDK family naming, generated method semantics, facade, and verification rules."
+    },
+    {
+      "file": "SDK_WORKSPACE_GENERATION_SPEC.md",
+      "path": "../../../sdkwork-specs/SDK_WORKSPACE_GENERATION_SPEC.md",
+      "purpose": "OpenAPI authority, generator input, and generated artifact ownership."
+    },
+    {
+      "file": "API_SPEC.md",
+      "path": "../../../sdkwork-specs/API_SPEC.md",
+      "purpose": "Backend API operation, schema, envelope, and pagination contracts."
+    },
+    {
+      "file": "PAGINATION_SPEC.md",
+      "path": "../../../sdkwork-specs/PAGINATION_SPEC.md",
+      "purpose": "Typed bounded list methods and no automatic all-page aggregation."
+    },
+    {
+      "file": "COMPONENT_SPEC.md",
+      "path": "../../../sdkwork-specs/COMPONENT_SPEC.md",
+      "purpose": "SDK family component contract requirements."
+    },
+    {
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../../../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Generated ownership and authored facade boundaries."
+    },
+    {
+      "file": "NAMING_SPEC.md",
+      "path": "../../../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical backend SDK package and resource naming."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "Authored TypeScript composed facade rules."
+    },
+    {
+      "file": "TEST_SPEC.md",
+      "path": "../../../sdkwork-specs/TEST_SPEC.md",
+      "purpose": "SDK generation, contract, and idempotence verification."
+    },
+    {
+      "file": "DOCUMENTATION_SPEC.md",
+      "path": "../../../sdkwork-specs/DOCUMENTATION_SPEC.md",
+      "purpose": "SDK family documentation and generated artifact descriptions."
+    }
+  ],
+  "sdk": {
+    "family": "sdkwork-models-backend-sdk",
+    "authority": "sdkwork-models-backend-api",
+    "sdkOwner": "sdkwork-models",
+    "apiPrefix": "/backend/v3/api",
+    "packageName": "@sdkwork/models-backend-sdk",
+    "sdkName": "sdkwork-models-backend-sdk",
+    "sdkType": "backend",
+    "sdkSurface": "backend",
+    "generatedOutput": "sdkwork-models-backend-sdk-typescript/generated/server-openapi",
+    "generatedOutputs": {
+      "typescript": "sdkwork-models-backend-sdk-typescript/generated/server-openapi",
+      "rust": "sdkwork-models-backend-sdk-rust/generated/server-openapi",
+      "java": "sdkwork-models-backend-sdk-java/generated/server-openapi",
+      "python": "sdkwork-models-backend-sdk-python/generated/server-openapi",
+      "go": "sdkwork-models-backend-sdk-go/generated/server-openapi"
+    },
+    "standardProfile": "sdkwork-v3"
+  },
+  "contracts": {
+    "layerRole": "sdk-facade",
+    "apiAuthority": {
+      "name": "sdkwork-models-backend-api",
+      "owner": "sdkwork-models",
+      "prefix": "/backend/v3/api",
+      "authorityOpenApi": "openapi/sdkwork-models-backend-api.openapi.json",
+      "derivedOpenApi": [
+        "openapi/sdkwork-models-backend-api.openapi.json"
+      ]
+    },
+    "publicExports": [
+      "@sdkwork/models-backend-sdk"
+    ],
+    "providedPorts": [
+      {
+        "name": "models.backendSdk",
+        "export": "@sdkwork/models-backend-sdk"
+      }
+    ],
+    "requiredPorts": [
+      {
+        "name": "iam.backendSdk",
+        "export": "@sdkwork/iam-backend-sdk",
+        "provider": "@sdkwork/iam-backend-sdk"
+      }
+    ],
+    "runtimeEntrypoints": [
+      "sdk-manifest.json"
+    ],
+    "routeManifest": null,
+    "sdkDependencies": [
+      {
+        "workspace": "sdkwork-iam-backend-sdk",
+        "role": "appbase-backend-management-capability",
+        "required": true,
+        "dependencyMode": "consumer-sdk",
+        "apiPrefix": "/backend/v3/api",
+        "apiAuthority": "sdkwork-iam-backend-api",
+        "generatedTransportImportPolicy": "forbidden",
+        "packageByLanguage": {
+          "typescript": "@sdkwork/iam-backend-sdk",
+          "rust": "sdkwork-iam-backend-sdk",
+          "java": "com.sdkwork:sdkwork-iam-backend-sdk",
+          "python": "sdkwork-iam-backend-sdk",
+          "go": "github.com/sdkwork/sdkwork-iam-backend-sdk"
+        }
+      }
+    ],
+    "dependencyApiExports": [],
+    "dependencyApiSurfaces": [],
+    "sdkClients": [
+      "SdkworkBackendClient"
+    ],
+    "events": [],
+    "configKeys": [
+      "sdk-manifest.json"
+    ]
+  },
+  "verification": {
+    "commands": [
+      "pnpm run sdk:generate",
+      "node tests/contract/models-openapi-contract.test.mjs",
+      "pnpm --filter @sdkwork/models-backend-sdk run typecheck"
+    ]
+  },
+  "metadata": {
+    "managedBy": "tools/models_sdk_generator_runner.mjs",
+    "standardVersion": "2026-07-31"
+  }
+}

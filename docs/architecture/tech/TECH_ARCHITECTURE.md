@@ -3,7 +3,7 @@ Specs: ARCHITECTURE_DECISION_SPEC.md, DOCUMENTATION_SPEC.md
 
 Status: active  
 Owner: SDKWork maintainers  
-Updated: 2026-07-04
+Updated: 2026-07-31
 
 ## 1. Overview
 
@@ -16,7 +16,7 @@ models/ releases/ schemas/     → Catalog JSON authority
 tools/                         → Validation, index, OpenAPI export
 crates/
   contract-service             → Store traits, domain errors
-  catalog-repository-sqlx      → Postgres/SQLite persistence
+  catalog-repository-sqlx      → PostgreSQL server repository; SQLite local adapter
   catalog-service              → HTTP handlers, application services
   database-bootstrap           → Embedded DDL authority
   database-host                → sdkwork-database lifecycle bootstrap
@@ -45,17 +45,50 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 ## 5. Data
 
 - L2 database module: `database/database.manifest.json`
+- PostgreSQL is the authoritative server engine declared by the database module.
+  SQLite is an explicit client-local/development adapter and is not a production
+  cluster authority or a second server database contract.
 - Catalog sync from JSON via admin `models.sync` (imports models, pricing, voices, voice bindings, and video generation profiles)
 - App catalog read uses in-memory `ModelCatalog` JSON snapshot in standalone mode
 - TTS voice catalog: `voices.json` + `model-voices/` per vendor region; persisted to `ai_model_voice` / `ai_model_voice_binding`
 - Video generation profiles: `model-video-profiles/{modelId}.json` per video model; persisted to `ai_model_video_profile`
+- AI resource, resource-group, and group-member list paths push filtering, stable
+  ordering, counting, and `LIMIT`/`OFFSET` into SQL. Resource member hydration is
+  restricted to resource codes in the selected page, so page reads do not grow
+  with the complete tenant catalog. API pagination defaults to `20` and is capped
+  at `200`, following `PAGINATION_SPEC.md`.
+- Manual resource groups support at most `512` persisted members. The admin UI
+  assigns or removes one member through the generated Models backend SDK instead
+  of aggregating the complete membership state. Bounded member
+  arrays remain available on create/update for contract-compatible initialization.
+- PostgreSQL locks the group row for member upsert/delete. Both SQL adapters commit
+  membership state, `ops_audit_log`, and `ai_routing_config_change` atomically. A
+  repeated delete is idempotent and does not emit audit or routing-change evidence
+  for a mutation that did not occur. Routing version records retain tenant and
+  global scope so cache invalidation can observe committed configuration changes.
 
-## 6. Verification
+## 6. Capacity And Failure Boundaries
+
+- Request bodies, search text, field lengths, list page size, and resource-group
+  membership are validated before persistence. P0 list and member management paths
+  do not use unbounded `listAll`, full-table collect, or browser-side slice paging.
+- PostgreSQL group-row locking serializes conflicting member changes for one group
+  while allowing unrelated groups to proceed independently. Transaction failures
+  roll back membership, audit, and routing events together.
+- SQLite uses a database write lock and real transaction tests to preserve local
+  semantic parity, but it is not used as evidence for multi-node availability.
+- Commercial release still requires an isolated PostgreSQL test database to retain
+  repeatable evidence for concurrent writers, retryable SQLSTATE classification,
+  deadlock/serialization retry budgets, and pool saturation behavior.
+
+## 7. Verification
 
 ```powershell
 pnpm run verify
 cargo check -p sdkwork-api-models-standalone-gateway
+cargo test -p sdkwork-models-catalog-repository-sqlx
 pnpm run topology:validate
+node ../sdkwork-specs/tools/check-pagination.mjs --workspace .
 ```
 
 See `docs/standards-alignment.md` for the current alignment matrix.

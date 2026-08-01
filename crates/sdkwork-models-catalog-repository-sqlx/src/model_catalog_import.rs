@@ -15,7 +15,6 @@ pub(crate) const SYSTEM_ORGANIZATION_ID: i64 = 0;
 pub(crate) const SYSTEM_DATA_SCOPE: i32 = 1;
 pub(crate) const ACTIVE_STATUS: i32 = 1;
 pub(crate) const INACTIVE_STATUS: i32 = 0;
-pub const DEFAULT_CATALOG_REFRESH_SOURCE: &str = "sdkwork_models";
 pub(crate) const SYNC_MODE_DRY_RUN: &str = "dry_run";
 const AI_RESOURCE_DESCRIPTION_MAX_CHARS: usize = 512;
 

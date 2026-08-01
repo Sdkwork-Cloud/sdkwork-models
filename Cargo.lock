@@ -1884,7 +1884,6 @@ dependencies = [
  "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",
- "sdkwork-web-bootstrap",
  "tokio",
 ]
 
@@ -2161,6 +2160,7 @@ dependencies = [
  "sha1",
  "sha2",
  "sqlx",
+ "tracing",
  "urlencoding",
  "uuid",
 ]
@@ -2206,7 +2206,6 @@ dependencies = [
  "chrono",
  "sdkwork-claw-http",
  "sdkwork-models",
- "sdkwork-models-catalog-repository-sqlx",
  "sdkwork-models-contract-service",
  "sdkwork-utils-rust",
  "sdkwork-web-core",

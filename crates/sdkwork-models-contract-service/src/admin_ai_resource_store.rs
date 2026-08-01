@@ -81,6 +81,7 @@ pub struct AdminAiResourceGroupResourceItem {
 pub struct ListAdminAiResourcesQuery {
     pub subject: AdminAiResourceSubject,
     pub q: Option<String>,
+    pub resource_type: Option<String>,
     pub limit: Option<i64>,
     pub offset: Option<i64>,
 }
@@ -209,6 +210,27 @@ pub struct UpdateAdminAiResourceGroupCommand {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UpsertAdminAiResourceGroupMemberCommand {
+    pub subject: AdminAiResourceSubject,
+    pub group_id: i64,
+    pub member_uuid: String,
+    pub audit_log_uuid: String,
+    pub member: AdminAiResourceGroupMemberCommand,
+    pub request_id: String,
+    pub requested_at: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeleteAdminAiResourceGroupMemberCommand {
+    pub subject: AdminAiResourceSubject,
+    pub group_id: i64,
+    pub resource_code: String,
+    pub audit_log_uuid: String,
+    pub request_id: String,
+    pub requested_at: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeleteAdminAiResourceGroupCommand {
     pub subject: AdminAiResourceSubject,
     pub group_id: i64,
@@ -306,6 +328,16 @@ pub trait AdminAiResourceStore {
         &'a self,
         command: UpdateAdminAiResourceGroupCommand,
     ) -> AdminAiResourceReadFuture<'a, Option<AdminAiResourceGroupItem>>;
+
+    fn upsert_ai_resource_group_member<'a>(
+        &'a self,
+        command: UpsertAdminAiResourceGroupMemberCommand,
+    ) -> AdminAiResourceReadFuture<'a, Option<AdminAiResourceGroupResourceItem>>;
+
+    fn delete_ai_resource_group_member<'a>(
+        &'a self,
+        command: DeleteAdminAiResourceGroupMemberCommand,
+    ) -> AdminAiResourceReadFuture<'a, bool>;
 
     fn delete_ai_resource_group<'a>(
         &'a self,
