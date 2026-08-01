@@ -24,6 +24,8 @@ export interface AgentModelConfigurationDraft {
 
 export interface UnifiedAgentModelOption {
   id: string;
+  catalogKey?: string;
+  catalogVersion?: string;
   configurationId?: string;
   modelId: string;
   label: string;
@@ -32,6 +34,12 @@ export interface UnifiedAgentModelOption {
   kind: UnifiedAgentModelKind;
   metadataLabel?: string;
   vendorCode?: string;
+  vendorName?: string;
+  releaseStage?: string;
+  sourceObservedAt?: string;
+  searchTerms?: readonly string[];
+  sortOrder?: number;
+  rankScore?: number;
   baseUrl?: string;
   supportedModelIds?: readonly string[];
   supportedProviderIds?: readonly string[];
@@ -56,6 +64,7 @@ export interface UnifiedAgentModelSelectorMessages {
   builtInModels: string;
   cancel: string;
   close: string;
+  clearSearch: string;
   createFailed: string;
   creating: string;
   customModels: string;
@@ -69,10 +78,13 @@ export interface UnifiedAgentModelSelectorMessages {
   modelSelectorLabel: string;
   multimodalLabel: string;
   noModels: string;
+  noSearchResults: string;
   notSupported: string;
   outputContextLabel: string;
   providerRequired: string;
   providerSection: string;
+  previewTag: string;
+  searchPlaceholder: string;
   selectFailed: string;
   submit: string;
   supportedModelsLabel: string;

@@ -7,8 +7,12 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { Bot, Check, ChevronDown, Loader2, Settings2 } from 'lucide-react';
+import { Bot, Check, ChevronDown, Loader2, Search, Settings2, X } from 'lucide-react';
 import { UnifiedModelConfigurationDialog } from './UnifiedModelConfigurationDialog';
+import {
+  filterUnifiedAgentModelOptions,
+  sortUnifiedAgentModelOptions,
+} from './unifiedAgentModelCatalog';
 import type {
   UnifiedAgentModelOption,
   UnifiedAgentModelSelectorProps,
@@ -33,19 +37,30 @@ export function UnifiedAgentModelSelector({
   selectedModelOptionId,
 }: UnifiedAgentModelSelectorProps) {
   const menuId = useId();
+  const listboxId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [configurationDialogOpen, setConfigurationDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectingOptionId, setSelectingOptionId] = useState<string | null>(null);
   const [selectionFailed, setSelectionFailed] = useState(false);
-  const enabledOptions = useMemo(
-    () => options.filter((option) => !option.disabled),
+  const sortedOptions = useMemo(
+    () => sortUnifiedAgentModelOptions(options),
     [options],
   );
-  const selectedOption = options.find((option) => option.id === selectedModelOptionId);
+  const filteredOptions = useMemo(
+    () => filterUnifiedAgentModelOptions(sortedOptions, searchQuery),
+    [searchQuery, sortedOptions],
+  );
+  const enabledOptions = useMemo(
+    () => filteredOptions.filter((option) => !option.disabled),
+    [filteredOptions],
+  );
+  const selectedOption = sortedOptions.find((option) => option.id === selectedModelOptionId);
   const selectedLabel = selectedOption?.label || fallbackLabel;
-  const builtInOptions = options.filter((option) => option.kind === 'built-in');
-  const customOptions = options.filter((option) => option.kind === 'custom');
+  const builtInOptions = filteredOptions.filter((option) => option.kind === 'built-in');
+  const customOptions = filteredOptions.filter((option) => option.kind === 'custom');
   const [activeIndex, setActiveIndex] = useState(() => Math.max(
     0,
     enabledOptions.findIndex((option) => option.id === selectedModelOptionId),
@@ -58,20 +73,21 @@ export function UnifiedAgentModelSelector({
       return;
     }
     setSelectionFailed(false);
-    const nextIndex = enabledOptions.findIndex((option) => option.id === selectedModelOptionId);
-    setActiveIndex(Math.max(0, nextIndex));
+    setSearchQuery('');
     const frame = window.requestAnimationFrame(() => {
-      const optionId = enabledOptions[Math.max(0, nextIndex)]?.id;
-      if (!optionId) {
-        menuRef.current?.focus();
-        return;
-      }
-      const escapedId = typeof CSS !== 'undefined' && CSS.escape
-        ? CSS.escape(optionId)
-        : optionId.replace(/["\\]/gu, '\\$&');
-      menuRef.current?.querySelector<HTMLElement>(`[data-model-id="${escapedId}"]`)?.focus();
+      searchInputRef.current?.focus();
     });
     return () => window.cancelAnimationFrame(frame);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const selectedIndex = enabledOptions.findIndex(
+      (option) => option.id === selectedModelOptionId,
+    );
+    setActiveIndex(Math.max(0, selectedIndex));
   }, [enabledOptions, open, selectedModelOptionId]);
 
   useEffect(() => {
@@ -135,6 +151,17 @@ export function UnifiedAgentModelSelector({
     if (enabledOptions.length === 0 || selectingOptionId) {
       return;
     }
+    if (event.target === searchInputRef.current) {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActiveIndex(0);
+        focusOption(0);
+      }
+      return;
+    }
+    if (!(event.target instanceof HTMLElement) || event.target.getAttribute('role') !== 'option') {
+      return;
+    }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -195,6 +222,10 @@ export function UnifiedAgentModelSelector({
                     <span className="sdkwork-unified-model-option-label">{option.label}</span>
                     {option.kind === 'custom' ? (
                       <span className="sdkwork-unified-model-option-tag">{messages.customTag}</span>
+                    ) : option.releaseStage === 'preview' ? (
+                      <span className="sdkwork-unified-model-option-tag" data-stage="preview">
+                        {messages.previewTag}
+                      </span>
                     ) : null}
                   </span>
                   {option.description ? (
@@ -226,13 +257,51 @@ export function UnifiedAgentModelSelector({
       className="sdkwork-unified-model-menu"
       id={menuId}
       onKeyDown={handleMenuKeyDown}
-      role="listbox"
+      role="dialog"
       style={menuStyle}
       tabIndex={-1}
     >
-      <div className="sdkwork-unified-model-scroll">
-        {options.length === 0 ? (
+      <div className="sdkwork-unified-model-search">
+        <Search aria-hidden="true" size={16} />
+        <input
+          ref={searchInputRef}
+          aria-controls={listboxId}
+          aria-label={messages.searchPlaceholder}
+          autoComplete="off"
+          className="sdkwork-unified-model-search-input"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder={messages.searchPlaceholder}
+          spellCheck={false}
+          type="search"
+          value={searchQuery}
+        />
+        {searchQuery ? (
+          <button
+            aria-label={messages.clearSearch}
+            className="sdkwork-unified-model-search-clear"
+            onClick={() => {
+              setSearchQuery('');
+              searchInputRef.current?.focus();
+            }}
+            title={messages.clearSearch}
+            type="button"
+          >
+            <X aria-hidden="true" size={15} />
+          </button>
+        ) : null}
+      </div>
+      <div
+        aria-label={messages.modelSelectorLabel}
+        className="sdkwork-unified-model-scroll"
+        id={listboxId}
+        role="listbox"
+      >
+        {sortedOptions.length === 0 ? (
           <div className="sdkwork-unified-model-empty">{messages.noModels}</div>
+        ) : filteredOptions.length === 0 ? (
+          <div className="sdkwork-unified-model-empty" role="status">
+            {messages.noSearchResults}
+          </div>
         ) : (
           <>
             {renderSection(messages.builtInModels, builtInOptions)}
@@ -270,7 +339,7 @@ export function UnifiedAgentModelSelector({
         ref={triggerRef}
         aria-controls={open ? menuId : undefined}
         aria-expanded={open}
-        aria-haspopup="listbox"
+        aria-haspopup="dialog"
         aria-label={selectedLabel}
         className="sdkwork-unified-model-trigger"
         disabled={disabled}

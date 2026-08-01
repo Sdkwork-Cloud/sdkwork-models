@@ -89,13 +89,14 @@
     "configKeys": []
   },
   "integration": {
-    "authority": "The package owns reusable model selection presentation only.",
-    "dependencyPolicy": "Consumers pass unified model options, Agent provider options, localized messages, and persistence callbacks through public props; provider bindings are resolved by the consuming runtime only after model selection.",
+    "authority": "The package owns reusable model selection presentation and the generated PC projection of the canonical sdkwork-models mainstream Agent catalog.",
+    "dependencyPolicy": "The generated mainstream model projection is derived from canonical models/index.json records; consumers merge runtime Agent provider support and custom model options, then pass localized messages and persistence callbacks through public props. Provider bindings are resolved by the consuming runtime only after model selection.",
     "sdkPolicy": "The package does not construct SDK clients, issue HTTP requests, or store provider credentials.",
     "languagePolicy": "PC React hosts consume the package root export and supply application design tokens."
   },
   "verification": {
     "commands": [
+      "node tools/generate-mainstream-agent-model-catalog.mjs --check",
       "pnpm --filter @sdkwork/models-pc-picker typecheck",
       "node ../sdkwork-specs/tools/check-component-port-bindings.mjs --root sdkwork-models"
     ]

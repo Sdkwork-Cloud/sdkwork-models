@@ -3,6 +3,8 @@ export * from './ModelPicker';
 export * from './unified-agent-model-selector/UnifiedAgentModelSelector';
 export * from './unified-agent-model-selector/UnifiedModelConfigurationDialog';
 export * from './unified-agent-model-selector/unifiedAgentModelSelectorTypes';
+export * from './unified-agent-model-selector/unifiedAgentModelCatalog';
+export * from './unified-agent-model-selector/mainstreamAgentModelCatalog.generated';
 export * from './unified-agent-model-selector/unifiedAgentModelValidation';
 export * from './modelPickerMenuLayout';
 export * from './modelPickerSearch';
