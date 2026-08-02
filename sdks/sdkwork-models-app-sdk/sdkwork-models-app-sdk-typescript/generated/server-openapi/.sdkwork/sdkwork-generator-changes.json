@@ -9,10 +9,14 @@
     "protocol": "http",
     "packageName": "sdkwork-models-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "d537c05971d91e2cebaae3310df0b8ca7bb430207d16953f4ca4b32048206456",
+  "changeFingerprint": "1b1ac4eb5215580ecd366ba57ab4e681fc9b3c29654ebf0861eed9ff86efeb1e",
   "changes": {
     "createdGeneratedFiles": [],
-    "updatedGeneratedFiles": [],
+    "updatedGeneratedFiles": [
+      "src/api/ai.ts",
+      "src/types/app-model-access-channel-item.ts",
+      "src/types/app-model-access-channel-upsert-request.ts"
+    ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
       "bin/publish.ps1",
@@ -24,7 +28,6 @@
       "package.json",
       "README.md",
       "sdkwork-sdk.json",
-      "src/api/ai.ts",
       "src/api/base.ts",
       "src/api/index.ts",
       "src/api/paths.ts",
@@ -33,6 +36,14 @@
       "src/http/index.ts",
       "src/index.ts",
       "src/sdk.ts",
+      "src/types/app-model-access-channel-item-data.ts",
+      "src/types/app-model-access-channel-model-input.ts",
+      "src/types/app-model-access-channel-model.ts",
+      "src/types/app-model-access-channel-offering-input.ts",
+      "src/types/app-model-access-channel-offering.ts",
+      "src/types/app-model-access-channel-preset.ts",
+      "src/types/app-model-access-channel-presets-page.ts",
+      "src/types/app-model-access-channels-page.ts",
       "src/types/app-model-catalog-group.ts",
       "src/types/app-model-catalog-item.ts",
       "src/types/app-model-catalog-page.ts",
@@ -43,6 +54,10 @@
       "src/types/common.ts",
       "src/types/field-error.ts",
       "src/types/index.ts",
+      "src/types/model-access-channel-presets-list-result.ts",
+      "src/types/model-access-channel-upsert-result.ts",
+      "src/types/model-access-channels-list-result.ts",
+      "src/types/model-access-channels-upsert-response.ts",
       "src/types/model-ranking-history-entry.ts",
       "src/types/model-ranking-history-point.ts",
       "src/types/model-ranking-item.ts",
@@ -73,26 +88,80 @@
   },
   "impact": {
     "schemaVersion": 1,
-    "areas": [],
-    "details": [],
-    "requiresVerification": false,
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    "areas": [
+      "api-surface",
+      "models"
+    ],
+    "details": [
+      {
+        "area": "api-surface",
+        "paths": [
+          "src/api/ai.ts"
+        ]
+      },
+      {
+        "area": "models",
+        "paths": [
+          "src/types/app-model-access-channel-item.ts",
+          "src/types/app-model-access-channel-upsert-request.ts"
+        ]
+      }
+    ],
+    "requiresVerification": true,
+    "summary": "Detected impact areas: api-surface, models. Verification is required."
   },
   "verificationPlan": {
-    "shouldRun": false,
-    "runPhase": "skip",
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
-    "steps": []
+    "shouldRun": true,
+    "runPhase": "now",
+    "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "steps": [
+      {
+        "id": "check",
+        "title": "Unified package check",
+        "required": true,
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "check"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action check"
+      },
+      {
+        "id": "build",
+        "title": "Unified package build",
+        "required": true,
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-app-sdk\\sdkwork-models-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "build"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action build"
+      }
+    ]
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "low",
-    "nextAction": "skip",
+    "riskLevel": "medium",
+    "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
-    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "no-actionable-changes"
+      "verification-required"
     ]
   },
   "preservedLegacyFiles": false

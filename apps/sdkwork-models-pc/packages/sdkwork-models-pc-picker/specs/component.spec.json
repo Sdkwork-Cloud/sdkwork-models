@@ -77,6 +77,7 @@
     ],
     "requiredPorts": [],
     "runtimeEntrypoints": [
+      "package.json#scripts.test",
       "package.json#scripts.typecheck"
     ],
     "routeManifest": null,
@@ -89,14 +90,15 @@
     "configKeys": []
   },
   "integration": {
-    "authority": "The package owns reusable model selection presentation and the generated PC projection of the canonical sdkwork-models mainstream Agent catalog.",
-    "dependencyPolicy": "The generated mainstream model projection is derived from canonical models/index.json records; consumers merge runtime Agent provider support and custom model options, then pass localized messages and persistence callbacks through public props. Provider bindings are resolved by the consuming runtime only after model selection.",
+    "authority": "The package owns reusable model and model-access-channel selection presentation, generated official vendor presets from direct ClawRouter provider definitions, ordered vendor model editing, and the generated PC fallback projection of the canonical sdkwork-models mainstream Agent catalog.",
+    "dependencyPolicy": "Consumers inject database-backed models, official access channels, relay stations, Agent provider support, localized messages, and persistence callbacks. Non-empty injected catalog results are authoritative; empty results use the generated mainstream fallback. Provider bindings are resolved by the consuming runtime only after the selector returns model, vendor offering, and access channel together.",
     "sdkPolicy": "The package does not construct SDK clients, issue HTTP requests, or store provider credentials.",
     "languagePolicy": "PC React hosts consume the package root export and supply application design tokens."
   },
   "verification": {
     "commands": [
       "node tools/generate-mainstream-agent-model-catalog.mjs --check",
+      "pnpm --filter @sdkwork/models-pc-picker test",
       "pnpm --filter @sdkwork/models-pc-picker typecheck",
       "node ../sdkwork-specs/tools/check-component-port-bindings.mjs --root sdkwork-models"
     ]

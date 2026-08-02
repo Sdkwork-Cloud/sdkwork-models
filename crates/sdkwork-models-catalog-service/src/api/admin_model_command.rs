@@ -1112,6 +1112,11 @@ fn build_list_models_query(
         vendor_codes: normalize_list_vendor_codes(query.vendor_codes.as_deref())?,
         q: query.q,
         model_types: None,
+        status: None,
+        release_stages: Vec::new(),
+        shelf_state: None,
+        routing_state: None,
+        modalities: Vec::new(),
         page_size: Some(page_size),
         offset: Some((page - 1) * page_size),
     })

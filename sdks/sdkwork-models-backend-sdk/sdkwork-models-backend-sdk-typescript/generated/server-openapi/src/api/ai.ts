@@ -114,7 +114,7 @@ export interface AiResourcesListParams {
   page?: number;
   pageSize?: number;
   q?: string;
-  resourceType?: 'vendor' | 'modality' | 'api_endpoint' | 'model_api' | 'bundle';
+  resourceType?: 'vendor' | 'modality' | 'api_endpoint' | 'model' | 'model_api' | 'bundle' | 'model_access_channel';
 }
 
 export class AiResourcesApi {
@@ -125,7 +125,7 @@ export class AiResourcesApi {
   }
 
 
-/** List assignable resources */
+/** List assignable resources page */
   async list(params?: AiResourcesListParams, requestOptions?: ApiRequestOptions): Promise<AiResourcesPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
@@ -136,12 +136,12 @@ export class AiResourcesApi {
     return this.client.request<AiResourcesPage>(appendQueryString(backendApiPath(`/ai/resources`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
-/** Create ai resource */
+/** Create AI resource */
   async create(body: AdminAiResourceCreateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
     return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
-/** Update ai resource */
+/** Update AI resource */
   async update(resourceId: string, body: AdminAiResourceUpdateRequest, requestOptions?: ApiRequestOptions): Promise<Record<string, unknown>> {
     return this.client.request<Record<string, unknown>>(backendApiPath(`/ai/resources/${serializePathParameter(resourceId, { name: 'resourceId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
@@ -161,7 +161,7 @@ export class AiResourceGroupsResourcesApi {
   }
 
 
-/** List resource group resources */
+/** List resource group resources page */
   async list(groupIdOrCode: string, params?: AiResourceGroupsResourcesListParams, requestOptions?: ApiRequestOptions): Promise<AiResourceGroupResourcesPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
@@ -198,7 +198,7 @@ export class AiResourceGroupsApi {
   }
 
 
-/** List resource groups */
+/** List resource groups page */
   async list(params?: AiResourceGroupsListParams, requestOptions?: ApiRequestOptions): Promise<AiResourceGroupsPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
@@ -239,7 +239,7 @@ export class AiModelsApi {
   }
 
 
-/** List all models */
+/** List models page */
   async list(params?: AiModelsListParams, requestOptions?: ApiRequestOptions): Promise<AdminAiModelPage> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },

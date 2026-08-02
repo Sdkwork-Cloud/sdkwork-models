@@ -988,6 +988,387 @@
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
+    },
+    "/app/v3/api/ai/model_access_channels": {
+      "get": {
+        "description": "List active official model endpoints and multi-vendor relay stations from the database. The response contains public routing metadata only and never exposes API keys.",
+        "operationId": "modelAccessChannels.list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Offset pagination page number."
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            },
+            "description": "Offset pagination page size."
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "description": "Free-text search on channel code, name, description, base URL, vendor, and model."
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "official",
+                "relay",
+                "custom"
+              ]
+            },
+            "description": "Filter by official endpoint or relay station."
+          },
+          {
+            "in": "query",
+            "name": "vendor_code",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Filter channels that expose at least one model from this vendor."
+          },
+          {
+            "in": "query",
+            "name": "agent_provider_id",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Filter channels compatible with an Agent Config SPI provider."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelAccessChannelsListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List model access channels",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource",
+          "ai_resource_group",
+          "ai_resource_group_item",
+          "ai_model_vendor",
+          "ai_model"
+        ],
+        "x-route-scope": "public",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "modelAccessChannels",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
+        "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext"
+      }
+    },
+    "/app/v3/api/ai/model_access_channels/{channelCode}": {
+      "put": {
+        "description": "Create or update tenant-owned public metadata for an official endpoint or multi-vendor relay station. API keys are forbidden and must be configured through sdkwork-agents Config SPI.",
+        "operationId": "modelAccessChannels.upsert",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "channelCode",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "description": "Stable tenant-owned model access channel code."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model access channel saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/AppModelAccessChannelItemData"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "Create or update a model access channel",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "update",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_resource",
+          "ai_resource_group_item"
+        ],
+        "x-route-scope": "public",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "modelAccessChannels",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
+        "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs",
+        "x-write-tables": [
+          "ai_resource",
+          "ai_resource_group",
+          "ai_resource_group_item",
+          "ops_audit_log"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Public model access channel metadata without credentials.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppModelAccessChannelUpsertRequest"
+              }
+            }
+          }
+        },
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext"
+      }
+    },
+    "/app/v3/api/ai/model_access_channel_presets": {
+      "get": {
+        "description": "List official provider presets from the clawrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.",
+        "operationId": "modelAccessChannelPresets.list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelAccessChannelPresetsListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Server Error"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Error response."
+          }
+        },
+        "security": [
+          {
+            "AccessToken": [],
+            "AuthToken": []
+          }
+        ],
+        "summary": "List official model access channel presets",
+        "tags": [
+          "ai"
+        ],
+        "x-contract-kind": "read",
+        "x-file-targets": [],
+        "x-read-sources": [
+          "ai_model_vendor",
+          "ai_model"
+        ],
+        "x-route-scope": "public",
+        "x-sdk-domain": "intelligence",
+        "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-domain": "intelligence",
+        "x-sdkwork-owner": "sdkwork-models",
+        "x-sdkwork-resource": "modelAccessChannelPresets",
+        "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
+        "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs",
+        "x-write-tables": [],
+        "x-sdkwork-api-surface": "app-api",
+        "x-sdkwork-request-context": "WebRequestContext"
+      }
     }
   },
   "components": {
@@ -1275,6 +1656,16 @@
             "maxLength": 64,
             "minLength": 1,
             "type": "string"
+          },
+          "supportedAgentProviderIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128,
+            "description": "Agent Config SPI provider ids that can consume this model."
           }
         },
         "required": [
@@ -1307,7 +1698,8 @@
           "replacementModel",
           "providerCodes",
           "officialReferencePrices",
-          "priceAvailability"
+          "priceAvailability",
+          "supportedAgentProviderIds"
         ],
         "type": "object"
       },
@@ -2050,6 +2442,535 @@
         "minimum": 40001,
         "maximum": 79999,
         "description": "Platform or domain error code per API_SPEC.md §15.3."
+      },
+      "AppModelAccessChannelModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One model exposed by a model access channel.",
+        "properties": {
+          "catalogKey": {
+            "type": "string",
+            "maxLength": 256,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "contextTokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "maxOutputTokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "toolCallRounds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "supportsMultimodal": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "catalogKey",
+          "model",
+          "displayName"
+        ]
+      },
+      "AppModelAccessChannelModelInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One model selected for a model access channel. Capability metadata is derived from sdkwork-models.",
+        "properties": {
+          "modelId": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "modelId"
+        ]
+      },
+      "AppModelAccessChannelOffering": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Models from one vendor exposed by an official endpoint or relay station.",
+        "properties": {
+          "vendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "vendorName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelModel"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "vendorCode",
+          "vendorName",
+          "models"
+        ]
+      },
+      "AppModelAccessChannelItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Official model endpoint or relay station returned by the app catalog API.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^[1-9][0-9]*$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 192,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "official",
+              "relay",
+              "custom"
+            ]
+          },
+          "baseUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "Public HTTP(S) API base URL. Credentials are never returned by this API."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "defaultVendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "defaultModelId": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "supportedAgentProviderIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128,
+            "description": "Agent provider ids that can consume this channel."
+          },
+          "offerings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelOffering"
+            },
+            "maxItems": 512
+          },
+          "vendorCount": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "modelCount": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "sortOrder": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "int64",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "x-sdkwork-int64-string": true,
+            "x-sdkwork-rust-type": "i64"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "kind",
+          "baseUrl",
+          "defaultVendorCode",
+          "defaultModelId",
+          "supportedAgentProviderIds",
+          "offerings",
+          "vendorCount",
+          "modelCount"
+        ]
+      },
+      "AppModelAccessChannelOfferingInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One vendor and its supported model ids for an official endpoint or relay station.",
+        "properties": {
+          "vendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "vendorName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "modelIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[\\x20-\\x7E]*$"
+            },
+            "maxItems": 512
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelModelInput"
+            },
+            "maxItems": 512
+          }
+        },
+        "required": [
+          "vendorCode",
+          "vendorName"
+        ]
+      },
+      "AppModelAccessChannelUpsertRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Public model access channel metadata. Credentials are intentionally forbidden.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "official",
+              "relay",
+              "custom"
+            ]
+          },
+          "baseUrl": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Public HTTP(S) API base URL. API keys are forbidden."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 512
+          },
+          "offerings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelOfferingInput"
+            },
+            "maxItems": 32
+          },
+          "defaultVendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "defaultModelId": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "supportedAgentProviderIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "maxItems": 128
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "baseUrl",
+          "offerings",
+          "defaultVendorCode",
+          "defaultModelId",
+          "supportedAgentProviderIds"
+        ]
+      },
+      "AppModelAccessChannelItemData": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Saved model access channel.",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/AppModelAccessChannelItem"
+          }
+        },
+        "required": [
+          "item"
+        ]
+      },
+      "AppModelAccessChannelsPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Paginated official endpoints and relay stations.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelItem"
+            },
+            "maxItems": 200
+          },
+          "pageInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ],
+            "description": "Offset pagination metadata for model access channels."
+          }
+        },
+        "required": [
+          "items",
+          "pageInfo"
+        ]
+      },
+      "ModelAccessChannelsListResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SdkWorkApiResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AppModelAccessChannelsPage"
+                  }
+                ],
+                "description": "Model access channel page."
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ],
+        "description": "Model access channel list result.",
+        "x-operation-id": "modelAccessChannels.list"
+      },
+      "ModelAccessChannelUpsertResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SdkWorkApiResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AppModelAccessChannelItemData"
+                  }
+                ],
+                "description": "Saved model access channel data."
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ],
+        "description": "Model access channel upsert result.",
+        "x-operation-id": "modelAccessChannels.upsert"
+      },
+      "AppModelAccessChannelPreset": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Official provider preset used to create a model access channel.",
+        "properties": {
+          "providerCode": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "providerDisplayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "vendorCode": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9._:-]+$"
+          },
+          "vendorName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "channelName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "baseUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelModel"
+            },
+            "maxItems": 512
+          },
+          "defaultModelId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128,
+            "pattern": "^[\\x20-\\x7E]*$"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "providerCode",
+          "providerDisplayName",
+          "protocol",
+          "vendorCode",
+          "vendorName",
+          "channelName",
+          "baseUrl",
+          "models",
+          "sortOrder"
+        ]
+      },
+      "AppModelAccessChannelPresetsPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Official provider presets and their current public model lists.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppModelAccessChannelPreset"
+            },
+            "maxItems": 128
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ModelAccessChannelPresetsListResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SdkWorkApiResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AppModelAccessChannelPresetsPage"
+                  }
+                ],
+                "description": "Official provider preset page."
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ],
+        "description": "Official provider preset list result.",
+        "x-operation-id": "modelAccessChannelPresets.list"
       },
       "SdkWorkResourceData": {
         "type": "object",

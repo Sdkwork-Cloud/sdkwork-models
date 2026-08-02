@@ -3,16 +3,23 @@ import type { UnifiedAgentModelOption } from './unifiedAgentModelSelectorTypes';
 export interface MainstreamAgentModelCatalogEntry {
   catalogKey: string;
   catalogVersion: string;
+  contextTokens?: number;
   description: string;
   displayName: string;
+  inputModalities: readonly string[];
   lifecycle: 'active' | 'preview';
+  maxOutputTokens?: number;
   modelId: string;
+  modalities?: readonly string[];
+  outputModalities: readonly string[];
   rankScore: number;
   releaseStage: string;
   searchTerms: readonly string[];
   sortOrder: number;
   sourceObservedAt: string;
   supportedProviderIds: readonly string[];
+  supportsTools: boolean;
+  toolCallRounds?: number;
   vendorCode: string;
   vendorName: string;
 }

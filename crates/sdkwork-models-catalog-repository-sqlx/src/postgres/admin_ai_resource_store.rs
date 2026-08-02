@@ -1,17 +1,22 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use sdkwork_models_contract_service::{
     AdminAiResourceGroupItem, AdminAiResourceGroupListPage, AdminAiResourceGroupResourceItem,
-    AdminAiResourceGroupResourcesPage, AdminAiResourceItem, AdminAiResourceListPage,
-    AdminAiResourceMemberCommand, AdminAiResourceMemberItem, AdminAiResourceReadFuture,
-    AdminAiResourceStore, CreateAdminAiResourceCommand, CreateAdminAiResourceGroupCommand,
-    DeleteAdminAiResourceGroupCommand, DeleteAdminAiResourceGroupMemberCommand, DomainError,
-    DomainResult, ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
-    ListAdminAiResourcesQuery, UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
+    AdminAiResourceGroupResourcesPage, AdminAiResourceHierarchyNodeCommand, AdminAiResourceItem,
+    AdminAiResourceListPage, AdminAiResourceMemberCommand, AdminAiResourceMemberItem,
+    AdminAiResourceReadFuture, AdminAiResourceStore, CreateAdminAiResourceCommand,
+    CreateAdminAiResourceGroupCommand, DeleteAdminAiResourceGroupCommand,
+    DeleteAdminAiResourceGroupMemberCommand, DomainError, DomainResult,
+    ListAdminAiResourceGroupResourcesQuery, ListAdminAiResourceGroupsQuery,
+    ListAdminAiResourcesQuery, ReplaceAdminAiResourceHierarchyCommand,
+    UpdateAdminAiResourceCommand, UpdateAdminAiResourceGroupCommand,
     UpsertAdminAiResourceGroupMemberCommand,
 };
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
+use crate::admin_ai_resource_hierarchy::{
+    hierarchy_node_schema, resource_code_is_owned, validate_hierarchy_command,
+};
 use crate::routing_config_change::{
     record_postgres_ai_routing_config_change, AiRoutingConfigChange,
 };
@@ -226,6 +231,13 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
         })
     }
 
+    fn replace_ai_resource_hierarchy<'a>(
+        &'a self,
+        command: ReplaceAdminAiResourceHierarchyCommand,
+    ) -> AdminAiResourceReadFuture<'a, AdminAiResourceItem> {
+        Box::pin(async move { replace_ai_resource_hierarchy(&self.pool, command).await })
+    }
+
     fn list_ai_resource_groups<'a>(
         &'a self,
         query: ListAdminAiResourceGroupsQuery,
@@ -276,11 +288,88 @@ impl AdminAiResourceStore for PostgresAdminAiResourceStore {
     }
 }
 
+async fn replace_ai_resource_hierarchy(
+    pool: &PgPool,
+    command: ReplaceAdminAiResourceHierarchyCommand,
+) -> DomainResult<AdminAiResourceItem> {
+    let desired_resource_codes = validate_hierarchy_command(&command)?;
+    let mut tx = pool.begin().await.map_err(|error| {
+        store_error(
+            "failed to begin AI resource hierarchy replacement transaction",
+            error,
+        )
+    })?;
+    let mut root_resource_id = None;
+    for node in &command.nodes {
+        let resource_id = upsert_hierarchy_resource(&mut tx, &command, node).await?;
+        replace_hierarchy_node_members(&mut tx, &command, node, resource_id).await?;
+        if node.resource_code == command.root_resource_code {
+            root_resource_id = Some(resource_id);
+        }
+    }
+    let root_resource_id = root_resource_id
+        .ok_or_else(|| DomainError::new("AI resource hierarchy root could not be persisted"))?;
+    let retired_count =
+        retire_stale_hierarchy_resources(&mut tx, &command, &desired_resource_codes).await?;
+    insert_audit_log(
+        &mut tx,
+        &command.audit_log_uuid,
+        &command.request_id,
+        command.subject.tenant_id,
+        command.subject.organization_id,
+        command.subject.operator_id,
+        command.subject.operator_type,
+        "replace_ai_resource_hierarchy",
+        root_resource_id,
+        serde_json::json!({
+            "action": "replace_ai_resource_hierarchy",
+            "rootResourceCode": &command.root_resource_code,
+            "resourceCount": command.nodes.len(),
+            "retiredResourceCount": retired_count
+        }),
+    )
+    .await?;
+    record_postgres_ai_routing_config_change(
+        &mut tx,
+        ai_resource_routing_config_change(
+            command.subject.tenant_id,
+            command.subject.organization_id,
+            command.subject.operator_id,
+            &command.request_id,
+            &command.requested_at,
+            "replace_ai_resource_hierarchy",
+            root_resource_id,
+            serde_json::json!({
+                "rootResourceCode": &command.root_resource_code,
+                "resourceCount": command.nodes.len(),
+                "retiredResourceCount": retired_count
+            }),
+        ),
+    )
+    .await?;
+    let item = load_resource_by_id(
+        &mut tx,
+        root_resource_id,
+        command.subject.tenant_id,
+        command.subject.organization_id,
+    )
+    .await?
+    .ok_or_else(|| DomainError::new("replaced AI resource hierarchy root could not be reloaded"))?;
+    tx.commit().await.map_err(|error| {
+        store_error(
+            "failed to commit AI resource hierarchy replacement transaction",
+            error,
+        )
+    })?;
+    Ok(item)
+}
+
 async fn list_ai_resources(
     pool: &PgPool,
     query: ListAdminAiResourcesQuery,
 ) -> DomainResult<AdminAiResourceListPage> {
     let search = resource_search_pattern(query.q.as_deref());
+    let status = query.status.as_deref().map(status_code);
     let total_count: i64 = sqlx::query_scalar(
         r#"
         SELECT COUNT(1)
@@ -314,14 +403,85 @@ async fn list_ai_resources(
               OR COALESCE(catalog_key, '') ILIKE $3
               OR COALESCE(model, '') ILIKE $3
               OR COALESCE(provider_native_model, '') ILIKE $3
+              OR COALESCE(description, '') ILIKE $3
+              OR COALESCE(resource_schema ->> 'baseUrl', '') ILIKE $3
+              OR COALESCE(resource_schema ->> 'description', '') ILIKE $3
+              OR EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group_item member_item
+                  JOIN ai_resource member_resource
+                    ON member_resource.tenant_id = member_item.tenant_id
+                   AND member_resource.organization_id = member_item.organization_id
+                   AND member_resource.resource_code = member_item.resource_code
+                   AND member_resource.deleted_at IS NULL
+                  WHERE member_item.tenant_id = ai_resource.tenant_id
+                    AND member_item.organization_id = ai_resource.organization_id
+                    AND member_item.resource_group_code = ai_resource.resource_code
+                    AND member_item.deleted_at IS NULL
+                    AND member_item.status = 1
+                    AND (
+                        COALESCE(member_resource.vendor_code, '') ILIKE $3
+                        OR COALESCE(member_resource.catalog_key, '') ILIKE $3
+                        OR COALESCE(member_resource.model, '') ILIKE $3
+                        OR COALESCE(member_resource.display_name, '') ILIKE $3
+                    )
+              )
           )
           AND ($4::text IS NULL OR resource_type = $4)
+          AND ($5::int IS NULL OR status = $5)
+          AND (
+              $6::text IS NULL
+              OR lower(COALESCE(resource_schema ->> 'accessChannelKind', '')) = $6
+          )
+          AND (
+              $7::text IS NULL
+              OR lower(COALESCE(vendor_code, '')) = $7
+              OR EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group_item vendor_item
+                  JOIN ai_resource vendor_resource
+                    ON vendor_resource.tenant_id = vendor_item.tenant_id
+                   AND vendor_resource.organization_id = vendor_item.organization_id
+                   AND vendor_resource.resource_code = vendor_item.resource_code
+                   AND vendor_resource.deleted_at IS NULL
+                  WHERE vendor_item.tenant_id = ai_resource.tenant_id
+                    AND vendor_item.organization_id = ai_resource.organization_id
+                    AND vendor_item.resource_group_code = ai_resource.resource_code
+                    AND vendor_item.deleted_at IS NULL
+                    AND vendor_item.status = 1
+                    AND lower(COALESCE(vendor_resource.vendor_code, '')) = $7
+              )
+          )
+          AND (
+              $8::text IS NULL
+              OR jsonb_array_length(COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)) = 0
+              OR EXISTS (
+                  SELECT 1
+                  FROM jsonb_array_elements_text(COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)) provider(value)
+                  WHERE lower(provider.value) = $8
+              )
+          )
+          AND (
+              NOT $9::boolean
+              OR (
+                  lower(COALESCE(resource_schema ->> 'accessChannelKind', '')) IN ('official', 'relay')
+                  AND (
+                      lower(COALESCE(resource_schema ->> 'baseUrl', '')) LIKE 'http://%'
+                      OR lower(COALESCE(resource_schema ->> 'baseUrl', '')) LIKE 'https://%'
+                  )
+              )
+          )
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
     .bind(search.as_deref())
     .bind(query.resource_type.as_deref())
+    .bind(status)
+    .bind(query.access_channel_kind.as_deref())
+    .bind(query.vendor_code.as_deref())
+    .bind(query.agent_provider_id.as_deref())
+    .bind(query.require_valid_access_channel_metadata)
     .fetch_one(pool)
     .await
     .map_err(|error| store_error("failed to count AI resources", error))?;
@@ -338,6 +498,27 @@ async fn list_ai_resources(
             catalog_key,
             model,
             provider_native_model,
+            NULLIF(resource_schema ->> 'accessChannelKind', '') AS access_channel_kind,
+            NULLIF(resource_schema ->> 'baseUrl', '') AS base_url,
+            NULLIF(resource_schema ->> 'defaultVendorCode', '') AS default_vendor_code,
+            NULLIF(resource_schema ->> 'defaultModelId', '') AS default_model_id,
+            COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)::text AS supported_agent_provider_ids_json,
+            CASE WHEN jsonb_typeof(resource_schema -> 'contextTokens') = 'number'
+                THEN (resource_schema ->> 'contextTokens')::bigint
+            END AS context_tokens,
+            CASE WHEN jsonb_typeof(resource_schema -> 'maxOutputTokens') = 'number'
+                THEN (resource_schema ->> 'maxOutputTokens')::bigint
+            END AS max_output_tokens,
+            CASE WHEN jsonb_typeof(resource_schema -> 'toolCallRounds') = 'number'
+                THEN (resource_schema ->> 'toolCallRounds')::bigint
+            END AS tool_call_rounds,
+            CASE WHEN jsonb_typeof(resource_schema -> 'supportsMultimodal') = 'boolean'
+                THEN (resource_schema ->> 'supportsMultimodal')::boolean
+            END AS supports_multimodal,
+            COALESCE(
+                NULLIF(resource_schema ->> 'description', ''),
+                NULLIF(description, '')
+            ) AS description,
             NULLIF(resource_schema ->> 'capability', '') AS capability,
             COALESCE(resource_schema -> 'capabilities', '[]'::jsonb)::text AS capabilities_json,
             COALESCE(
@@ -385,16 +566,87 @@ async fn list_ai_resources(
               OR COALESCE(catalog_key, '') ILIKE $3
               OR COALESCE(model, '') ILIKE $3
               OR COALESCE(provider_native_model, '') ILIKE $3
+              OR COALESCE(description, '') ILIKE $3
+              OR COALESCE(resource_schema ->> 'baseUrl', '') ILIKE $3
+              OR COALESCE(resource_schema ->> 'description', '') ILIKE $3
+              OR EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group_item member_item
+                  JOIN ai_resource member_resource
+                    ON member_resource.tenant_id = member_item.tenant_id
+                   AND member_resource.organization_id = member_item.organization_id
+                   AND member_resource.resource_code = member_item.resource_code
+                   AND member_resource.deleted_at IS NULL
+                  WHERE member_item.tenant_id = ai_resource.tenant_id
+                    AND member_item.organization_id = ai_resource.organization_id
+                    AND member_item.resource_group_code = ai_resource.resource_code
+                    AND member_item.deleted_at IS NULL
+                    AND member_item.status = 1
+                    AND (
+                        COALESCE(member_resource.vendor_code, '') ILIKE $3
+                        OR COALESCE(member_resource.catalog_key, '') ILIKE $3
+                        OR COALESCE(member_resource.model, '') ILIKE $3
+                        OR COALESCE(member_resource.display_name, '') ILIKE $3
+                    )
+              )
           )
           AND ($4::text IS NULL OR resource_type = $4)
+          AND ($5::int IS NULL OR status = $5)
+          AND (
+              $6::text IS NULL
+              OR lower(COALESCE(resource_schema ->> 'accessChannelKind', '')) = $6
+          )
+          AND (
+              $7::text IS NULL
+              OR lower(COALESCE(vendor_code, '')) = $7
+              OR EXISTS (
+                  SELECT 1
+                  FROM ai_resource_group_item vendor_item
+                  JOIN ai_resource vendor_resource
+                    ON vendor_resource.tenant_id = vendor_item.tenant_id
+                   AND vendor_resource.organization_id = vendor_item.organization_id
+                   AND vendor_resource.resource_code = vendor_item.resource_code
+                   AND vendor_resource.deleted_at IS NULL
+                  WHERE vendor_item.tenant_id = ai_resource.tenant_id
+                    AND vendor_item.organization_id = ai_resource.organization_id
+                    AND vendor_item.resource_group_code = ai_resource.resource_code
+                    AND vendor_item.deleted_at IS NULL
+                    AND vendor_item.status = 1
+                    AND lower(COALESCE(vendor_resource.vendor_code, '')) = $7
+              )
+          )
+          AND (
+              $8::text IS NULL
+              OR jsonb_array_length(COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)) = 0
+              OR EXISTS (
+                  SELECT 1
+                  FROM jsonb_array_elements_text(COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)) provider(value)
+                  WHERE lower(provider.value) = $8
+              )
+          )
+          AND (
+              NOT $9::boolean
+              OR (
+                  lower(COALESCE(resource_schema ->> 'accessChannelKind', '')) IN ('official', 'relay')
+                  AND (
+                      lower(COALESCE(resource_schema ->> 'baseUrl', '')) LIKE 'http://%'
+                      OR lower(COALESCE(resource_schema ->> 'baseUrl', '')) LIKE 'https://%'
+                  )
+              )
+          )
         ORDER BY COALESCE(sort_order, 100000) ASC, id ASC
-        LIMIT $5 OFFSET $6
+        LIMIT $10 OFFSET $11
         "#,
     )
     .bind(query.subject.tenant_id)
     .bind(query.subject.organization_id)
     .bind(search.as_deref())
     .bind(query.resource_type.as_deref())
+    .bind(status)
+    .bind(query.access_channel_kind.as_deref())
+    .bind(query.vendor_code.as_deref())
+    .bind(query.agent_provider_id.as_deref())
+    .bind(query.require_valid_access_channel_metadata)
     .bind(query.normalized_limit())
     .bind(query.normalized_offset())
     .fetch_all(pool)
@@ -1406,6 +1658,348 @@ async fn delete_ai_resource_group(
     Ok(true)
 }
 
+fn ai_resource_schema_for_create(command: &CreateAdminAiResourceCommand) -> String {
+    let mut schema = serde_json::Map::new();
+    schema.insert(
+        "compositionMode".to_owned(),
+        serde_json::Value::String(command.composition_mode.clone()),
+    );
+    if let Some(value) = command.access_channel_kind.as_ref() {
+        schema.insert(
+            "accessChannelKind".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.base_url.as_ref() {
+        schema.insert(
+            "baseUrl".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.default_vendor_code.as_ref() {
+        schema.insert(
+            "defaultVendorCode".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.default_model_id.as_ref() {
+        schema.insert(
+            "defaultModelId".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if !command.supported_agent_provider_ids.is_empty() {
+        schema.insert(
+            "supportedAgentProviderIds".to_owned(),
+            serde_json::json!(&command.supported_agent_provider_ids),
+        );
+    }
+    if let Some(value) = command.description.as_ref() {
+        schema.insert(
+            "description".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    serde_json::Value::Object(schema).to_string()
+}
+
+fn ai_resource_schema_patch_for_update(command: &UpdateAdminAiResourceCommand) -> Option<String> {
+    let mut patch = serde_json::Map::new();
+    if let Some(value) = command.composition_mode.as_ref() {
+        patch.insert(
+            "compositionMode".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.access_channel_kind.as_ref() {
+        patch.insert(
+            "accessChannelKind".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.base_url.as_ref() {
+        patch.insert(
+            "baseUrl".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.default_vendor_code.as_ref() {
+        patch.insert(
+            "defaultVendorCode".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(value) = command.default_model_id.as_ref() {
+        patch.insert(
+            "defaultModelId".to_owned(),
+            serde_json::Value::String(value.clone()),
+        );
+    }
+    if let Some(values) = command.supported_agent_provider_ids.as_ref() {
+        patch.insert(
+            "supportedAgentProviderIds".to_owned(),
+            serde_json::json!(values),
+        );
+    }
+    if let Some(value) = command.description.as_ref() {
+        patch.insert(
+            "description".to_owned(),
+            value
+                .as_ref()
+                .map(|value| serde_json::Value::String(value.clone()))
+                .unwrap_or(serde_json::Value::Null),
+        );
+    }
+    (!patch.is_empty()).then(|| serde_json::Value::Object(patch).to_string())
+}
+
+async fn upsert_hierarchy_resource(
+    tx: &mut Transaction<'_, Postgres>,
+    command: &ReplaceAdminAiResourceHierarchyCommand,
+    node: &AdminAiResourceHierarchyNodeCommand,
+) -> DomainResult<i64> {
+    sqlx::query_scalar(
+        r#"
+        INSERT INTO ai_resource
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
+        VALUES
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18, $19)
+        ON CONFLICT(tenant_id, organization_id, resource_code) DO UPDATE SET
+            status = excluded.status,
+            updated_at = excluded.updated_at,
+            version = COALESCE(ai_resource.version, 0) + 1,
+            deleted_at = NULL,
+            deleted_by = NULL,
+            resource_type = excluded.resource_type,
+            display_name = excluded.display_name,
+            vendor_code = excluded.vendor_code,
+            modality_code = excluded.modality_code,
+            api_code = excluded.api_code,
+            catalog_key = excluded.catalog_key,
+            model = excluded.model,
+            provider_native_model = excluded.provider_native_model,
+            resource_schema = excluded.resource_schema,
+            description = excluded.description,
+            sort_order = COALESCE(excluded.sort_order, ai_resource.sort_order)
+        RETURNING id
+        "#,
+    )
+    .bind(&node.resource_uuid)
+    .bind(command.subject.tenant_id)
+    .bind(command.subject.organization_id)
+    .bind(status_code(&node.status))
+    .bind(&command.requested_at)
+    .bind(&command.requested_at)
+    .bind(&node.resource_code)
+    .bind(&node.resource_type)
+    .bind(&node.display_name)
+    .bind(node.vendor_code.as_deref())
+    .bind(node.modality_code.as_deref())
+    .bind(node.api_endpoint_code.as_deref())
+    .bind(node.catalog_key.as_deref())
+    .bind(node.model.as_deref())
+    .bind(node.provider_native_model.as_deref())
+    .bind(hierarchy_node_schema(node))
+    .bind(node.description.as_deref())
+    .bind(node.sort_order)
+    .bind(next_claw_runtime_id("ai_resource")?)
+    .fetch_one(&mut **tx)
+    .await
+    .map_err(|error| store_error("failed to upsert AI resource hierarchy node", error))
+}
+
+async fn replace_hierarchy_node_members(
+    tx: &mut Transaction<'_, Postgres>,
+    command: &ReplaceAdminAiResourceHierarchyCommand,
+    node: &AdminAiResourceHierarchyNodeCommand,
+    resource_id: i64,
+) -> DomainResult<()> {
+    sqlx::query(
+        r#"
+        UPDATE ai_resource_group_item
+        SET status = -1, deleted_at = $1, deleted_by = $2, updated_at = $3,
+            version = COALESCE(version, 0) + 1
+        WHERE tenant_id = $4
+          AND organization_id = $5
+          AND resource_group_code = $6
+          AND deleted_at IS NULL
+        "#,
+    )
+    .bind(&command.requested_at)
+    .bind(command.subject.operator_id)
+    .bind(&command.requested_at)
+    .bind(command.subject.tenant_id)
+    .bind(command.subject.organization_id)
+    .bind(&node.resource_code)
+    .execute(&mut **tx)
+    .await
+    .map_err(|error| store_error("failed to clear AI resource hierarchy members", error))?;
+
+    if node.members.is_empty() {
+        sqlx::query(
+            r#"
+            UPDATE ai_resource_group
+            SET status = -1, deleted_at = $1, deleted_by = $2, updated_at = $3,
+                version = COALESCE(version, 0) + 1
+            WHERE tenant_id = $4
+              AND organization_id = $5
+              AND group_code = $6
+              AND deleted_at IS NULL
+            "#,
+        )
+        .bind(&command.requested_at)
+        .bind(command.subject.operator_id)
+        .bind(&command.requested_at)
+        .bind(command.subject.tenant_id)
+        .bind(command.subject.organization_id)
+        .bind(&node.resource_code)
+        .execute(&mut **tx)
+        .await
+        .map_err(|error| {
+            store_error("failed to retire empty AI resource hierarchy group", error)
+        })?;
+        return Ok(());
+    }
+
+    insert_members(
+        tx,
+        resource_id,
+        &node.resource_code,
+        command.subject.tenant_id,
+        command.subject.organization_id,
+        &command.requested_at,
+        &node.member_uuids,
+        &node.members,
+    )
+    .await?;
+    sqlx::query(
+        r#"
+        UPDATE ai_resource_group
+        SET group_name = $1,
+            group_type = $2,
+            selection_mode = $3,
+            status = $4,
+            deleted_at = NULL,
+            deleted_by = NULL,
+            updated_at = $5,
+            version = COALESCE(version, 0) + 1
+        WHERE tenant_id = $6
+          AND organization_id = $7
+          AND group_code = $8
+        "#,
+    )
+    .bind(&node.display_name)
+    .bind(&node.resource_type)
+    .bind(&node.composition_mode)
+    .bind(status_code(&node.status))
+    .bind(&command.requested_at)
+    .bind(command.subject.tenant_id)
+    .bind(command.subject.organization_id)
+    .bind(&node.resource_code)
+    .execute(&mut **tx)
+    .await
+    .map_err(|error| store_error("failed to sync AI resource hierarchy group", error))?;
+    Ok(())
+}
+
+async fn retire_stale_hierarchy_resources(
+    tx: &mut Transaction<'_, Postgres>,
+    command: &ReplaceAdminAiResourceHierarchyCommand,
+    desired_resource_codes: &HashSet<String>,
+) -> DomainResult<usize> {
+    let descendant_prefix = format!("{}.", command.root_resource_code);
+    let rows = sqlx::query(
+        r#"
+        SELECT resource_code
+        FROM ai_resource
+        WHERE tenant_id = $1
+          AND organization_id = $2
+          AND deleted_at IS NULL
+          AND strpos(resource_code, $3) = 1
+        "#,
+    )
+    .bind(command.subject.tenant_id)
+    .bind(command.subject.organization_id)
+    .bind(descendant_prefix)
+    .fetch_all(&mut **tx)
+    .await
+    .map_err(|error| store_error("failed to find stale AI resource hierarchy nodes", error))?;
+    let stale_resource_codes = rows
+        .into_iter()
+        .map(|row| row.try_get::<String, _>("resource_code").map_err(row_error))
+        .collect::<DomainResult<Vec<_>>>()?
+        .into_iter()
+        .filter(|resource_code| {
+            resource_code_is_owned(command, resource_code)
+                && !desired_resource_codes.contains(resource_code)
+        })
+        .collect::<Vec<_>>();
+
+    for resource_code in &stale_resource_codes {
+        sqlx::query(
+            r#"
+            UPDATE ai_resource_group_item
+            SET status = -1, deleted_at = $1, deleted_by = $2, updated_at = $3,
+                version = COALESCE(version, 0) + 1
+            WHERE tenant_id = $4
+              AND organization_id = $5
+              AND (resource_group_code = $6 OR resource_code = $6)
+              AND deleted_at IS NULL
+            "#,
+        )
+        .bind(&command.requested_at)
+        .bind(command.subject.operator_id)
+        .bind(&command.requested_at)
+        .bind(command.subject.tenant_id)
+        .bind(command.subject.organization_id)
+        .bind(resource_code)
+        .execute(&mut **tx)
+        .await
+        .map_err(|error| store_error("failed to retire stale hierarchy members", error))?;
+        sqlx::query(
+            r#"
+            UPDATE ai_resource_group
+            SET status = -1, deleted_at = $1, deleted_by = $2, updated_at = $3,
+                version = COALESCE(version, 0) + 1
+            WHERE tenant_id = $4
+              AND organization_id = $5
+              AND group_code = $6
+              AND deleted_at IS NULL
+            "#,
+        )
+        .bind(&command.requested_at)
+        .bind(command.subject.operator_id)
+        .bind(&command.requested_at)
+        .bind(command.subject.tenant_id)
+        .bind(command.subject.organization_id)
+        .bind(resource_code)
+        .execute(&mut **tx)
+        .await
+        .map_err(|error| store_error("failed to retire stale hierarchy group", error))?;
+        sqlx::query(
+            r#"
+            UPDATE ai_resource
+            SET status = -1, deleted_at = $1, deleted_by = $2, updated_at = $3,
+                version = COALESCE(version, 0) + 1
+            WHERE tenant_id = $4
+              AND organization_id = $5
+              AND resource_code = $6
+              AND deleted_at IS NULL
+            "#,
+        )
+        .bind(&command.requested_at)
+        .bind(command.subject.operator_id)
+        .bind(&command.requested_at)
+        .bind(command.subject.tenant_id)
+        .bind(command.subject.organization_id)
+        .bind(resource_code)
+        .execute(&mut **tx)
+        .await
+        .map_err(|error| store_error("failed to retire stale hierarchy resource", error))?;
+    }
+    Ok(stale_resource_codes.len())
+}
+
 async fn insert_ai_resource(
     tx: &mut Transaction<'_, Postgres>,
     command: &CreateAdminAiResourceCommand,
@@ -1413,9 +2007,9 @@ async fn insert_ai_resource(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, sort_order, id)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
         VALUES
-            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18)
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18, $19)
         RETURNING id
         "#,
     )
@@ -1434,7 +2028,8 @@ async fn insert_ai_resource(
     .bind(command.catalog_key.as_deref())
     .bind(command.model.as_deref())
     .bind(command.provider_native_model.as_deref())
-    .bind(serde_json::json!({ "compositionMode": &command.composition_mode }).to_string())
+    .bind(ai_resource_schema_for_create(command))
+    .bind(command.description.as_deref())
     .bind(command.sort_order)
     .bind(next_claw_runtime_id("ai_resource")?)
     .fetch_one(&mut **tx)
@@ -1477,6 +2072,7 @@ async fn update_ai_resource_core(
     tx: &mut Transaction<'_, Postgres>,
     command: &UpdateAdminAiResourceCommand,
 ) -> DomainResult<()> {
+    let resource_schema_patch = ai_resource_schema_patch_for_update(command);
     sqlx::query(
         r#"
         UPDATE ai_resource
@@ -1491,15 +2087,16 @@ async fn update_ai_resource_core(
             provider_native_model = CASE WHEN $14 THEN $15 ELSE provider_native_model END,
             resource_schema = CASE
                 WHEN $16 IS NULL THEN resource_schema
-                ELSE jsonb_set(COALESCE(resource_schema, '{}'::jsonb), '{compositionMode}', to_jsonb($16::text), true)
+                ELSE COALESCE(resource_schema, '{}'::jsonb) || $16::jsonb
             END,
-            status = COALESCE($17, status),
-            sort_order = CASE WHEN $18 THEN $19 ELSE sort_order END,
-            updated_at = $20,
+            description = CASE WHEN $17 THEN $18 ELSE description END,
+            status = COALESCE($19, status),
+            sort_order = CASE WHEN $20 THEN $21 ELSE sort_order END,
+            updated_at = $22,
             version = COALESCE(version, 0) + 1
-        WHERE id = $21
-          AND tenant_id = $22
-          AND organization_id = $23
+        WHERE id = $23
+          AND tenant_id = $24
+          AND organization_id = $25
           AND deleted_at IS NULL
         "#,
     )
@@ -1518,7 +2115,9 @@ async fn update_ai_resource_core(
     .bind(optional_optional_str(&command.model))
     .bind(command.provider_native_model.is_some())
     .bind(optional_optional_str(&command.provider_native_model))
-    .bind(command.composition_mode.as_deref())
+    .bind(resource_schema_patch.as_deref())
+    .bind(command.description.is_some())
+    .bind(optional_optional_str(&command.description))
     .bind(command.status.as_ref().map(|value| status_code(value)))
     .bind(command.sort_order.is_some())
     .bind(command.sort_order.flatten())
@@ -2237,6 +2836,27 @@ async fn load_resource_by_id(
             catalog_key,
             model,
             provider_native_model,
+            NULLIF(resource_schema ->> 'accessChannelKind', '') AS access_channel_kind,
+            NULLIF(resource_schema ->> 'baseUrl', '') AS base_url,
+            NULLIF(resource_schema ->> 'defaultVendorCode', '') AS default_vendor_code,
+            NULLIF(resource_schema ->> 'defaultModelId', '') AS default_model_id,
+            COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)::text AS supported_agent_provider_ids_json,
+            CASE WHEN jsonb_typeof(resource_schema -> 'contextTokens') = 'number'
+                THEN (resource_schema ->> 'contextTokens')::bigint
+            END AS context_tokens,
+            CASE WHEN jsonb_typeof(resource_schema -> 'maxOutputTokens') = 'number'
+                THEN (resource_schema ->> 'maxOutputTokens')::bigint
+            END AS max_output_tokens,
+            CASE WHEN jsonb_typeof(resource_schema -> 'toolCallRounds') = 'number'
+                THEN (resource_schema ->> 'toolCallRounds')::bigint
+            END AS tool_call_rounds,
+            CASE WHEN jsonb_typeof(resource_schema -> 'supportsMultimodal') = 'boolean'
+                THEN (resource_schema ->> 'supportsMultimodal')::boolean
+            END AS supports_multimodal,
+            COALESCE(
+                NULLIF(resource_schema ->> 'description', ''),
+                NULLIF(description, '')
+            ) AS description,
             NULLIF(resource_schema ->> 'capability', '') AS capability,
             COALESCE(resource_schema -> 'capabilities', '[]'::jsonb)::text AS capabilities_json,
             COALESCE(
@@ -2570,6 +3190,16 @@ fn item_from_row(
         catalog_key: optional_string_cell(&row, "catalog_key"),
         model: optional_string_cell(&row, "model"),
         provider_native_model: optional_string_cell(&row, "provider_native_model"),
+        access_channel_kind: optional_string_cell(&row, "access_channel_kind"),
+        base_url: optional_string_cell(&row, "base_url"),
+        default_vendor_code: optional_string_cell(&row, "default_vendor_code"),
+        default_model_id: optional_string_cell(&row, "default_model_id"),
+        supported_agent_provider_ids: string_array_cell(&row, "supported_agent_provider_ids_json")?,
+        context_tokens: row.try_get("context_tokens").map_err(row_error)?,
+        max_output_tokens: row.try_get("max_output_tokens").map_err(row_error)?,
+        tool_call_rounds: row.try_get("tool_call_rounds").map_err(row_error)?,
+        supports_multimodal: row.try_get("supports_multimodal").map_err(row_error)?,
+        description: optional_string_cell(&row, "description"),
         capability: optional_string_cell(&row, "capability"),
         capabilities: string_array_cell(&row, "capabilities_json")?,
         composition_mode: row.try_get("composition_mode").map_err(row_error)?,
@@ -2926,8 +3556,16 @@ mod tests {
             .split("#[cfg(test)]")
             .next()
             .expect("production source before test module");
+        let resource_list = source
+            .split("async fn list_ai_resources")
+            .nth(1)
+            .and_then(|body| body.split("async fn list_ai_resource_groups").next())
+            .expect("AI resource list implementation");
 
-        assert!(source.contains("LIMIT $5 OFFSET $6"));
+        assert!(resource_list.contains("LIMIT $10 OFFSET $11"));
+        assert!(resource_list.contains("supportedAgentProviderIds"));
+        assert!(resource_list.contains("accessChannelKind"));
+        assert!(resource_list.contains("vendor_resource.vendor_code"));
         assert!(source.contains("resource_group_code::text = ANY($3::text[])"));
         assert!(source.contains("&resource_codes"));
         assert!(!source.contains(

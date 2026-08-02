@@ -1,0 +1,32 @@
+schema_version: 1
+kind: sdkwork.database.schema
+database_role: client-local
+module_id: user-model-config-client-local
+contract_version: 1.0.0
+owner_team: sdkwork-models-platform
+compliance_level: L2
+engines:
+  - sqlite
+table_prefix: user_model_
+tables:
+  - name: ops_schema_migration
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_channel
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_channel_offering
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_channel_model
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_key
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_engine_config
+    lifecycle_status: active
+    owner: sdkwork-models-platform
+  - name: user_model_engine_selection
+    lifecycle_status: active
+    owner: sdkwork-models-platform

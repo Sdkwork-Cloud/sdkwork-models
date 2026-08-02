@@ -21,9 +21,20 @@ const BACKEND_PATH_PREFIXES = [
 const APP_PATH_PREFIXES = [
   "/app/v3/api/ai/model_vendors",
   "/app/v3/api/ai/models",
+  "/app/v3/api/ai/model_access_channels",
   "/app/v3/api/ai/model_rankings",
   "/app/v3/api/ai/voices",
   "/app/v3/api/ai/video_profiles",
+];
+
+const AI_RESOURCE_TYPES = [
+  "vendor",
+  "modality",
+  "api_endpoint",
+  "model",
+  "model_api",
+  "bundle",
+  "model_access_channel",
 ];
 
 function matchesPrefix(pathKey, prefixes) {
@@ -281,6 +292,493 @@ function mergeAiResourceGroupMemberPaths(document) {
   ] = {
     put: updateOperation,
     delete: deleteOperation,
+  };
+  return document;
+}
+
+function mergeAiResourceWritePaths(document) {
+  const createTemplate = operationAt(
+    document,
+    "/backend/v3/api/ai/resource_groups",
+    "post",
+  );
+  const updateTemplate = operationAt(
+    document,
+    "/backend/v3/api/ai/resource_groups/{groupId}",
+    "patch",
+  );
+  if (!createTemplate || !updateTemplate) {
+    return document;
+  }
+
+  const createOperation = cloneJson(createTemplate);
+  createOperation.operationId = "resources.create";
+  createOperation.summary = "Create AI resource";
+  createOperation.description =
+    "Create a tenant-owned AI resource, including model access channels and their public routing metadata. Credentials are not accepted by this catalog API.";
+  createOperation.parameters = [];
+  createOperation["x-contract-kind"] = "create";
+  createOperation["x-read-sources"] = ["ai_resource"];
+  createOperation["x-write-tables"] = ["ai_resource", "ai_resource_group_item", "ops_audit_log"];
+  createOperation["x-sdkwork-resource"] = "resources";
+  createOperation["x-source-file"] =
+    "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/admin_ai_resource.rs";
+
+  const updateOperation = cloneJson(updateTemplate);
+  updateOperation.operationId = "resources.update";
+  updateOperation.summary = "Update AI resource";
+  updateOperation.description =
+    "Update a tenant-owned AI resource and its public model access channel metadata. Credentials are not accepted by this catalog API.";
+  updateOperation.parameters = [
+    {
+      in: "path",
+      name: "resourceId",
+      required: true,
+      schema: int64StringSchema(false, 1),
+      description: "Tenant-owned AI resource id.",
+    },
+  ];
+  updateOperation["x-contract-kind"] = "update";
+  updateOperation["x-read-sources"] = ["ai_resource"];
+  updateOperation["x-write-tables"] = ["ai_resource", "ai_resource_group_item", "ops_audit_log"];
+  updateOperation["x-sdkwork-resource"] = "resources";
+  updateOperation["x-source-file"] =
+    "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/admin_ai_resource.rs";
+
+  document.paths["/backend/v3/api/ai/resources"] = {
+    ...(document.paths["/backend/v3/api/ai/resources"] ?? {}),
+    post: createOperation,
+  };
+  document.paths["/backend/v3/api/ai/resources/{resourceId}"] = {
+    put: updateOperation,
+  };
+  return document;
+}
+
+function modelAccessChannelModelSchema() {
+  return objectSchema(
+    {
+      catalogKey: visibleAsciiStringSchema(256, false),
+      model: visibleAsciiStringSchema(128, false),
+      displayName: stringSchema(128, 1),
+      contextTokens: {
+        type: ["integer", "null"],
+        format: "int32",
+        minimum: 1,
+        maximum: 100000000,
+      },
+      maxOutputTokens: {
+        type: ["integer", "null"],
+        format: "int32",
+        minimum: 1,
+        maximum: 100000000,
+      },
+      toolCallRounds: {
+        type: ["integer", "null"],
+        format: "int32",
+        minimum: 1,
+        maximum: 10000,
+      },
+      supportsMultimodal: { type: ["boolean", "null"] },
+    },
+    ["catalogKey", "model", "displayName"],
+    "One model exposed by a model access channel.",
+  );
+}
+
+function modelAccessChannelModelInputSchema() {
+  return objectSchema(
+    {
+      modelId: visibleAsciiStringSchema(128, false),
+      displayName: nullableStringSchema(128),
+    },
+    ["modelId"],
+    "One model selected for a model access channel. Capability metadata is derived from sdkwork-models.",
+  );
+}
+
+function modelAccessChannelOfferingSchema() {
+  return objectSchema(
+    {
+      vendorCode: safeCodeSchema(64, false),
+      vendorName: stringSchema(128, 1),
+      models: arraySchema(schemaRef("AppModelAccessChannelModel"), 512),
+    },
+    ["vendorCode", "vendorName", "models"],
+    "Models from one vendor exposed by an official endpoint or relay station.",
+  );
+}
+
+function modelAccessChannelItemSchema() {
+  return objectSchema(
+    {
+      id: int64StringSchema(false, 1),
+      code: safeCodeSchema(192, false),
+      name: stringSchema(128, 1),
+      kind: enumStringSchema(["official", "relay", "custom"], false),
+      baseUrl: {
+        type: "string",
+        format: "uri",
+        maxLength: 2048,
+        description: "Public HTTP(S) API base URL. Credentials are never returned by this API.",
+      },
+      description: nullableStringSchema(512),
+      defaultVendorCode: safeCodeSchema(64, false),
+      defaultModelId: visibleAsciiStringSchema(128, false),
+      supportedAgentProviderIds: arraySchema(
+        safeCodeSchema(128, false),
+        128,
+        "Agent provider ids that can consume this channel.",
+      ),
+      offerings: arraySchema(schemaRef("AppModelAccessChannelOffering"), 512),
+      vendorCount: int32Schema(0),
+      modelCount: int32Schema(0),
+      sortOrder: int64StringSchema(true, 0),
+    },
+    [
+      "id",
+      "code",
+      "name",
+      "kind",
+      "baseUrl",
+      "defaultVendorCode",
+      "defaultModelId",
+      "supportedAgentProviderIds",
+      "offerings",
+      "vendorCount",
+      "modelCount",
+    ],
+    "Official model endpoint or relay station returned by the app catalog API.",
+  );
+}
+
+function modelAccessChannelOfferingInputSchema() {
+  return objectSchema(
+    {
+      vendorCode: safeCodeSchema(64, false),
+      vendorName: stringSchema(128, 1),
+      modelIds: arraySchema(visibleAsciiStringSchema(128, false), 512),
+      models: arraySchema(schemaRef("AppModelAccessChannelModelInput"), 512),
+    },
+    ["vendorCode", "vendorName"],
+    "One vendor and its supported model ids for an official endpoint or relay station.",
+  );
+}
+
+function modelAccessChannelUpsertRequestSchema() {
+  return objectSchema(
+    {
+      name: stringSchema(128, 1),
+      kind: enumStringSchema(["official", "relay", "custom"], false),
+      baseUrl: {
+        type: "string",
+        format: "uri",
+        minLength: 1,
+        maxLength: 2048,
+        description: "Public HTTP(S) API base URL. API keys are forbidden.",
+      },
+      description: nullableStringSchema(512),
+      offerings: arraySchema(schemaRef("AppModelAccessChannelOfferingInput"), 32),
+      defaultVendorCode: safeCodeSchema(64, false),
+      defaultModelId: visibleAsciiStringSchema(128, false),
+      supportedAgentProviderIds: arraySchema(safeCodeSchema(128, false), 128),
+    },
+    [
+      "name",
+      "kind",
+      "baseUrl",
+      "offerings",
+      "defaultVendorCode",
+      "defaultModelId",
+      "supportedAgentProviderIds",
+    ],
+    "Public model access channel metadata. Credentials are intentionally forbidden.",
+  );
+}
+
+function modelAccessChannelItemDataSchema() {
+  return objectSchema(
+    { item: schemaRef("AppModelAccessChannelItem") },
+    ["item"],
+    "Saved model access channel.",
+  );
+}
+
+function modelAccessChannelUpsertResultSchema() {
+  return {
+    allOf: [
+      schemaRef("SdkWorkApiResponse"),
+      objectSchema(
+        {
+          data: {
+            allOf: [schemaRef("AppModelAccessChannelItemData")],
+            description: "Saved model access channel data.",
+          },
+        },
+        ["data"],
+      ),
+    ],
+    description: "Model access channel upsert result.",
+    "x-operation-id": "modelAccessChannels.upsert",
+  };
+}
+
+function modelAccessChannelsPageSchema() {
+  return objectSchema(
+    {
+      items: arraySchema(schemaRef("AppModelAccessChannelItem"), 200),
+      pageInfo: {
+        allOf: [schemaRef("PageInfo")],
+        description: "Offset pagination metadata for model access channels.",
+      },
+    },
+    ["items", "pageInfo"],
+    "Paginated official endpoints and relay stations.",
+  );
+}
+
+function modelAccessChannelsListResultSchema() {
+  return {
+    allOf: [
+      schemaRef("SdkWorkApiResponse"),
+      objectSchema(
+        {
+          data: {
+            allOf: [schemaRef("AppModelAccessChannelsPage")],
+            description: "Model access channel page.",
+          },
+        },
+        ["data"],
+      ),
+    ],
+    description: "Model access channel list result.",
+    "x-operation-id": "modelAccessChannels.list",
+  };
+}
+
+function modelAccessChannelPresetSchema() {
+  return objectSchema(
+    {
+      providerCode: safeCodeSchema(128, false),
+      providerDisplayName: stringSchema(128, 1),
+      protocol: safeCodeSchema(64, false),
+      vendorCode: safeCodeSchema(64, false),
+      vendorName: stringSchema(128, 1),
+      channelName: stringSchema(128, 1),
+      baseUrl: {
+        type: "string",
+        format: "uri",
+        maxLength: 2048,
+      },
+      models: arraySchema(schemaRef("AppModelAccessChannelModel"), 512),
+      defaultModelId: visibleAsciiStringSchema(128, true),
+      sortOrder: int32Schema(0),
+    },
+    [
+      "providerCode",
+      "providerDisplayName",
+      "protocol",
+      "vendorCode",
+      "vendorName",
+      "channelName",
+      "baseUrl",
+      "models",
+      "sortOrder",
+    ],
+    "Official provider preset used to create a model access channel.",
+  );
+}
+
+function modelAccessChannelPresetsPageSchema() {
+  return objectSchema(
+    { items: arraySchema(schemaRef("AppModelAccessChannelPreset"), 128) },
+    ["items"],
+    "Official provider presets and their current public model lists.",
+  );
+}
+
+function modelAccessChannelPresetsListResultSchema() {
+  return {
+    allOf: [
+      schemaRef("SdkWorkApiResponse"),
+      objectSchema(
+        {
+          data: {
+            allOf: [schemaRef("AppModelAccessChannelPresetsPage")],
+            description: "Official provider preset page.",
+          },
+        },
+        ["data"],
+      ),
+    ],
+    description: "Official provider preset list result.",
+    "x-operation-id": "modelAccessChannelPresets.list",
+  };
+}
+
+function mergeModelAccessChannelAppPath(document) {
+  if (!document.components) {
+    document.components = {};
+  }
+  if (!document.components.schemas) {
+    document.components.schemas = {};
+  }
+  Object.assign(document.components.schemas, {
+    AppModelAccessChannelModel: modelAccessChannelModelSchema(),
+    AppModelAccessChannelModelInput: modelAccessChannelModelInputSchema(),
+    AppModelAccessChannelOffering: modelAccessChannelOfferingSchema(),
+    AppModelAccessChannelItem: modelAccessChannelItemSchema(),
+    AppModelAccessChannelOfferingInput: modelAccessChannelOfferingInputSchema(),
+    AppModelAccessChannelUpsertRequest: modelAccessChannelUpsertRequestSchema(),
+    AppModelAccessChannelItemData: modelAccessChannelItemDataSchema(),
+    AppModelAccessChannelsPage: modelAccessChannelsPageSchema(),
+    ModelAccessChannelsListResult: modelAccessChannelsListResultSchema(),
+    ModelAccessChannelUpsertResult: modelAccessChannelUpsertResultSchema(),
+    AppModelAccessChannelPreset: modelAccessChannelPresetSchema(),
+    AppModelAccessChannelPresetsPage: modelAccessChannelPresetsPageSchema(),
+    ModelAccessChannelPresetsListResult: modelAccessChannelPresetsListResultSchema(),
+  });
+
+  const modelItemSchema = document.components.schemas.AppModelCatalogItem;
+  if (modelItemSchema?.properties) {
+    modelItemSchema.properties.supportedAgentProviderIds = arraySchema(
+      safeCodeSchema(128, false),
+      128,
+      "Agent Config SPI provider ids that can consume this model.",
+    );
+    modelItemSchema.required = [
+      ...new Set([
+        ...(modelItemSchema.required ?? []),
+        "supportedAgentProviderIds",
+      ]),
+    ];
+  }
+
+  const modelListOperation = document.paths?.["/app/v3/api/ai/models"]?.get;
+  const operation = cloneJson(modelListOperation ?? {});
+  operation.operationId = "modelAccessChannels.list";
+  operation.summary = "List model access channels";
+  operation.description =
+    "List active official model endpoints and multi-vendor relay stations from the database. The response contains public routing metadata only and never exposes API keys.";
+  operation.parameters = [
+    ...offsetListQueryParameters(
+      "Free-text search on channel code, name, description, base URL, vendor, and model.",
+    ),
+    {
+      in: "query",
+      name: "kind",
+      required: false,
+      schema: enumStringSchema(["official", "relay", "custom"], false),
+      description: "Filter by official endpoint or relay station.",
+    },
+    {
+      in: "query",
+      name: "vendor_code",
+      required: false,
+      schema: safeCodeSchema(64, false),
+      description: "Filter channels that expose at least one model from this vendor.",
+    },
+    {
+      in: "query",
+      name: "agent_provider_id",
+      required: false,
+      schema: safeCodeSchema(128, false),
+      description: "Filter channels compatible with an Agent Config SPI provider.",
+    },
+  ];
+  operation.responses = {
+    "200": operationSuccessResponse(
+      "#/components/schemas/ModelAccessChannelsListResult",
+      "OK",
+    ),
+    ...keepProblemResponses(modelListOperation?.responses),
+  };
+  operation["x-contract-kind"] = "read";
+  operation["x-read-sources"] = [
+    "ai_resource",
+    "ai_resource_group",
+    "ai_resource_group_item",
+    "ai_model_vendor",
+    "ai_model",
+  ];
+  operation["x-write-tables"] = [];
+  operation["x-file-targets"] = [];
+  operation["x-route-scope"] = "public";
+  operation["x-sdk-domain"] = "intelligence";
+  operation["x-sdkwork-domain"] = "intelligence";
+  operation["x-sdkwork-owner"] = "sdkwork-models";
+  operation["x-sdkwork-api-authority"] = "sdkwork-models-app-api";
+  operation["x-sdkwork-source-route-crate"] = "sdkwork-routes-models-catalog-app-api";
+  operation["x-sdkwork-resource"] = "modelAccessChannels";
+  operation["x-source-file"] =
+    "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs";
+  document.paths["/app/v3/api/ai/model_access_channels"] = { get: operation };
+  const upsertOperation = cloneJson(operation);
+  upsertOperation.operationId = "modelAccessChannels.upsert";
+  upsertOperation.summary = "Create or update a model access channel";
+  upsertOperation.description =
+    "Create or update tenant-owned public metadata for an official endpoint or multi-vendor relay station. API keys are forbidden and must be configured through sdkwork-agents Config SPI.";
+  upsertOperation.parameters = [
+    {
+      in: "path",
+      name: "channelCode",
+      required: true,
+      schema: safeCodeSchema(96, false),
+      description: "Stable tenant-owned model access channel code.",
+    },
+  ];
+  upsertOperation.requestBody = jsonRequestBody(
+    "#/components/schemas/AppModelAccessChannelUpsertRequest",
+    "Public model access channel metadata without credentials.",
+  );
+  upsertOperation.responses = {
+    "200": operationDataSuccessResponse(
+      "#/components/schemas/AppModelAccessChannelItemData",
+      "Model access channel saved.",
+    ),
+    ...keepProblemResponses(operation.responses),
+  };
+  upsertOperation["x-contract-kind"] = "update";
+  upsertOperation["x-read-sources"] = ["ai_resource", "ai_resource_group_item"];
+  upsertOperation["x-write-tables"] = [
+    "ai_resource",
+    "ai_resource_group",
+    "ai_resource_group_item",
+    "ops_audit_log",
+  ];
+  upsertOperation["x-sdkwork-resource"] = "modelAccessChannels";
+  document.paths["/app/v3/api/ai/model_access_channels/{channelCode}"] = {
+    put: upsertOperation,
+  };
+  const presetOperation = cloneJson(modelListOperation ?? {});
+  presetOperation.operationId = "modelAccessChannelPresets.list";
+  presetOperation.summary = "List official model access channel presets";
+  presetOperation.description =
+    "List official provider presets from the clawrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.";
+  presetOperation.parameters = [];
+  presetOperation.responses = {
+    "200": operationSuccessResponse(
+      "#/components/schemas/ModelAccessChannelPresetsListResult",
+      "OK",
+    ),
+    ...keepProblemResponses(modelListOperation?.responses),
+  };
+  presetOperation["x-contract-kind"] = "read";
+  presetOperation["x-read-sources"] = ["ai_model_vendor", "ai_model"];
+  presetOperation["x-write-tables"] = [];
+  presetOperation["x-file-targets"] = [];
+  presetOperation["x-route-scope"] = "public";
+  presetOperation["x-sdk-domain"] = "intelligence";
+  presetOperation["x-sdkwork-domain"] = "intelligence";
+  presetOperation["x-sdkwork-owner"] = "sdkwork-models";
+  presetOperation["x-sdkwork-api-authority"] = "sdkwork-models-app-api";
+  presetOperation["x-sdkwork-source-route-crate"] =
+    "sdkwork-routes-models-catalog-app-api";
+  presetOperation["x-sdkwork-resource"] = "modelAccessChannelPresets";
+  presetOperation["x-source-file"] =
+    "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs";
+  document.paths["/app/v3/api/ai/model_access_channel_presets"] = {
+    get: presetOperation,
   };
   return document;
 }
@@ -883,7 +1381,7 @@ function adminAiResourceCreateRequestSchema() {
   return objectSchema(
     {
       resourceCode: safeCodeSchema(192, false),
-      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], false),
+      resourceType: enumStringSchema(AI_RESOURCE_TYPES, false),
       displayName: stringSchema(128, 1),
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
@@ -891,6 +1389,12 @@ function adminAiResourceCreateRequestSchema() {
       catalogKey: visibleAsciiStringSchema(256, true),
       model: visibleAsciiStringSchema(128, true),
       providerNativeModel: visibleAsciiStringSchema(256, true),
+      accessChannelKind: enumStringSchema(["official", "relay", "custom"], true),
+      baseUrl: visibleAsciiStringSchema(2048, true),
+      defaultVendorCode: safeCodeSchema(64, true),
+      defaultModelId: visibleAsciiStringSchema(128, true),
+      supportedAgentProviderIds: arraySchema(safeCodeSchema(128, false), 128),
+      description: nullableStringSchema(512),
       compositionMode: enumStringSchema(["single", "any", "all"], true),
       status: enumStringSchema(["active", "disabled", "inactive"], true),
       sortOrder: int64StringSchema(true, 0),
@@ -905,7 +1409,7 @@ function adminAiResourceUpdateRequestSchema() {
   return objectSchema(
     {
       resourceCode: safeCodeSchema(192, true),
-      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], true),
+      resourceType: enumStringSchema(AI_RESOURCE_TYPES, true),
       displayName: nullableStringSchema(128),
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
@@ -913,6 +1417,12 @@ function adminAiResourceUpdateRequestSchema() {
       catalogKey: visibleAsciiStringSchema(256, true),
       model: visibleAsciiStringSchema(128, true),
       providerNativeModel: visibleAsciiStringSchema(256, true),
+      accessChannelKind: enumStringSchema(["official", "relay", "custom"], true),
+      baseUrl: visibleAsciiStringSchema(2048, true),
+      defaultVendorCode: safeCodeSchema(64, true),
+      defaultModelId: visibleAsciiStringSchema(128, true),
+      supportedAgentProviderIds: arraySchema(safeCodeSchema(128, false), 128),
+      description: nullableStringSchema(512),
       compositionMode: enumStringSchema(["single", "any", "all"], true),
       status: enumStringSchema(["active", "disabled", "inactive"], true),
       sortOrder: int64StringSchema(true, 0),
@@ -942,7 +1452,7 @@ function adminAiResourceItemSchema() {
     {
       id: int64StringSchema(false, 1),
       resourceCode: safeCodeSchema(192, false),
-      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], false),
+      resourceType: enumStringSchema(AI_RESOURCE_TYPES, false),
       displayName: stringSchema(128, 1),
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
@@ -950,6 +1460,12 @@ function adminAiResourceItemSchema() {
       catalogKey: visibleAsciiStringSchema(256, true),
       model: visibleAsciiStringSchema(128, true),
       providerNativeModel: visibleAsciiStringSchema(256, true),
+      accessChannelKind: enumStringSchema(["official", "relay", "custom"], true),
+      baseUrl: visibleAsciiStringSchema(2048, true),
+      defaultVendorCode: safeCodeSchema(64, true),
+      defaultModelId: visibleAsciiStringSchema(128, true),
+      supportedAgentProviderIds: arraySchema(safeCodeSchema(128, false), 128),
+      description: nullableStringSchema(512),
       capability: safeCodeSchema(128, true),
       capabilities: arraySchema(safeCodeSchema(128, false), 128),
       compositionMode: enumStringSchema(["single", "any", "all"], false),
@@ -1009,7 +1525,7 @@ function adminAiResourceGroupResourceItemSchema() {
     {
       id: int64StringSchema(false, 1),
       resourceCode: safeCodeSchema(192, false),
-      resourceType: enumStringSchema(["vendor", "modality", "api_endpoint", "model_api", "bundle"], false),
+      resourceType: enumStringSchema(AI_RESOURCE_TYPES, false),
       displayName: stringSchema(128, 1),
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
@@ -1407,7 +1923,7 @@ function standardizeAiResourceListOperations(document) {
         required: false,
         schema: {
           type: "string",
-          enum: ["vendor", "modality", "api_endpoint", "model_api", "bundle"],
+          enum: AI_RESOURCE_TYPES,
         },
         description: "Filter by the canonical AI resource type.",
       },
@@ -1691,11 +2207,13 @@ const backendDocument = decorateGatewayContract(
           mergeVideoProfileCatalogBackendPaths(
             mergeVoiceCatalogBackendPaths(
               mergeAiResourceGroupMemberPaths(
-                extractSurface(
-                  backendSource,
-                  BACKEND_PATH_PREFIXES,
-                  "SDKWork Models Backend API",
-                  "/backend/v3/api",
+                mergeAiResourceWritePaths(
+                  extractSurface(
+                    backendSource,
+                    BACKEND_PATH_PREFIXES,
+                    "SDKWork Models Backend API",
+                    "/backend/v3/api",
+                  ),
                 ),
               ),
             ),
@@ -1708,13 +2226,15 @@ const backendDocument = decorateGatewayContract(
 );
 const appDocument = decorateGatewayContract(
   migrateOpenApiDocument(
-    mergeVideoProfileCatalogAppPaths(
-      mergeVoiceCatalogAppPaths(
-        extractSurface(
-          appSource,
-          APP_PATH_PREFIXES,
-          "SDKWork Models App API",
-          "/app/v3/api",
+    mergeModelAccessChannelAppPath(
+      mergeVideoProfileCatalogAppPaths(
+        mergeVoiceCatalogAppPaths(
+          extractSurface(
+            appSource,
+            APP_PATH_PREFIXES,
+            "SDKWork Models App API",
+            "/app/v3/api",
+          ),
         ),
       ),
     ),

@@ -1391,6 +1391,7 @@ pub(crate) fn catalog_preview_admin_items(
                 organization_id: subject.organization_id,
                 vendor_id: vendor.vendor.vendor_code.clone(),
                 vendor_code: vendor.vendor.vendor_code.clone(),
+                vendor_name: vendor.vendor.display_name.clone(),
                 catalog_key: catalog_key.clone(),
                 model: model.model_id.clone(),
                 display_name: model.display_name.clone(),

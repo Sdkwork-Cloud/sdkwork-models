@@ -10,6 +10,7 @@ use axum::Router;
 use sdkwork_claw_http::TrustedRequestSubject;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use url::Url;
 
 use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
@@ -40,6 +41,7 @@ const MAX_API_ENDPOINT_CODE_LEN: usize = 128;
 const MAX_CATALOG_KEY_LEN: usize = 256;
 const MAX_MODEL_LEN: usize = 128;
 const MAX_PROVIDER_NATIVE_MODEL_LEN: usize = 256;
+const MAX_BASE_URL_LEN: usize = 2_048;
 const MAX_COMPOSITION_MODE_LEN: usize = 32;
 const MAX_GROUP_CODE_LEN: usize = 128;
 const MAX_GROUP_NAME_LEN: usize = 128;
@@ -50,6 +52,14 @@ const MAX_MEMBERS: usize = 512;
 const MAX_LIST_SEARCH_LEN: usize = 256;
 const DEFAULT_LIST_PAGE_SIZE: i64 = 20;
 const MAX_LIST_PAGE_SIZE: i64 = 200;
+const CANONICAL_AGENT_PROVIDER_IDS: &[&str] = &[
+    "codex",
+    "claude-code",
+    "gemini",
+    "opencode",
+    "openclaw",
+    "hermes",
+];
 
 #[derive(Clone)]
 struct AdminAiResourceState {
@@ -83,6 +93,17 @@ struct AdminAiResourceItemResponse {
     model: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     provider_native_model: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    access_channel_kind: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    base_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    default_vendor_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    default_model_id: Option<String>,
+    supported_agent_provider_ids: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     capability: Option<String>,
     capabilities: Vec<String>,
@@ -220,6 +241,12 @@ struct AiResourceCreateRequest {
     catalog_key: Option<String>,
     model: Option<String>,
     provider_native_model: Option<String>,
+    access_channel_kind: Option<String>,
+    base_url: Option<String>,
+    default_vendor_code: Option<String>,
+    default_model_id: Option<String>,
+    supported_agent_provider_ids: Option<Vec<String>>,
+    description: Option<String>,
     composition_mode: Option<String>,
     status: Option<String>,
     sort_order: Option<Value>,
@@ -239,6 +266,12 @@ struct AiResourceUpdateRequest {
     catalog_key: Option<Option<String>>,
     model: Option<Option<String>>,
     provider_native_model: Option<Option<String>>,
+    access_channel_kind: Option<String>,
+    base_url: Option<String>,
+    default_vendor_code: Option<String>,
+    default_model_id: Option<String>,
+    supported_agent_provider_ids: Option<Vec<String>>,
+    description: Option<Option<String>>,
     composition_mode: Option<String>,
     status: Option<String>,
     sort_order: Option<Option<Value>>,
@@ -290,6 +323,7 @@ struct AiResourceGroupUpdateRequest {
     members: Option<Vec<AiResourceGroupMemberRequest>>,
 }
 
+#[derive(Debug)]
 enum AiResourceCommandBuildError {
     BadRequest(String),
     System(DomainError),
@@ -357,6 +391,11 @@ async fn fetch_ai_resources(
             subject,
             q,
             resource_type,
+            status: None,
+            access_channel_kind: None,
+            vendor_code: None,
+            agent_provider_id: None,
+            require_valid_access_channel_metadata: false,
             limit: Some(page_size),
             offset: Some(offset),
         })
@@ -765,6 +804,12 @@ fn to_item_response(item: AdminAiResourceItem) -> AdminAiResourceItemResponse {
         catalog_key: item.catalog_key,
         model: item.model,
         provider_native_model: item.provider_native_model,
+        access_channel_kind: item.access_channel_kind,
+        base_url: item.base_url,
+        default_vendor_code: item.default_vendor_code,
+        default_model_id: item.default_model_id,
+        supported_agent_provider_ids: item.supported_agent_provider_ids,
+        description: item.description,
         capability: item.capability,
         capabilities: item.capabilities,
         composition_mode: item.composition_mode,
@@ -983,6 +1028,28 @@ fn build_create_command(
     request: AiResourceCreateRequest,
 ) -> Result<CreateAdminAiResourceCommand, AiResourceCommandBuildError> {
     let members = normalize_members(request.members.unwrap_or_default())?;
+    let resource_type = normalize_resource_type(required_text(
+        request.resource_type,
+        "resourceType",
+        "AI resource type",
+        MAX_RESOURCE_TYPE_LEN,
+    )?)?;
+    let is_access_channel = resource_type == "model_access_channel";
+    if !is_access_channel
+        && (request.default_vendor_code.is_some() || request.default_model_id.is_some())
+    {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "default model fields require resourceType model_access_channel".to_owned(),
+        ));
+    }
+    let access_channel_kind =
+        normalize_access_channel_kind(request.access_channel_kind, is_access_channel, true)?;
+    let base_url = normalize_base_url(request.base_url, is_access_channel, true)?;
+    let supported_agent_provider_ids = normalize_supported_agent_provider_ids(
+        request.supported_agent_provider_ids,
+        is_access_channel,
+        true,
+    )?;
     Ok(CreateAdminAiResourceCommand {
         subject,
         resource_uuid: generate_entity_uuid(&state)?,
@@ -994,12 +1061,7 @@ fn build_create_command(
             "AI resource code",
             MAX_RESOURCE_CODE_LEN,
         )?,
-        resource_type: normalize_resource_type(required_text(
-            request.resource_type,
-            "resourceType",
-            "AI resource type",
-            MAX_RESOURCE_TYPE_LEN,
-        )?)?,
+        resource_type,
         display_name: required_text(
             request.display_name,
             "displayName",
@@ -1020,6 +1082,20 @@ fn build_create_command(
             "providerNativeModel",
             MAX_PROVIDER_NATIVE_MODEL_LEN,
         )?,
+        access_channel_kind,
+        base_url,
+        default_vendor_code: optional_code(
+            request.default_vendor_code,
+            "defaultVendorCode",
+            MAX_VENDOR_CODE_LEN,
+        )?,
+        default_model_id: optional_visible_text(
+            request.default_model_id,
+            "defaultModelId",
+            MAX_MODEL_LEN,
+        )?,
+        supported_agent_provider_ids,
+        description: optional_text(request.description, "description", MAX_DESCRIPTION_LEN)?,
         composition_mode: normalize_composition_mode(
             optional_text(
                 request.composition_mode,
@@ -1082,6 +1158,47 @@ fn build_update_command(
 ) -> Result<UpdateAdminAiResourceCommand, AiResourceCommandBuildError> {
     let members = request.members.map(normalize_members).transpose()?;
     let member_count = members.as_ref().map(Vec::len).unwrap_or(0);
+    let resource_type = request
+        .resource_type
+        .map(|value| {
+            normalize_resource_type(required_text(
+                Some(value),
+                "resourceType",
+                "AI resource type",
+                MAX_RESOURCE_TYPE_LEN,
+            )?)
+        })
+        .transpose()?;
+    let explicitly_access_channel = resource_type.as_deref() == Some("model_access_channel");
+    let explicitly_other_resource = resource_type
+        .as_deref()
+        .is_some_and(|value| value != "model_access_channel");
+    if explicitly_other_resource
+        && (request.access_channel_kind.is_some()
+            || request.base_url.is_some()
+            || request.default_vendor_code.is_some()
+            || request.default_model_id.is_some()
+            || request.supported_agent_provider_ids.is_some())
+    {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "access channel fields require resourceType model_access_channel".to_owned(),
+        ));
+    }
+    let access_channel_kind = normalize_access_channel_kind(
+        request.access_channel_kind,
+        !explicitly_other_resource,
+        explicitly_access_channel,
+    )?;
+    let base_url = normalize_base_url(
+        request.base_url,
+        !explicitly_other_resource,
+        explicitly_access_channel,
+    )?;
+    let supported_agent_provider_ids = match request.supported_agent_provider_ids {
+        Some(values) => Some(normalize_agent_provider_ids(values, false)?),
+        None if explicitly_access_channel => Some(canonical_agent_provider_ids()),
+        None => None,
+    };
     Ok(UpdateAdminAiResourceCommand {
         subject,
         resource_id,
@@ -1091,17 +1208,7 @@ fn build_update_command(
             .resource_code
             .map(|value| resource_code_value(value, "resourceCode", MAX_RESOURCE_CODE_LEN))
             .transpose()?,
-        resource_type: request
-            .resource_type
-            .map(|value| {
-                normalize_resource_type(required_text(
-                    Some(value),
-                    "resourceType",
-                    "AI resource type",
-                    MAX_RESOURCE_TYPE_LEN,
-                )?)
-            })
-            .transpose()?,
+        resource_type,
         display_name: request
             .display_name
             .map(|value| {
@@ -1135,6 +1242,28 @@ fn build_update_command(
             .map(|value| {
                 optional_visible_text(value, "providerNativeModel", MAX_PROVIDER_NATIVE_MODEL_LEN)
             })
+            .transpose()?,
+        access_channel_kind,
+        base_url,
+        default_vendor_code: request
+            .default_vendor_code
+            .map(|value| resource_code_value(value, "defaultVendorCode", MAX_VENDOR_CODE_LEN))
+            .transpose()?,
+        default_model_id: request
+            .default_model_id
+            .map(|value| {
+                required_text(
+                    Some(value),
+                    "defaultModelId",
+                    "default model id",
+                    MAX_MODEL_LEN,
+                )
+            })
+            .transpose()?,
+        supported_agent_provider_ids,
+        description: request
+            .description
+            .map(|value| optional_text(value, "description", MAX_DESCRIPTION_LEN))
             .transpose()?,
         composition_mode: request
             .composition_mode
@@ -1337,14 +1466,134 @@ fn validate_list_search_query(q: Option<String>) -> Result<Option<String>, Strin
 
 fn normalize_resource_type(value: String) -> Result<String, AiResourceCommandBuildError> {
     match value.trim().to_ascii_lowercase().as_str() {
-        "vendor" | "modality" | "api_endpoint" | "model_api" | "bundle" => {
+        "vendor"
+        | "modality"
+        | "api_endpoint"
+        | "model"
+        | "model_api"
+        | "model_access_channel"
+        | "bundle" => {
             Ok(value.trim().to_ascii_lowercase())
         }
         _ => Err(AiResourceCommandBuildError::BadRequest(
-            "resourceType must be one of vendor, modality, api_endpoint, model_api, bundle"
-                .to_owned(),
+            "resourceType must be one of vendor, modality, api_endpoint, model, model_api, model_access_channel, bundle".to_owned(),
         )),
     }
+}
+
+fn normalize_access_channel_kind(
+    value: Option<String>,
+    access_channel_fields_allowed: bool,
+    required: bool,
+) -> Result<Option<String>, AiResourceCommandBuildError> {
+    if !access_channel_fields_allowed && value.is_some() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "accessChannelKind requires resourceType model_access_channel".to_owned(),
+        ));
+    }
+    let normalized =
+        optional_text(value, "accessChannelKind", 16)?.map(|value| value.to_ascii_lowercase());
+    if required && normalized.is_none() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "accessChannelKind is required for model_access_channel".to_owned(),
+        ));
+    }
+    if normalized
+        .as_deref()
+        .is_some_and(|value| !matches!(value, "official" | "relay"))
+    {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "accessChannelKind must be one of official, relay".to_owned(),
+        ));
+    }
+    Ok(normalized)
+}
+
+fn normalize_base_url(
+    value: Option<String>,
+    access_channel_fields_allowed: bool,
+    required: bool,
+) -> Result<Option<String>, AiResourceCommandBuildError> {
+    if !access_channel_fields_allowed && value.is_some() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "baseUrl requires resourceType model_access_channel".to_owned(),
+        ));
+    }
+    let Some(value) = optional_text(value, "baseUrl", MAX_BASE_URL_LEN)? else {
+        if required {
+            return Err(AiResourceCommandBuildError::BadRequest(
+                "baseUrl is required for model_access_channel".to_owned(),
+            ));
+        }
+        return Ok(None);
+    };
+    let parsed = Url::parse(&value).map_err(|_| {
+        AiResourceCommandBuildError::BadRequest(
+            "baseUrl must be an absolute HTTP(S) URL".to_owned(),
+        )
+    })?;
+    if !matches!(parsed.scheme(), "http" | "https") || parsed.host_str().is_none() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "baseUrl must be an absolute HTTP(S) URL".to_owned(),
+        ));
+    }
+    if !parsed.username().is_empty() || parsed.password().is_some() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "baseUrl must not contain credentials".to_owned(),
+        ));
+    }
+    Ok(Some(parsed.to_string()))
+}
+
+fn normalize_supported_agent_provider_ids(
+    value: Option<Vec<String>>,
+    access_channel_fields_allowed: bool,
+    default_all: bool,
+) -> Result<Vec<String>, AiResourceCommandBuildError> {
+    if !access_channel_fields_allowed && value.is_some() {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "supportedAgentProviderIds requires resourceType model_access_channel".to_owned(),
+        ));
+    }
+    match value {
+        Some(values) => normalize_agent_provider_ids(values, false),
+        None if default_all => Ok(canonical_agent_provider_ids()),
+        None => Ok(Vec::new()),
+    }
+}
+
+fn normalize_agent_provider_ids(
+    values: Vec<String>,
+    allow_empty: bool,
+) -> Result<Vec<String>, AiResourceCommandBuildError> {
+    let mut normalized = values
+        .into_iter()
+        .map(|value| value.trim().to_ascii_lowercase())
+        .filter(|value| !value.is_empty())
+        .collect::<Vec<_>>();
+    normalized.sort();
+    normalized.dedup();
+    if normalized.is_empty() && !allow_empty {
+        return Err(AiResourceCommandBuildError::BadRequest(
+            "supportedAgentProviderIds must contain at least one provider".to_owned(),
+        ));
+    }
+    if let Some(unknown) = normalized
+        .iter()
+        .find(|value| !CANONICAL_AGENT_PROVIDER_IDS.contains(&value.as_str()))
+    {
+        return Err(AiResourceCommandBuildError::BadRequest(format!(
+            "supportedAgentProviderIds contains an unsupported provider: {unknown}"
+        )));
+    }
+    Ok(normalized)
+}
+
+fn canonical_agent_provider_ids() -> Vec<String> {
+    CANONICAL_AGENT_PROVIDER_IDS
+        .iter()
+        .map(|value| (*value).to_owned())
+        .collect()
 }
 
 fn normalize_composition_mode(value: String) -> Result<String, AiResourceCommandBuildError> {
@@ -1678,5 +1927,64 @@ mod tests {
         .expect_err("unknown request fields must be rejected");
 
         assert!(error.contains("unknown field `legacyRole`"));
+    }
+
+    #[test]
+    fn model_access_channel_fields_are_strict_and_default_to_all_agent_providers() {
+        assert_eq!(
+            normalize_resource_type("MODEL_ACCESS_CHANNEL".to_owned())
+                .expect("model access channel resource type"),
+            "model_access_channel"
+        );
+        assert_eq!(
+            normalize_access_channel_kind(Some(" Relay ".to_owned()), true, true)
+                .expect("relay kind"),
+            Some("relay".to_owned())
+        );
+        assert_eq!(
+            normalize_supported_agent_provider_ids(None, true, true).expect("default providers"),
+            canonical_agent_provider_ids()
+        );
+        let error = normalize_agent_provider_ids(vec!["unknown-agent".to_owned()], false)
+            .expect_err("unknown provider must be rejected");
+        match error {
+            AiResourceCommandBuildError::BadRequest(message) => {
+                assert!(message.contains("unsupported provider"));
+            }
+            AiResourceCommandBuildError::System(_) => panic!("expected validation error"),
+        }
+    }
+
+    #[test]
+    fn model_access_channel_base_url_requires_public_http_origin_without_credentials() {
+        assert_eq!(
+            normalize_base_url(Some("https://relay.example.test/v1".to_owned()), true, true,)
+                .expect("valid relay URL"),
+            Some("https://relay.example.test/v1".to_owned())
+        );
+        for invalid in [
+            "relative/path",
+            "ftp://relay.example.test/v1",
+            "https://user:secret@relay.example.test/v1",
+        ] {
+            assert!(normalize_base_url(Some(invalid.to_owned()), true, true).is_err());
+        }
+    }
+
+    #[test]
+    fn ai_resource_requests_reject_api_key_fields() {
+        let error = parse_json_body::<AiResourceCreateRequest>(
+            br#"{
+                "resourceCode":"channel.relay",
+                "resourceType":"model_access_channel",
+                "displayName":"Relay",
+                "accessChannelKind":"relay",
+                "baseUrl":"https://relay.example.test/v1",
+                "apiKey":"must-never-enter-models"
+            }"#,
+            "AI resource",
+        )
+        .expect_err("API key fields must be rejected");
+        assert!(error.contains("unknown field `apiKey`"));
     }
 }

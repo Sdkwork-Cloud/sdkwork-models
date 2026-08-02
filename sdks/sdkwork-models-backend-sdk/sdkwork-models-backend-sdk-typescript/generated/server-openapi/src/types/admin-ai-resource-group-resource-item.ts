@@ -2,7 +2,7 @@
 export interface AdminAiResourceGroupResourceItem {
   id: string;
   resourceCode: string;
-  resourceType: 'vendor' | 'modality' | 'api_endpoint' | 'model_api' | 'bundle';
+  resourceType: 'vendor' | 'modality' | 'api_endpoint' | 'model' | 'model_api' | 'bundle' | 'model_access_channel';
   displayName: string;
   vendorCode?: string | null;
   modalityCode?: string | null;

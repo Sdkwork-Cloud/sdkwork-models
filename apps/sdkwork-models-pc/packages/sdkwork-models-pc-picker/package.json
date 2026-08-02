@@ -8,9 +8,11 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts"
-    }
+    },
+    "./style.css": "./src/agent-model-access-selector/agent-model-access-selector.css"
   },
   "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 pub const ENV_MODELS_CATALOG_ROOT: &str = "SDKWORK_MODELS_CATALOG_ROOT";
 
+mod admin_ai_resource_hierarchy;
 mod admin_models_list;
 pub mod model_catalog_import;
 pub mod model_modality;

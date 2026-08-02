@@ -40,7 +40,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "413ef1906345108b7b711e666116dd96b7acfeb61c3189b9c4f07678b633a0ed"
+      "sha256": "80a480e656fd842016048c2df61cc9d3353789400a2513095bc27490163432e3"
     },
     {
       "path": "README.md",
@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "ca57ccb50e2d08e9f6231197c05c391b80be500ddef87c59390c90a361fc0cb0"
+      "sha256": "a564dbbf0eb41795c0018d50a7cfdb9e2cc53805e1965c026e368d2305df9432"
     },
     {
       "path": "src/api/base.ts",
@@ -112,7 +112,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-create-request.ts",
-      "sha256": "5b1c8761b70fe5a1474817e689264d8a867dddd58c1482f1d1a49b5f49be805c"
+      "sha256": "d231a406de66819fdbd3820957284474e5c38ed4197ab244dd0cbdda1b4caf8e"
     },
     {
       "path": "src/types/admin-ai-resource-group-create-request.ts",
@@ -132,7 +132,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-group-resource-item.ts",
-      "sha256": "b245d8774a0320e42c8a16755126c2c9d654bd254206ff85662facf82848ed2e"
+      "sha256": "27d835fa1d5dfaae0274bed853a8e1d53071dc438b5dda250d0faaf2c0d8d86e"
     },
     {
       "path": "src/types/admin-ai-resource-group-update-request.ts",
@@ -140,7 +140,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-item.ts",
-      "sha256": "36fb484ae3ae728f051b1d2f96a646ced875ab102da354ab43076b8bf5d4bdaf"
+      "sha256": "9249b9deeb684c7779704e9f50c57d147449d4accc5625fef23043c62ccb77bb"
     },
     {
       "path": "src/types/admin-ai-resource-member-input.ts",
@@ -152,7 +152,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-update-request.ts",
-      "sha256": "36ef6839370c6b18c7e50a4e58944020769097779bdcfa5e6ecf6c1f1d360b19"
+      "sha256": "538b5434bc749800053691b28f422d5ade5422ed29d15db123d966619f69de2b"
     },
     {
       "path": "src/types/admin-model-catalog-sync-request.ts",
@@ -212,7 +212,7 @@
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "755af198dcdb4a9a3356b9fe573657457d7134da75774ffd315349585bd1f7c8"
+      "sha256": "f577333452ccfa70be190d1495bb59b8b9eb01b9a5be7767c7d5b7b820f7c52a"
     },
     {
       "path": "src/types/json-null.ts",

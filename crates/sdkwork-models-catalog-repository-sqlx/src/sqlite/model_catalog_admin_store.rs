@@ -4,9 +4,11 @@ use sdkwork_database_sqlx::sqlite_decimal::register_decimal_functions;
 use sqlx::{Acquire, Row, Sqlite, SqlitePool, Transaction};
 
 use crate::admin_models_list::{
-    capability_codes_from_model_types, normalized_search_pattern, normalized_vendor_codes,
-    optional_non_empty, sqlite_capability_in_clause, sqlite_vendor_codes_in_clause,
-    LIST_MODELS_BASE_WHERE_SQLITE, LIST_MODELS_COUNT_WHERE_SQLITE, LIST_MODELS_ORDER_PAGE_SQLITE,
+    capability_codes_from_model_types, normalized_modalities, normalized_release_stages,
+    normalized_search_pattern, normalized_vendor_codes, optional_non_empty,
+    sqlite_capability_in_clause, sqlite_modalities_clause, sqlite_release_stages_clause,
+    sqlite_vendor_codes_in_clause, LIST_MODELS_BASE_WHERE_SQLITE, LIST_MODELS_COUNT_WHERE_SQLITE,
+    LIST_MODELS_ORDER_PAGE_SQLITE,
 };
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
@@ -736,14 +738,23 @@ async fn list_models(
     let vendor_codes = normalized_vendor_codes(&query);
     let search_pattern = normalized_search_pattern(&query);
     let capability_codes = capability_codes_from_model_types(query.model_types.as_deref());
+    let modalities = normalized_modalities(&query);
+    let release_stages = normalized_release_stages(&query);
+    let status = query.status.as_deref().map(status_code);
     let vendor_clause = sqlite_vendor_codes_in_clause(vendor_codes.len());
     let capability_clause = sqlite_capability_in_clause(capability_codes.len());
+    let modality_clause = sqlite_modalities_clause(modalities.len());
+    let release_stage_clause = sqlite_release_stages_clause(release_stages.len());
     let limit = query.normalized_limit();
     let offset = query.normalized_offset();
 
     let count_sql = format!(
-        "SELECT COUNT(*) AS total_count FROM ai_model m {}{}{}",
-        LIST_MODELS_COUNT_WHERE_SQLITE, vendor_clause, capability_clause
+        "SELECT COUNT(*) AS total_count FROM ai_model m {}{}{}{}{}",
+        LIST_MODELS_COUNT_WHERE_SQLITE,
+        vendor_clause,
+        capability_clause,
+        modality_clause,
+        release_stage_clause
     );
     let mut count_query = sqlx::query(sqlx::AssertSqlSafe(count_sql))
         .bind(query.subject.tenant_id)
@@ -754,12 +765,26 @@ async fn list_models(
         .bind(vendor_id.as_deref())
         .bind(search_pattern.as_deref())
         .bind(search_pattern.as_deref())
-        .bind(search_pattern.as_deref());
+        .bind(search_pattern.as_deref())
+        .bind(search_pattern.as_deref())
+        .bind(search_pattern.as_deref())
+        .bind(status)
+        .bind(status)
+        .bind(query.shelf_state)
+        .bind(query.shelf_state)
+        .bind(query.routing_state)
+        .bind(query.routing_state);
     for vendor_code in &vendor_codes {
         count_query = count_query.bind(vendor_code);
     }
     for code in &capability_codes {
         count_query = count_query.bind(code);
+    }
+    for modality in &modalities {
+        count_query = count_query.bind(modality);
+    }
+    for release_stage in &release_stages {
+        count_query = count_query.bind(release_stage);
     }
     let count_row = count_query
         .fetch_one(pool)
@@ -768,7 +793,7 @@ async fn list_models(
     let total_count: i64 = count_row.try_get("total_count").map_err(row_error)?;
 
     let list_predicate = format!(
-        "{LIST_MODELS_BASE_WHERE_SQLITE}{vendor_clause}{capability_clause}{LIST_MODELS_ORDER_PAGE_SQLITE}"
+        "{LIST_MODELS_BASE_WHERE_SQLITE}{vendor_clause}{capability_clause}{modality_clause}{release_stage_clause}{LIST_MODELS_ORDER_PAGE_SQLITE}"
     );
     let list_sql = model_select_sql(
         list_predicate.as_str(),
@@ -784,12 +809,26 @@ async fn list_models(
         .bind(vendor_id.as_deref())
         .bind(search_pattern.as_deref())
         .bind(search_pattern.as_deref())
-        .bind(search_pattern.as_deref());
+        .bind(search_pattern.as_deref())
+        .bind(search_pattern.as_deref())
+        .bind(search_pattern.as_deref())
+        .bind(status)
+        .bind(status)
+        .bind(query.shelf_state)
+        .bind(query.shelf_state)
+        .bind(query.routing_state)
+        .bind(query.routing_state);
     for vendor_code in &vendor_codes {
         list_query = list_query.bind(vendor_code);
     }
     for code in &capability_codes {
         list_query = list_query.bind(code);
+    }
+    for modality in &modalities {
+        list_query = list_query.bind(modality);
+    }
+    for release_stage in &release_stages {
+        list_query = list_query.bind(release_stage);
     }
     let rows = list_query
         .bind(query.subject.tenant_id)
@@ -3466,6 +3505,12 @@ fn model_select_sql(
             COALESCE(m.organization_id, 0) AS organization_id,
             CAST(COALESCE(m.vendor_id, 0) AS TEXT) AS vendor_id,
             COALESCE(m.vendor_code, '') AS vendor_code,
+            COALESCE(
+                NULLIF(v.display_name, ''),
+                NULLIF(m.vendor_name_snapshot, ''),
+                m.vendor_code,
+                ''
+            ) AS vendor_name,
             COALESCE(m.catalog_key, COALESCE(m.vendor_code, '') || '/' || COALESCE(m.model, '')) AS catalog_key,
             COALESCE(m.model, '') AS model,
             COALESCE(NULLIF(m.display_name, ''), m.model, '') AS display_name,
@@ -3495,6 +3540,7 @@ fn model_select_sql(
             CAST(m.deleted_at AS TEXT) AS deleted_at
         FROM ai_model m
         LEFT JOIN selected_rank_calls rc ON rc.model = m.model
+        LEFT JOIN ai_model_vendor v ON v.id = m.vendor_id AND v.deleted_at IS NULL
         {predicate}
         "#
     ))
@@ -3843,6 +3889,7 @@ fn model_from_row(row: sqlx::sqlite::SqliteRow) -> DomainResult<AdminAiModelItem
         organization_id: optional_integer_cell(&row, "organization_id").unwrap_or(0),
         vendor_id: row.try_get("vendor_id").map_err(row_error)?,
         vendor_code: row.try_get("vendor_code").map_err(row_error)?,
+        vendor_name: row.try_get("vendor_name").map_err(row_error)?,
         catalog_key: row.try_get("catalog_key").unwrap_or_default(),
         model: row.try_get("model").map_err(row_error)?,
         display_name: row.try_get("display_name").map_err(row_error)?,

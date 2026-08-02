@@ -48,13 +48,13 @@ impl ModelsDatabaseHost {
 
 /// Loads the canonical models database module around an existing pool without
 /// creating framework tables, applying schema, or seeding catalog data.
+///
+/// Both database roles are legitimate (ENVIRONMENT_SPEC §7.2): the server role
+/// (workspace PostgreSQL profile) is resolved by `DatabaseConfig::from_env`,
+/// while desktop hosts connect the client-local SQLite pool through
+/// `DatabaseConfig::load_client_local_from_env`. The role-aware config loader
+/// guarantees server modules never receive SQLite.
 pub fn connect_models_database(pool: DatabasePool) -> Result<ModelsDatabaseHost, String> {
-    if pool.as_postgres().is_none() {
-        return Err(
-            "sdkwork-models is an authoritative-server database module and requires PostgreSQL"
-                .to_owned(),
-        );
-    }
     let app_root = resolve_app_root();
     let module = Arc::new(
         DefaultDatabaseModule::from_app_root(&app_root)
@@ -94,10 +94,39 @@ pub async fn migrate_models_database(
     Ok((host, applied))
 }
 
+/// Explicitly migrates the client-local SQLite models database for runtimes
+/// without a lifecycle operator (desktop standalone). The module manifest
+/// disables auto-migrate, so the host runtime performs the documented
+/// lifecycle migrate itself before serving requests.
+pub async fn migrate_client_local_models_database(applied_by: &str) -> Result<usize, String> {
+    let _ = dotenvy::dotenv();
+    if !sdkwork_database_config::client_local_sqlite_url_configured() {
+        return Err(
+            "client-local models database migration requires SDKWORK_DATABASE_SQLITE_URL"
+                .to_owned(),
+        );
+    }
+    let config = DatabaseConfig::load_client_local_from_env("MODELS")
+        .map_err(|error| format!("read models database config failed: {error}"))?;
+    let pool = create_pool_from_config(config)
+        .await
+        .map_err(|error| format!("create models database pool failed: {error}"))?;
+    migrate_models_database(pool, applied_by)
+        .await
+        .map(|(_, applied)| applied)
+}
+
 pub async fn bootstrap_models_database_from_env() -> Result<ModelsDatabaseHost, String> {
     let _ = dotenvy::dotenv();
-    let config = DatabaseConfig::from_env("MODELS")
-        .map_err(|error| format!("read models database config failed: {error}"))?;
+    // Client-local SQLite (desktop standalone) resolves exclusively through
+    // SDKWORK_DATABASE_SQLITE_URL; otherwise the workspace PostgreSQL profile
+    // applies (ENVIRONMENT_SPEC §7.2).
+    let config = if sdkwork_database_config::client_local_sqlite_url_configured() {
+        DatabaseConfig::load_client_local_from_env("MODELS")
+    } else {
+        DatabaseConfig::from_env("MODELS")
+    }
+    .map_err(|error| format!("read models database config failed: {error}"))?;
     let pool = create_pool_from_config(config)
         .await
         .map_err(|error| format!("create models database pool failed: {error}"))?;
@@ -140,11 +169,12 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn authoritative_host_rejects_sqlite_pool() {
-        let error = connect_models_database(memory_pool().await)
-            .err()
-            .expect("SQLite pool must be rejected");
-        assert!(error.contains("requires PostgreSQL"));
+    async fn client_local_sqlite_pool_connects() {
+        // Desktop hosts connect the declared client-local SQLite pool; the
+        // role-aware config loader keeps server modules on PostgreSQL.
+        let host = connect_models_database(memory_pool().await)
+            .expect("client-local SQLite pool must connect");
+        assert!(host.pool().as_sqlite().is_some());
     }
 
     #[test]

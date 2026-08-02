@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.database.prefix-registry",
+  "prefixes": [
+    { "prefix": "user_model_", "owner": "sdkwork-models-platform", "domain": "user-model-config" },
+    { "prefix": "ops_", "owner": "sdkwork-models-platform", "domain": "user-model-config" }
+  ]
+}

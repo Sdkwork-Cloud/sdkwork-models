@@ -25,6 +25,7 @@ const appOpenApi = readJson('apis/app-api/intelligence/openapi.json');
 const resolveOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappings/resolve']?.post;
 const modelMappingsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/model_mappings']?.get;
 const appModelsListOperation = appOpenApi.paths?.['/app/v3/api/ai/models']?.get;
+const appModelAccessChannelsListOperation = appOpenApi.paths?.['/app/v3/api/ai/model_access_channels']?.get;
 const backendModelsListOperation = backendOpenApi.paths?.['/backend/v3/api/ai/models']?.get;
 const aiResourceListOperations = [
   [
@@ -188,6 +189,55 @@ assert.equal(
   'App model items must expose typed regional officialReferencePrices',
 );
 assert.ok(appModelItem?.properties?.providerCodes, 'App model items must expose providerCodes');
+assert.ok(
+  appModelItem?.properties?.supportedAgentProviderIds,
+  'App model items must expose supported Agent Config SPI provider ids',
+);
+
+assert.ok(appModelAccessChannelsListOperation, 'modelAccessChannels.list operation must exist');
+assert.equal(appModelAccessChannelsListOperation.operationId, 'modelAccessChannels.list');
+assert.equal(
+  responseDataSchemaRef(appOpenApi, appModelAccessChannelsListOperation),
+  '#/components/schemas/AppModelAccessChannelsPage',
+);
+const modelAccessChannelQueryParams = new Map(
+  (appModelAccessChannelsListOperation.parameters ?? []).map((parameter) => [parameter.name, parameter]),
+);
+assert.deepEqual(
+  [...modelAccessChannelQueryParams.keys()],
+  ['page', 'page_size', 'q', 'kind', 'vendor_code', 'agent_provider_id'],
+);
+assert.deepEqual(modelAccessChannelQueryParams.get('kind')?.schema?.enum, ['official', 'relay']);
+assert.equal(modelAccessChannelQueryParams.get('page_size')?.schema?.maximum, 200);
+
+const modelAccessChannelPage = appOpenApi.components?.schemas?.AppModelAccessChannelsPage;
+assert.equal(
+  modelAccessChannelPage?.properties?.items?.items?.$ref,
+  '#/components/schemas/AppModelAccessChannelItem',
+);
+assert.equal(
+  modelAccessChannelPage?.properties?.pageInfo?.allOf?.[0]?.$ref,
+  '#/components/schemas/PageInfo',
+);
+const modelAccessChannelItem = appOpenApi.components?.schemas?.AppModelAccessChannelItem;
+for (const field of [
+  'id',
+  'code',
+  'name',
+  'kind',
+  'baseUrl',
+  'supportedAgentProviderIds',
+  'offerings',
+  'vendorCount',
+  'modelCount',
+]) {
+  assert.ok(modelAccessChannelItem?.properties?.[field], `AppModelAccessChannelItem.${field} must exist`);
+}
+assert.equal(modelAccessChannelItem?.properties?.apiKey, undefined);
+assert.equal(
+  appOpenApi.components?.schemas?.AppModelAccessChannelOffering?.properties?.models?.items?.$ref,
+  '#/components/schemas/AppModelAccessChannelModel',
+);
 
 const adminModelPage = backendOpenApi.components?.schemas?.AdminAiModelPage;
 assert.equal(adminModelPage?.properties?.items?.items?.$ref, '#/components/schemas/AdminAiModelItem');
@@ -245,6 +295,23 @@ for (const [schemaName, fields] of [
     assert.equal(property.format, 'int64');
     assert.equal(property['x-sdkwork-int64-string'], true);
   }
+}
+
+for (const schemaName of [
+  'AdminAiResourceCreateRequest',
+  'AdminAiResourceUpdateRequest',
+  'AdminAiResourceItem',
+]) {
+  const schema = backendOpenApi.components?.schemas?.[schemaName];
+  for (const field of [
+    'accessChannelKind',
+    'baseUrl',
+    'supportedAgentProviderIds',
+    'description',
+  ]) {
+    assert.ok(schema?.properties?.[field], `${schemaName}.${field} must exist`);
+  }
+  assert.equal(schema?.properties?.apiKey, undefined, `${schemaName} must never expose API keys`);
 }
 
 const memberPath = '/backend/v3/api/ai/resource_groups/{groupId}/resources/{resourceCode}';
@@ -314,6 +381,23 @@ assert.doesNotMatch(
   'generated app SDK must not serialize the unsupported model_types query parameter',
 );
 assert.match(
+  generatedAppApiSource,
+  /async list\([^)]*params\?: AiModelAccessChannelsListParams[^)]*\): Promise<AppModelAccessChannelsPage>/,
+  'generated app SDK must expose modelAccessChannels.list(params)',
+);
+for (const [wireName, modelName] of [
+  ['page_size', 'pageSize'],
+  ['kind', 'kind'],
+  ['vendor_code', 'vendorCode'],
+  ['agent_provider_id', 'agentProviderId'],
+]) {
+  assert.match(
+    generatedAppApiSource,
+    new RegExp(`\\{ name: '${wireName}', value: params\\?\\.${modelName}`),
+    `generated app SDK must serialize modelAccessChannels.list ${modelName} as ${wireName}`,
+  );
+}
+assert.match(
   generatedApiSource,
   /async list\([^)]*params\?: AiModelsListParams[^)]*\): Promise<AdminAiModelPage>/,
   'generated backend SDK must return the typed admin model page',
@@ -351,7 +435,7 @@ const resourcesListParamsBlock = generatedApiSource.match(
 assert.ok(resourcesListParamsBlock, 'AiResourcesListParams must be generated');
 assert.match(
   resourcesListParamsBlock,
-  /resourceType\?: 'vendor' \| 'modality' \| 'api_endpoint' \| 'model_api' \| 'bundle';/,
+  /resourceType\?: 'vendor' \| 'modality' \| 'api_endpoint' \| 'model' \| 'model_api' \| 'bundle' \| 'model_access_channel';/,
 );
 for (const paramsName of ['AiResourceGroupsListParams', 'AiResourceGroupsResourcesListParams']) {
   const paramsBlock = generatedApiSource.match(

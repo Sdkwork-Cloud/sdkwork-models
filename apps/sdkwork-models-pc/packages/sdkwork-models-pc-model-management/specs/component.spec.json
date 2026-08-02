@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.component.spec",
+  "component": {
+    "name": "@sdkwork/models-pc-model-management",
+    "displayName": "SDKWork Models PC Model Management",
+    "version": "0.1.0",
+    "type": "react-package",
+    "root": "sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-model-management",
+    "domain": "intelligence",
+    "declaredDomain": "intelligence",
+    "capability": "model-management",
+    "surface": "app",
+    "status": "ready",
+    "languages": [
+      "typescript",
+      "react"
+    ],
+    "generated": false,
+    "private": true,
+    "manifests": [
+      "package.json"
+    ]
+  },
+  "canonicalSpecs": [
+    {
+      "file": "COMPONENT_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/COMPONENT_SPEC.md",
+      "purpose": "Component contract and public integration rules."
+    },
+    {
+      "file": "CODE_STYLE_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/CODE_STYLE_SPEC.md",
+      "purpose": "Authored source organization and public exports."
+    },
+    {
+      "file": "NAMING_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/NAMING_SPEC.md",
+      "purpose": "Canonical component and package naming."
+    },
+    {
+      "file": "TYPESCRIPT_CODE_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/TYPESCRIPT_CODE_SPEC.md",
+      "purpose": "Strict TypeScript package rules."
+    },
+    {
+      "file": "FRONTEND_CODE_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/FRONTEND_CODE_SPEC.md",
+      "purpose": "Frontend component and accessibility rules."
+    },
+    {
+      "file": "FRONTEND_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/FRONTEND_SPEC.md",
+      "purpose": "Reusable UI state and injection boundaries."
+    },
+    {
+      "file": "UI_ARCHITECTURE_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/UI_ARCHITECTURE_SPEC.md",
+      "purpose": "PC UI architecture selection."
+    },
+    {
+      "file": "APP_PC_REACT_UI_SPEC.md",
+      "path": "../../../../../../sdkwork-specs/APP_PC_REACT_UI_SPEC.md",
+      "purpose": "Detailed PC React interaction rules."
+    }
+  ],
+  "contracts": {
+    "layerRole": "frontend-feature",
+    "publicExports": [
+      "."
+    ],
+    "providedPorts": [
+      {
+        "name": "modelManagementSettingsUi",
+        "export": "."
+      }
+    ],
+    "requiredPorts": [],
+    "runtimeEntrypoints": [
+      "package.json#scripts.test",
+      "package.json#scripts.typecheck"
+    ],
+    "routeManifest": null,
+    "sdkClients": [],
+    "sdkDependencies": [],
+    "permissionComposition": {},
+    "dependencyApiExports": [],
+    "dependencyApiSurfaces": [],
+    "events": [],
+    "configKeys": []
+  },
+  "integration": {
+    "authority": "The package owns the PC model-management settings center presentation: a split-pane layout listing suppliers (the BirdCoder official platform entry, relay stations, and custom configurations) on the left and the selected supplier's configuration on the right, including inline editing of relay/custom channels.",
+    "dependencyPolicy": "Consumers inject the official vendor presets, client-local channels, catalog models, Agent provider options, localized messages, and persistence callbacks. The package performs no data fetching and persists nothing itself.",
+    "sdkPolicy": "The package does not construct SDK clients, issue HTTP requests, or store provider credentials. Credentials exist only in write-command drafts passed to callbacks.",
+    "languagePolicy": "PC React hosts consume the package root export and supply application design tokens."
+  },
+  "verification": {
+    "commands": [
+      "pnpm --filter @sdkwork/models-pc-model-management typecheck",
+      "node ../sdkwork-specs/tools/check-component-port-bindings.mjs --root sdkwork-models"
+    ]
+  },
+  "metadata": {
+    "managedBy": "sdkwork-models maintainers",
+    "standardVersion": "2026-08-01"
+  }
+}

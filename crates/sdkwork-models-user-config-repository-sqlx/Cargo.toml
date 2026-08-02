@@ -1,0 +1,13 @@
+[package]
+name = "sdkwork-models-user-config-repository-sqlx"
+version = "0.1.0"
+edition = "2021"
+description = "Client-local user model configuration repository (sqlite)"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+sqlx = { workspace = true, features = ["sqlite", "runtime-tokio"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

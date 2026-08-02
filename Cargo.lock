@@ -1956,6 +1956,9 @@ dependencies = [
  "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",
+ "sdkwork-web-bootstrap",
+ "sdkwork-web-core",
+ "sqlx",
  "tokio",
 ]
 
@@ -2285,6 +2288,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
+ "url",
 ]
 
 [[package]]
@@ -2319,6 +2323,16 @@ dependencies = [
  "sdkwork-models-catalog-repository-sqlx",
  "sdkwork-models-catalog-service",
  "sdkwork-models-database-host",
+]
+
+[[package]]
+name = "sdkwork-models-user-config-repository-sqlx"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
 ]
 
 [[package]]

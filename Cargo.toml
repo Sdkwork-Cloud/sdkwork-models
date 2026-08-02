@@ -5,6 +5,7 @@ members = [
   "crates/sdkwork-models-catalog-repository-sqlx",
   "crates/sdkwork-models-catalog-service",
   "crates/sdkwork-models-database-host",
+  "crates/sdkwork-models-user-config-repository-sqlx",
   "crates/sdkwork-api-models-standalone-gateway",
   "crates/sdkwork-models-service-host",
   "crates/sdkwork-routes-catalog-app-api",
@@ -44,6 +45,7 @@ sdkwork_models_contract_service = { package = "sdkwork-models-contract-service",
 sdkwork_models_catalog_repository_sqlx = { package = "sdkwork-models-catalog-repository-sqlx", path = "crates/sdkwork-models-catalog-repository-sqlx" }
 sdkwork_models_catalog_service = { package = "sdkwork-models-catalog-service", path = "crates/sdkwork-models-catalog-service" }
 sdkwork_models_database_host = { package = "sdkwork-models-database-host", path = "crates/sdkwork-models-database-host" }
+sdkwork_models_user_config_repository_sqlx = { package = "sdkwork-models-user-config-repository-sqlx", path = "crates/sdkwork-models-user-config-repository-sqlx" }
 sdkwork_api_models_assembly = { package = "sdkwork-api-models-assembly", path = "crates/sdkwork-api-models-assembly" }
 sdkwork_models_service_host = { package = "sdkwork-models-service-host", path = "crates/sdkwork-models-service-host" }
 sdkwork_routes_models_catalog_app_api = { package = "sdkwork-routes-models-catalog-app-api", path = "crates/sdkwork-routes-catalog-app-api" }

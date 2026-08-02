@@ -63,4 +63,6 @@ export interface AppModelCatalogItem {
   vendor: string;
   /** Vendor code field on app model catalog item. */
   vendorCode: string;
+  /** Agent Config SPI provider ids that can consume this model. */
+  supportedAgentProviderIds: string[];
 }

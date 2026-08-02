@@ -4,14 +4,23 @@ import type { MainstreamAgentModelCatalogEntry } from './unifiedAgentModelCatalo
 export const SDKWORK_MODELS_CATALOG_VERSION = "2026.07.26.1";
 export const SDKWORK_MODELS_CATALOG_GENERATED_AT = "2026-07-26T00:00:00Z";
 
-export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
+export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG: readonly MainstreamAgentModelCatalogEntry[] = [
   {
     "catalogKey": "openai/gpt-5.6-sol",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "GPT-5.6 Sol flagship model with max reasoning and ultra sub-agent modes. Generally available as of July 2026.",
     "displayName": "GPT-5.6 Sol",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.6-sol",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1220,
     "releaseStage": "active",
     "searchTerms": [
@@ -26,16 +35,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.5-pro",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "OpenAI GPT-5.5 Pro frontier model for maximum reasoning depth, coding, and agentic workloads.",
     "displayName": "GPT-5.5 Pro",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.5-pro",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1190,
     "releaseStage": "active",
     "searchTerms": [
@@ -50,16 +69,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "Current OpenAI frontier model for coding, reasoning, and agentic workloads.",
     "displayName": "GPT-5.5",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1180,
     "releaseStage": "active",
     "searchTerms": [
@@ -74,16 +103,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.4-pro",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "OpenAI GPT-5.4 Pro model for the highest reasoning, coding, and agent workloads on the GPT-5.4 generation.",
     "displayName": "GPT-5.4 Pro",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.4-pro",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1170,
     "releaseStage": "active",
     "searchTerms": [
@@ -98,16 +137,27 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.4",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "OpenAI GPT-5.4 multimodal model for high-quality reasoning and generation.",
     "displayName": "GPT-5.4",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.4",
+    "outputModalities": [
+      "text",
+      "image"
+    ],
     "rankScore": 1160,
     "releaseStage": "active",
     "searchTerms": [
@@ -122,16 +172,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.6-terra",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "GPT-5.6 Terra balanced model for everyday work at roughly half the cost of GPT-5.5. Generally available as of July 2026.",
     "displayName": "GPT-5.6 Terra",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.6-terra",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1150,
     "releaseStage": "active",
     "searchTerms": [
@@ -145,16 +205,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.6-luna",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1050000,
     "description": "GPT-5.6 Luna fast and affordable tier for latency-sensitive workloads. Generally available as of July 2026.",
     "displayName": "GPT-5.6 Luna",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.6-luna",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1050,
     "releaseStage": "active",
     "searchTerms": [
@@ -168,16 +238,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.4-mini",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 400000,
     "description": "Compact GPT-5.4 model for cost-sensitive chat, coding, and agent workloads.",
     "displayName": "GPT-5.4 Mini",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.4-mini",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1030,
     "releaseStage": "active",
     "searchTerms": [
@@ -191,16 +271,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "openai/gpt-5.4-nano",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 400000,
     "description": "Smallest GPT-5.4 model for high-throughput, low-cost routing.",
     "displayName": "GPT-5.4 Nano",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "gpt-5.4-nano",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 910,
     "releaseStage": "active",
     "searchTerms": [
@@ -214,16 +304,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "codex"
     ],
+    "supportsTools": true,
     "vendorCode": "openai",
     "vendorName": "OpenAI"
   },
   {
     "catalogKey": "anthropic/claude-opus-5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Claude Opus 5 frontier model released July 24, 2026; step-change improvement over Claude Opus 4.8 with 1M token context window, 128k max output, thinking on by default, and the full effort ladder (low/medium/high/xhigh/max).",
     "displayName": "Claude Opus 5",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "claude-opus-5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1230,
     "releaseStage": "active",
     "searchTerms": [
@@ -239,16 +339,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "anthropic/claude-opus-4-8",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",
     "displayName": "Claude Opus 4.8",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "claude-opus-4-8",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1185,
     "releaseStage": "active",
     "searchTerms": [
@@ -263,16 +373,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "anthropic/claude-opus-4-7",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",
     "displayName": "Claude Opus 4.7",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "claude-opus-4-7",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1170,
     "releaseStage": "active",
     "searchTerms": [
@@ -287,16 +407,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "anthropic/claude-sonnet-5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Claude Sonnet 5 is Anthropic's most agentic Sonnet model for coding, tool use, and autonomous workflows with introductory API pricing through August 2026.",
     "displayName": "Claude Sonnet 5",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "claude-sonnet-5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1120,
     "releaseStage": "active",
     "searchTerms": [
@@ -311,16 +441,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "anthropic/claude-sonnet-4-6",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Claude Sonnet model for reasoning, coding, and agent workflows.",
     "displayName": "Claude Sonnet 4.6",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 128000,
     "modelId": "claude-sonnet-4-6",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1080,
     "releaseStage": "active",
     "searchTerms": [
@@ -335,16 +475,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "anthropic/claude-haiku-4-5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 200000,
     "description": "Fast Claude model for cost-sensitive chat, coding assistance, and agent sub-tasks.",
     "displayName": "Claude Haiku 4.5",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 64000,
     "modelId": "claude-haiku-4-5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 980,
     "releaseStage": "active",
     "searchTerms": [
@@ -359,16 +509,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "claude-code"
     ],
+    "supportsTools": true,
     "vendorCode": "anthropic",
     "vendorName": "Anthropic"
   },
   {
     "catalogKey": "google/gemini-3.6-flash",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Gemini 3.6 Flash main-tier model with 17% fewer output tokens than 3.5 Flash, improved agentic coding and multimodal efficiency.",
     "displayName": "Gemini 3.6 Flash",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 65535,
     "modelId": "gemini-3.6-flash",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1060,
     "releaseStage": "active",
     "searchTerms": [
@@ -383,16 +545,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3.5-flash-lite",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Fastest, most cost-efficient Gemini 3.5 Flash Lite for high-throughput agentic search and document processing at 350 tokens/sec.",
     "displayName": "Gemini 3.5 Flash Lite",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 65535,
     "modelId": "gemini-3.5-flash-lite",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 980,
     "releaseStage": "active",
     "searchTerms": [
@@ -407,16 +581,27 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3.1-pro",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Gemini 3.1 Pro is Google's latest production-ready pro-tier model for complex reasoning, coding, and multimodal tasks.",
     "displayName": "Gemini 3.1 Pro",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "active",
     "modelId": "gemini-3.1-pro",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 935,
     "releaseStage": "active",
     "searchTerms": [
@@ -431,16 +616,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3.1-pro-preview",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Preview multimodal Gemini model for long-context reasoning.",
     "displayName": "Gemini 3.1 Pro Preview",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "preview",
+    "maxOutputTokens": 65535,
     "modelId": "gemini-3.1-pro-preview",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1050,
     "releaseStage": "preview",
     "searchTerms": [
@@ -454,16 +651,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3-flash-preview",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Fast Gemini 3 preview model for multimodal chat and cost-sensitive reasoning.",
     "displayName": "Gemini 3 Flash Preview",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "preview",
+    "maxOutputTokens": 65535,
     "modelId": "gemini-3-flash-preview",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 990,
     "releaseStage": "preview",
     "searchTerms": [
@@ -478,16 +687,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3.1-flash-lite-preview",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Preview Gemini 3.1 Flash Lite model for low-cost multimodal chat.",
     "displayName": "Gemini 3.1 Flash Lite Preview",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "preview",
+    "maxOutputTokens": 65535,
     "modelId": "gemini-3.1-flash-lite-preview",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 925,
     "releaseStage": "preview",
     "searchTerms": [
@@ -501,16 +722,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "google/gemini-3.1-flash-live-preview",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 131072,
     "description": "Gemini 3.1 Flash Live preview model for low-latency multimodal realtime sessions.",
     "displayName": "Gemini 3.1 Flash Live Preview",
+    "inputModalities": [
+      "text",
+      "audio",
+      "video"
+    ],
     "lifecycle": "preview",
+    "maxOutputTokens": 8192,
     "modelId": "gemini-3.1-flash-live-preview",
+    "outputModalities": [
+      "text",
+      "audio"
+    ],
     "rankScore": 900,
     "releaseStage": "preview",
     "searchTerms": [
@@ -524,16 +757,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "supportedProviderIds": [
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "google",
     "vendorName": "Google"
   },
   {
     "catalogKey": "xai/grok-4.5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 500000,
     "description": "Grok 4.5 flagship model for code, agentic tool calling, and configurable reasoning with minimal hallucinations.",
     "displayName": "Grok 4.5",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
     "modelId": "grok-4.5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 950,
     "releaseStage": "active",
     "searchTerms": [
@@ -546,16 +788,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 22,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "xai",
     "vendorName": "xAI"
   },
   {
     "catalogKey": "xai/grok-4.20-0309-non-reasoning",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Grok 4.20 non-reasoning model optimized for fast general-purpose chat and instruction following.",
     "displayName": "Grok 4.20",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
     "modelId": "grok-4.20-0309-non-reasoning",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 935,
     "releaseStage": "active",
     "searchTerms": [
@@ -567,16 +818,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 23,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "xai",
     "vendorName": "xAI"
   },
   {
     "catalogKey": "xai/grok-4.3",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Grok model for general chat, reasoning, and multimodal assistance.",
     "displayName": "Grok 4.3",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
     "modelId": "grok-4.3",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 930,
     "releaseStage": "active",
     "searchTerms": [
@@ -588,16 +848,24 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 24,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "xai",
     "vendorName": "xAI"
   },
   {
     "catalogKey": "xai/grok-build-0.1",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
     "description": "Grok Build lightweight model for fast, cost-efficient inference on simpler tasks.",
     "displayName": "Grok Build 0.1",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
     "modelId": "grok-build-0.1",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 800,
     "releaseStage": "active",
     "searchTerms": [
@@ -608,16 +876,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 25,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "xai",
     "vendorName": "xAI"
   },
   {
     "catalogKey": "alibaba/qwen3.7-max",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Qwen3.7-Max international flagship reasoning and agent model with 1M context.",
     "displayName": "Qwen3.7 Max",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 65530,
     "modelId": "qwen3.7-max",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1060,
     "releaseStage": "active",
     "searchTerms": [
@@ -634,16 +911,28 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "alibaba",
     "vendorName": "Alibaba Cloud"
   },
   {
     "catalogKey": "alibaba/qwen3.8-max-preview",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Qwen3.8-Max preview flagship unveiled at WAIC 2026 on July 19, 2026; 2.4T-parameter MoE with 350B activated, native multimodal (text/image/video/document) and 1M context. Apache 2.0 weights planned.",
     "displayName": "Qwen3.8 Max Preview",
+    "inputModalities": [
+      "text",
+      "image",
+      "video",
+      "document"
+    ],
     "lifecycle": "preview",
+    "maxOutputTokens": 65536,
     "modelId": "qwen3.8-max-preview",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1090,
     "releaseStage": "preview",
     "searchTerms": [
@@ -661,16 +950,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "alibaba",
     "vendorName": "Alibaba Cloud"
   },
   {
     "catalogKey": "deepseek/deepseek-v4-pro",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "DeepSeek reasoning and coding model.",
     "displayName": "DeepSeek V4 Pro",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 393216,
     "modelId": "deepseek-v4-pro",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 900,
     "releaseStage": "active",
     "searchTerms": [
@@ -686,16 +984,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "deepseek",
     "vendorName": "DeepSeek"
   },
   {
     "catalogKey": "deepseek/deepseek-v4-flash",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Fast DeepSeek V4 model for cost-sensitive reasoning and coding traffic.",
     "displayName": "DeepSeek V4 Flash",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 393216,
     "modelId": "deepseek-v4-flash",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 860,
     "releaseStage": "active",
     "searchTerms": [
@@ -711,16 +1018,26 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "deepseek",
     "vendorName": "DeepSeek"
   },
   {
     "catalogKey": "moonshot/kimi-k3",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "Kimi K3 flagship released on July 16, 2026 at WAIC 2026; 2.8T-parameter Stable LatentMoE with 16-of-896 expert activation, native multimodal vision, and 1M context for long-horizon agent coding.",
     "displayName": "Kimi K3",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 65536,
     "modelId": "kimi-k3",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1090,
     "releaseStage": "active",
     "searchTerms": [
@@ -734,16 +1051,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 30,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "moonshot",
     "vendorName": "Moonshot Kimi"
   },
   {
     "catalogKey": "moonshot/kimi-k2.6",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 262144,
     "description": "Kimi K2.6 model for long-context Chinese, multilingual, and agent workloads.",
     "displayName": "Kimi K2.6",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 32768,
     "modelId": "kimi-k2.6",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 875,
     "releaseStage": "active",
     "searchTerms": [
@@ -756,16 +1082,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 31,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "moonshot",
     "vendorName": "Moonshot Kimi"
   },
   {
     "catalogKey": "zhipu/glm-5.2",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1000000,
     "description": "GLM-5.2 flagship coding and agent model with 1M context and open-weight lineage.",
     "displayName": "GLM-5.2",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 131072,
     "modelId": "glm-5.2",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 920,
     "releaseStage": "active",
     "searchTerms": [
@@ -778,16 +1113,25 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 32,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "zhipu",
     "vendorName": "Zhipu AI"
   },
   {
     "catalogKey": "zhipu/glm-5.1",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 200000,
     "description": "GLM model for Chinese and multimodal assistance.",
     "displayName": "GLM-5.1",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 131072,
     "modelId": "glm-5.1",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 840,
     "releaseStage": "active",
     "searchTerms": [
@@ -799,16 +1143,706 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
     "sortOrder": 33,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [],
+    "supportsTools": true,
     "vendorCode": "zhipu",
     "vendorName": "Zhipu AI"
   },
   {
+    "catalogKey": "baidu/ernie-5.1",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 128000,
+    "description": "ERNIE 5.1 flagship model built on the 2.4 trillion parameter ERNIE 5.0 foundation, optimized for Chinese reasoning, knowledge, and search-augmented workloads.",
+    "displayName": "ERNIE 5.1",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 65536,
+    "modelId": "ernie-5.1",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 880,
+    "releaseStage": "active",
+    "searchTerms": [
+      "ernie",
+      "Chinese",
+      "Knowledge",
+      "Search"
+    ],
+    "sortOrder": 34,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "baidu",
+    "vendorName": "Baidu AI Cloud"
+  },
+  {
+    "catalogKey": "baidu/ernie-4.5-turbo-128k",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 128000,
+    "description": "ERNIE 4.5 Turbo high-performance model optimized for multi-turn long-history dialogue and long-document understanding.",
+    "displayName": "ERNIE 4.5 Turbo",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 12288,
+    "modelId": "ernie-4.5-turbo-128k",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 850,
+    "releaseStage": "active",
+    "searchTerms": [
+      "ernie",
+      "Long context",
+      "Chinese",
+      "Multi-turn dialogue"
+    ],
+    "sortOrder": 35,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "baidu",
+    "vendorName": "Baidu AI Cloud"
+  },
+  {
+    "catalogKey": "baidu/ernie-5.0-thinking-preview",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 128000,
+    "description": "ERNIE thinking preview model for Chinese reasoning workloads.",
+    "displayName": "ERNIE 5.0 Thinking Preview",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "lifecycle": "preview",
+    "maxOutputTokens": 65536,
+    "modelId": "ernie-5.0-thinking-preview",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 820,
+    "releaseStage": "preview",
+    "searchTerms": [
+      "ernie",
+      "Chinese",
+      "Reasoning",
+      "Vision"
+    ],
+    "sortOrder": 36,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "baidu",
+    "vendorName": "Baidu AI Cloud"
+  },
+  {
+    "catalogKey": "tencent/hy3",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Tencent Hy3 fast/slow thinking fusion model with MoE architecture (295B total params, 21B activated). Supports 256K context. Successor to Hunyuan 2.0 with significant improvements in complex reasoning, instruction following, context learning, code generation, and agent capabilities.",
+    "displayName": "Hy3",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 65536,
+    "modelId": "hy3",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 900,
+    "releaseStage": "active",
+    "searchTerms": [
+      "hunyuan",
+      "Reasoning",
+      "Code",
+      "Agent",
+      "Long context",
+      "Instruction following"
+    ],
+    "sortOrder": 37,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "tencent",
+    "vendorName": "Tencent Cloud"
+  },
+  {
+    "catalogKey": "tencent/hunyuan-2.0-instruct-20251111",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 128000,
+    "description": "Tencent HY 2.0 Instruct model with enhanced instruction following, multi-turn dialogue, literary creation, and code capabilities.",
+    "displayName": "Hunyuan 2.0 Instruct",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 16384,
+    "modelId": "hunyuan-2.0-instruct-20251111",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 845,
+    "releaseStage": "active",
+    "searchTerms": [
+      "hunyuan",
+      "Instruction following",
+      "Long context",
+      "Code",
+      "Writing"
+    ],
+    "sortOrder": 38,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "tencent",
+    "vendorName": "Tencent Cloud"
+  },
+  {
+    "catalogKey": "tencent/hunyuan-turbos-latest",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 32768,
+    "description": "Tencent Hunyuan model for Chinese assistant workloads.",
+    "displayName": "Hunyuan Turbos Latest",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 16384,
+    "modelId": "hunyuan-turbos-latest",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 800,
+    "releaseStage": "active",
+    "searchTerms": [
+      "hunyuan",
+      "Chinese",
+      "Enterprise",
+      "Cost efficient"
+    ],
+    "sortOrder": 39,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "tencent",
+    "vendorName": "Tencent Cloud"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-1-pro-260628",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Doubao Seed 2.1 Pro deep-thinking flagship for complex coding, long-horizon agents, and multimodal understanding on the international Seed API.",
+    "displayName": "Doubao Seed 2.1 Pro",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "doubao-seed-2-1-pro-260628",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 930,
+    "releaseStage": "active",
+    "searchTerms": [
+      "doubao-seed",
+      "Coding",
+      "Agents",
+      "Reasoning",
+      "Multimodal"
+    ],
+    "sortOrder": 40,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-0-pro-260215",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Doubao Seed 2.0 Pro flagship model for complex reasoning, agents, and multimodal tasks.",
+    "displayName": "Doubao Seed 2.0 Pro",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "doubao-seed-2-0-pro-260215",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 900,
+    "releaseStage": "active",
+    "searchTerms": [
+      "doubao-seed",
+      "Multimodal",
+      "Agents",
+      "Reasoning",
+      "Coding"
+    ],
+    "sortOrder": 41,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-1-turbo-260628",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Doubao Seed 2.1 Turbo fast variant for high-frequency enterprise workloads on the international Seed API.",
+    "displayName": "Doubao Seed 2.1 Turbo",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "doubao-seed-2-1-turbo-260628",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 900,
+    "releaseStage": "active",
+    "searchTerms": [
+      "doubao-seed",
+      "Coding",
+      "Agents",
+      "Low latency",
+      "Cost efficient"
+    ],
+    "sortOrder": 42,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-0-lite-260215",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Seed 2.0 Lite balances output quality and response speed. Ideal as a general-purpose, production-grade model with omni-modal understanding.",
+    "displayName": "Doubao Seed 2.0 Lite",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "doubao-seed-2-0-lite-260215",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 880,
+    "releaseStage": "active",
+    "searchTerms": [
+      "doubao-seed",
+      "Multimodal",
+      "Speed",
+      "Agent",
+      "Coding"
+    ],
+    "sortOrder": 43,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-0-code-preview-260215",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Doubao Seed 2.0 Code model optimized for software engineering, debugging, and agentic coding workflows.",
+    "displayName": "Doubao Seed 2.0 Code",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "doubao-seed-2-0-code-preview-260215",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 870,
+    "releaseStage": "preview",
+    "searchTerms": [
+      "doubao-seed",
+      "Coding",
+      "Agents",
+      "Multimodal"
+    ],
+    "sortOrder": 44,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "bytedance/doubao-seed-2-0-mini-260215",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 128000,
+    "description": "Seed 2.0 Mini is optimized for inference throughput and deployment density. Designed for high concurrency and batch generation scenarios.",
+    "displayName": "Doubao Seed 2.0 Mini",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 16384,
+    "modelId": "doubao-seed-2-0-mini-260215",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 830,
+    "releaseStage": "active",
+    "searchTerms": [
+      "doubao-seed",
+      "Speed",
+      "Cost efficiency",
+      "High concurrency"
+    ],
+    "sortOrder": 45,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "bytedance",
+    "vendorName": "ByteDance"
+  },
+  {
+    "catalogKey": "minimax/MiniMax-M2.7",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 204800,
+    "description": "MiniMax M2.7 text model for long-context coding, office, agent and tool workflows.",
+    "displayName": "MiniMax M2.7",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "MiniMax-M2.7",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 805,
+    "releaseStage": "active",
+    "searchTerms": [
+      "minimax",
+      "Code",
+      "Tools",
+      "Long context"
+    ],
+    "sortOrder": 46,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "minimax",
+    "vendorName": "MiniMax"
+  },
+  {
+    "catalogKey": "minimax/MiniMax-M2.7-highspeed",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 204800,
+    "description": "MiniMax M2.7 high-speed variant with the same model quality and lower latency.",
+    "displayName": "MiniMax M2.7 Highspeed",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "MiniMax-M2.7-highspeed",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 795,
+    "releaseStage": "active",
+    "searchTerms": [
+      "minimax",
+      "Low latency",
+      "Code",
+      "Tools"
+    ],
+    "sortOrder": 47,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "minimax",
+    "vendorName": "MiniMax"
+  },
+  {
+    "catalogKey": "minimax/MiniMax-M2.5",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 204800,
+    "description": "MiniMax M2.5 text model optimized for coding, tool use, search and office productivity.",
+    "displayName": "MiniMax M2.5",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "MiniMax-M2.5",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 780,
+    "releaseStage": "active",
+    "searchTerms": [
+      "minimax",
+      "Code",
+      "Tools",
+      "Value"
+    ],
+    "sortOrder": 48,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "minimax",
+    "vendorName": "MiniMax"
+  },
+  {
+    "catalogKey": "minimax/MiniMax-M2.5-highspeed",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 204800,
+    "description": "MiniMax M2.5 high-speed variant with the same model quality and faster inference.",
+    "displayName": "MiniMax M2.5 Highspeed",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "MiniMax-M2.5-highspeed",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 770,
+    "releaseStage": "active",
+    "searchTerms": [
+      "minimax",
+      "Low latency",
+      "Code",
+      "Value"
+    ],
+    "sortOrder": 49,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "minimax",
+    "vendorName": "MiniMax"
+  },
+  {
+    "catalogKey": "minimax/M2-her",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 65536,
+    "description": "MiniMax M2-her text chat model for role-playing and long-horizon multi-turn dialogue.",
+    "displayName": "MiniMax M2-her",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 2048,
+    "modelId": "M2-her",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 735,
+    "releaseStage": "active",
+    "searchTerms": [
+      "minimax",
+      "Role play",
+      "Dialogue",
+      "Character customization"
+    ],
+    "sortOrder": 50,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": false,
+    "vendorCode": "minimax",
+    "vendorName": "MiniMax"
+  },
+  {
+    "catalogKey": "stepfun/step-3.7-flash",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "StepFun flagship multimodal reasoning model with native image and video understanding.",
+    "displayName": "Step 3.7 Flash",
+    "inputModalities": [
+      "text",
+      "image",
+      "video"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 65536,
+    "modelId": "step-3.7-flash",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 960,
+    "releaseStage": "active",
+    "searchTerms": [
+      "step-flash",
+      "Multimodal",
+      "Agents",
+      "Coding",
+      "Reasoning"
+    ],
+    "sortOrder": 51,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "stepfun",
+    "vendorName": "StepFun"
+  },
+  {
+    "catalogKey": "stepfun/step-3.5-flash-2603",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Agent-optimized Step 3.5 Flash variant with faster inference and reasoning_effort controls.",
+    "displayName": "Step 3.5 Flash 2603",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 65536,
+    "modelId": "step-3.5-flash-2603",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 920,
+    "releaseStage": "active",
+    "searchTerms": [
+      "step-flash",
+      "Agents",
+      "Coding",
+      "Efficiency",
+      "Tools"
+    ],
+    "sortOrder": 52,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "stepfun",
+    "vendorName": "StepFun"
+  },
+  {
+    "catalogKey": "stepfun/step-3.5-flash",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "StepFun flagship sparse MoE reasoning model for agents, coding, and tool use.",
+    "displayName": "Step 3.5 Flash",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 65536,
+    "modelId": "step-3.5-flash",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 900,
+    "releaseStage": "active",
+    "searchTerms": [
+      "step-flash",
+      "Agents",
+      "Coding",
+      "Reasoning",
+      "Tools"
+    ],
+    "sortOrder": 53,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "stepfun",
+    "vendorName": "StepFun"
+  },
+  {
+    "catalogKey": "meituan/longcat-2.0",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
+    "description": "Meituan LongCat 2.0 trillion-parameter MoE agentic model for coding, agent workflows, and ultra-long context tasks. Open-sourced under MIT license with 1M token context window.",
+    "displayName": "LongCat 2.0",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 131072,
+    "modelId": "longcat-2.0",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 920,
+    "releaseStage": "active",
+    "searchTerms": [
+      "longcat",
+      "Chinese",
+      "Coding",
+      "Agentic",
+      "Long context"
+    ],
+    "sortOrder": 54,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "meituan",
+    "vendorName": "Meituan"
+  },
+  {
+    "catalogKey": "meituan/longcat-1.0",
+    "catalogVersion": "2026.07.26.1",
+    "contextTokens": 256000,
+    "description": "Meituan LongCat (Longmao) general-purpose reasoning model for Chinese enterprise and application workflows.",
+    "displayName": "LongCat 1.0",
+    "inputModalities": [
+      "text"
+    ],
+    "lifecycle": "active",
+    "maxOutputTokens": 32768,
+    "modelId": "longcat-1.0",
+    "outputModalities": [
+      "text"
+    ],
+    "rankScore": 890,
+    "releaseStage": "active",
+    "searchTerms": [
+      "longcat",
+      "Chinese",
+      "Reasoning",
+      "Instruction following"
+    ],
+    "sortOrder": 55,
+    "sourceObservedAt": "2026-07-26T00:00:00Z",
+    "supportedProviderIds": [],
+    "supportsTools": true,
+    "vendorCode": "meituan",
+    "vendorName": "Meituan"
+  },
+  {
     "catalogKey": "xiaomi/mimo-v2.5-pro-ultraspeed",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Xiaomi MiMo V2.5 Pro UltraSpeed - Ultra-speed inference mode of the 1T parameter MiMo-V2.5-Pro, delivering ~10x output speed (1000 TPS) through model-system codesign.",
     "displayName": "MiMo V2.5 Pro UltraSpeed",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 262144,
     "modelId": "mimo-v2.5-pro-ultraspeed",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1110,
     "releaseStage": "active",
     "searchTerms": [
@@ -818,23 +1852,32 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "Coding",
       "Agents"
     ],
-    "sortOrder": 34,
+    "sortOrder": 56,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [
       "claude-code",
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "xiaomi",
     "vendorName": "Xiaomi MiMo"
   },
   {
     "catalogKey": "xiaomi/mimo-v2.5-pro",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Xiaomi MiMo V2.5 Pro - 1T parameter MoE model with 42B active parameters, optimized for agentic and long-horizon tasks.",
     "displayName": "MiMo V2.5 Pro",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 262144,
     "modelId": "mimo-v2.5-pro",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1100,
     "releaseStage": "active",
     "searchTerms": [
@@ -844,23 +1887,32 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "Agents",
       "Long Context"
     ],
-    "sortOrder": 35,
+    "sortOrder": 57,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [
       "claude-code",
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "xiaomi",
     "vendorName": "Xiaomi MiMo"
   },
   {
     "catalogKey": "xiaomi/mimo-v2.5-pro-fp4-dflash",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Xiaomi MiMo V2.5 Pro FP4 DFlash - 554B parameter MoE model with FP4 quantization, optimized for high-speed inference.",
     "displayName": "MiMo V2.5 Pro FP4 DFlash",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 262144,
     "modelId": "mimo-v2.5-pro-fp4-dflash",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1095,
     "releaseStage": "active",
     "searchTerms": [
@@ -870,23 +1922,35 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "Coding",
       "Agents"
     ],
-    "sortOrder": 36,
+    "sortOrder": 58,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [
       "claude-code",
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "xiaomi",
     "vendorName": "Xiaomi MiMo"
   },
   {
     "catalogKey": "xiaomi/mimo-v2.5",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 1048576,
     "description": "Xiaomi MiMo V2.5 - Native omnimodal model supporting text, image, video, and audio understanding with 310B total / 15B active parameters.",
     "displayName": "MiMo V2.5",
+    "inputModalities": [
+      "text",
+      "image",
+      "audio",
+      "video"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 262144,
     "modelId": "mimo-v2.5",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 1050,
     "releaseStage": "active",
     "searchTerms": [
@@ -897,23 +1961,32 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "Agents",
       "Long Context"
     ],
-    "sortOrder": 37,
+    "sortOrder": 59,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [
       "claude-code",
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "xiaomi",
     "vendorName": "Xiaomi MiMo"
   },
   {
     "catalogKey": "xiaomi/mimo-v2-flash",
     "catalogVersion": "2026.07.26.1",
+    "contextTokens": 262144,
     "description": "Xiaomi MiMo V2 Flash - High-performance MoE model with 309B total / 15B active parameters, optimized for speed and cost efficiency.",
     "displayName": "MiMo V2 Flash",
+    "inputModalities": [
+      "text"
+    ],
     "lifecycle": "active",
+    "maxOutputTokens": 65536,
     "modelId": "mimo-v2-flash",
+    "outputModalities": [
+      "text"
+    ],
     "rankScore": 980,
     "releaseStage": "active",
     "searchTerms": [
@@ -923,14 +1996,15 @@ export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = [
       "Reasoning",
       "Coding"
     ],
-    "sortOrder": 38,
+    "sortOrder": 60,
     "sourceObservedAt": "2026-07-26T00:00:00Z",
     "supportedProviderIds": [
       "claude-code",
       "codex",
       "gemini"
     ],
+    "supportsTools": true,
     "vendorCode": "xiaomi",
     "vendorName": "Xiaomi MiMo"
   }
-] as const satisfies readonly MainstreamAgentModelCatalogEntry[];
+];

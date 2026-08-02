@@ -3,8 +3,9 @@ use std::collections::BTreeMap;
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
 use crate::admin_models_list::{
-    capability_codes_from_model_types, normalized_search_pattern, normalized_vendor_codes,
-    optional_non_empty, LIST_MODELS_BASE_WHERE_POSTGRES, LIST_MODELS_COUNT_WHERE_POSTGRES,
+    capability_codes_from_model_types, normalized_modalities, normalized_release_stages,
+    normalized_search_pattern, normalized_vendor_codes, optional_non_empty,
+    LIST_MODELS_BASE_WHERE_POSTGRES, LIST_MODELS_COUNT_WHERE_POSTGRES,
 };
 use crate::model_catalog_import::{
     catalog_preview_admin_items, catalog_scope_counts, catalog_scope_source_hash,
@@ -726,6 +727,9 @@ async fn list_models(
     let vendor_codes = normalized_vendor_codes(&query);
     let search_pattern = normalized_search_pattern(&query);
     let capability_codes = capability_codes_from_model_types(query.model_types.as_deref());
+    let modalities = normalized_modalities(&query);
+    let release_stages = normalized_release_stages(&query);
+    let status = query.status.as_deref().map(status_code);
     let limit = query.normalized_limit();
     let offset = query.normalized_offset();
 
@@ -740,6 +744,11 @@ async fn list_models(
     .bind(&vendor_codes)
     .bind(search_pattern.as_deref())
     .bind(&capability_codes)
+    .bind(status)
+    .bind(&modalities)
+    .bind(&release_stages)
+    .bind(query.shelf_state)
+    .bind(query.routing_state)
     .fetch_one(pool)
     .await
     .map_err(|error| store_error("failed to count ai models", error))?;
@@ -760,7 +769,12 @@ async fn list_models(
         .bind(vendor_id)
         .bind(&vendor_codes)
         .bind(search_pattern)
-        .bind(&capability_codes);
+        .bind(&capability_codes)
+        .bind(status)
+        .bind(&modalities)
+        .bind(&release_stages)
+        .bind(query.shelf_state)
+        .bind(query.routing_state);
 
     let rows = list_query
         .bind(limit)
@@ -3389,6 +3403,12 @@ fn model_select_sql(
             COALESCE(m.organization_id, 0) AS organization_id,
             COALESCE(m.vendor_id, 0)::text AS vendor_id,
             COALESCE(m.vendor_code, '') AS vendor_code,
+            COALESCE(
+                NULLIF(v.display_name, ''),
+                NULLIF(m.vendor_name_snapshot, ''),
+                m.vendor_code,
+                ''
+            ) AS vendor_name,
             COALESCE(m.catalog_key, COALESCE(m.vendor_code, '') || '/' || COALESCE(m.model, '')) AS catalog_key,
             COALESCE(m.model, '') AS model,
             COALESCE(NULLIF(m.display_name, ''), m.model, '') AS display_name,
@@ -3418,6 +3438,7 @@ fn model_select_sql(
             m.deleted_at::text AS deleted_at
         FROM ai_model m
         LEFT JOIN selected_rank_calls rc ON rc.model = m.model
+        LEFT JOIN ai_model_vendor v ON v.id = m.vendor_id AND v.deleted_at IS NULL
         {predicate}
         "#
     ))
@@ -3766,6 +3787,7 @@ fn model_from_row(row: sqlx::postgres::PgRow) -> DomainResult<AdminAiModelItem> 
         organization_id: optional_integer_cell(&row, "organization_id").unwrap_or(0),
         vendor_id: row.try_get("vendor_id").map_err(row_error)?,
         vendor_code: row.try_get("vendor_code").map_err(row_error)?,
+        vendor_name: row.try_get("vendor_name").map_err(row_error)?,
         catalog_key: row.try_get("catalog_key").unwrap_or_default(),
         model: row.try_get("model").map_err(row_error)?,
         display_name: row.try_get("display_name").map_err(row_error)?,

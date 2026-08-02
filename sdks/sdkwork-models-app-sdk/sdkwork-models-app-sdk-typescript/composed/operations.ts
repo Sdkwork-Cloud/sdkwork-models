@@ -15,6 +15,9 @@ export const sdkMetadata = {
 };
 
 export const operations = {
+  "modelAccessChannelPresets.list": { method: "GET", path: "/app/v3/api/ai/model_access_channel_presets" },
+  "modelAccessChannels.list": { method: "GET", path: "/app/v3/api/ai/model_access_channels" },
+  "modelAccessChannels.upsert": { method: "PUT", path: "/app/v3/api/ai/model_access_channels/{channelCode}" },
   "modelRankings.list": { method: "GET", path: "/app/v3/api/ai/model_rankings" },
   "models.list": { method: "GET", path: "/app/v3/api/ai/models" },
   "modelVendors.list": { method: "GET", path: "/app/v3/api/ai/model_vendors" },

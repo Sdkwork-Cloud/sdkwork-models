@@ -24,6 +24,27 @@ pub const ROUTES: &[RouteDefinition] = &[
     },
     RouteDefinition {
         method: "GET",
+        path: "/app/v3/api/ai/model_access_channels",
+        operation_id: "modelAccessChannels.list",
+        handler: "list_model_access_channels",
+        service_method: "list_model_access_channels",
+    },
+    RouteDefinition {
+        method: "GET",
+        path: "/app/v3/api/ai/model_access_channel_presets",
+        operation_id: "modelAccessChannelPresets.list",
+        handler: "list_model_access_channel_presets",
+        service_method: "list_model_access_channel_presets",
+    },
+    RouteDefinition {
+        method: "PUT",
+        path: "/app/v3/api/ai/model_access_channels/{channel_code}",
+        operation_id: "modelAccessChannels.upsert",
+        handler: "upsert_model_access_channel",
+        service_method: "upsert_model_access_channel",
+    },
+    RouteDefinition {
+        method: "GET",
         path: "/app/v3/api/ai/model_rankings",
         operation_id: "modelRankings.list",
         handler: "list_model_rankings",

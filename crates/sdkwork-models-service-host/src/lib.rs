@@ -59,5 +59,7 @@ fn resolve_models_catalog_root() -> PathBuf {
             return PathBuf::from(trimmed);
         }
     }
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../models")
+    // The catalog root is the repository root that owns the
+    // `sdkwork-models.json` manifest (its `modelsRoot` points at `models/`).
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
 }

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "kind": "sdkwork.database.module",
+  "moduleId": "user-model-config-client-local",
+  "serviceCode": "USER_MODEL_CONFIG_CLIENT_LOCAL",
+  "displayName": "User Model Configuration Client-Local Database",
+  "owner": "sdkwork-models-platform",
+  "engines": ["sqlite"],
+  "defaultEngine": "sqlite",
+  "tablePrefix": "user_model_",
+  "contractVersion": "1.0.0",
+  "baselineStrategy": "baseline-plus-migrations",
+  "modules": [],
+  "lifecycle": {
+    "autoMigrate": true,
+    "seedOnBoot": false,
+    "defaultSeedLocale": "zh-CN",
+    "defaultSeedProfile": "standard",
+    "supportedSeedLocales": ["zh-CN", "en-US"],
+    "activeSeedLocales": ["zh-CN"],
+    "driftCheckIntervalSec": 60
+  },
+  "paths": {
+    "contract": "contract/schema.yaml",
+    "migrations": "migrations",
+    "seeds": "seeds",
+    "driftPolicy": "drift/policy.yaml",
+    "localDataPolicy": "local-data-policy.yaml"
+  },
+  "spi": {
+    "provider": "default",
+    "hooks": []
+  },
+  "databaseRole": "client-local",
+  "clientLocal": {
+    "mode": "local-only",
+    "scope": "environment-profile-origin-account",
+    "authoritativeSource": "local-device",
+    "syncContract": null
+  }
+}

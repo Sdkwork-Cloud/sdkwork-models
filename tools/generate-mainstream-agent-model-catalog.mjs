@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const catalogRoot = path.join(repositoryRoot, 'models');
-const outputFile = path.join(
+const mainstreamCatalogOutputFile = path.join(
   repositoryRoot,
   'apps',
   'sdkwork-models-pc',
@@ -14,19 +14,22 @@ const outputFile = path.join(
   'unified-agent-model-selector',
   'mainstreamAgentModelCatalog.generated.ts',
 );
-
-const mainstreamVendorCodes = new Set([
-  'alibaba',
-  'anthropic',
-  'deepseek',
-  'google',
-  'mistral_ai',
-  'moonshot',
-  'openai',
-  'xai',
-  'xiaomi',
-  'zhipu',
-]);
+const officialVendorPresetsOutputFile = path.join(
+  repositoryRoot,
+  'apps',
+  'sdkwork-models-pc',
+  'packages',
+  'sdkwork-models-pc-picker',
+  'src',
+  'agent-model-access-selector',
+  'officialModelVendorPresets.generated.ts',
+);
+const clawRouterProvidersFile = path.join(
+  repositoryRoot,
+  'overlays',
+  'clawrouter',
+  'providers.json',
+);
 
 const providerIdByClientApiCode = {
   claude_code: 'claude-code',
@@ -67,11 +70,11 @@ function listSupportedProviderIds(vendor) {
 
 async function generateCatalogSource() {
   const index = await readJson(path.join(catalogRoot, 'index.json'));
+  // Every catalog vendor that publishes chat models is an option, not only a
+  // curated mainstream subset, so vendor lists stay complete for relay and
+  // custom channels regardless of the database availability.
   const vendorEntriesByCode = new Map();
   for (const vendorEntry of index.vendors) {
-    if (!mainstreamVendorCodes.has(vendorEntry.vendorCode)) {
-      continue;
-    }
     vendorEntriesByCode.set(
       vendorEntry.vendorCode,
       selectPreferredRegion(vendorEntriesByCode.get(vendorEntry.vendorCode), vendorEntry),
@@ -88,9 +91,6 @@ async function generateCatalogSource() {
 
   const modelsByCatalogKey = new Map();
   for (const vendorEntry of index.vendors) {
-    if (!mainstreamVendorCodes.has(vendorEntry.vendorCode)) {
-      continue;
-    }
     for (const modelFile of vendorEntry.modelFiles) {
       const model = await readJson(path.join(catalogRoot, modelFile));
       if (
@@ -124,10 +124,15 @@ async function generateCatalogSource() {
     return {
       catalogKey: model.catalogKey,
       catalogVersion: index.catalogVersion,
+      contextTokens: model.contextTokens,
       description: model.description,
       displayName: model.displayName,
+      inputModalities: model.inputModalities,
       lifecycle: model.lifecycle,
+      maxOutputTokens: model.maxOutputTokens,
       modelId: model.modelId,
+      modalities: model.modalities,
+      outputModalities: model.outputModalities,
       rankScore: Number(model.rankScore ?? 0),
       releaseStage: model.releaseStage,
       searchTerms: [
@@ -137,6 +142,8 @@ async function generateCatalogSource() {
       sortOrder,
       sourceObservedAt: model.source?.observedAt ?? index.generatedAt,
       supportedProviderIds: listSupportedProviderIds(vendor ?? {}),
+      supportsTools: model.supportsTools,
+      toolCallRounds: model.toolCallRounds,
       vendorCode: model.vendorCode,
       vendorName: model.vendorName ?? vendor?.displayName ?? model.vendorCode,
     };
@@ -149,20 +156,113 @@ async function generateCatalogSource() {
     `export const SDKWORK_MODELS_CATALOG_VERSION = ${JSON.stringify(index.catalogVersion)};`,
     `export const SDKWORK_MODELS_CATALOG_GENERATED_AT = ${JSON.stringify(index.generatedAt)};`,
     '',
-    `export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG = ${JSON.stringify(entries, null, 2)} as const satisfies readonly MainstreamAgentModelCatalogEntry[];`,
+    `export const SDKWORK_MAINSTREAM_AGENT_MODEL_CATALOG: readonly MainstreamAgentModelCatalogEntry[] = ${JSON.stringify(entries, null, 2)};`,
     '',
   ].join('\n');
 }
 
-const source = await generateCatalogSource();
-if (process.argv.includes('--check')) {
-  const current = await readFile(outputFile, 'utf8').catch(() => '');
-  if (current !== source) {
+async function generateOfficialVendorPresetsSource() {
+  const [index, providerOverlay] = await Promise.all([
+    readJson(path.join(catalogRoot, 'index.json')),
+    readJson(clawRouterProvidersFile),
+  ]);
+  const directProviders = providerOverlay.providers.filter((provider) => (
+    provider.providerCode.endsWith('_direct')
+  ));
+  const duplicateVendorCodes = directProviders
+    .map((provider) => provider.vendorCode)
+    .filter((vendorCode, index, vendorCodes) => vendorCodes.indexOf(vendorCode) !== index);
+  if (duplicateVendorCodes.length > 0) {
     throw new Error(
-      'The generated mainstream Agent model catalog is stale. '
-      + 'Run node tools/generate-mainstream-agent-model-catalog.mjs.',
+      `Each official vendor must have exactly one direct provider: ${duplicateVendorCodes.join(', ')}`,
     );
   }
+
+  // Every catalog vendor that publishes chat models is an official channel
+  // option, not only the mainstream subset.
+  const vendorEntriesByCode = new Map();
+  for (const vendorEntry of index.vendors) {
+    vendorEntriesByCode.set(
+      vendorEntry.vendorCode,
+      selectPreferredRegion(vendorEntriesByCode.get(vendorEntry.vendorCode), vendorEntry),
+    );
+  }
+
+  async function listChatModels(vendorEntry) {
+    const models = [];
+    for (const [sortOrder, modelFile] of vendorEntry.modelFiles.entries()) {
+      const model = await readJson(path.join(catalogRoot, modelFile));
+      if (
+        model.primaryCapability !== 'chat'
+        || model.shelfState !== 'listed'
+        || model.routingState !== 'enabled'
+      ) {
+        continue;
+      }
+      models.push({
+        catalogKey: model.catalogKey,
+        model: model.modelId,
+        displayName: model.displayName,
+        sortOrder,
+      });
+    }
+    return models;
+  }
+
+  const directSortOrder = new Map(
+    directProviders.map((provider, index) => [provider.vendorCode, index]),
+  );
+  const entries = [];
+  for (const [vendorCode, vendorEntry] of vendorEntriesByCode) {
+    const vendor = await readJson(path.join(catalogRoot, vendorEntry.path));
+    const models = await listChatModels(vendorEntry);
+    if (models.length === 0) {
+      continue;
+    }
+    const directProvider = directProviders.find((provider) => (
+      provider.vendorCode === vendorCode
+    ));
+    entries.push({
+      baseUrl: directProvider?.baseUrl ?? '',
+      channelName: vendor.displayName,
+      protocol: directProvider?.protocol ?? '',
+      providerCode: directProvider?.providerCode ?? `${vendorCode}.direct`,
+      providerDisplayName: directProvider?.displayName ?? vendor.displayName,
+      models,
+      sortOrder: directSortOrder.has(vendorCode)
+        ? directSortOrder.get(vendorCode)
+        : directProviders.length + entries.length,
+      vendorCode,
+      vendorName: vendor.displayName,
+    });
+  }
+  entries.sort((left, right) => left.sortOrder - right.sortOrder);
+
+  return [
+    '/* This file is generated by tools/generate-mainstream-agent-model-catalog.mjs. */',
+    "import type { OfficialModelVendorPreset } from './agentModelAccessSelectorTypes';",
+    '',
+    `export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = ${JSON.stringify(entries, null, 2)} as const satisfies readonly OfficialModelVendorPreset[];`,
+    '',
+  ].join('\n');
+}
+
+const generatedOutputs = [
+  [mainstreamCatalogOutputFile, await generateCatalogSource()],
+  [officialVendorPresetsOutputFile, await generateOfficialVendorPresetsSource()],
+];
+if (process.argv.includes('--check')) {
+  for (const [outputFile, source] of generatedOutputs) {
+    const current = await readFile(outputFile, 'utf8').catch(() => '');
+    if (current !== source) {
+      throw new Error(
+        `Generated picker catalog ${path.relative(repositoryRoot, outputFile)} is stale. `
+        + 'Run node tools/generate-mainstream-agent-model-catalog.mjs.',
+      );
+    }
+  }
 } else {
-  await writeFile(outputFile, source, 'utf8');
+  await Promise.all(generatedOutputs.map(([outputFile, source]) => (
+    writeFile(outputFile, source, 'utf8')
+  )));
 }

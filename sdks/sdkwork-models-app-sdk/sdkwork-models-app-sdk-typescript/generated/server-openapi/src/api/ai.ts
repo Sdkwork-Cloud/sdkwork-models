@@ -1,8 +1,58 @@
 import { appApiPath } from './paths';
 import type { ApiRequestOptions, HttpClient } from '../http/client';
 
-import type { AppModelCatalogPage, AppModelVendorCatalogResponse, ModelRankingsPage, PageInfo } from '../types';
+import type { AppModelAccessChannelItem, AppModelAccessChannelPresetsPage, AppModelAccessChannelsPage, AppModelAccessChannelUpsertRequest, AppModelCatalogPage, AppModelVendorCatalogResponse, ModelRankingsPage, PageInfo } from '../types';
 
+
+export class AiModelAccessChannelPresetsApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List official model access channel presets */
+  async list(requestOptions?: ApiRequestOptions): Promise<AppModelAccessChannelPresetsPage> {
+    return this.client.request<AppModelAccessChannelPresetsPage>(appApiPath(`/ai/model_access_channel_presets`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'data' });
+  }
+}
+
+export interface AiModelAccessChannelsListParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  kind?: 'official' | 'relay' | 'custom';
+  vendorCode?: string;
+  agentProviderId?: string;
+}
+
+export class AiModelAccessChannelsApi {
+  private client: HttpClient;
+
+  constructor(client: HttpClient) {
+    this.client = client;
+  }
+
+
+/** List model access channels */
+  async list(params?: AiModelAccessChannelsListParams, requestOptions?: ApiRequestOptions): Promise<AppModelAccessChannelsPage> {
+    const query = buildQueryString([
+      { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
+      { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
+      { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
+      { name: 'kind', value: params?.kind, style: 'form', explode: true, allowReserved: false },
+      { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
+      { name: 'agent_provider_id', value: params?.agentProviderId, style: 'form', explode: true, allowReserved: false },
+    ]);
+    return this.client.request<AppModelAccessChannelsPage>(appendQueryString(appApiPath(`/ai/model_access_channels`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
+  }
+
+/** Create or update a model access channel */
+  async upsert(channelCode: string, body: AppModelAccessChannelUpsertRequest, requestOptions?: ApiRequestOptions): Promise<AppModelAccessChannelItem> {
+    return this.client.request<AppModelAccessChannelItem>(appApiPath(`/ai/model_access_channels/${serializePathParameter(channelCode, { name: 'channelCode', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
+  }
+}
 
 export interface AiModelVideoProfilesListParams {
   vendorCode?: string;
@@ -203,6 +253,8 @@ export class AiApi {
   public readonly modelVoices: AiModelVoicesApi;
   public readonly videoProfiles: AiVideoProfilesApi;
   public readonly modelVideoProfiles: AiModelVideoProfilesApi;
+  public readonly modelAccessChannels: AiModelAccessChannelsApi;
+  public readonly modelAccessChannelPresets: AiModelAccessChannelPresetsApi;
 
   constructor(client: HttpClient) {
     this.client = client;
@@ -213,6 +265,8 @@ export class AiApi {
     this.modelVoices = new AiModelVoicesApi(client);
     this.videoProfiles = new AiVideoProfilesApi(client);
     this.modelVideoProfiles = new AiModelVideoProfilesApi(client);
+    this.modelAccessChannels = new AiModelAccessChannelsApi(client);
+    this.modelAccessChannelPresets = new AiModelAccessChannelPresetsApi(client);
   }
 
 }

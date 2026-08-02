@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "kind": "sdkwork.database.table-registry",
+  "tables": [
+    { "table_name": "ops_schema_migration", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_channel", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_channel_offering", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_channel_model", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_key", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_engine_config", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" },
+    { "table_name": "user_model_engine_selection", "owner": "sdkwork-models-platform", "compliance_level": "L2", "lifecycle_status": "active" }
+  ]
+}

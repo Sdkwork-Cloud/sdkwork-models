@@ -66,5 +66,5 @@ export type { ModelRankingsRefreshResponse } from './model-rankings-refresh-resp
 export type { ModelsSyncResponse } from './models-sync-response';
 export type { ResourceGroupsListResponse } from './resource-groups-list-response';
 export type { ResourceGroupsListGetResponse } from './resource-groups-list-get-response';
-export type { ResourcesListResponse } from './resources-list-response';
 export type { ResourceGroupsUpdateResponse } from './resource-groups-update-response';
+export type { ResourcesListResponse } from './resources-list-response';

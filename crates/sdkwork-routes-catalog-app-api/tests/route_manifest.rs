@@ -13,7 +13,10 @@ fn app_route_manifest_matches_route_definitions() {
                     entry.method, entry.path
                 )
             });
-        assert_eq!(matched.auth, RouteAuth::Public);
+        // The app catalog surface is only consumed by authenticated clients
+        // (the SDK always attaches dual-token credentials), so every route is
+        // dual-token; anonymous classification would reject those credentials.
+        assert_eq!(matched.auth, RouteAuth::DualToken);
         assert_eq!(matched.operation_id, entry.operation_id);
     }
 }
