@@ -44,5 +44,11 @@
   "trendScore": "0.880000",
   "vendorCode": "moonshot",
   "vendorName": "Moonshot Kimi",
-  "winRate": "0.875000"
+  "winRate": "0.875000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

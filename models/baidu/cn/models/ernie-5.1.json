@@ -39,5 +39,10 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "vendorCode": "baidu",
-  "vendorName": "Baidu AI Cloud"
+  "vendorName": "Baidu AI Cloud",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

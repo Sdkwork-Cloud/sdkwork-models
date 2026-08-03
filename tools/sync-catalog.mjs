@@ -77,10 +77,13 @@ export function syncCatalog(root, options = {}) {
     }
 
     for (const model of vendor.models) {
-      for (const field of ["supportsStreaming", "supportsTools", "supportsJsonSchema"]) {
+      for (const field of ["supportsStreaming", "supportsTools", "supportsJsonSchema", "codingVisible"]) {
         if (typeof model[field] !== "boolean") {
           report.missingCapabilityFlags += 1;
         }
+      }
+      if (!Array.isArray(model.usageScopes)) {
+        report.missingCapabilityFlags += 1;
       }
       if (Object.keys(inferMissingModelCapabilities(model)).length > 0) {
         report.missingCapabilityFlags += 1;

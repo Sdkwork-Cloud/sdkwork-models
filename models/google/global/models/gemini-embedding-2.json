@@ -37,5 +37,7 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "vendorCode": "google",
-  "vendorName": "Google"
+  "vendorName": "Google",
+  "usageScopes": [],
+  "codingVisible": false
 }

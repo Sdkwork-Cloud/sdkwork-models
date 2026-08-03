@@ -42,5 +42,7 @@
   "trendScore": "0.920000",
   "vendorCode": "suno",
   "vendorName": "Suno",
-  "winRate": "0.880000"
+  "winRate": "0.880000",
+  "usageScopes": [],
+  "codingVisible": false
 }

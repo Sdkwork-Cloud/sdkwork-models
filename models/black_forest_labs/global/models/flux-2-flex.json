@@ -41,5 +41,7 @@
   "trendScore": "0.880000",
   "vendorCode": "black_forest_labs",
   "vendorName": "Black Forest Labs",
-  "winRate": "0.870000"
+  "winRate": "0.870000",
+  "usageScopes": [],
+  "codingVisible": false
 }

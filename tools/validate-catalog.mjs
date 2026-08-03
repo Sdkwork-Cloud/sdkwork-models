@@ -39,6 +39,8 @@ const DURATION_TIER_CODES = new Set([
   "dur_60s",
 ]);
 
+const USAGE_SCOPES = new Set(["coding", "chat", "agent"]);
+
 export function validateCatalog(root) {
   const issues = [];
 
@@ -205,13 +207,33 @@ export function validateCatalog(root) {
       if (!model.source?.sourceUrl || !model.source?.observedAt) {
         issues.push(issue("model.source.missing", `${modelPath}#/source`, "model sourceUrl and observedAt are required"));
       }
-      for (const capabilityField of ["supportsStreaming", "supportsTools", "supportsJsonSchema"]) {
+      for (const capabilityField of ["supportsStreaming", "supportsTools", "supportsJsonSchema", "codingVisible"]) {
         if (typeof model[capabilityField] !== "boolean") {
           issues.push(
             issue(
               "model.capability_flag.missing",
               `${modelPath}#/${capabilityField}`,
               `${capabilityField} must be a boolean; run node tools/align-model-capabilities.mjs to backfill`,
+            ),
+          );
+        }
+      }
+      if (!Array.isArray(model.usageScopes)) {
+        issues.push(
+          issue(
+            "model.usage_scopes.missing",
+            `${modelPath}#/usageScopes`,
+            "usageScopes must be an array of product usage scopes; run node tools/align-model-capabilities.mjs to backfill",
+          ),
+        );
+      } else {
+        const unknownScopes = model.usageScopes.filter((scope) => !USAGE_SCOPES.has(scope));
+        if (unknownScopes.length > 0) {
+          issues.push(
+            issue(
+              "model.usage_scopes.unknown",
+              `${modelPath}#/usageScopes`,
+              `unknown usage scope(s): ${unknownScopes.join(", ")}; allowed: ${[...USAGE_SCOPES].sort().join(", ")}`,
             ),
           );
         }
@@ -650,6 +672,8 @@ function modelIdentityDifferences(left, right) {
     "supportsStreaming",
     "supportsTools",
     "supportsJsonSchema",
+    "usageScopes",
+    "codingVisible",
     "replacementModel",
   ];
   return fields.filter((field) => stableJson(left[field] ?? null) !== stableJson(right[field] ?? null));

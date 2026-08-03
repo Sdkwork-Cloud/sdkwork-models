@@ -18,6 +18,8 @@ export type ModelModality =
   | "rerank"
   | "tool";
 
+export type ModelUsageScope = "coding" | "chat" | "agent";
+
 export interface SourceEvidence {
   sourceUrl: string;
   observedAt: string;
@@ -90,6 +92,8 @@ export interface ModelInfo {
   supportsStreaming?: boolean;
   supportsTools?: boolean;
   supportsJsonSchema?: boolean;
+  usageScopes?: ModelUsageScope[];
+  codingVisible?: boolean;
   source: SourceEvidence;
 }
 

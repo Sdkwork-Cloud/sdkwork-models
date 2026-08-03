@@ -30,16 +30,30 @@ function filterVendorCards(cards: VendorCard[], query: string): VendorCard[] {
   );
 }
 
-function filterModels(models: ModelInfo[], query: string): ModelInfo[] {
+function filterModels(
+  models: ModelInfo[],
+  query: string,
+  filters: { codingOnly: boolean; ideVisibleOnly: boolean },
+): ModelInfo[] {
   const normalizedQuery = normalizeSearch(query);
-  if (!normalizedQuery) {
-    return models;
-  }
-  return models.filter((model) =>
-    matchesSearch(model.modelId, normalizedQuery)
-    || matchesSearch(model.displayName ?? "", normalizedQuery)
-    || matchesSearch(model.catalogKey, normalizedQuery),
-  );
+  return models.filter((model) => {
+    if (normalizedQuery) {
+      const matches =
+        matchesSearch(model.modelId, normalizedQuery)
+        || matchesSearch(model.displayName ?? "", normalizedQuery)
+        || matchesSearch(model.catalogKey, normalizedQuery);
+      if (!matches) {
+        return false;
+      }
+    }
+    if (filters.codingOnly && !(model.usageScopes ?? []).includes("coding")) {
+      return false;
+    }
+    if (filters.ideVisibleOnly && model.codingVisible === false) {
+      return false;
+    }
+    return true;
+  });
 }
 
 export function ModelsCatalogApp() {
@@ -50,6 +64,8 @@ export function ModelsCatalogApp() {
   const [vendorCards, setVendorCards] = useState<VendorCard[]>([]);
   const [search, setSearch] = useState("");
   const [selectedVendorCode, setSelectedVendorCode] = useState<string | null>(null);
+  const [codingOnly, setCodingOnly] = useState(false);
+  const [ideVisibleOnly, setIdeVisibleOnly] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -98,8 +114,9 @@ export function ModelsCatalogApp() {
     return filterModels(
       listAvailableModels(catalog, { vendorCode: selectedVendorCode }),
       search,
+      { codingOnly, ideVisibleOnly },
     );
-  }, [catalog, search, selectedVendorCode]);
+  }, [catalog, search, selectedVendorCode, codingOnly, ideVisibleOnly]);
 
   return (
     <main>
@@ -124,6 +141,24 @@ export function ModelsCatalogApp() {
           placeholder="Vendor code, display name, or model id"
           className="search-input"
         />
+        <div className="filter-row" role="group" aria-label="Model applicability filters">
+          <button
+            type="button"
+            className={`filter-chip${codingOnly ? " filter-chip-active" : ""}`}
+            aria-pressed={codingOnly}
+            onClick={() => setCodingOnly((value) => !value)}
+          >
+            Coding
+          </button>
+          <button
+            type="button"
+            className={`filter-chip${ideVisibleOnly ? " filter-chip-active" : ""}`}
+            aria-pressed={ideVisibleOnly}
+            onClick={() => setIdeVisibleOnly((value) => !value)}
+          >
+            IDE visible
+          </button>
+        </div>
         <p className="muted search-meta">
           Showing {visibleVendors.length} of {vendorCards.length} vendors
         </p>
@@ -154,7 +189,15 @@ export function ModelsCatalogApp() {
           <ul className="model-list">
             {selectedVendorModels.map((model) => (
               <li key={model.catalogKey}>
-                <strong>{model.displayName || model.modelId}</strong>
+                <strong>
+                  {model.displayName || model.modelId}
+                  {(model.usageScopes ?? []).includes("coding")
+                    ? <span className="model-badge">coding</span>
+                    : null}
+                  {model.codingVisible === false
+                    ? <span className="model-badge model-badge-hidden">IDE hidden</span>
+                    : null}
+                </strong>
                 <span>{model.modelId}</span>
                 <span>{model.regionCode}</span>
               </li>

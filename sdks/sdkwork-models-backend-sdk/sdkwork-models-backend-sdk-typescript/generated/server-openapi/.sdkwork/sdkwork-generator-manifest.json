@@ -88,7 +88,7 @@
     },
     {
       "path": "src/types/admin-ai-model-create-request.ts",
-      "sha256": "62f2165b8b2efb0f0d64ba3df5e45ac011c66578061d002dd0018d2947920a54"
+      "sha256": "1ac7ac8ad01004327ee3ab764eee55c99a3054a876181a680477f758ba0cc3e3"
     },
     {
       "path": "src/types/admin-ai-model-item.ts",
@@ -108,11 +108,11 @@
     },
     {
       "path": "src/types/admin-ai-model-update-request.ts",
-      "sha256": "c6abbd6e3f320314216f2a01be8eedbe5ebbab60acfe414b220947e03bca6848"
+      "sha256": "02725933dbcafb6ce28903d32e0f4614b4791eff128ed5e8b970833fa87171ea"
     },
     {
       "path": "src/types/admin-ai-resource-create-request.ts",
-      "sha256": "d231a406de66819fdbd3820957284474e5c38ed4197ab244dd0cbdda1b4caf8e"
+      "sha256": "8f78323848ac2d5385ce0fae2e82a8dd7a67f6b74784ad1d85c0876df2987df8"
     },
     {
       "path": "src/types/admin-ai-resource-group-create-request.ts",
@@ -140,7 +140,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-item.ts",
-      "sha256": "9249b9deeb684c7779704e9f50c57d147449d4accc5625fef23043c62ccb77bb"
+      "sha256": "c2855fc0856d6df16d1cd1a1c5a61e5d46a71994cd43e656dbdc1ccb08a005ef"
     },
     {
       "path": "src/types/admin-ai-resource-member-input.ts",
@@ -152,7 +152,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-update-request.ts",
-      "sha256": "538b5434bc749800053691b28f422d5ade5422ed29d15db123d966619f69de2b"
+      "sha256": "9e2fda61f95c3e0e8c213abb1c2dccb8eb104f915ecbedbbadddfb555e274d6d"
     },
     {
       "path": "src/types/admin-model-catalog-sync-request.ts",

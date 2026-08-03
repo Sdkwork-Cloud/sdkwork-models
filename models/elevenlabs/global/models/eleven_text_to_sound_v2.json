@@ -41,5 +41,7 @@
   "trendScore": "0.820000",
   "vendorCode": "elevenlabs",
   "vendorName": "ElevenLabs",
-  "winRate": "0.820000"
+  "winRate": "0.820000",
+  "usageScopes": [],
+  "codingVisible": false
 }

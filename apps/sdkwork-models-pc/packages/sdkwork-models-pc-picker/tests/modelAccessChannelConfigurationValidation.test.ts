@@ -202,3 +202,52 @@ test('official validation rejects vendors without a generated direct provider pr
   assert.equal(validation.officialVendorUnsupported, true);
   assert.equal(isModelAccessChannelConfigurationDraftValid(validation), false);
 });
+
+test('an empty active provider id accepts any checked provider subset', () => {
+  const draft = {
+    ...createEmptyModelAccessChannelConfigurationDraft(providers),
+    name: 'Gemini-only Relay',
+    baseUrl: 'https://relay.example.com/v1',
+    apiKey: 'write-only-secret',
+    offerings: [offering('openai', 'OpenAI', ['gpt-latest'])],
+    defaultVendorCode: 'openai',
+    defaultModelId: 'gpt-latest',
+    // The active engine (codex) is deliberately unchecked; the settings panel
+    // has no active engine and must still accept the save.
+    supportedAgentProviderIds: ['gemini'],
+  };
+  const validation = validateModelAccessChannelConfigurationDraft(draft, '');
+  assert.equal(validation.providerRequired, false);
+  assert.equal(isModelAccessChannelConfigurationDraftValid(validation), true);
+  // A non-empty active provider id keeps requiring that provider.
+  assert.equal(
+    validateModelAccessChannelConfigurationDraft(draft, 'codex').providerRequired,
+    true,
+  );
+});
+
+test('names without ASCII slug characters still produce a distinct channel identity', () => {
+  const first = normalizeModelAccessChannelConfigurationDraft({
+    ...createEmptyModelAccessChannelConfigurationDraft(providers, 'relay'),
+    name: '我的中转站',
+    baseUrl: 'https://relay.example.com/v1',
+    apiKey: 'write-only-secret',
+    offerings: [offering('openai', 'OpenAI', ['gpt-latest'])],
+    defaultVendorCode: 'openai',
+    defaultModelId: 'gpt-latest',
+  });
+  const second = normalizeModelAccessChannelConfigurationDraft({
+    ...createEmptyModelAccessChannelConfigurationDraft(providers, 'relay'),
+    name: '另一个中转站',
+    baseUrl: 'https://relay.example.com/v2',
+    apiKey: 'write-only-secret',
+    offerings: [offering('openai', 'OpenAI', ['gpt-latest'])],
+    defaultVendorCode: 'openai',
+    defaultModelId: 'gpt-latest',
+  });
+  // Both identities are unique (and neither is the old generic "custom"), so
+  // the second save can never silently overwrite the first channel.
+  assert.notEqual(first.channelId, second.channelId);
+  assert.match(first.channelId, /^model-access\.relay\.custom-/u);
+  assert.match(second.channelId, /^model-access\.relay\.custom-/u);
+});

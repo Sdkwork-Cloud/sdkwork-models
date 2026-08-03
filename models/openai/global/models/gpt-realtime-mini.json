@@ -39,5 +39,9 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "vendorCode": "openai",
-  "vendorName": "OpenAI"
+  "vendorName": "OpenAI",
+  "usageScopes": [
+    "agent"
+  ],
+  "codingVisible": false
 }

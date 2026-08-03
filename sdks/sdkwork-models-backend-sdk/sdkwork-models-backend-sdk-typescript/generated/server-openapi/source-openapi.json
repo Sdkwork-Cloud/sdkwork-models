@@ -3815,6 +3815,23 @@
           "supportsJsonSchema": {
             "type": "boolean"
           },
+          "usageScopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "coding",
+                "chat",
+                "agent"
+              ]
+            },
+            "maxItems": 3,
+            "description": "Product usage scopes where the model can be applied."
+          },
+          "codingVisible": {
+            "type": "boolean",
+            "description": "Whether the model is shown in code IDE surfaces."
+          },
           "releaseStage": {
             "type": "integer",
             "format": "int32",
@@ -4414,6 +4431,23 @@
           "supportsJsonSchema": {
             "type": "boolean"
           },
+          "usageScopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "coding",
+                "chat",
+                "agent"
+              ]
+            },
+            "maxItems": 3,
+            "description": "Product usage scopes where the model can be applied."
+          },
+          "codingVisible": {
+            "type": "boolean",
+            "description": "Whether the model is shown in code IDE surfaces."
+          },
           "releaseStage": {
             "type": "integer",
             "format": "int32",
@@ -4525,6 +4559,7 @@
             "enum": [
               "official",
               "relay",
+              "custom",
               null
             ]
           },
@@ -5163,6 +5198,7 @@
             "enum": [
               "official",
               "relay",
+              "custom",
               null
             ]
           },
@@ -5444,6 +5480,7 @@
             "enum": [
               "official",
               "relay",
+              "custom",
               null
             ]
           },

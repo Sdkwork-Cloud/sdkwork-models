@@ -11,7 +11,7 @@ export interface AdminAiResourceUpdateRequest {
   catalogKey?: string | null;
   model?: string | null;
   providerNativeModel?: string | null;
-  accessChannelKind?: 'official' | 'relay' | null;
+  accessChannelKind?: 'official' | 'relay' | 'custom' | null;
   baseUrl?: string | null;
   defaultVendorCode?: string | null;
   defaultModelId?: string | null;

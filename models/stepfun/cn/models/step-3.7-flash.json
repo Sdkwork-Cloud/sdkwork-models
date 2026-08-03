@@ -45,5 +45,11 @@
   "trendScore": "0.950000",
   "vendorCode": "stepfun",
   "vendorName": "StepFun",
-  "winRate": "0.920000"
+  "winRate": "0.920000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

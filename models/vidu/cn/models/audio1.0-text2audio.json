@@ -41,5 +41,7 @@
   "trendScore": "0.940000",
   "vendorCode": "vidu",
   "vendorName": "Vidu",
-  "winRate": "0.910000"
+  "winRate": "0.910000",
+  "usageScopes": [],
+  "codingVisible": false
 }

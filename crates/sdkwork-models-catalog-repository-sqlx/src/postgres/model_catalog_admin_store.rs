@@ -73,6 +73,8 @@ struct EffectiveModelUpdate {
     supports_streaming: bool,
     supports_tools: bool,
     supports_json_schema: bool,
+    usage_scopes: Vec<String>,
+    coding_visible: bool,
     release_stage: i32,
     shelf_state: i32,
     routing_state: i32,
@@ -1687,9 +1689,9 @@ async fn insert_model(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_model
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, deleted_at, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, capability, modalities, input_modalities, output_modalities, description, capability_intro, limitations, supported_languages, use_cases, training_data_cutoff, context_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, api_format, release_stage, shelf_state, routing_state, replacement_model, rank_score, id)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, deleted_at, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, capability, modalities, input_modalities, output_modalities, description, capability_intro, limitations, supported_languages, use_cases, training_data_cutoff, context_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, usage_scopes, coding_visible, api_format, release_stage, shelf_state, routing_state, replacement_model, rank_score, id)
         VALUES
-            ($1, $2, $3, 1, 1, $4::timestamptz, $5::timestamptz, 0, NULL, '{}'::jsonb, $6, $7, $8, $9, $10, $11, $12, $13::jsonb, $14::jsonb, $15::jsonb, $16, $17, $18::jsonb, $19::jsonb, $20::jsonb, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, NULL, $32)
+            ($1, $2, $3, 1, 1, $4::timestamptz, $5::timestamptz, 0, NULL, '{}'::jsonb, $6, $7, $8, $9, $10, $11, $12, $13::jsonb, $14::jsonb, $15::jsonb, $16, $17, $18::jsonb, $19::jsonb, $20::jsonb, $21, $22, $23, $24, $25, $26, $27::jsonb, $28, $29, $30, $31, $32, $33, NULL, $34)
         RETURNING id
         "#,
     )
@@ -1719,6 +1721,8 @@ async fn insert_model(
     .bind(command.supports_streaming)
     .bind(command.supports_tools)
     .bind(command.supports_json_schema)
+    .bind(json_array_text(&command.usage_scopes)?)
+    .bind(command.coding_visible)
     .bind(&command.api_format)
     .bind(command.release_stage)
     .bind(command.shelf_state)
@@ -2671,6 +2675,11 @@ fn effective_model_update(
         supports_json_schema: command
             .supports_json_schema
             .unwrap_or(current.supports_json_schema),
+        usage_scopes: command
+            .usage_scopes
+            .clone()
+            .unwrap_or_else(|| current.usage_scopes.clone()),
+        coding_visible: command.coding_visible.unwrap_or(current.coding_visible),
         release_stage: command.release_stage.or(current.release_stage).unwrap_or(1),
         shelf_state: command.shelf_state.or(current.shelf_state).unwrap_or(1),
         routing_state: command.routing_state.or(current.routing_state).unwrap_or(1),
@@ -2740,12 +2749,14 @@ async fn update_model_core(
             supports_streaming = $21,
             supports_tools = $22,
             supports_json_schema = $23,
-            api_format = $24,
-            release_stage = $25,
-            shelf_state = $26,
-            routing_state = $27,
-            replacement_model = $28
-        WHERE id = $29
+            usage_scopes = $24::jsonb,
+            coding_visible = $25,
+            api_format = $26,
+            release_stage = $27,
+            shelf_state = $28,
+            routing_state = $29,
+            replacement_model = $30
+        WHERE id = $31
           AND deleted_at IS NULL
         "#,
     )
@@ -2772,6 +2783,8 @@ async fn update_model_core(
     .bind(update.supports_streaming)
     .bind(update.supports_tools)
     .bind(update.supports_json_schema)
+    .bind(json_array_text(&update.usage_scopes)?)
+    .bind(update.coding_visible)
     .bind(update.api_format.as_deref())
     .bind(update.release_stage)
     .bind(update.shelf_state)
@@ -3431,6 +3444,8 @@ fn model_select_sql(
             COALESCE(m.supports_streaming, false) AS supports_streaming,
             COALESCE(m.supports_tools, false) AS supports_tools,
             COALESCE(m.supports_json_schema, false) AS supports_json_schema,
+            COALESCE(m.usage_scopes::text, '[]') AS usage_scopes_json,
+            COALESCE(m.coding_visible, TRUE) AS coding_visible,
             m.release_stage AS release_stage,
             m.shelf_state AS shelf_state,
             m.routing_state AS routing_state,
@@ -3831,6 +3846,12 @@ fn model_from_row(row: sqlx::postgres::PgRow) -> DomainResult<AdminAiModelItem> 
         supports_streaming: bool_cell(&row, "supports_streaming"),
         supports_tools: bool_cell(&row, "supports_tools"),
         supports_json_schema: bool_cell(&row, "supports_json_schema"),
+        usage_scopes: parse_string_array(
+            &row.try_get::<String, _>("usage_scopes_json")
+                .map_err(row_error)?,
+            "usage_scopes",
+        )?,
+        coding_visible: bool_cell(&row, "coding_visible"),
         release_stage: optional_i32_cell(&row, "release_stage"),
         shelf_state: optional_i32_cell(&row, "shelf_state"),
         routing_state: optional_i32_cell(&row, "routing_state"),

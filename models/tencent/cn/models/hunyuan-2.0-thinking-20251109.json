@@ -41,5 +41,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "vendorCode": "tencent",
-  "vendorName": "Tencent Cloud"
+  "vendorName": "Tencent Cloud",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

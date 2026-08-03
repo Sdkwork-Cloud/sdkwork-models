@@ -42,5 +42,7 @@
   "trendScore": "0.910000",
   "vendorCode": "alibaba",
   "vendorName": "Alibaba Cloud",
-  "winRate": "0.870000"
+  "winRate": "0.870000",
+  "usageScopes": [],
+  "codingVisible": false
 }

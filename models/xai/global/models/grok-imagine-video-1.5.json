@@ -42,5 +42,7 @@
   "trendScore": "0.920000",
   "vendorCode": "xai",
   "vendorName": "xAI",
-  "winRate": "0.890000"
+  "winRate": "0.890000",
+  "usageScopes": [],
+  "codingVisible": false
 }

@@ -41,5 +41,7 @@
   "trendScore": "0.910000",
   "vendorCode": "runway",
   "vendorName": "Runway",
-  "winRate": "0.860000"
+  "winRate": "0.860000",
+  "usageScopes": [],
+  "codingVisible": false
 }

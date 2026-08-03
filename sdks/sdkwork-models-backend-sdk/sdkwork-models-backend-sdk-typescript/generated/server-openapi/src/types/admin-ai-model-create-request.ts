@@ -28,6 +28,10 @@ export interface AdminAiModelCreateRequest {
   supportsStreaming?: boolean;
   supportsTools?: boolean;
   supportsJsonSchema?: boolean;
+  /** Product usage scopes where the model can be applied. */
+  usageScopes?: ('coding' | 'chat' | 'agent')[];
+  /** Whether the model is shown in code IDE surfaces. */
+  codingVisible?: boolean;
   releaseStage?: number;
   shelfState?: number;
   routingState?: number;

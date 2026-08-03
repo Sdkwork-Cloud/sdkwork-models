@@ -43,5 +43,9 @@
   "trendScore": "0.930000",
   "vendorCode": "google",
   "vendorName": "Google",
-  "winRate": "0.900000"
+  "winRate": "0.900000",
+  "usageScopes": [
+    "agent"
+  ],
+  "codingVisible": false
 }

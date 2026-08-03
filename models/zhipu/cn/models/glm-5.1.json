@@ -43,5 +43,10 @@
   "trendScore": "0.830000",
   "vendorCode": "zhipu",
   "vendorName": "Zhipu AI",
-  "winRate": "0.840000"
+  "winRate": "0.840000",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

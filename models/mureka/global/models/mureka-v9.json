@@ -41,5 +41,7 @@
   "trendScore": "0.970000",
   "vendorCode": "mureka",
   "vendorName": "Mureka",
-  "winRate": "0.930000"
+  "winRate": "0.930000",
+  "usageScopes": [],
+  "codingVisible": false
 }

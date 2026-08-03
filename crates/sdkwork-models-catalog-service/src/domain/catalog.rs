@@ -308,6 +308,8 @@ pub struct AiModel {
     pub supports_streaming: bool,
     pub supports_tools: bool,
     pub supports_json_schema: bool,
+    pub usage_scopes: Vec<String>,
+    pub coding_visible: bool,
     pub release_stage: Option<i32>,
     pub shelf_state: Option<i32>,
     pub routing_state: Option<i32>,
@@ -551,6 +553,8 @@ impl AiModel {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            usage_scopes: Vec::new(),
+            coding_visible: true,
             release_stage: None,
             shelf_state: None,
             routing_state: None,
@@ -579,6 +583,8 @@ impl AiModel {
         self.supports_streaming = metadata.supports_streaming;
         self.supports_tools = metadata.supports_tools;
         self.supports_json_schema = metadata.supports_json_schema;
+        self.usage_scopes = metadata.usage_scopes;
+        self.coding_visible = metadata.coding_visible;
         self.release_stage = metadata.release_stage;
         self.shelf_state = metadata.shelf_state;
         self.routing_state = metadata.routing_state;
@@ -610,6 +616,8 @@ pub struct AiModelPublicMetadata {
     pub supports_streaming: bool,
     pub supports_tools: bool,
     pub supports_json_schema: bool,
+    pub usage_scopes: Vec<String>,
+    pub coding_visible: bool,
     pub release_stage: Option<i32>,
     pub shelf_state: Option<i32>,
     pub routing_state: Option<i32>,

@@ -43,5 +43,10 @@
   "trendScore": "0.800000",
   "vendorCode": "tencent",
   "vendorName": "Tencent Cloud",
-  "winRate": "0.800000"
+  "winRate": "0.800000",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

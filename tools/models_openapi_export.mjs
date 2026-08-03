@@ -652,6 +652,17 @@ function mergeModelAccessChannelAppPath(document) {
         "supportedAgentProviderIds",
       ]),
     ];
+    modelItemSchema.properties.usageScopes = arraySchema(
+      enumStringSchema(["coding", "chat", "agent"], false),
+      3,
+      "Product usage scopes where the model can be applied, e.g. coding (code IDE/agent surfaces).",
+    );
+    modelItemSchema.properties.codingVisible = booleanSchema(
+      "Whether the model is shown in code IDE surfaces. Defaults to true.",
+    );
+    modelItemSchema.required = [
+      ...new Set([...(modelItemSchema.required ?? []), "usageScopes", "codingVisible"]),
+    ];
   }
 
   const modelListOperation = document.paths?.["/app/v3/api/ai/models"]?.get;
@@ -1122,6 +1133,12 @@ function adminAiModelCreateRequestSchema() {
       supportsStreaming: booleanSchema(),
       supportsTools: booleanSchema(),
       supportsJsonSchema: booleanSchema(),
+      usageScopes: arraySchema(
+        enumStringSchema(["coding", "chat", "agent"], false),
+        3,
+        "Product usage scopes where the model can be applied.",
+      ),
+      codingVisible: booleanSchema("Whether the model is shown in code IDE surfaces."),
       releaseStage: int32Schema(1, 3),
       shelfState: int32Schema(1, 3),
       routingState: int32Schema(0, 2),
@@ -1156,6 +1173,12 @@ function adminAiModelUpdateRequestSchema() {
       supportsStreaming: booleanSchema(),
       supportsTools: booleanSchema(),
       supportsJsonSchema: booleanSchema(),
+      usageScopes: arraySchema(
+        enumStringSchema(["coding", "chat", "agent"], false),
+        3,
+        "Product usage scopes where the model can be applied.",
+      ),
+      codingVisible: booleanSchema("Whether the model is shown in code IDE surfaces."),
       releaseStage: int32Schema(1, 3),
       shelfState: int32Schema(1, 3),
       routingState: int32Schema(0, 2),

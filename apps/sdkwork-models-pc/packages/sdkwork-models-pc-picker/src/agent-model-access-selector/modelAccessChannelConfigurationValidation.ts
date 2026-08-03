@@ -37,13 +37,20 @@ function normalizeList(values: readonly string[]): string[] {
   return normalized;
 }
 
+// Monotonic counter keeps the non-ASCII slug fallback unique even when two
+// channels are created within the same millisecond.
+let customSlugSequence = 0;
+
 function slug(value: string): string {
   const normalized = value
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9._-]+/gu, '-')
     .replace(/^-+|-+$/gu, '');
-  return normalized || 'custom';
+  // Names without ASCII slug characters (for example CJK-only names) must not
+  // collapse to the same generic "custom" identity: every saved channel needs
+  // a distinct code or later saves silently overwrite earlier ones.
+  return normalized || `custom-${Date.now().toString(36)}-${(customSlugSequence++).toString(36)}`;
 }
 
 function isAbsoluteHttpUrl(value: string): boolean {
@@ -211,6 +218,15 @@ export function normalizeModelAccessChannelConfigurationDraft(
   };
 }
 
+/**
+ * Validates a channel configuration draft.
+ *
+ * `activeProviderId` names the provider the configuration is being prepared
+ * for (the chat composer passes the active engine id, so the active engine
+ * must stay checked). An empty value means "any checked subset is fine" —
+ * the settings panel has no active engine and must allow saving a
+ * configuration for a single secondary provider.
+ */
 export function validateModelAccessChannelConfigurationDraft(
   draft: ModelAccessChannelConfigurationDraft,
   activeProviderId: string,
@@ -252,7 +268,9 @@ export function validateModelAccessChannelConfigurationDraft(
     offeringsRequired: populatedOfferings.length === 0,
     providerRequired:
       normalized.supportedAgentProviderIds.length === 0
-      || !normalized.supportedAgentProviderIds.includes(activeProviderId),
+      || (activeProviderId
+        ? !normalized.supportedAgentProviderIds.includes(activeProviderId)
+        : false),
     vendorRequired: normalized.offerings.some((offering) => !offering.vendorCode),
   };
 }

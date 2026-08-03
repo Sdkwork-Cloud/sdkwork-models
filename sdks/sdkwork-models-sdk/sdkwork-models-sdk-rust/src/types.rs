@@ -132,6 +132,10 @@ pub struct ModelInfo {
     pub supports_tools: bool,
     #[serde(default)]
     pub supports_json_schema: bool,
+    #[serde(default)]
+    pub usage_scopes: Vec<String>,
+    #[serde(default = "default_coding_visible")]
+    pub coding_visible: bool,
     pub rank_score: Option<String>,
     pub lifecycle: String,
     pub release_stage: String,
@@ -184,6 +188,10 @@ pub struct SourceEvidence {
     pub source_url: String,
     pub observed_at: String,
     pub source_hash: Option<String>,
+}
+
+fn default_coding_visible() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

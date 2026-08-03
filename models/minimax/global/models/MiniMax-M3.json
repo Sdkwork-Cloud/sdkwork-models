@@ -40,5 +40,11 @@
   "supportsTools": true,
   "trendScore": "0.910000",
   "vendorCode": "minimax",
-  "vendorName": "MiniMax"
+  "vendorName": "MiniMax",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

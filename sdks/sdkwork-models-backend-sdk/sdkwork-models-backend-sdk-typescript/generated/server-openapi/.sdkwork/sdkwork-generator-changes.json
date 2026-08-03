@@ -9,10 +9,16 @@
     "protocol": "http",
     "packageName": "sdkwork-models-backend-sdk-generated-typescript"
   },
-  "changeFingerprint": "8b22508f3484d3b3f8dc56cf8774542b4568fb9489822d23303fcaec945bdbf2",
+  "changeFingerprint": "82787c93cdd608badd052afdf0d2c7f7d3f78599806b74ef0df254e35512d9e8",
   "changes": {
     "createdGeneratedFiles": [],
-    "updatedGeneratedFiles": [],
+    "updatedGeneratedFiles": [
+      "src/types/admin-ai-model-create-request.ts",
+      "src/types/admin-ai-model-update-request.ts",
+      "src/types/admin-ai-resource-create-request.ts",
+      "src/types/admin-ai-resource-item.ts",
+      "src/types/admin-ai-resource-update-request.ts"
+    ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
       "bin/publish.ps1",
@@ -33,23 +39,18 @@
       "src/http/index.ts",
       "src/index.ts",
       "src/sdk.ts",
-      "src/types/admin-ai-model-create-request.ts",
       "src/types/admin-ai-model-item.ts",
       "src/types/admin-ai-model-page.ts",
       "src/types/admin-ai-model-region-price-request.ts",
       "src/types/admin-ai-model-region-price.ts",
-      "src/types/admin-ai-model-update-request.ts",
-      "src/types/admin-ai-resource-create-request.ts",
       "src/types/admin-ai-resource-group-create-request.ts",
       "src/types/admin-ai-resource-group-item.ts",
       "src/types/admin-ai-resource-group-member-input.ts",
       "src/types/admin-ai-resource-group-member-update-request.ts",
       "src/types/admin-ai-resource-group-resource-item.ts",
       "src/types/admin-ai-resource-group-update-request.ts",
-      "src/types/admin-ai-resource-item.ts",
       "src/types/admin-ai-resource-member-input.ts",
       "src/types/admin-ai-resource-member-item.ts",
-      "src/types/admin-ai-resource-update-request.ts",
       "src/types/admin-model-catalog-sync-request.ts",
       "src/types/admin-model-mapping-create-request.ts",
       "src/types/admin-model-mapping-resolve-request.ts",
@@ -116,26 +117,76 @@
   },
   "impact": {
     "schemaVersion": 1,
-    "areas": [],
-    "details": [],
-    "requiresVerification": false,
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    "areas": [
+      "models"
+    ],
+    "details": [
+      {
+        "area": "models",
+        "paths": [
+          "src/types/admin-ai-model-create-request.ts",
+          "src/types/admin-ai-model-update-request.ts",
+          "src/types/admin-ai-resource-create-request.ts",
+          "src/types/admin-ai-resource-item.ts",
+          "src/types/admin-ai-resource-update-request.ts"
+        ]
+      }
+    ],
+    "requiresVerification": true,
+    "summary": "Detected impact areas: models. Verification is required."
   },
   "verificationPlan": {
-    "shouldRun": false,
-    "runPhase": "skip",
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
-    "steps": []
+    "shouldRun": true,
+    "runPhase": "now",
+    "summary": "Detected impact areas: models. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "steps": [
+      {
+        "id": "check",
+        "title": "Unified package check",
+        "required": true,
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "check"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action check"
+      },
+      {
+        "id": "build",
+        "title": "Unified package build",
+        "required": true,
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: models.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "build"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action build"
+      }
+    ]
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "low",
-    "nextAction": "skip",
+    "riskLevel": "medium",
+    "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
-    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "no-actionable-changes"
+      "verification-required"
     ]
   },
   "preservedLegacyFiles": false

@@ -142,6 +142,11 @@ pub trait UserModelConfigStore: Send + Sync {
         &self,
         config: &UserModelEngineConfig,
     ) -> impl std::future::Future<Output = UserModelConfigStoreResult<()>> + Send;
+    fn delete_engine_config(
+        &self,
+        engine_id: &str,
+        channel_code: &str,
+    ) -> impl std::future::Future<Output = UserModelConfigStoreResult<()>> + Send;
 
     // Per-engine selections.
     fn list_engine_selections(
@@ -154,6 +159,10 @@ pub trait UserModelConfigStore: Send + Sync {
     fn upsert_engine_selection(
         &self,
         selection: &UserModelEngineSelection,
+    ) -> impl std::future::Future<Output = UserModelConfigStoreResult<()>> + Send;
+    fn delete_engine_selection(
+        &self,
+        engine_id: &str,
     ) -> impl std::future::Future<Output = UserModelConfigStoreResult<()>> + Send;
 }
 

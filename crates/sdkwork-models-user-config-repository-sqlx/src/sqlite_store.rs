@@ -437,8 +437,7 @@ impl UserModelConfigStore for SqliteUserModelConfigStore {
     async fn upsert_engine_config(
         &self,
         config: &UserModelEngineConfig,
-    ) -> UserModelConfigStoreResult<()> {
-        sqlx::query(
+    ) -> UserModelConfigStoreResult<()> {        sqlx::query(
             "INSERT INTO user_model_engine_config \
              (engine_id, channel_code, vendor_code, base_url, default_model_id, \
               supported_model_ids, supported_provider_ids, input_context_tokens, \
@@ -470,6 +469,21 @@ impl UserModelConfigStore for SqliteUserModelConfigStore {
         .bind(if config.supports_multimodal { 1 } else { 0 })
         .bind(if config.api_key_configured { 1 } else { 0 })
         .bind(&config.applied_at)
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn delete_engine_config(
+        &self,
+        engine_id: &str,
+        channel_code: &str,
+    ) -> UserModelConfigStoreResult<()> {
+        sqlx::query(
+            "DELETE FROM user_model_engine_config WHERE engine_id = ? AND channel_code = ?",
+        )
+        .bind(engine_id)
+        .bind(channel_code)
         .execute(&self.pool)
         .await?;
         Ok(())
@@ -529,6 +543,17 @@ impl UserModelConfigStore for SqliteUserModelConfigStore {
         .bind(now_rfc3339())
         .execute(&self.pool)
         .await?;
+        Ok(())
+    }
+
+    async fn delete_engine_selection(
+        &self,
+        engine_id: &str,
+    ) -> UserModelConfigStoreResult<()> {
+        sqlx::query("DELETE FROM user_model_engine_selection WHERE engine_id = ?")
+            .bind(engine_id)
+            .execute(&self.pool)
+            .await?;
         Ok(())
     }
 }

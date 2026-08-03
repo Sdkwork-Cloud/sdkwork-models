@@ -193,6 +193,15 @@ assert.ok(
   appModelItem?.properties?.supportedAgentProviderIds,
   'App model items must expose supported Agent Config SPI provider ids',
 );
+assert.deepEqual(
+  appModelItem?.properties?.usageScopes?.items?.enum,
+  ['coding', 'chat', 'agent'],
+  'App model items must expose usageScopes with the coding/chat/agent enum',
+);
+assert.ok(
+  appModelItem?.properties?.codingVisible?.type === 'boolean',
+  'App model items must expose the codingVisible boolean',
+);
 
 assert.ok(appModelAccessChannelsListOperation, 'modelAccessChannels.list operation must exist');
 assert.equal(appModelAccessChannelsListOperation.operationId, 'modelAccessChannels.list');
@@ -207,7 +216,7 @@ assert.deepEqual(
   [...modelAccessChannelQueryParams.keys()],
   ['page', 'page_size', 'q', 'kind', 'vendor_code', 'agent_provider_id'],
 );
-assert.deepEqual(modelAccessChannelQueryParams.get('kind')?.schema?.enum, ['official', 'relay']);
+assert.deepEqual(modelAccessChannelQueryParams.get('kind')?.schema?.enum, ['official', 'relay', 'custom']);
 assert.equal(modelAccessChannelQueryParams.get('page_size')?.schema?.maximum, 200);
 
 const modelAccessChannelPage = appOpenApi.components?.schemas?.AppModelAccessChannelsPage;

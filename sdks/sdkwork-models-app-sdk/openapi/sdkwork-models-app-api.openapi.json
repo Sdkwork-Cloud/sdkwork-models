@@ -1666,6 +1666,23 @@
             },
             "maxItems": 128,
             "description": "Agent Config SPI provider ids that can consume this model."
+          },
+          "usageScopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "coding",
+                "chat",
+                "agent"
+              ]
+            },
+            "maxItems": 3,
+            "description": "Product usage scopes where the model can be applied, e.g. coding (code IDE/agent surfaces)."
+          },
+          "codingVisible": {
+            "type": "boolean",
+            "description": "Whether the model is shown in code IDE surfaces. Defaults to true."
           }
         },
         "required": [
@@ -1699,7 +1716,9 @@
           "providerCodes",
           "officialReferencePrices",
           "priceAvailability",
-          "supportedAgentProviderIds"
+          "supportedAgentProviderIds",
+          "usageScopes",
+          "codingVisible"
         ],
         "type": "object"
       },

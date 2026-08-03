@@ -402,9 +402,9 @@ async fn import_models(
         sqlx::query(
                 r#"
                 INSERT INTO ai_model
-                    (uuid, tenant_id, organization_id, data_scope, status, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, family_id, family_code, provider_hint, model_family, capability, capabilities, modalities, input_modalities, output_modalities, color_token, docs_url, api_format, context_tokens, max_input_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, performance_profile, rank_score, release_stage, shelf_state, routing_state, replacement_model, description, id)
+                    (uuid, tenant_id, organization_id, data_scope, status, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, family_id, family_code, provider_hint, model_family, capability, capabilities, modalities, input_modalities, output_modalities, color_token, docs_url, api_format, context_tokens, max_input_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, usage_scopes, coding_visible, performance_profile, rank_score, release_stage, shelf_state, routing_state, replacement_model, description, id)
                 VALUES
-                    ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18::jsonb, $19::jsonb, $20::jsonb, $21::jsonb, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31::jsonb, CAST($32 AS NUMERIC), $33, $34, $35, $36, $37, $38)
+                    ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18::jsonb, $19::jsonb, $20::jsonb, $21::jsonb, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31::jsonb, $32, $33::jsonb, CAST($34 AS NUMERIC), $35, $36, $37, $38, $39, $40)
                 ON CONFLICT(tenant_id, organization_id, catalog_key) DO UPDATE SET
                     display_name = excluded.display_name,
                     vendor_id = excluded.vendor_id,
@@ -427,6 +427,8 @@ async fn import_models(
                     supports_streaming = excluded.supports_streaming,
                     supports_tools = excluded.supports_tools,
                     supports_json_schema = excluded.supports_json_schema,
+                    usage_scopes = excluded.usage_scopes,
+                    coding_visible = excluded.coding_visible,
                     performance_profile = excluded.performance_profile,
                     rank_score = excluded.rank_score,
                     release_stage = excluded.release_stage,
@@ -473,6 +475,8 @@ async fn import_models(
         .bind(model.supports_streaming)
         .bind(model.supports_tools)
         .bind(model.supports_json_schema)
+        .bind(json_array(&model.usage_scopes))
+        .bind(model.coding_visible)
         .bind(serde_json::json!({
             "latencyP50Ms": model.latency_p50_ms,
             "latencyP95Ms": model.latency_p95_ms,

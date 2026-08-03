@@ -6,6 +6,7 @@ members = [
   "crates/sdkwork-models-catalog-service",
   "crates/sdkwork-models-database-host",
   "crates/sdkwork-models-user-config-repository-sqlx",
+  "crates/sdkwork-models-agent-config-bridge",
   "crates/sdkwork-api-models-standalone-gateway",
   "crates/sdkwork-models-service-host",
   "crates/sdkwork-routes-catalog-app-api",

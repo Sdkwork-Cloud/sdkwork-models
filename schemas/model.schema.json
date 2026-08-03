@@ -22,6 +22,8 @@
     "supportsStreaming",
     "supportsTools",
     "supportsJsonSchema",
+    "usageScopes",
+    "codingVisible",
     "source"
   ],
   "properties": {
@@ -118,6 +120,19 @@
       "type": "boolean",
       "default": false
     },
+    "usageScopes": {
+      "description": "Product usage scopes where the model can be applied, e.g. coding (code IDE/agent surfaces). References the usageScope enum in $defs.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/usageScope"
+      },
+      "default": []
+    },
+    "codingVisible": {
+      "description": "Whether the model is shown in code IDE surfaces. Defaults to true; non-chat models (embedding, media, speech) are aligned to false.",
+      "type": "boolean",
+      "default": true
+    },
     "source": {
       "$ref": "#/$defs/sourceEvidence"
     }
@@ -145,6 +160,14 @@
         "streaming",
         "rerank",
         "tool"
+      ]
+    },
+    "usageScope": {
+      "description": "Product usage surface where a model can be selected. coding covers code IDE and coding-agent surfaces.",
+      "enum": [
+        "coding",
+        "chat",
+        "agent"
       ]
     },
     "modality": {

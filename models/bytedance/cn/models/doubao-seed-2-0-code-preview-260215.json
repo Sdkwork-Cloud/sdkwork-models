@@ -43,5 +43,11 @@
   "trendScore": "0.900000",
   "vendorCode": "bytedance",
   "vendorName": "ByteDance",
-  "winRate": "0.860000"
+  "winRate": "0.860000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

@@ -44,5 +44,10 @@
   "trendScore": "0.840000",
   "vendorCode": "baidu",
   "vendorName": "Baidu AI Cloud",
-  "winRate": "0.820000"
+  "winRate": "0.820000",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

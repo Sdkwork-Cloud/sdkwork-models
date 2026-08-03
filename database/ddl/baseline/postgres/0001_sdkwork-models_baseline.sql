@@ -413,6 +413,8 @@ CREATE TABLE IF NOT EXISTS ai_model (
     supports_streaming BOOLEAN,
     supports_tools BOOLEAN,
     supports_json_schema BOOLEAN,
+    usage_scopes JSONB NOT NULL DEFAULT '[]'::jsonb,
+    coding_visible BOOLEAN NOT NULL DEFAULT TRUE,
     performance_profile JSONB,
     default_pricing_id BIGINT,
     rank_score NUMERIC(38, 12),

@@ -45,5 +45,11 @@
   "supportsTools": true,
   "trendScore": "0.890000",
   "vendorCode": "bytedance",
-  "vendorName": "ByteDance"
+  "vendorName": "ByteDance",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

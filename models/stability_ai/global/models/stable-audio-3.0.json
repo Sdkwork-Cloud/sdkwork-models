@@ -42,5 +42,7 @@
   "trendScore": "0.900000",
   "vendorCode": "stability_ai",
   "vendorName": "Stability AI",
-  "winRate": "0.870000"
+  "winRate": "0.870000",
+  "usageScopes": [],
+  "codingVisible": false
 }

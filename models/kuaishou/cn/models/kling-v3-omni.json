@@ -45,5 +45,7 @@
   "trendScore": "0.970000",
   "vendorCode": "kuaishou",
   "vendorName": "Kuaishou",
-  "winRate": "0.920000"
+  "winRate": "0.920000",
+  "usageScopes": [],
+  "codingVisible": false
 }

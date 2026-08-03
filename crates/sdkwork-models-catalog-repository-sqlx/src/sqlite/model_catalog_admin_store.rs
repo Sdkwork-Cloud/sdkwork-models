@@ -76,6 +76,8 @@ struct EffectiveModelUpdate {
     supports_streaming: bool,
     supports_tools: bool,
     supports_json_schema: bool,
+    usage_scopes: Vec<String>,
+    coding_visible: bool,
     release_stage: i32,
     shelf_state: i32,
     routing_state: i32,
@@ -1772,9 +1774,9 @@ async fn insert_model(
     sqlx::query(
         r#"
         INSERT INTO ai_model
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, deleted_at, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, capability, modalities, input_modalities, output_modalities, description, capability_intro, limitations, supported_languages, use_cases, training_data_cutoff, context_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, api_format, release_stage, shelf_state, routing_state, replacement_model, rank_score, id)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, deleted_at, metadata, catalog_key, model, display_name, vendor_id, vendor_code, vendor_name_snapshot, capability, modalities, input_modalities, output_modalities, description, capability_intro, limitations, supported_languages, use_cases, training_data_cutoff, context_tokens, max_output_tokens, supports_streaming, supports_tools, supports_json_schema, usage_scopes, coding_visible, api_format, release_stage, shelf_state, routing_state, replacement_model, rank_score, id)
         VALUES
-            (?, ?, ?, 1, 1, ?, ?, 0, NULL, '{}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)
+            (?, ?, ?, 1, 1, ?, ?, 0, NULL, '{}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)
         "#,
     )
     .bind(&command.model_uuid)
@@ -1803,6 +1805,8 @@ async fn insert_model(
     .bind(command.supports_streaming)
     .bind(command.supports_tools)
     .bind(command.supports_json_schema)
+    .bind(json_array_text(&command.usage_scopes)?)
+    .bind(command.coding_visible)
     .bind(&command.api_format)
     .bind(command.release_stage)
     .bind(command.shelf_state)
@@ -2770,6 +2774,11 @@ fn effective_model_update(
         supports_json_schema: command
             .supports_json_schema
             .unwrap_or(current.supports_json_schema),
+        usage_scopes: command
+            .usage_scopes
+            .clone()
+            .unwrap_or_else(|| current.usage_scopes.clone()),
+        coding_visible: command.coding_visible.unwrap_or(current.coding_visible),
         release_stage: command.release_stage.or(current.release_stage).unwrap_or(1),
         shelf_state: command.shelf_state.or(current.shelf_state).unwrap_or(1),
         routing_state: command.routing_state.or(current.routing_state).unwrap_or(1),
@@ -2839,6 +2848,8 @@ async fn update_model_core(
             supports_streaming = ?,
             supports_tools = ?,
             supports_json_schema = ?,
+            usage_scopes = ?,
+            coding_visible = ?,
             api_format = ?,
             release_stage = ?,
             shelf_state = ?,
@@ -2871,6 +2882,8 @@ async fn update_model_core(
     .bind(update.supports_streaming)
     .bind(update.supports_tools)
     .bind(update.supports_json_schema)
+    .bind(json_array_text(&update.usage_scopes)?)
+    .bind(update.coding_visible)
     .bind(update.api_format.as_deref())
     .bind(update.release_stage)
     .bind(update.shelf_state)
@@ -3533,6 +3546,8 @@ fn model_select_sql(
             COALESCE(m.supports_streaming, 0) AS supports_streaming,
             COALESCE(m.supports_tools, 0) AS supports_tools,
             COALESCE(m.supports_json_schema, 0) AS supports_json_schema,
+            COALESCE(CAST(m.usage_scopes AS TEXT), '[]') AS usage_scopes_json,
+            COALESCE(m.coding_visible, 1) AS coding_visible,
             m.release_stage AS release_stage,
             m.shelf_state AS shelf_state,
             m.routing_state AS routing_state,
@@ -3933,6 +3948,12 @@ fn model_from_row(row: sqlx::sqlite::SqliteRow) -> DomainResult<AdminAiModelItem
         supports_streaming: bool_cell(&row, "supports_streaming"),
         supports_tools: bool_cell(&row, "supports_tools"),
         supports_json_schema: bool_cell(&row, "supports_json_schema"),
+        usage_scopes: parse_string_array(
+            &row.try_get::<String, _>("usage_scopes_json")
+                .map_err(row_error)?,
+            "usage_scopes",
+        )?,
+        coding_visible: bool_cell(&row, "coding_visible"),
         release_stage: optional_i32_cell(&row, "release_stage"),
         shelf_state: optional_i32_cell(&row, "shelf_state"),
         routing_state: optional_i32_cell(&row, "routing_state"),

@@ -45,5 +45,10 @@
   "trendScore": "0.940000",
   "vendorCode": "anthropic",
   "vendorName": "Anthropic",
-  "winRate": "0.910000"
+  "winRate": "0.910000",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

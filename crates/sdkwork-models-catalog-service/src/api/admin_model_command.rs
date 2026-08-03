@@ -135,6 +135,8 @@ struct AdminAiModelCreateRequest {
     supports_streaming: Option<bool>,
     supports_tools: Option<bool>,
     supports_json_schema: Option<bool>,
+    usage_scopes: Option<Vec<String>>,
+    coding_visible: Option<bool>,
     release_stage: Option<Value>,
     shelf_state: Option<Value>,
     routing_state: Option<Value>,
@@ -166,6 +168,8 @@ struct AdminAiModelUpdateRequest {
     supports_streaming: Option<bool>,
     supports_tools: Option<bool>,
     supports_json_schema: Option<bool>,
+    usage_scopes: Option<Vec<String>>,
+    coding_visible: Option<bool>,
     release_stage: Option<Value>,
     shelf_state: Option<Value>,
     routing_state: Option<Value>,
@@ -313,6 +317,8 @@ struct NormalizedModelCreateRequest {
     supports_streaming: bool,
     supports_tools: bool,
     supports_json_schema: bool,
+    usage_scopes: Vec<String>,
+    coding_visible: bool,
     release_stage: i32,
     shelf_state: i32,
     routing_state: i32,
@@ -342,6 +348,8 @@ struct NormalizedModelUpdateRequest {
     supports_streaming: Option<bool>,
     supports_tools: Option<bool>,
     supports_json_schema: Option<bool>,
+    usage_scopes: Option<Vec<String>>,
+    coding_visible: Option<bool>,
     release_stage: Option<i32>,
     shelf_state: Option<i32>,
     routing_state: Option<i32>,
@@ -438,6 +446,8 @@ struct AdminAiModelItemResponse {
     supports_streaming: bool,
     supports_tools: bool,
     supports_json_schema: bool,
+    usage_scopes: Vec<String>,
+    coding_visible: bool,
     release_stage: Option<i32>,
     shelf_state: Option<i32>,
     routing_state: Option<i32>,
@@ -1019,6 +1029,8 @@ fn build_create_model_command(
         supports_streaming: request.supports_streaming,
         supports_tools: request.supports_tools,
         supports_json_schema: request.supports_json_schema,
+        usage_scopes: request.usage_scopes,
+        coding_visible: request.coding_visible,
         release_stage: request.release_stage,
         shelf_state: request.shelf_state,
         routing_state: request.routing_state,
@@ -1062,6 +1074,8 @@ fn build_update_model_command(
         supports_streaming: request.supports_streaming,
         supports_tools: request.supports_tools,
         supports_json_schema: request.supports_json_schema,
+        usage_scopes: request.usage_scopes,
+        coding_visible: request.coding_visible,
         release_stage: request.release_stage,
         shelf_state: request.shelf_state,
         routing_state: request.routing_state,
@@ -1457,6 +1471,14 @@ fn normalize_model_create_request(
         supports_json_schema: request
             .supports_json_schema
             .unwrap_or(defaults.supports_json_schema),
+        usage_scopes: normalize_text_array(
+            request.usage_scopes,
+            "usageScopes",
+            MAX_MODEL_METADATA_ITEMS,
+            MAX_MODEL_METADATA_TEXT_LEN,
+        )?
+        .unwrap_or_default(),
+        coding_visible: request.coding_visible.unwrap_or(defaults.coding_visible),
         release_stage: normalize_enum_i32(request.release_stage.as_ref(), "releaseStage", 1, 3)?
             .unwrap_or(1),
         shelf_state: normalize_enum_i32(request.shelf_state.as_ref(), "shelfState", 1, 3)?
@@ -1605,6 +1627,15 @@ fn normalize_model_update_request(
         supports_json_schema: request
             .supports_json_schema
             .or_else(|| defaults.as_ref().map(|value| value.supports_json_schema)),
+        usage_scopes: normalize_text_array(
+            request.usage_scopes,
+            "usageScopes",
+            MAX_MODEL_METADATA_ITEMS,
+            MAX_MODEL_METADATA_TEXT_LEN,
+        )?,
+        coding_visible: request
+            .coding_visible
+            .or_else(|| defaults.as_ref().map(|value| value.coding_visible)),
         release_stage: normalize_enum_i32(request.release_stage.as_ref(), "releaseStage", 1, 3)?,
         shelf_state: normalize_enum_i32(request.shelf_state.as_ref(), "shelfState", 1, 3)?,
         routing_state: normalize_enum_i32(request.routing_state.as_ref(), "routingState", 0, 2)?,
@@ -2716,6 +2747,8 @@ fn to_model_response(item: AdminAiModelItem) -> AdminAiModelItemResponse {
         supports_streaming: item.supports_streaming,
         supports_tools: item.supports_tools,
         supports_json_schema: item.supports_json_schema,
+        usage_scopes: item.usage_scopes,
+        coding_visible: item.coding_visible,
         release_stage: item.release_stage,
         shelf_state: item.shelf_state,
         routing_state: item.routing_state,
@@ -2821,6 +2854,7 @@ struct ModelDefaults {
     supports_streaming: bool,
     supports_tools: bool,
     supports_json_schema: bool,
+    coding_visible: bool,
 }
 
 fn model_defaults(model_type: &str) -> ModelDefaults {
@@ -2833,6 +2867,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         "Audio" => ModelDefaults {
             modalities: vec!["audio".to_owned()],
@@ -2842,6 +2877,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         "Embedding" => ModelDefaults {
             modalities: vec!["embedding".to_owned()],
@@ -2851,6 +2887,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         "Music" => ModelDefaults {
             modalities: vec!["music".to_owned()],
@@ -2860,6 +2897,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         "SoundEffect" => ModelDefaults {
             modalities: vec!["sfx".to_owned()],
@@ -2869,6 +2907,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         "Video" => ModelDefaults {
             modalities: vec!["video".to_owned()],
@@ -2878,6 +2917,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: false,
             supports_tools: false,
             supports_json_schema: false,
+            coding_visible: false,
         },
         _ => ModelDefaults {
             modalities: vec!["text".to_owned()],
@@ -2887,6 +2927,7 @@ fn model_defaults(model_type: &str) -> ModelDefaults {
             supports_streaming: true,
             supports_tools: true,
             supports_json_schema: true,
+            coding_visible: true,
         },
     }
 }

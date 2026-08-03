@@ -276,7 +276,10 @@ export function ModelManagementSettingsCenter({
             .map((provider) => provider.id),
         };
   }, [editingChannelCode, providerOptions, selectedChannel]);
-  const activeProviderId = providerOptions[0]?.id ?? '';
+  // The settings panel has no "active engine": any checked provider subset is
+  // a valid save, so the dialog must not require a particular provider.
+  // (The chat surfaces pass their active engine id instead.)
+  const activeProviderId = '';
 
   const closeDialog = useCallback(() => {
     setCreatingKind(null);

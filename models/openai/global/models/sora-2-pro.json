@@ -41,5 +41,7 @@
   "trendScore": "0.920000",
   "vendorCode": "openai",
   "vendorName": "OpenAI",
-  "winRate": "0.900000"
+  "winRate": "0.900000",
+  "usageScopes": [],
+  "codingVisible": false
 }

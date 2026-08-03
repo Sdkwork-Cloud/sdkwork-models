@@ -43,5 +43,11 @@
   "trendScore": "0.920000",
   "vendorCode": "meituan",
   "vendorName": "Meituan",
-  "winRate": "0.900000"
+  "winRate": "0.900000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

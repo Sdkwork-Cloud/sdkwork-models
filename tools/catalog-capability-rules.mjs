@@ -95,6 +95,32 @@ export function inferMissingModelCapabilities(model) {
     }
   }
 
+  if (model.usageScopes === undefined) {
+    const scopes = [];
+    const strengths = model.strengths ?? [];
+    const modelIdToken = String(modelId ?? "").toLowerCase();
+    const isCodingNamed =
+      /(^|[-_. ])code([-_. ]|$)/.test(modelIdToken)
+      || /(^|[-_. ])coder([-_. ]|$)/.test(modelIdToken)
+      || /(^|[-_. ])coding([-_. ]|$)/.test(modelIdToken);
+    const isCodingStrengthened = strengths.some((strength) => /\bcod(?:e|ing)\b/i.test(String(strength)));
+    if (primary === "code" || capabilities.has("code") || isCodingNamed || isCodingStrengthened) {
+      scopes.push("coding");
+    }
+    if (isChatLike) {
+      scopes.push("chat");
+    }
+    const supportsTools = inferred.supportsTools ?? model.supportsTools;
+    if (supportsTools === true) {
+      scopes.push("agent");
+    }
+    inferred.usageScopes = scopes;
+  }
+
+  if (model.codingVisible === undefined) {
+    inferred.codingVisible = isChatLike;
+  }
+
   return inferred;
 }
 

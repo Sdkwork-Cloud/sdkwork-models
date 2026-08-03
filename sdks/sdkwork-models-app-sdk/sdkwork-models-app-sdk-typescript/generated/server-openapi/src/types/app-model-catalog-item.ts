@@ -65,4 +65,8 @@ export interface AppModelCatalogItem {
   vendorCode: string;
   /** Agent Config SPI provider ids that can consume this model. */
   supportedAgentProviderIds: string[];
+  /** Product usage scopes where the model can be applied, e.g. coding (code IDE/agent surfaces). */
+  usageScopes: ('coding' | 'chat' | 'agent')[];
+  /** Whether the model is shown in code IDE surfaces. Defaults to true. */
+  codingVisible: boolean;
 }

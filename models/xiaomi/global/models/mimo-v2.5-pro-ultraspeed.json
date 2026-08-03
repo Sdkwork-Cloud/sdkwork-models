@@ -44,5 +44,11 @@
   "trendScore": "0.970000",
   "vendorCode": "xiaomi",
   "vendorName": "Xiaomi MiMo",
-  "winRate": "0.940000"
+  "winRate": "0.940000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
 }

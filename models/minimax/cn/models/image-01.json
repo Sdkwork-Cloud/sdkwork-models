@@ -41,5 +41,7 @@
   "trendScore": "0.880000",
   "vendorCode": "minimax",
   "vendorName": "MiniMax",
-  "winRate": "0.860000"
+  "winRate": "0.860000",
+  "usageScopes": [],
+  "codingVisible": false
 }
