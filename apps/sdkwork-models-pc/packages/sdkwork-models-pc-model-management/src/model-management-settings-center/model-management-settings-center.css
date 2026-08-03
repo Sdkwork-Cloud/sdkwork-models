@@ -149,7 +149,14 @@
   min-width: 0;
 }
 
-.sdkwork-model-management-supplier-copy strong {
+.sdkwork-model-management-supplier-heading {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.sdkwork-model-management-supplier-heading strong {
   color: #e6e6e9;
   font-size: 13px;
   font-weight: 550;
@@ -157,6 +164,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sdkwork-model-management-supplier-heading
+.sdkwork-model-management-supplier-tag {
+  background: #2c3a5c;
+  border: 1px solid #4a5f8f;
+  border-radius: 4px;
+  color: #b9c7e8;
+  flex: 0 0 auto;
+  font-size: 10px;
+  line-height: 15px;
+  padding: 0 5px;
 }
 
 .sdkwork-model-management-supplier-copy small {
@@ -211,7 +230,7 @@
 }
 
 .sdkwork-model-management-official-panel {
-  max-width: 720px;
+  width: 100%;
 }
 
 .sdkwork-model-management-official-section-title {
@@ -225,9 +244,9 @@
 }
 
 .sdkwork-model-management-official-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   margin-top: 16px;
 }
 
@@ -235,6 +254,7 @@
   background: #141417;
   border: 1px solid rgb(255 255 255 / 7%);
   border-radius: 9px;
+  min-width: 0;
   padding: 14px 16px;
 }
 
@@ -302,7 +322,7 @@
 }
 
 .sdkwork-model-management-channel-detail {
-  max-width: 720px;
+  width: 100%;
 }
 
 .sdkwork-model-management-channel-detail-header {
@@ -386,7 +406,7 @@
   border-radius: 9px;
   display: grid;
   gap: 12px 18px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   margin: 18px 0 0;
   padding: 14px 16px;
 }
@@ -429,15 +449,22 @@
   text-transform: uppercase;
 }
 
+.sdkwork-model-management-channel-vendors {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.sdkwork-model-management-channel-vendors h3 {
+  grid-column: 1 / -1;
+}
+
 .sdkwork-model-management-channel-vendor {
   background: #141417;
   border: 1px solid rgb(255 255 255 / 7%);
   border-radius: 9px;
+  min-width: 0;
   padding: 12px 16px;
-}
-
-.sdkwork-model-management-channel-vendor + .sdkwork-model-management-channel-vendor {
-  margin-top: 8px;
 }
 
 .sdkwork-model-management-channel-vendor strong {
@@ -482,102 +509,4 @@
 .sdkwork-model-management-engine-bindings li strong {
   color: #c9c9ce;
   font-weight: 550;
-}
-
-.sdkwork-model-management-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 640px;
-}
-
-.sdkwork-model-management-form-header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-
-.sdkwork-model-management-form-title {
-  color: #f2f2f4;
-  font-size: 17px;
-  font-weight: 650;
-  line-height: 24px;
-}
-
-.sdkwork-model-management-icon-button {
-  align-items: center;
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-  color: #8f8f97;
-  cursor: pointer;
-  display: inline-flex;
-  height: 30px;
-  justify-content: center;
-  padding: 0;
-  width: 30px;
-}
-
-.sdkwork-model-management-icon-button:hover {
-  background: #242427;
-  color: #f2f2f4;
-}
-
-.sdkwork-model-management-form-hint {
-  color: #6f6f78;
-  font-size: 11px;
-  line-height: 16px;
-}
-
-.sdkwork-model-management-form-actions {
-  align-items: center;
-  border-top: 1px solid rgb(255 255 255 / 6%);
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  padding-top: 14px;
-}
-
-.sdkwork-model-management-form-actions button {
-  align-items: center;
-  background: #303136;
-  border: 1px solid #404146;
-  border-radius: 6px;
-  color: #dedee2;
-  cursor: pointer;
-  display: inline-flex;
-  font: inherit;
-  font-size: 13px;
-  gap: 7px;
-  height: 36px;
-  justify-content: center;
-  min-width: 86px;
-  padding: 0 16px;
-}
-
-.sdkwork-model-management-form-actions button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-}
-
-.sdkwork-model-management-form-actions .sdkwork-model-management-save {
-  background: #e7e9ee;
-  border-color: #e7e9ee;
-  color: #202124;
-  font-weight: 650;
-}
-
-.sdkwork-model-management-form-actions .sdkwork-model-management-delete {
-  background: transparent;
-  border-color: #6b3435;
-  color: #e18d8d;
-  margin-right: auto;
-}
-
-.sdkwork-model-management-form-actions .sdkwork-model-management-delete-confirm {
-  background: #7f1d1d;
-  border-color: #a53434;
-  color: #ffffff;
-  font-weight: 650;
-  margin-right: auto;
 }

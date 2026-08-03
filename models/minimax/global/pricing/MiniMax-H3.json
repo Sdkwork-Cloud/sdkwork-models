@@ -1,0 +1,26 @@
+{
+  "catalogKey": "minimax/MiniMax-H3",
+  "currency": "USD",
+  "modelId": "MiniMax-H3",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-31T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-h3-second-2k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-03T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-video"
+      },
+      "unitPrice": "0.130000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "minimax"
+}

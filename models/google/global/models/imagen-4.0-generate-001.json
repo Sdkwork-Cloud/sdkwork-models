@@ -5,7 +5,7 @@
   ],
   "catalogKey": "google/imagen-4.0-generate-001",
   "colorToken": "#0891b2",
-  "description": "Google image generation model.",
+  "description": "Imagen 4.0 Generate shuts down on 2026-08-17; migrate to Nano Banana 2 (gemini-3.1-flash-image-preview). Kept for migration reference.",
   "displayName": "Imagen 4.0 Generate",
   "familyCode": "imagen",
   "inputModalities": [
@@ -14,7 +14,7 @@
   ],
   "latencyP50Ms": 4800,
   "latencyP95Ms": 18000,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "modelId": "imagen-4.0-generate-001",
   "outputModalities": [
     "image"
@@ -22,12 +22,12 @@
   "primaryCapability": "image",
   "rankScore": "760.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://cloud.google.com/vertex-ai/generative-ai/docs/models"
   },
   "strengths": [

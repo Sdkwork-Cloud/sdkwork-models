@@ -1,18 +1,19 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Building2, ChevronRight, Pencil, Plus, Route, Settings2 } from 'lucide-react';
-import type {
-  AgentModelCatalogOption,
-  AgentProviderOption,
-  ModelAccessChannel,
-  ModelAccessChannelConfigurationDraft,
-  OfficialModelVendorPreset,
+import {
+  ModelAccessChannelConfigurationDialog,
+  type AgentModelCatalogOption,
+  type AgentProviderOption,
+  type ModelAccessChannel,
+  type ModelAccessChannelConfigurationDraft,
+  type ModelAccessChannelKind,
+  type ModelVendor,
+  type OfficialModelVendorPreset,
 } from '@sdkwork/models-pc-picker';
 import '@sdkwork/models-pc-picker/style.css';
 import './model-management-settings-center.css';
-import { ModelManagementChannelForm } from './ModelManagementChannelForm';
 import {
   BIRDOODER_OFFICIAL_SUPPLIER_ID,
-  type ModelManagementChannelKind,
   type ModelManagementSettingsCenterProps,
   type ModelManagementSettingsMessages,
 } from './modelManagementSettingsTypes';
@@ -41,6 +42,22 @@ function sortChannels(channels: readonly ModelAccessChannel[]): ModelAccessChann
   ));
 }
 
+function deriveVendorOptions(models: readonly AgentModelCatalogOption[]): ModelVendor[] {
+  const byCode = new Map<string, ModelVendor>();
+  for (const model of models) {
+    const code = model.vendorCode.trim();
+    if (!code || code === 'unknown' || byCode.has(code.toLowerCase())) {
+      continue;
+    }
+    byCode.set(code.toLowerCase(), {
+      code,
+      name: model.vendorName.trim() || code,
+      sortOrder: model.sortOrder,
+    });
+  }
+  return [...byCode.values()];
+}
+
 function officialSummary(
   preset: OfficialModelVendorPreset,
   messages: ModelManagementSettingsMessages,
@@ -56,7 +73,7 @@ function officialSummary(
       <dl className="sdkwork-model-management-official-entry-facts">
         <div>
           <dt>{messages.baseUrlLabel}</dt>
-          <dd>{preset.baseUrl}</dd>
+          <dd title={preset.baseUrl}>{preset.baseUrl}</dd>
         </div>
         <div>
           <dt>{messages.officialVendorProtocol}</dt>
@@ -155,7 +172,7 @@ function channelDetail(
         </div>
         <div>
           <dt>{messages.baseUrlLabel}</dt>
-          <dd>{channel.baseUrl}</dd>
+          <dd title={channel.baseUrl}>{channel.baseUrl}</dd>
         </div>
         <div>
           <dt>{messages.defaultVendorLabel}</dt>
@@ -217,11 +234,12 @@ export function ModelManagementSettingsCenter({
   onDeleteChannel,
 }: ModelManagementSettingsCenterProps) {
   const [selectedSupplierId, setSelectedSupplierId] = useState(BIRDOODER_OFFICIAL_SUPPLIER_ID);
+  const [creatingKind, setCreatingKind] = useState<ModelAccessChannelKind | null>(null);
   const [editingChannelCode, setEditingChannelCode] = useState<string | null>(null);
-  const [creatingKind, setCreatingKind] = useState<ModelManagementChannelKind | null>(null);
   const [deleteConfirmedFor, setDeleteConfirmedFor] = useState<string | null>(null);
   const [deletingFor, setDeletingFor] = useState<string | null>(null);
   const [deleteErrorFor, setDeleteErrorFor] = useState<string | null>(null);
+  const dialogTriggerRef = useRef<HTMLButtonElement>(null);
 
   const officialChannels = useMemo(
     () => sortChannels(channels.filter((channel) => channel.kind === 'official')),
@@ -235,17 +253,46 @@ export function ModelManagementSettingsCenter({
     () => sortChannels(channels.filter((channel) => channel.kind === 'custom')),
     [channels],
   );
+  const vendorOptions = useMemo(() => deriveVendorOptions(models), [models]);
 
   const selectedChannel = channels.find(
     (channel) => channelIdentity(channel) === selectedSupplierId,
   );
   const isOfficialSupplier = selectedSupplierId === BIRDOODER_OFFICIAL_SUPPLIER_ID;
-  const showCreateForm = creatingKind !== null;
-  const showEditForm = Boolean(
-    selectedChannel && editingChannelCode === selectedSupplierId && !showCreateForm,
-  );
-  const formKind: ModelManagementChannelKind = creatingKind
-    ?? (selectedChannel?.kind === 'custom' ? 'custom' : 'relay');
+  const dialogOpen = creatingKind !== null || editingChannelCode !== null;
+  // Settings-owned channels are usable by every Agent engine (per-engine
+  // bindings live in the engine-config rows); the shared dialog validates at
+  // least one provider checkbox, so pre-fill all of them for the edit draft.
+  const editingChannel = useMemo(() => {
+    if (editingChannelCode === null || !selectedChannel) {
+      return undefined;
+    }
+    return selectedChannel.supportedAgentProviderIds.length > 0
+      ? selectedChannel
+      : {
+          ...selectedChannel,
+          supportedAgentProviderIds: providerOptions
+            .filter((provider) => !provider.disabled)
+            .map((provider) => provider.id),
+        };
+  }, [editingChannelCode, providerOptions, selectedChannel]);
+  const activeProviderId = providerOptions[0]?.id ?? '';
+
+  const closeDialog = useCallback(() => {
+    setCreatingKind(null);
+    setEditingChannelCode(null);
+    setDeleteConfirmedFor(null);
+    setDeleteErrorFor(null);
+  }, []);
+
+  const handleDialogSave = useCallback(async (draft: ModelAccessChannelConfigurationDraft) => {
+    const code = await onSaveChannel(draft);
+    // The dialog closes itself after a successful save; select the new
+    // channel so its configuration is visible right away.
+    if (code) {
+      setSelectedSupplierId(code);
+    }
+  }, [onSaveChannel]);
 
   const renderSupplierRow = (
     id: string,
@@ -253,6 +300,7 @@ export function ModelManagementSettingsCenter({
     description: string | undefined,
     icon: React.ReactNode,
     selected: boolean,
+    tag?: string,
   ) => (
     <button
       aria-pressed={selected}
@@ -272,7 +320,12 @@ export function ModelManagementSettingsCenter({
         {icon}
       </span>
       <span className="sdkwork-model-management-supplier-copy">
-        <strong>{label}</strong>
+        <span className="sdkwork-model-management-supplier-heading">
+          <strong>{label}</strong>
+          {tag ? (
+            <small className="sdkwork-model-management-supplier-tag">{tag}</small>
+          ) : null}
+        </span>
         {description ? <small>{description}</small> : null}
       </span>
       <ChevronRight aria-hidden="true" className="sdkwork-model-management-supplier-chevron" size={15} />
@@ -286,6 +339,7 @@ export function ModelManagementSettingsCenter({
     try {
       await onDeleteChannel(channel);
       setSelectedSupplierId(BIRDOODER_OFFICIAL_SUPPLIER_ID);
+      setCreatingKind(null);
       setEditingChannelCode(null);
       setDeleteConfirmedFor(null);
     } catch (error) {
@@ -308,35 +362,15 @@ export function ModelManagementSettingsCenter({
         </div>
         <div className="sdkwork-model-management-sidebar-groups">
           <section className="sdkwork-model-management-group">
-            <h3>{messages.officialSupplierLabel}</h3>
-            <div className="sdkwork-model-management-group-list">
-              {renderSupplierRow(
-                BIRDOODER_OFFICIAL_SUPPLIER_ID,
-                messages.officialSupplierLabel,
-                messages.officialSupplierDescription,
-                <Building2 size={17} />,
-                selectedSupplierId === BIRDOODER_OFFICIAL_SUPPLIER_ID,
-              )}
-              {officialChannels.map((channel) => renderSupplierRow(
-                channelIdentity(channel),
-                channel.name,
-                channel.description || channel.baseUrl,
-                <Building2 size={17} />,
-                selectedSupplierId === channelIdentity(channel),
-              ))}
-            </div>
-          </section>
-
-          <section className="sdkwork-model-management-group">
             <header className="sdkwork-model-management-group-header">
               <h3>{messages.relayStationsLabel}</h3>
               <button
                 aria-label={messages.addRelayStation}
-                disabled={showCreateForm || showEditForm}
-                onClick={() => {
-                  setCreatingKind('relay');
+                disabled={dialogOpen}
+                onClick={(event) => {
+                  dialogTriggerRef.current = event.currentTarget;
                   setEditingChannelCode(null);
-                  setDeleteConfirmedFor(null);
+                  setCreatingKind('relay');
                 }}
                 title={messages.addRelayStation}
                 type="button"
@@ -345,9 +379,15 @@ export function ModelManagementSettingsCenter({
               </button>
             </header>
             <div className="sdkwork-model-management-group-list">
-              {relayChannels.length === 0 ? (
-                <p className="sdkwork-model-management-group-empty">{messages.emptyRelayStations}</p>
-              ) : relayChannels.map((channel) => renderSupplierRow(
+              {renderSupplierRow(
+                BIRDOODER_OFFICIAL_SUPPLIER_ID,
+                messages.officialSupplierLabel,
+                messages.officialSupplierDescription,
+                <Building2 size={17} />,
+                selectedSupplierId === BIRDOODER_OFFICIAL_SUPPLIER_ID,
+                messages.defaultSupplierTag,
+              )}
+              {relayChannels.map((channel) => renderSupplierRow(
                 channelIdentity(channel),
                 channel.name,
                 channel.description || channel.baseUrl,
@@ -359,14 +399,44 @@ export function ModelManagementSettingsCenter({
 
           <section className="sdkwork-model-management-group">
             <header className="sdkwork-model-management-group-header">
+              <h3>{messages.officialVendorsLabel}</h3>
+              <button
+                aria-label={messages.addOfficialSupplier}
+                disabled={dialogOpen}
+                onClick={(event) => {
+                  dialogTriggerRef.current = event.currentTarget;
+                  setEditingChannelCode(null);
+                  setCreatingKind('official');
+                }}
+                title={messages.addOfficialSupplier}
+                type="button"
+              >
+                <Plus aria-hidden="true" size={14} />
+              </button>
+            </header>
+            <div className="sdkwork-model-management-group-list">
+              {officialChannels.length === 0 ? (
+                <p className="sdkwork-model-management-group-empty">{messages.emptyOfficialSuppliers}</p>
+              ) : officialChannels.map((channel) => renderSupplierRow(
+                channelIdentity(channel),
+                channel.name,
+                channel.description || channel.baseUrl,
+                <Building2 size={17} />,
+                selectedSupplierId === channelIdentity(channel),
+              ))}
+            </div>
+          </section>
+
+          <section className="sdkwork-model-management-group">
+            <header className="sdkwork-model-management-group-header">
               <h3>{messages.customConfigsLabel}</h3>
               <button
                 aria-label={messages.addCustomConfig}
-                disabled={showCreateForm || showEditForm}
-                onClick={() => {
-                  setCreatingKind('custom');
+                disabled={dialogOpen}
+                onClick={(event) => {
+                  dialogTriggerRef.current = event.currentTarget;
                   setEditingChannelCode(null);
-                  setDeleteConfirmedFor(null);
+                  setCreatingKind('custom');
                 }}
                 title={messages.addCustomConfig}
                 type="button"
@@ -390,33 +460,7 @@ export function ModelManagementSettingsCenter({
       </aside>
 
       <main className="sdkwork-model-management-panel">
-        {showCreateForm || showEditForm ? (
-          <ModelManagementChannelForm
-            initialChannel={showEditForm ? selectedChannel : undefined}
-            kind={formKind}
-            messages={messages}
-            formMessages={formMessages}
-            models={models}
-            providerOptions={providerOptions}
-            onCancel={() => {
-              setCreatingKind(null);
-              setEditingChannelCode(null);
-              setDeleteConfirmedFor(null);
-              setDeleteErrorFor(null);
-            }}
-            onDelete={showEditForm && selectedChannel
-              ? () => handleDelete(selectedChannel)
-              : undefined}
-            onSave={onSaveChannel}
-            onSaved={(channelCode) => {
-              setSelectedSupplierId(channelCode);
-              setCreatingKind(null);
-              setEditingChannelCode(null);
-              setDeleteConfirmedFor(null);
-              setDeleteErrorFor(null);
-            }}
-          />
-        ) : isOfficialSupplier ? (
+        {isOfficialSupplier ? (
           <div className="sdkwork-model-management-official-panel">
             <header className="sdkwork-model-management-panel-header">
               <h2>{messages.officialSupplierLabel}</h2>
@@ -439,6 +483,7 @@ export function ModelManagementSettingsCenter({
             messages,
             selectedChannel.kind !== 'official',
             () => {
+              dialogTriggerRef.current = null;
               setEditingChannelCode(selectedSupplierId);
               setCreatingKind(null);
               setDeleteConfirmedFor(null);
@@ -454,6 +499,24 @@ export function ModelManagementSettingsCenter({
           <div className="sdkwork-model-management-empty">{messages.noSelection}</div>
         )}
       </main>
+
+      {dialogOpen ? (
+        <ModelAccessChannelConfigurationDialog
+          activeProviderId={activeProviderId}
+          initialChannel={editingChannel}
+          initialKind={creatingKind ?? undefined}
+          messages={formMessages}
+          models={models}
+          officialVendorPresets={officialPresets}
+          onClose={closeDialog}
+          onDelete={editingChannel ? handleDelete : undefined}
+          onSave={handleDialogSave}
+          open={dialogOpen}
+          providerOptions={providerOptions}
+          returnFocusRef={dialogTriggerRef}
+          vendorOptions={vendorOptions}
+        />
+      ) : null}
     </div>
   );
 }

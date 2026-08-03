@@ -6,7 +6,7 @@
   "catalogKey": "google/gemini-2.5-flash-image",
   "colorToken": "#0891b2",
   "contextTokens": 32768,
-  "description": "Gemini 2.5 Flash native image generation model optimized for speed and contextual understanding.",
+  "description": "Gemini 2.5 Flash Image (Nano Banana) shuts down on 2026-10-02; migrate to Nano Banana 2 (gemini-3.1-flash-image-preview). Kept for migration reference.",
   "displayName": "Gemini 2.5 Flash Image",
   "familyCode": "gemini-image",
   "inputModalities": [
@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 2200,
   "latencyP95Ms": 8000,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "maxInputTokens": 32768,
   "modelId": "gemini-2.5-flash-image",
   "outputModalities": [
@@ -24,12 +24,12 @@
   "primaryCapability": "image",
   "rankScore": "840.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image"
   },
   "strengths": [

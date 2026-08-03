@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "5.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "25.000000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "tierCode": "cache_write_5m",
@@ -62,7 +62,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "tierCode": "cache_write_1h",
@@ -79,7 +79,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.500000",
@@ -95,7 +95,7 @@
       "pricingScope": "plan",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "tierCode": "fast_mode",
@@ -112,7 +112,7 @@
       "pricingScope": "plan",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "tierCode": "fast_mode",

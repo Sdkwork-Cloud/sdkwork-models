@@ -7,7 +7,7 @@
   "catalogKey": "google/gemini-3.1-pro",
   "colorToken": "#4285f4",
   "contextTokens": 1048576,
-  "description": "Gemini 3.1 Pro is Google's latest production-ready pro-tier model for complex reasoning, coding, and multimodal tasks.",
+  "description": "Gemini 3.1 Pro preview-tier model for complex reasoning, coding, and multimodal tasks; still preview on the official API.",
   "displayName": "Gemini 3.1 Pro",
   "familyCode": "gemini",
   "inputModalities": [
@@ -16,7 +16,7 @@
     "audio",
     "video"
   ],
-  "lifecycle": "active",
+  "lifecycle": "preview",
   "maxInputTokens": 1048576,
   "modelId": "gemini-3.1-pro",
   "outputModalities": [
@@ -25,12 +25,12 @@
   "primaryCapability": "chat",
   "rankScore": "935.000000",
   "regionCode": "global",
-  "releaseStage": "active",
+  "releaseStage": "preview",
   "routingState": "enabled",
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/models"
   },
   "strengths": [

@@ -13,7 +13,7 @@
     "text"
   ],
   "lifecycle": "active",
-  "maxInputTokens": 123000,
+  "maxInputTokens": 119000,
   "maxOutputTokens": 65536,
   "modelId": "ernie-5.1",
   "outputModalities": [
@@ -27,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://cloud.baidu.com/doc/qianfan/s/wmh4sv6ya"
   },
   "strengths": [

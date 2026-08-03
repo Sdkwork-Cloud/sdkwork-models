@@ -5,14 +5,23 @@ Local contract index for `@sdkwork/models-pc-model-management`.
 The package owns the PC model-management settings center presentation. It is a
 split-pane settings surface:
 
-- **Left supplier list** — three groups: the default BirdCoder official
-  platform entry (plus any locally configured official channels), relay
-  stations, and custom configurations. The BirdCoder entry is selected by
-  default.
+- **Left supplier list** — three groups. The relay-stations group leads with
+  the default BirdCoder official relay entry (a single entry) followed by the
+  user's relay stations. The official-suppliers group lists only the official
+  supplier configurations the user added (never the vendor presets by
+  default); the custom-configurations group lists custom channels. The
+  BirdCoder entry is selected by default.
 - **Right configuration panel** — the BirdCoder entry shows the official
-  vendor presets read-only (vendor name, Base URL, protocol, models, default
-  model). Relay/custom channels show their configuration summary and switch to
-  an inline editing form; saving persists through the injected callback only.
+  vendor presets read-only as a grid (vendor name, Base URL, protocol,
+  models, default model) as the reference overview. Relay/custom channels
+  show their configuration summary. The panel is never replaced by a form and
+  uses the full available width.
+- **Create/edit dialog** — every group's "+" button opens the shared
+  model-access configuration dialog (`ModelAccessChannelConfigurationDialog`
+  from `@sdkwork/models-pc-picker`, the same dialog the chat surface uses)
+  positioned on that group's kind tab (official/relay/custom). Editing an
+  existing channel opens the same dialog with the channel's own kind. Saving
+  persists through the injected callback only.
 
 All data (official vendor presets, client-local channels, catalog models,
 Agent provider options, localized messages) and persistence callbacks are

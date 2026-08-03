@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.600000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.060000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.375000",
@@ -61,7 +61,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "2.400000",

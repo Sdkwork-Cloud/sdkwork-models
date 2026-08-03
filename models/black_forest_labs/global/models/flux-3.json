@@ -1,0 +1,50 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "image",
+    "video",
+    "audio"
+  ],
+  "catalogKey": "black_forest_labs/flux-3",
+  "colorToken": "#18181b",
+  "description": "FLUX 3 unified multimodal frontier model announced July 23, 2026 with image, video, audio, and action prediction in one architecture; gated early access with no public API pricing yet.",
+  "displayName": "FLUX.3",
+  "familyCode": "flux",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 240000,
+  "lifecycle": "preview",
+  "modelId": "flux-3",
+  "outputModalities": [
+    "image",
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "800.000000",
+  "regionCode": "global",
+  "releaseStage": "preview",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-08-03T00:00:00Z",
+    "sourceUrl": "https://docs.bfl.ai"
+  },
+  "strengths": [
+    "Unified multimodal",
+    "Text to video",
+    "Native audio",
+    "Robot action"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "vendorCode": "black_forest_labs",
+  "vendorName": "Black Forest Labs",
+  "winRate": "0.900000"
+}

@@ -3,7 +3,7 @@ import type { OfficialModelVendorPreset } from './agentModelAccessSelectorTypes'
 
 export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
   {
-    "baseUrl": "https://api.openai.com/v1",
+    "baseUrl": "https://api.birdcoder.com/v1",
     "channelName": "OpenAI",
     "protocol": "openai_compatible",
     "providerCode": "openai_direct",
@@ -69,12 +69,18 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
     "vendorName": "OpenAI"
   },
   {
-    "baseUrl": "https://api.anthropic.com",
+    "baseUrl": "https://api.birdcoder.com",
     "channelName": "Anthropic",
     "protocol": "anthropic_messages",
     "providerCode": "anthropic_direct",
     "providerDisplayName": "Anthropic direct",
     "models": [
+      {
+        "catalogKey": "anthropic/claude-fable-5",
+        "model": "claude-fable-5",
+        "displayName": "Claude Fable 5",
+        "sortOrder": 0
+      },
       {
         "catalogKey": "anthropic/claude-haiku-4-5",
         "model": "claude-haiku-4-5",
@@ -117,7 +123,7 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
     "vendorName": "Anthropic"
   },
   {
-    "baseUrl": "https://generativelanguage.googleapis.com",
+    "baseUrl": "https://api.birdcoder.com",
     "channelName": "Google",
     "protocol": "google_gemini",
     "providerCode": "google_ai_direct",
@@ -134,6 +140,12 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
         "model": "gemini-3.1-flash-lite-preview",
         "displayName": "Gemini 3.1 Flash Lite Preview",
         "sortOrder": 7
+      },
+      {
+        "catalogKey": "google/gemini-3.1-flash-lite",
+        "model": "gemini-3.1-flash-lite",
+        "displayName": "Gemini 3.1 Flash Lite",
+        "sortOrder": 8
       },
       {
         "catalogKey": "google/gemini-3.1-flash-live-preview",
@@ -158,6 +170,12 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
         "model": "gemini-3.5-flash-lite",
         "displayName": "Gemini 3.5 Flash Lite",
         "sortOrder": 13
+      },
+      {
+        "catalogKey": "google/gemini-3.5-flash",
+        "model": "gemini-3.5-flash",
+        "displayName": "Gemini 3.5 Flash",
+        "sortOrder": 14
       },
       {
         "catalogKey": "google/gemini-3.6-flash",
@@ -331,25 +349,25 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
         "catalogKey": "minimax/MiniMax-M2.5-highspeed",
         "model": "MiniMax-M2.5-highspeed",
         "displayName": "MiniMax M2.5 Highspeed",
-        "sortOrder": 5
+        "sortOrder": 6
       },
       {
         "catalogKey": "minimax/MiniMax-M2.5",
         "model": "MiniMax-M2.5",
         "displayName": "MiniMax M2.5",
-        "sortOrder": 6
+        "sortOrder": 7
       },
       {
         "catalogKey": "minimax/MiniMax-M2.7-highspeed",
         "model": "MiniMax-M2.7-highspeed",
         "displayName": "MiniMax M2.7 Highspeed",
-        "sortOrder": 7
+        "sortOrder": 8
       },
       {
         "catalogKey": "minimax/MiniMax-M2.7",
         "model": "MiniMax-M2.7",
         "displayName": "MiniMax M2.7",
-        "sortOrder": 8
+        "sortOrder": 9
       }
     ],
     "sortOrder": 10,
@@ -418,18 +436,6 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
     "providerDisplayName": "Tencent Cloud",
     "models": [
       {
-        "catalogKey": "tencent/hunyuan-2.0-instruct-20251111",
-        "model": "hunyuan-2.0-instruct-20251111",
-        "displayName": "Hunyuan 2.0 Instruct",
-        "sortOrder": 0
-      },
-      {
-        "catalogKey": "tencent/hunyuan-turbos-latest",
-        "model": "hunyuan-turbos-latest",
-        "displayName": "Hunyuan Turbos Latest",
-        "sortOrder": 2
-      },
-      {
         "catalogKey": "tencent/hy3",
         "model": "hy3",
         "displayName": "Hy3",
@@ -483,12 +489,6 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
     "providerCode": "xiaomi.direct",
     "providerDisplayName": "Xiaomi MiMo",
     "models": [
-      {
-        "catalogKey": "xiaomi/mimo-v2-flash",
-        "model": "mimo-v2-flash",
-        "displayName": "MiMo V2 Flash",
-        "sortOrder": 0
-      },
       {
         "catalogKey": "xiaomi/mimo-v2.5-pro-fp4-dflash",
         "model": "mimo-v2.5-pro-fp4-dflash",

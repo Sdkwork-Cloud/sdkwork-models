@@ -5,7 +5,7 @@
   ],
   "catalogKey": "luma_ai/ray-flash-2",
   "colorToken": "#6366f1",
-  "description": "Luma Ray 2 Flash Dream Machine model for faster and lower-cost video generation.",
+  "description": "Luma Ray 2 Flash Dream Machine model officially deprecated; use Ray 3.2 for new projects. Kept for migration reference.",
   "displayName": "Ray 2 Flash",
   "familyCode": "luma-video",
   "inputModalities": [
@@ -14,7 +14,7 @@
   ],
   "latencyP50Ms": 30000,
   "latencyP95Ms": 90000,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "modelId": "ray-flash-2",
   "outputModalities": [
     "video"
@@ -22,12 +22,12 @@
   "primaryCapability": "video",
   "rankScore": "800.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://docs.lumalabs.ai/docs/video-generation"
   },
   "strengths": [

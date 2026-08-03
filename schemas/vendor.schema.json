@@ -131,12 +131,15 @@
     "capability": {
       "enum": [
         "chat",
+        "reasoning",
+        "code",
         "embedding",
         "image",
         "audio",
         "music",
         "sfx",
         "video",
+        "streaming",
         "rerank",
         "tool"
       ]

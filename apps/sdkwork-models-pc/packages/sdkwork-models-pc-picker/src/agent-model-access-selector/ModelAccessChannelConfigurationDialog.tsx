@@ -50,6 +50,9 @@ import {
 export interface ModelAccessChannelConfigurationDialogProps {
   activeProviderId: string;
   initialChannel?: ModelAccessChannel;
+  /** Create-mode entry kind; ignored when an initial channel is edited.
+   *  Defaults to 'official' so the chat surface keeps its current behavior. */
+  initialKind?: ModelAccessChannelKind;
   messages: AgentModelAccessSelectorMessages;
   onClose: () => void;
   onGetApiKey?: (context: ModelAccessApiKeyRequestContext) => void;
@@ -82,10 +85,11 @@ function createInitialDraft(
   initialChannel: ModelAccessChannel | undefined,
   providerOptions: readonly AgentProviderOption[],
   officialCatalog: readonly OfficialModelVendorCatalogEntry[],
+  initialKind: ModelAccessChannelKind = 'official',
 ): ModelAccessChannelConfigurationDraft {
   const baseDraft = initialChannel
     ? createModelAccessChannelConfigurationDraft(initialChannel)
-    : createEmptyModelAccessChannelConfigurationDraft(providerOptions);
+    : createEmptyModelAccessChannelConfigurationDraft(providerOptions, initialKind);
   if (baseDraft.kind !== 'official') {
     return baseDraft;
   }
@@ -99,6 +103,7 @@ function createInitialDraft(
 export function ModelAccessChannelConfigurationDialog({
   activeProviderId,
   initialChannel,
+  initialKind,
   messages,
   onClose,
   onGetApiKey,
@@ -128,7 +133,7 @@ export function ModelAccessChannelConfigurationDialog({
     [officialCatalog],
   );
   const [draft, setDraft] = useState<ModelAccessChannelConfigurationDraft>(() => (
-    createInitialDraft(initialChannel, providerOptions, officialCatalog)
+    createInitialDraft(initialChannel, providerOptions, officialCatalog, initialKind)
   ));
   const [activeOfferingIndex, setActiveOfferingIndex] = useState(0);
   const [apiKeyVisible, setApiKeyVisible] = useState(false);
@@ -167,7 +172,7 @@ export function ModelAccessChannelConfigurationDialog({
     previousActiveElementRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    setDraft(createInitialDraft(initialChannel, providerOptions, officialCatalog));
+    setDraft(createInitialDraft(initialChannel, providerOptions, officialCatalog, initialKind));
     setActiveOfferingIndex(0);
     setApiKeyVisible(false);
     setSubmitted(false);
@@ -182,7 +187,7 @@ export function ModelAccessChannelConfigurationDialog({
       window.cancelAnimationFrame(frame);
       (returnFocusRef.current ?? previousActiveElementRef.current)?.focus();
     };
-  }, [initialChannel, officialCatalog, open, providerOptions, returnFocusRef]);
+  }, [initialChannel, initialKind, officialCatalog, open, providerOptions, returnFocusRef]);
 
   useEffect(() => {
     if (!open) {

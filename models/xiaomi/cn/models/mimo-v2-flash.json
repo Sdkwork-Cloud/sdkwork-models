@@ -6,7 +6,7 @@
   "catalogKey": "xiaomi/mimo-v2-flash",
   "colorToken": "#FF6900",
   "contextTokens": 262144,
-  "description": "Xiaomi MiMo V2 Flash - High-performance MoE model with 309B total / 15B active parameters, optimized for speed and cost efficiency.",
+  "description": "Xiaomi MiMo V2 Flash model retired on 2026-06-30; requests route to MiMo V2.5. Kept for migration reference.",
   "displayName": "MiMo V2 Flash",
   "familyCode": "mimo-v2",
   "inputModalities": [
@@ -14,7 +14,7 @@
   ],
   "latencyP50Ms": 350,
   "latencyP95Ms": 1200,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "maxInputTokens": 262144,
   "maxOutputTokens": 65536,
   "modelId": "mimo-v2-flash",
@@ -24,12 +24,12 @@
   "primaryCapability": "chat",
   "rankScore": "980.000000",
   "regionCode": "cn",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://mimo.xiaomi.com"
   },
   "strengths": [

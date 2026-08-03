@@ -6,14 +6,14 @@
   "catalogKey": "anthropic/claude-mythos-5",
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
-  "description": "Project Glasswing limited-availability Mythos-class model. Not generally available on the public Claude API.",
+  "description": "Project Glasswing limited-availability Mythos-class model. Active on the official catalog but restricted to approved organizations; not generally available on the public Claude API.",
   "displayName": "Claude Mythos 5",
   "familyCode": "claude",
   "inputModalities": [
     "text",
     "image"
   ],
-  "lifecycle": "catalog_only",
+  "lifecycle": "preview",
   "maxInputTokens": 1000000,
   "maxOutputTokens": 128000,
   "modelId": "claude-mythos-5",
@@ -26,9 +26,9 @@
   "releaseStage": "preview",
   "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "hidden",
+  "shelfState": "listed",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
   },
   "strengths": [

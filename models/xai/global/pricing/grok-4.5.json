@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "up_to_200k",
@@ -30,7 +30,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "up_to_200k",
@@ -47,7 +47,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "up_to_200k",
@@ -64,7 +64,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "over_200k",
@@ -81,7 +81,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "over_200k",
@@ -98,7 +98,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "tierCode": "over_200k",

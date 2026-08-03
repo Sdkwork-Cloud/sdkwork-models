@@ -3,13 +3,14 @@
  * Shared capability and pricing alignment rules for sdkwork-models catalog sync.
  */
 
-export const CHAT_LIKE_CAPABILITIES = new Set(["chat", "reasoning", "tool"]);
-export const GENERATIVE_MEDIA_CAPABILITIES = new Set(["image", "video", "music", "sfx"]);
+export const CHAT_LIKE_CAPABILITIES = new Set(["chat", "reasoning", "code", "tool"]);
+export const GENERATIVE_MEDIA_CAPABILITIES = new Set(["image", "video", "music", "sfx", "streaming"]);
 
 /** Meter modalities considered valid per primary capability (plus api/* fallback meters). */
 export const ALLOWED_METER_MODALITIES_BY_CAPABILITY = {
   chat: new Set(["text", "tool", "image", "audio", "video"]),
   reasoning: new Set(["text", "tool", "image", "audio", "video"]),
+  code: new Set(["text", "tool", "image", "audio", "video"]),
   tool: new Set(["text", "tool", "image", "audio", "video"]),
   embedding: new Set(["embedding", "text"]),
   image: new Set(["image", "text"]),
@@ -17,6 +18,7 @@ export const ALLOWED_METER_MODALITIES_BY_CAPABILITY = {
   music: new Set(["audio", "music", "api"]),
   sfx: new Set(["audio", "sfx", "api"]),
   video: new Set(["video", "api", "text", "image", "audio"]),
+  streaming: new Set(["video", "audio", "text", "image", "api"]),
   rerank: new Set(["rerank", "text"]),
 };
 

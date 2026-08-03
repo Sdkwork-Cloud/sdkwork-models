@@ -15,7 +15,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "5.000000",
@@ -33,7 +33,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "7.000000",
@@ -49,7 +49,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "30.000000",

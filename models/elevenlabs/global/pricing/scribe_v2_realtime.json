@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "0.001",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://elevenlabs.io/pricing/api"
       },
       "unitPrice": "0.006500",

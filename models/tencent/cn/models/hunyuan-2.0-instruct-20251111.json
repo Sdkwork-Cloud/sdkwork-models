@@ -6,13 +6,13 @@
   "catalogKey": "tencent/hunyuan-2.0-instruct-20251111",
   "colorToken": "#0052d9",
   "contextTokens": 128000,
-  "description": "Tencent HY 2.0 Instruct model with enhanced instruction following, multi-turn dialogue, literary creation, and code capabilities.",
+  "description": "Tencent HY 2.0 Instruct model shut down on 2026-06-26 per official announcement; migrate to Hunyuan 3 (hy3). Kept for migration reference.",
   "displayName": "Hunyuan 2.0 Instruct",
   "familyCode": "hunyuan",
   "inputModalities": [
     "text"
   ],
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "maxInputTokens": 128000,
   "maxOutputTokens": 16384,
   "modelId": "hunyuan-2.0-instruct-20251111",
@@ -22,12 +22,12 @@
   "primaryCapability": "chat",
   "rankScore": "845.000000",
   "regionCode": "cn",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-07-26T00:00:00Z",
+    "observedAt": "2026-08-03T00:00:00Z",
     "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
   },
   "strengths": [

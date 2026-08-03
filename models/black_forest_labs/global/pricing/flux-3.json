@@ -1,0 +1,26 @@
+{
+  "catalogKey": "black_forest_labs/flux-3",
+  "currency": "USD",
+  "modelId": "flux-3",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-23T00:00:00Z",
+      "meterCode": "api_request",
+      "minimumQuantity": "0",
+      "priceId": "bfl-flux-3-api-request",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-03T00:00:00Z",
+        "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
+      },
+      "unitPrice": "0.000000",
+      "unitSize": "1"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "black_forest_labs"
+}

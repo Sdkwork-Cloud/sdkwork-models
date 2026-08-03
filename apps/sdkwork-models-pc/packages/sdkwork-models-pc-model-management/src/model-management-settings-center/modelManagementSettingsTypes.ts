@@ -23,12 +23,17 @@ export interface ModelManagementSettingsMessages {
   description: string;
   officialSupplierLabel: string;
   officialSupplierDescription: string;
+  /** Short badge shown next to the default official relay station entry. */
+  defaultSupplierTag: string;
   relayStationsLabel: string;
   customConfigsLabel: string;
   addRelayStation: string;
   addCustomConfig: string;
+  /** Opens the shared dialog on the official kind tab. */
+  addOfficialSupplier: string;
   emptyRelayStations: string;
   emptyCustomConfigs: string;
+  emptyOfficialSuppliers: string;
   officialVendorsLabel: string;
   officialVendorProtocol: string;
   officialVendorDefaultModel: string;

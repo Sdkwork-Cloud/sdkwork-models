@@ -176,7 +176,7 @@ test('fallback official channels cover every catalog vendor with chat models', (
   const openAiChannel = channels.find((channel) => channel.id === 'official.openai');
   assert.ok(openAiChannel);
   assert.ok((openAiChannel.offerings[0]?.models.length ?? 0) > 0);
-  assert.equal(openAiChannel?.baseUrl, 'https://api.openai.com/v1');
+  assert.equal(openAiChannel?.baseUrl, 'https://api.birdcoder.com/v1');
   assert.equal(openAiChannel?.isCustom, false);
   // Generated fallback channels are marked so the picker can hide them from
   // the channel list while keeping them for model-selection resolution.

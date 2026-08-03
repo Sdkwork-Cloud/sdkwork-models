@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "0.800000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-07-26T00:00:00Z",
+        "observedAt": "2026-08-03T00:00:00Z",
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "3.200000",

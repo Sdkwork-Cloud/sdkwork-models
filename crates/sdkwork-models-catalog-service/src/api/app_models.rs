@@ -2499,7 +2499,7 @@ mod tests {
         let providers = official_provider_definitions().expect("valid provider overlay");
         assert_eq!(providers.len(), 3);
         assert_eq!(providers[0].vendor_code, "openai");
-        assert_eq!(providers[0].base_url, "https://api.openai.com/v1");
+        assert_eq!(providers[0].base_url, "https://api.birdcoder.com/v1");
         assert_eq!(providers[1].vendor_code, "anthropic");
         assert_eq!(providers[2].vendor_code, "google");
     }
@@ -2509,7 +2509,7 @@ mod tests {
         let credential_body = br#"{
             "name":"OpenAI",
             "kind":"official",
-            "baseUrl":"https://api.openai.com/v1",
+            "baseUrl":"https://api.birdcoder.com/v1",
             "offerings":[{"vendorCode":"openai","vendorName":"OpenAI","modelIds":["gpt-5"]}],
             "defaultVendorCode":"openai",
             "defaultModelId":"gpt-5",

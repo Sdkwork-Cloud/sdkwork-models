@@ -1042,13 +1042,16 @@ fn build_create_command(
             "default model fields require resourceType model_access_channel".to_owned(),
         ));
     }
-    let access_channel_kind =
-        normalize_access_channel_kind(request.access_channel_kind, is_access_channel, true)?;
-    let base_url = normalize_base_url(request.base_url, is_access_channel, true)?;
+    let access_channel_kind = normalize_access_channel_kind(
+        request.access_channel_kind,
+        is_access_channel,
+        is_access_channel,
+    )?;
+    let base_url = normalize_base_url(request.base_url, is_access_channel, is_access_channel)?;
     let supported_agent_provider_ids = normalize_supported_agent_provider_ids(
         request.supported_agent_provider_ids,
         is_access_channel,
-        true,
+        is_access_channel,
     )?;
     Ok(CreateAdminAiResourceCommand {
         subject,

@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "ray-2",
+      "defaultModel": "ray-3.2",
       "displayName": "Dream Machine",
       "familyCode": "luma-video",
       "familyType": "video",
