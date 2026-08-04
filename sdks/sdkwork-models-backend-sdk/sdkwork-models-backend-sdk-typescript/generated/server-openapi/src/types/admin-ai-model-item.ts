@@ -1,6 +1,6 @@
 import type { AdminAiModelRegionPrice } from './admin-ai-model-region-price';
 
-/** Admin ai model item schema exposed by Claw Router. */
+/** Admin ai model item schema exposed by Cloud Router. */
 export interface AdminAiModelItem {
   /** Api format field on admin ai model item. */
   apiFormat: string | null;

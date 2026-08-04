@@ -30,6 +30,6 @@ pnpm run topology:validate
 
 ## PC Browser Bundle
 
-The catalog explorer ships from `apps/sdkwork-models-pc/`. Admin libraries are composed into Claw Router PC for production operator workflows.
+The catalog explorer ships from `apps/sdkwork-models-pc/`. Admin libraries are composed into Cloud Router PC for production operator workflows.
 
 Per-application `deployments/deploy.yaml` will be added when SDKWork Deploy Server publication is enabled for this product.

@@ -7,4 +7,4 @@ This directory is the SDK boundary owned by `sdkwork-models`.
   Flutter.
 
 Catalog HTTP APIs, database import, and RPC services are owned by consumer applications such as
-ClawRouter. This repository intentionally does not publish OpenAPI-generated HTTP SDK families.
+CloudRouter. This repository intentionally does not publish OpenAPI-generated HTTP SDK families.

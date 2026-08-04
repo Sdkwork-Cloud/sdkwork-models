@@ -18,7 +18,7 @@ use crate::admin_ai_resource_hierarchy::{
     hierarchy_node_schema, resource_code_is_owned, validate_hierarchy_command,
 };
 use crate::routing_config_change::{record_sqlite_ai_routing_config_change, AiRoutingConfigChange};
-use crate::runtime_id::next_claw_runtime_id;
+use crate::runtime_id::next_cloud_runtime_id;
 
 const AI_RESOURCE_TARGET_TYPE: i32 = 91;
 const MAX_RESOURCE_GROUP_MEMBERS: i64 = 512;
@@ -1891,7 +1891,7 @@ async fn upsert_hierarchy_resource(
     .bind(hierarchy_node_schema(node))
     .bind(node.description.as_deref())
     .bind(node.sort_order)
-    .bind(next_claw_runtime_id("ai_resource")?)
+    .bind(next_cloud_runtime_id("ai_resource")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to upsert AI resource hierarchy node", error))
@@ -2094,7 +2094,7 @@ async fn insert_ai_resource(
     tx: &mut Transaction<'_, Sqlite>,
     command: &CreateAdminAiResourceCommand,
 ) -> DomainResult<i64> {
-    let resource_id = next_claw_runtime_id("ai_resource")?;
+    let resource_id = next_cloud_runtime_id("ai_resource")?;
     sqlx::query(
         r#"
         INSERT INTO ai_resource
@@ -2132,7 +2132,7 @@ async fn insert_ai_resource_group(
     tx: &mut Transaction<'_, Sqlite>,
     command: &CreateAdminAiResourceGroupCommand,
 ) -> DomainResult<i64> {
-    let group_id = next_claw_runtime_id("ai_resource_group")?;
+    let group_id = next_cloud_runtime_id("ai_resource_group")?;
     sqlx::query(
         r#"
         INSERT INTO ai_resource_group
@@ -2490,7 +2490,7 @@ async fn insert_members(
         .bind(&resolved_member.child_resource_group_code)
         .bind(&member.member_role)
         .bind(member.sort_order)
-        .bind(next_claw_runtime_id("ai_resource_group_item")?)
+        .bind(next_cloud_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource member", error))?;
@@ -2649,7 +2649,7 @@ async fn ensure_resource_group(
         return Ok(group_id);
     }
 
-    let group_id = next_claw_runtime_id("ai_resource_group")?;
+    let group_id = next_cloud_runtime_id("ai_resource_group")?;
     let result = sqlx::query(
         r#"
         INSERT INTO ai_resource_group
@@ -3447,7 +3447,7 @@ async fn insert_group_resource_members(
         .bind(&member.resource_code)
         .bind(&member.item_role)
         .bind(member.sort_order)
-        .bind(next_claw_runtime_id("ai_resource_group_item")?)
+        .bind(next_cloud_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource group member", error))?;
@@ -3642,7 +3642,7 @@ async fn insert_audit_log(
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         "#,
     )
-    .bind(next_claw_runtime_id("ops_audit_log")?)
+    .bind(next_cloud_runtime_id("ops_audit_log")?)
     .bind(audit_log_uuid)
     .bind(tenant_id)
     .bind(organization_id)

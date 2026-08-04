@@ -62,12 +62,12 @@ This document records the **verified** alignment posture for `sdkwork-models`. I
 | Observability | Aligned | Request-scoped `traceId` on success and error via `WebRequestContext`; structured tracing on admin model list |
 | Supply-chain SBOM | Deferred | `security.sbomRequired: false` in `sdkwork.workflow.json` until release gate enables evidence |
 | PC browser catalog | Aligned | `apps/sdkwork-models-pc/` standalone catalog explorer via `@sdkwork/models` |
-| PC admin UI | Composed | Admin packages (`sdkwork-models-pc-admin-*`) mount in Claw Router host per `APP_PC_ARCHITECTURE_SPEC` |
+| PC admin UI | Composed | Admin packages (`sdkwork-models-pc-admin-*`) mount in Cloud Router host per `APP_PC_ARCHITECTURE_SPEC` |
 | PostgreSQL contention evidence | Open | Requires an isolated `SDKWORK_DATABASE_URL` to retain concurrent writer, retryable SQLSTATE, deadlock/serialization, and pool saturation evidence |
 
 ## Composed Host Integration
 
-Claw Router mounts catalog routes locally. Admin PC packages (`sdkwork-models-pc-admin-*`) are **composed workspaces** requiring `@sdkwork/clawrouter-pc-commons` at runtime.
+Cloud Router mounts catalog routes locally. Admin PC packages (`sdkwork-models-pc-admin-*`) are **composed workspaces** requiring `@sdkwork/cloudrouter-pc-commons` at runtime.
 
 Standalone installs use `.npmrc` (`auto-install-peers=false`) so peer packages resolve from the composed host.
 

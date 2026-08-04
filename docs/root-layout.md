@@ -25,7 +25,7 @@ It owns versioned model vendor JSON, pricing evidence, catalog indexes, release 
 | `models/` | Vendor-region model facts, pricing files, generated indexes |
 | `schemas/` | JSON Schema contracts |
 | `sources/` | Official source evidence and verification policy |
-| `overlays/` | Consumer-specific overlays such as ClawRouter routing |
+| `overlays/` | Consumer-specific overlays such as CloudRouter routing |
 | `releases/` | Immutable catalog release manifests |
 | `specs/` | Repository component contract |
 | `.sdkwork/` | Source-controlled workspace metadata |

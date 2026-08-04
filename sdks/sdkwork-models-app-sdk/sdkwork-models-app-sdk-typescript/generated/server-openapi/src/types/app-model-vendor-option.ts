@@ -1,4 +1,4 @@
-/** App model vendor option schema exposed by Claw Router. */
+/** App model vendor option schema exposed by Cloud Router. */
 export interface AppModelVendorOption {
   /** Code field on app model vendor option. */
   code: string;

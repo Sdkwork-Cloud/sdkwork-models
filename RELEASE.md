@@ -16,22 +16,22 @@ git push -u origin main
 Do not run the push command from restricted automation. Run it from a release
 host or maintainer workstation with network access and GitHub credentials.
 
-## ClawRouter Submodule Setup
+## CloudRouter Submodule Setup
 
-ClawRouter should mount this repository at:
+CloudRouter should mount this repository at:
 
 ```text
 data/sdkwork-models
 ```
 
-Add or refresh the submodule from the ClawRouter application root:
+Add or refresh the submodule from the CloudRouter application root:
 
 ```powershell
 git submodule add https://github.com/Sdkwork-Cloud/sdkwork-models.git data/sdkwork-models
 git submodule update --init --recursive
 ```
 
-To update ClawRouter to a newer catalog:
+To update CloudRouter to a newer catalog:
 
 ```powershell
 cd data/sdkwork-models
@@ -63,10 +63,10 @@ must satisfy `schemas/official-verification-policy.schema.json`; every
 is bidirectional: every source declaration with `verificationStatus:
 "official_verified"` must also be present in `requiredVerifiedVendorRegions`.
 
-From ClawRouter, also run:
+From CloudRouter, also run:
 
 ```powershell
-cargo test -p sdkwork-clawrouter-router-service --test database_installer --offline
+cargo test -p sdkwork-cloudrouter-router-service --test database_installer --offline
 ```
 
 ## Versioning

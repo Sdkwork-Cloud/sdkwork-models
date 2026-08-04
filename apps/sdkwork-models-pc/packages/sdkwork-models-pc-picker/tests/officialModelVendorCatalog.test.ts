@@ -91,7 +91,7 @@ test('generated official presets cover every catalog vendor with chat models', (
   assert.ok(baidu);
   assert.equal(baidu.baseUrl, '');
   assert.ok((baidu.models?.length ?? 0) > 0);
-  // Vendors without a direct ClawRouter provider keep an empty Base URL so the
+  // Vendors without a direct CloudRouter provider keep an empty Base URL so the
   // user supplies the official endpoint during configuration.
   const deepSeek = SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS.find((preset) => (
     preset.vendorCode === 'deepseek'

@@ -20,7 +20,7 @@ use crate::admin_ai_resource_hierarchy::{
 use crate::routing_config_change::{
     record_postgres_ai_routing_config_change, AiRoutingConfigChange,
 };
-use crate::runtime_id::next_claw_runtime_id;
+use crate::runtime_id::next_cloud_runtime_id;
 
 const AI_RESOURCE_TARGET_TYPE: i32 = 91;
 const MAX_RESOURCE_GROUP_MEMBERS: i64 = 512;
@@ -1802,7 +1802,7 @@ async fn upsert_hierarchy_resource(
     .bind(hierarchy_node_schema(node))
     .bind(node.description.as_deref())
     .bind(node.sort_order)
-    .bind(next_claw_runtime_id("ai_resource")?)
+    .bind(next_cloud_runtime_id("ai_resource")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to upsert AI resource hierarchy node", error))
@@ -2031,7 +2031,7 @@ async fn insert_ai_resource(
     .bind(ai_resource_schema_for_create(command))
     .bind(command.description.as_deref())
     .bind(command.sort_order)
-    .bind(next_claw_runtime_id("ai_resource")?)
+    .bind(next_cloud_runtime_id("ai_resource")?)
     .fetch_one(&mut **tx)
     .await
         .map_err(|error| store_error("failed to create AI resource", error))
@@ -2062,7 +2062,7 @@ async fn insert_ai_resource_group(
     .bind(&command.selection_mode)
     .bind(command.description.as_deref())
     .bind(command.sort_order)
-    .bind(next_claw_runtime_id("ai_resource_group")?)
+    .bind(next_cloud_runtime_id("ai_resource_group")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create AI resource group", error))
@@ -2507,7 +2507,7 @@ async fn insert_group_resource_members(
         .bind(&member.resource_code)
         .bind(&member.item_role)
         .bind(member.sort_order)
-        .bind(next_claw_runtime_id("ai_resource_group_item")?)
+        .bind(next_cloud_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource group member", error))?;
@@ -2633,7 +2633,7 @@ async fn insert_members(
         .bind(&resolved_member.child_resource_group_code)
         .bind(&member.member_role)
         .bind(member.sort_order)
-        .bind(next_claw_runtime_id("ai_resource_group_item")?)
+        .bind(next_cloud_runtime_id("ai_resource_group_item")?)
         .execute(&mut **tx)
         .await
         .map_err(|error| store_error("failed to upsert AI resource member", error))?;
@@ -2811,7 +2811,7 @@ async fn ensure_resource_group(
     .bind(tenant_id)
     .bind(organization_id)
     .bind(group_uuid)
-    .bind(next_claw_runtime_id("ai_resource_group")?)
+    .bind(next_cloud_runtime_id("ai_resource_group")?)
     .fetch_one(&mut **tx)
     .await
     .map_err(|error| store_error("failed to create resource group", error))
@@ -3514,7 +3514,7 @@ async fn insert_audit_log(
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb)
         "#,
     )
-    .bind(next_claw_runtime_id("ops_audit_log")?)
+    .bind(next_cloud_runtime_id("ops_audit_log")?)
     .bind(audit_log_uuid)
     .bind(tenant_id)
     .bind(organization_id)

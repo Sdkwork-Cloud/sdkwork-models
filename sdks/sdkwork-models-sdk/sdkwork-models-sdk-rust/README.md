@@ -12,7 +12,7 @@ sdkwork-models
 ## Runtime Targets
 
 - Rust 2021 edition or newer
-- ClawRouter importer
+- CloudRouter importer
 - CLI tooling
 - server and desktop applications
 
@@ -23,7 +23,7 @@ legal jurisdiction.
 `load_catalog(path_or_url)` reads `models/index.json` and loads the declared
 `modelFiles` and `pricingFiles` instead of scanning unpublished directories.
 `load_bundled_catalog()` resolves the crate-local catalog snapshot used by the
-ClawRouter importer.
+CloudRouter importer.
 
 ## Required Public API
 
@@ -86,10 +86,10 @@ Errors and validation issues must distinguish:
 
 Validation issues must expose stable machine-readable codes.
 
-## ClawRouter Boundary
+## CloudRouter Boundary
 
-ClawRouter may depend on this crate for import. This crate must not depend on
-ClawRouter crates.
+CloudRouter may depend on this crate for import. This crate must not depend on
+CloudRouter crates.
 
 ## SDKWork Documentation Contract
 

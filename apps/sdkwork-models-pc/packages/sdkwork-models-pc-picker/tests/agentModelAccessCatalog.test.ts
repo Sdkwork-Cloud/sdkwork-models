@@ -167,7 +167,7 @@ test('fallback official channels cover every catalog vendor with chat models', (
     anthropicModel,
   ]);
   // The generated presets include every catalog vendor that publishes chat
-  // models; vendors without a direct ClawRouter provider keep an empty base
+  // models; vendors without a direct CloudRouter provider keep an empty base
   // URL for manual configuration.
   assert.equal(channels.length, 15);
   const alibabaChannel = channels.find((channel) => channel.id === 'official.alibaba');

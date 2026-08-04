@@ -1,4 +1,4 @@
-// Generated from docs/schema-registry/sdkwork-clawrouter.tables.yaml.
+// Generated from docs/schema-registry/sdkwork-cloudrouter.tables.yaml.
 // Do not edit by hand; update Schema Registry and regenerate.
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

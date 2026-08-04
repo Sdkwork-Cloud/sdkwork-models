@@ -18,7 +18,7 @@ Catalog dictionary and public model facts imported from the JSON catalog:
 - `ai_model_voice`, `ai_model_voice_binding` (TTS speaker catalog and model bindings)
 - `ai_model_video_profile` (video generation profile catalog per video model)
 
-Claw Router retains tenant routing overlays (`ai_model_mapping_*`), gateway channels, and tenant pricing plans.
+Cloud Router retains tenant routing overlays (`ai_model_mapping_*`), gateway channels, and tenant pricing plans.
 
 ## Initialization state
 

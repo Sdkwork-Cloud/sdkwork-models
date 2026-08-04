@@ -15,7 +15,7 @@ chrono = { version = "0.4", default-features = false, features = ["clock", "std"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio.workspace = true
-sdkwork-claw-http.workspace = true
+sdkwork-cloudrouter-http.workspace = true
 sdkwork-models.workspace = true
 sdkwork_models_contract_service.workspace = true
 sdkwork-utils-rust.workspace = true

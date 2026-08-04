@@ -11,10 +11,10 @@ import {
   readString,
   readStringArray,
   type ApiRecord,
-} from '@sdkwork/clawroutes-pc-commons/api-result';
-import { createIdempotencyParams } from '@sdkwork/clawroutes-pc-commons/idempotency';
-import { getModelsBackendSdkClient } from '@sdkwork/clawroutes-pc-commons/sdk-clients';
-import { requiredSafePathSegment } from '@sdkwork/clawroutes-pc-commons/sdk-request-boundary';
+} from '@sdkwork/cloudroutes-pc-commons/api-result';
+import { createIdempotencyParams } from '@sdkwork/cloudroutes-pc-commons/idempotency';
+import { getModelsBackendSdkClient } from '@sdkwork/cloudroutes-pc-commons/sdk-clients';
+import { requiredSafePathSegment } from '@sdkwork/cloudroutes-pc-commons/sdk-request-boundary';
 import type {
   AdminAiModelCreateRequest,
   AdminAiModelUpdateRequest,

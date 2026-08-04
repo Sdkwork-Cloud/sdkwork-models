@@ -1,4 +1,4 @@
-/** Model rankings source schema exposed by Claw Router. */
+/** Model rankings source schema exposed by Cloud Router. */
 export interface ModelRankingsSource {
   /** Cache max age seconds field on model rankings source. */
   cacheMaxAgeSeconds: number;

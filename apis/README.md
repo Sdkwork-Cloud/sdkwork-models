@@ -31,6 +31,6 @@ pnpm run sdk:build
 
 Responses include `totalCount` for server-side pagination. Admin consumers must not re-filter or re-slice pages client-side.
 
-The export tool injects `model_types` into owner OpenAPI until ClawRouter route metadata declares it upstream.
+The export tool injects `model_types` into owner OpenAPI until CloudRouter route metadata declares it upstream.
 
-Composed hosts such as `sdkwork-clawrouter` must consume generated SDK families and declare dependency surfaces in `specs/dependency-api-surfaces.json`; hosts must not duplicate catalog admin handlers or DDL.
+Composed hosts such as `sdkwork-cloudrouter` must consume generated SDK families and declare dependency surfaces in `specs/dependency-api-surfaces.json`; hosts must not duplicate catalog admin handlers or DDL.

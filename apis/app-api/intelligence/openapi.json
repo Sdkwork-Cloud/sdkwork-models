@@ -156,7 +156,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -243,7 +243,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -478,7 +478,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-models/src/modelService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-models/src/modelService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -620,7 +620,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "voices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -726,7 +726,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVoices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -877,7 +877,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "videoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -983,7 +983,7 @@
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVideoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
-        "x-source-file": "apps/sdkwork-clawrouter-pc/packages/sdkwork-clawrouter-pc-rankings/src/rankingService.ts",
+        "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
         "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
@@ -1285,7 +1285,7 @@
     },
     "/app/v3/api/ai/model_access_channel_presets": {
       "get": {
-        "description": "List official provider presets from the clawrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.",
+        "description": "List official provider presets from the cloudrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.",
         "operationId": "modelAccessChannelPresets.list",
         "parameters": [],
         "responses": {
@@ -1387,7 +1387,7 @@
     "schemas": {
       "AppModelCatalogGroup": {
         "additionalProperties": false,
-        "description": "App model catalog group schema exposed by Claw Router.",
+        "description": "App model catalog group schema exposed by Cloud Router.",
         "properties": {
           "key": {
             "description": "Key field on app model catalog group.",
@@ -1417,7 +1417,7 @@
       },
       "AppModelCatalogItem": {
         "additionalProperties": false,
-        "description": "App model catalog item schema exposed by Claw Router.",
+        "description": "App model catalog item schema exposed by Cloud Router.",
         "properties": {
           "apiFormat": {
             "description": "Api format field on app model catalog item.",
@@ -1724,7 +1724,7 @@
       },
       "AppModelCatalogPage": {
         "additionalProperties": false,
-        "description": "App model catalog page schema exposed by Claw Router.",
+        "description": "App model catalog page schema exposed by Cloud Router.",
         "name": "AppModelCatalogPage",
         "properties": {
           "groups": {
@@ -1761,7 +1761,7 @@
       },
       "AppModelCatalogPriceAvailability": {
         "additionalProperties": false,
-        "description": "App model catalog price availability schema exposed by Claw Router.",
+        "description": "App model catalog price availability schema exposed by Cloud Router.",
         "properties": {
           "reason": {
             "description": "Reason field on app model catalog price availability.",
@@ -1786,7 +1786,7 @@
       },
       "AppModelCatalogReferencePrice": {
         "additionalProperties": false,
-        "description": "App model catalog reference price schema exposed by Claw Router.",
+        "description": "App model catalog reference price schema exposed by Cloud Router.",
         "properties": {
           "billingMeter": {
             "description": "Billing meter field on app model catalog reference price.",
@@ -1821,7 +1821,7 @@
       },
       "AppModelVendorCatalogResponse": {
         "additionalProperties": false,
-        "description": "App model vendor catalog response schema exposed by Claw Router.",
+        "description": "App model vendor catalog response schema exposed by Cloud Router.",
         "name": "AppModelVendorCatalogResponse",
         "properties": {
           "items": {
@@ -1840,7 +1840,7 @@
       },
       "AppModelVendorOption": {
         "additionalProperties": false,
-        "description": "App model vendor option schema exposed by Claw Router.",
+        "description": "App model vendor option schema exposed by Cloud Router.",
         "properties": {
           "code": {
             "description": "Code field on app model vendor option.",
@@ -1914,7 +1914,7 @@
       },
       "ModelRankingHistoryEntry": {
         "additionalProperties": false,
-        "description": "Model ranking history entry schema exposed by Claw Router.",
+        "description": "Model ranking history entry schema exposed by Cloud Router.",
         "properties": {
           "catalogKey": {
             "description": "Catalog key field on model ranking history entry.",
@@ -1950,7 +1950,7 @@
       },
       "ModelRankingHistoryPoint": {
         "additionalProperties": false,
-        "description": "Model ranking history point schema exposed by Claw Router.",
+        "description": "Model ranking history point schema exposed by Cloud Router.",
         "properties": {
           "date": {
             "description": "Date field on model ranking history point.",
@@ -1978,7 +1978,7 @@
       },
       "ModelRankingItem": {
         "additionalProperties": false,
-        "description": "Model ranking item schema exposed by Claw Router.",
+        "description": "Model ranking item schema exposed by Cloud Router.",
         "properties": {
           "baseVolume": {
             "description": "Base volume field on model ranking item.",
@@ -2126,12 +2126,12 @@
             "type": "object"
           }
         ],
-        "description": "Model rankings list result schema exposed by Claw Router.",
+        "description": "Model rankings list result schema exposed by Cloud Router.",
         "x-operation-id": "modelRankings.list"
       },
       "ModelRankingsPage": {
         "additionalProperties": false,
-        "description": "Model rankings page schema exposed by Claw Router.",
+        "description": "Model rankings page schema exposed by Cloud Router.",
         "name": "ModelRankingsPage",
         "properties": {
           "history": {
@@ -2175,7 +2175,7 @@
       },
       "ModelRankingsSource": {
         "additionalProperties": false,
-        "description": "Model rankings source schema exposed by Claw Router.",
+        "description": "Model rankings source schema exposed by Cloud Router.",
         "properties": {
           "cacheMaxAgeSeconds": {
             "description": "Cache max age seconds field on model rankings source.",
@@ -2301,7 +2301,7 @@
             "type": "object"
           }
         ],
-        "description": "Model vendors list result schema exposed by Claw Router.",
+        "description": "Model vendors list result schema exposed by Cloud Router.",
         "x-operation-id": "modelVendors.list"
       },
       "ModelsListResult": {
@@ -2328,7 +2328,7 @@
             "type": "object"
           }
         ],
-        "description": "Models list result schema exposed by Claw Router.",
+        "description": "Models list result schema exposed by Cloud Router.",
         "x-operation-id": "models.list"
       },
       "PageInfo": {

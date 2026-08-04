@@ -1,4 +1,4 @@
-/** Admin ai model region price schema exposed by Claw Router. */
+/** Admin ai model region price schema exposed by Cloud Router. */
 export interface AdminAiModelRegionPrice {
   /** Cache read price field on admin ai model region price. */
   cacheReadPrice: string;

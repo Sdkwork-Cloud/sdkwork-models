@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AiResourceSelectorModal,
   type AiResourceSelectorOption,
-} from '@sdkwork/clawroutes-pc-commons/components/AiResourceSelectorModal';
-import { BottomPagination } from '@sdkwork/clawroutes-pc-commons/components/BottomPagination';
-import { ConfirmDialog } from '@sdkwork/clawroutes-pc-commons/components/ConfirmDialog';
+} from '@sdkwork/cloudroutes-pc-commons/components/AiResourceSelectorModal';
+import { BottomPagination } from '@sdkwork/cloudroutes-pc-commons/components/BottomPagination';
+import { ConfirmDialog } from '@sdkwork/cloudroutes-pc-commons/components/ConfirmDialog';
 import { Edit, Loader2, Plus, RefreshCw, Search, Trash2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

@@ -10,7 +10,7 @@ const MODELS_RUNTIME_NODE_ID_ENV: &str = "SDKWORK_MODELS_SNOWFLAKE_NODE_ID";
 static MODELS_RUNTIME_ID_GENERATOR: OnceLock<Result<SnowflakeIdGenerator, String>> =
     OnceLock::new();
 
-pub(crate) fn next_claw_runtime_id(context: &str) -> DomainResult<i64> {
+pub(crate) fn next_cloud_runtime_id(context: &str) -> DomainResult<i64> {
     let generator = models_runtime_id_generator()?;
     generator
         .generate()

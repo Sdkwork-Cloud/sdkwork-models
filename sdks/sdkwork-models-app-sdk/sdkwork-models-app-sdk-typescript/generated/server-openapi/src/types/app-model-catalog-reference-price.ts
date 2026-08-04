@@ -1,4 +1,4 @@
-/** App model catalog reference price schema exposed by Claw Router. */
+/** App model catalog reference price schema exposed by Cloud Router. */
 export interface AppModelCatalogReferencePrice {
   /** Billing meter field on app model catalog reference price. */
   billingMeter: string;

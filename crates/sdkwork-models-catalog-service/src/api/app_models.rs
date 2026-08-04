@@ -6,7 +6,7 @@ use axum::extract::{Path, Query, State};
 use axum::response::Response;
 use axum::routing::{get, put};
 use axum::Router;
-use sdkwork_claw_http::TrustedRequestSubject;
+use sdkwork_cloudrouter_http::TrustedRequestSubject;
 use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 use serde::{Deserialize, Serialize};
@@ -39,7 +39,7 @@ const MAX_ACCESS_CHANNEL_OFFERINGS: usize = 32;
 const MAX_ACCESS_CHANNEL_MODELS: usize = 512;
 const MODEL_ACCESS_CHANNEL_RESOURCE_TYPE: &str = "model_access_channel";
 const OFFICIAL_PROVIDER_OVERLAY_JSON: &str =
-    include_str!("../../../../overlays/clawrouter/providers.json");
+    include_str!("../../../../overlays/cloudrouter/providers.json");
 const CANONICAL_AGENT_PROVIDER_IDS: &[&str] = &[
     "codex",
     "claude-code",

@@ -8,7 +8,7 @@ use axum::http::{HeaderMap, StatusCode};
 use axum::response::Response;
 use axum::routing::{get, patch, post};
 use axum::Router;
-use sdkwork_claw_http::TrustedRequestSubject;
+use sdkwork_cloudrouter_http::TrustedRequestSubject;
 use sdkwork_utils_rust::slugify;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

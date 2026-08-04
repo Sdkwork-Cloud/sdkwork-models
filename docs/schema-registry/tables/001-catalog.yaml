@@ -1019,8 +1019,8 @@
   - ai_model
   - ai_model_pricing
   source_refs:
-  - sdkwork-clawrouter.ai_usage
-  - sdkwork-clawrouter.ai_request_trace
+  - sdkwork-cloudrouter.ai_usage
+  - sdkwork-cloudrouter.ai_request_trace
   frontend_routes:
   - /rankings
   - /console/dashboard

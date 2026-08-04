@@ -1,4 +1,4 @@
-/** App model catalog price availability schema exposed by Claw Router. */
+/** App model catalog price availability schema exposed by Cloud Router. */
 export interface AppModelCatalogPriceAvailability {
   /** Reason field on app model catalog price availability. */
   reason: string | null;

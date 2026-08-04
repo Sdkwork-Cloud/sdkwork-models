@@ -19,7 +19,7 @@ not construct SDK clients, issue requests, persist credentials, or configure
 Agent providers.
 
 Official vendor choices are generated from direct providers in
-`overlays/clawrouter/providers.json`. Selecting one fills its sdkwork-models
+`overlays/cloudrouter/providers.json`. Selecting one fills its sdkwork-models
 name, Base URL, vendor identity, current authoritative catalog models, and
 default model. Relay stations retain editable names, Base URLs, and multiple
 vendor offerings. Offering models use ordered `{ modelId, displayName }` rows;

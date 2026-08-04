@@ -1,4 +1,4 @@
-/** Model ranking item schema exposed by Claw Router. */
+/** Model ranking item schema exposed by Cloud Router. */
 export interface ModelRankingItem {
   /** Base volume field on model ranking item. */
   baseVolume: number;

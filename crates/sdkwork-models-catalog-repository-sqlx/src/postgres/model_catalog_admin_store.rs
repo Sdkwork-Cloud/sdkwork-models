@@ -14,7 +14,7 @@ use crate::model_catalog_import::{
     pricing_catalog_key as build_model_pricing_catalog_key, stable_uuid, CatalogScopeCounts,
 };
 use crate::model_modality;
-use crate::runtime_id::next_claw_runtime_id;
+use crate::runtime_id::next_cloud_runtime_id;
 use crate::ENV_MODELS_CATALOG_ROOT;
 use sdkwork_models_contract_service::{
     AdminAiModelItem, AdminAiModelListPage, AdminAiModelRegionPriceCommand,
@@ -1116,7 +1116,7 @@ async fn insert_vendor(
     tx: &mut Transaction<'_, Postgres>,
     command: &CreateAdminModelVendorCommand,
 ) -> DomainResult<i64> {
-    let id = next_claw_runtime_id("ai_model_vendor")?;
+    let id = next_cloud_runtime_id("ai_model_vendor")?;
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_model_vendor
@@ -1146,7 +1146,7 @@ async fn insert_model_mapping(
     tx: &mut Transaction<'_, Postgres>,
     command: &CreateAdminModelMappingCommand,
 ) -> DomainResult<i64> {
-    let id = next_claw_runtime_id("ai_model_mapping_rule")?;
+    let id = next_cloud_runtime_id("ai_model_mapping_rule")?;
     let mapping_id = sqlx::query_scalar(
         r#"
         INSERT INTO ai_model_mapping_rule
@@ -1236,7 +1236,7 @@ async fn insert_model_mapping_binding_row(
     sort_order: i32,
     requested_at: &str,
 ) -> DomainResult<()> {
-    let id = next_claw_runtime_id("ai_model_mapping_rule_binding")?;
+    let id = next_cloud_runtime_id("ai_model_mapping_rule_binding")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_mapping_rule_binding
@@ -1304,7 +1304,7 @@ async fn insert_model_mapping_item_row(
     sort_order: i32,
     requested_at: &str,
 ) -> DomainResult<()> {
-    let id = next_claw_runtime_id("ai_model_mapping_rule_item")?;
+    let id = next_cloud_runtime_id("ai_model_mapping_rule_item")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_mapping_rule_item
@@ -1685,7 +1685,7 @@ async fn insert_model(
     let supported_languages = json_array_text(&command.supported_languages)?;
     let use_cases = json_array_text(&command.use_cases)?;
     let catalog_key = build_model_base_catalog_key(&vendor.code, &command.model);
-    let id = next_claw_runtime_id("ai_model")?;
+    let id = next_cloud_runtime_id("ai_model")?;
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_model
@@ -1742,7 +1742,7 @@ async fn insert_model_capability(
 ) -> DomainResult<()> {
     let capability_code_text = model_capability_code(&command.model_type);
     let catalog_key = build_model_base_catalog_key(&vendor.code, &command.model);
-    let id = next_claw_runtime_id("ai_model_capability")?;
+    let id = next_cloud_runtime_id("ai_model_capability")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_capability
@@ -1864,7 +1864,7 @@ async fn insert_region_model_pricing(
         "admin-price",
         &[&command.model_uuid, region_code, meter, price_kind],
     );
-    let id = next_claw_runtime_id("ai_model_pricing")?;
+    let id = next_cloud_runtime_id("ai_model_pricing")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_pricing
@@ -1920,7 +1920,7 @@ async fn insert_pricing_import_snapshot(
         "refreshKind": "admin_fast_catalog_refresh",
     })
     .to_string();
-    let id = next_claw_runtime_id("ai_pricing_import_snapshot")?;
+    let id = next_cloud_runtime_id("ai_pricing_import_snapshot")?;
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_pricing_import_snapshot
@@ -2026,7 +2026,7 @@ async fn upsert_model_catalog_sync_run(
     })
     .to_string();
 
-    let source_insert_id = next_claw_runtime_id("ai_model_catalog_source")?;
+    let source_insert_id = next_cloud_runtime_id("ai_model_catalog_source")?;
     let source_id: i64 = if dry_run {
         let dry_run_metadata = serde_json::json!({
             "source": command.source,
@@ -2110,7 +2110,7 @@ async fn upsert_model_catalog_sync_run(
         .map_err(|error| store_error("failed to upsert model catalog source", error))?
     };
 
-    let id = next_claw_runtime_id("ai_model_catalog_sync_run")?;
+    let id = next_cloud_runtime_id("ai_model_catalog_sync_run")?;
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_model_catalog_sync_run
@@ -2840,7 +2840,7 @@ async fn upsert_model_capability(
     if result.rows_affected() > 0 {
         return Ok(());
     }
-    let id = next_claw_runtime_id("ai_model_capability")?;
+    let id = next_cloud_runtime_id("ai_model_capability")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_capability
@@ -2995,7 +2995,7 @@ async fn insert_update_region_model_pricing(
             price_kind,
         ],
     );
-    let id = next_claw_runtime_id("ai_model_pricing")?;
+    let id = next_cloud_runtime_id("ai_model_pricing")?;
     sqlx::query(
         r#"
         INSERT INTO ai_model_pricing
@@ -3308,7 +3308,7 @@ async fn insert_audit_log(
     target_id: i64,
     change_summary: serde_json::Value,
 ) -> DomainResult<()> {
-    let id = next_claw_runtime_id("ops_audit_log")?;
+    let id = next_cloud_runtime_id("ops_audit_log")?;
     sqlx::query(
         r#"
         INSERT INTO ops_audit_log

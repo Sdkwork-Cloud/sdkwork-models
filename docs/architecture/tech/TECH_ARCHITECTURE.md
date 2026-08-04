@@ -7,7 +7,7 @@ Updated: 2026-07-31
 
 ## 1. Overview
 
-`sdkwork-models` is a **composed product module** that can run standalone or mount into Claw Router. It owns intelligence catalog domain data, HTTP route crates, database module, and SDK families.
+`sdkwork-models` is a **composed product module** that can run standalone or mount into Cloud Router. It owns intelligence catalog domain data, HTTP route crates, database module, and SDK families.
 
 ## 2. Layering
 
@@ -30,7 +30,7 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
 
 | Mode | Ingress | Notes |
 | --- | --- | --- |
-| Composed | Claw Router backend/app routers | Primary production path |
+| Composed | Cloud Router backend/app routers | Primary production path |
 | Standalone | `sdkwork-api-models-standalone-gateway` | Declared in `specs/topology.spec.json` |
 | Cloud | `sdkwork-api-cloud-gateway` + app upstream | `configs/sdkwork-api-cloud-gateway.models.*.toml` |
 

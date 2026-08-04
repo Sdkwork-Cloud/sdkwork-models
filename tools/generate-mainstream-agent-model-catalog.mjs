@@ -24,10 +24,10 @@ const officialVendorPresetsOutputFile = path.join(
   'agent-model-access-selector',
   'officialModelVendorPresets.generated.ts',
 );
-const clawRouterProvidersFile = path.join(
+const cloudRouterProvidersFile = path.join(
   repositoryRoot,
   'overlays',
-  'clawrouter',
+  'cloudrouter',
   'providers.json',
 );
 
@@ -164,7 +164,7 @@ async function generateCatalogSource() {
 async function generateOfficialVendorPresetsSource() {
   const [index, providerOverlay] = await Promise.all([
     readJson(path.join(catalogRoot, 'index.json')),
-    readJson(clawRouterProvidersFile),
+    readJson(cloudRouterProvidersFile),
   ]);
   const directProviders = providerOverlay.providers.filter((provider) => (
     provider.providerCode.endsWith('_direct')

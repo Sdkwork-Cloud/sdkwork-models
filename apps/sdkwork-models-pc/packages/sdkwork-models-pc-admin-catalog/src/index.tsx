@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { AdminTableShell } from '@sdkwork/clawroutes-pc-commons/components/AdminTableShell';
-import { BottomPagination } from '@sdkwork/clawroutes-pc-commons/components/BottomPagination';
-import { BusinessStateTableRow } from '@sdkwork/clawroutes-pc-commons/components/BusinessState';
-import { ConfirmDialog } from '@sdkwork/clawroutes-pc-commons/components/ConfirmDialog';
-import { readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons/media-resource';
+import { AdminTableShell } from '@sdkwork/cloudroutes-pc-commons/components/AdminTableShell';
+import { BottomPagination } from '@sdkwork/cloudroutes-pc-commons/components/BottomPagination';
+import { BusinessStateTableRow } from '@sdkwork/cloudroutes-pc-commons/components/BusinessState';
+import { ConfirmDialog } from '@sdkwork/cloudroutes-pc-commons/components/ConfirmDialog';
+import { readMediaResourceUrl } from '@sdkwork/cloudroutes-pc-commons/media-resource';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatMoney } from '@sdkwork/utils/money';

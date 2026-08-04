@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "overlayCode": "clawrouter",
-  "description": "ClawRouter access-provider overlay. This file maps vendor-owned model facts to provider and channel defaults without redefining public model metadata. Official channels route through the BirdCoder platform relay (api.birdcoder.com) so vendor-direct credentials are never required client-side; the logged-in session auth token authenticates every request.",
+  "overlayCode": "cloudrouter",
+  "description": "CloudRouter access-provider overlay. This file maps vendor-owned model facts to provider and channel defaults without redefining public model metadata. Official channels route through the BirdCoder platform relay (api.birdcoder.com) so vendor-direct credentials are never required client-side; the logged-in session auth token authenticates every request.",
   "providers": [
     {
       "providerCode": "openai_direct",

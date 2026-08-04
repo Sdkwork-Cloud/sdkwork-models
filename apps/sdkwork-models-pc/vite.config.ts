@@ -73,8 +73,6 @@ export default defineConfig(({ mode }) => {
   },
   resolve: {
     alias: {
-      "@sdkwork/models-pc-core": join(appRoot, "packages/sdkwork-models-pc-core/src/index.ts"),
-      "@sdkwork/models-pc-catalog": join(appRoot, "packages/sdkwork-models-pc-catalog/src/index.tsx"),
     },
   },
   build: {

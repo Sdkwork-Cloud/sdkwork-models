@@ -1,4 +1,4 @@
-/** Model ranking refresh job item schema exposed by Claw Router. */
+/** Model ranking refresh job item schema exposed by Cloud Router. */
 export interface ModelRankingRefreshJobItem {
   /** Duration ms field on model ranking refresh job item. */
   durationMs: number;

@@ -1,4 +1,4 @@
-/** Model ranking history entry schema exposed by Claw Router. */
+/** Model ranking history entry schema exposed by Cloud Router. */
 export interface ModelRankingHistoryEntry {
   /** Catalog key field on model ranking history entry. */
   catalogKey: string;

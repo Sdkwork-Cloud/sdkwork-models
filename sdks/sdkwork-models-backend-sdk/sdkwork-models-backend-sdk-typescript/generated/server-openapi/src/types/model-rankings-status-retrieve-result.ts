@@ -1,6 +1,6 @@
 import type { ModelRankingRefreshStatus } from './model-ranking-refresh-status';
 
-/** Model rankings status retrieve result schema exposed by Claw Router. */
+/** Model rankings status retrieve result schema exposed by Cloud Router. */
 export interface ModelRankingsStatusRetrieveResult {
   code: 0;
   data: unknown & ModelRankingRefreshStatus;

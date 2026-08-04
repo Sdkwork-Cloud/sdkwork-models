@@ -1,4 +1,4 @@
-/** App model catalog group schema exposed by Claw Router. */
+/** App model catalog group schema exposed by Cloud Router. */
 export interface AppModelCatalogGroup {
   /** Key field on app model catalog group. */
   key: string;

@@ -93,7 +93,7 @@ fetch remote catalog data.
 
 ## Dependency Boundary
 
-This package must not depend on ClawRouter app/backend SDKs. It is a portable
+This package must not depend on CloudRouter app/backend SDKs. It is a portable
 catalog SDK.
 
 ## SDKWork Documentation Contract

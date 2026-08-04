@@ -98,7 +98,7 @@ catalogs can be inspected by older SDKs when the schema version allows it.
 
 ## Dependency Boundary
 
-This package must not depend on ClawRouter app/backend SDKs. It is a portable
+This package must not depend on CloudRouter app/backend SDKs. It is a portable
 catalog SDK.
 
 ## SDKWork Documentation Contract

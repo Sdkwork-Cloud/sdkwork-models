@@ -13,7 +13,7 @@ scope:
     - docs/schema-registry/sdkwork-models.tables.yaml
   consumers:
     - sdkwork-models-catalog-service
-    - sdkwork-clawrouter-router-service
+    - sdkwork-cloudrouter-router-service
 compatibility_window:
   starts_at: 2026-07-30
   ends_at: 2026-07-30
@@ -36,7 +36,7 @@ verification:
 ```
 
 `ai_model_pricing.channel_id` was a stale physical name for an upstream supplier
-account identity. The shared models domain contract and its active Claw Router
+account identity. The shared models domain contract and its active Cloud Router
 consumer already use `supplier_code` plus `account_id`; a workspace source scan
 found no authored pricing consumer that requires `ai_model_pricing.channel_id`.
 The migration therefore performs a metadata-only rename, preserves every stored

@@ -1,7 +1,7 @@
 use sha2::{Digest, Sha256};
 use sqlx::{PgPool, Postgres, Row, Transaction};
 
-use crate::runtime_id::next_claw_runtime_id;
+use crate::runtime_id::next_cloud_runtime_id;
 use crate::sql_model_rankings::{add_seconds_to_timestamp, normalize_iso_timestamp, period_code};
 use sdkwork_models_contract_service::{
     normalize_rank_scope, normalize_scope_ids, normalize_snapshot_period, DecimalValue,
@@ -182,7 +182,7 @@ async fn record_model_ranking_refresh_audit(
              $11, $12, $13, $14, $15, $16, $17::jsonb)
         "#,
     )
-    .bind(next_claw_runtime_id("ops_job_execution")?)
+    .bind(next_cloud_runtime_id("ops_job_execution")?)
     .bind(stable_uuid(
         "job",
         &[
@@ -505,7 +505,7 @@ async fn upsert_ranking_snapshot(
             rank_payload = excluded.rank_payload
         "#,
     )
-    .bind(next_claw_runtime_id("ai_model_rank_snapshot")?)
+    .bind(next_cloud_runtime_id("ai_model_rank_snapshot")?)
     .bind(stable_uuid(
         "rank",
         &[

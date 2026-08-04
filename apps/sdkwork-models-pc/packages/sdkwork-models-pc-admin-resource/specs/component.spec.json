@@ -112,9 +112,9 @@
         "provider": "@sdkwork/models-backend-sdk"
       },
       {
-        "name": "clawrouter.resourceAdminPrimitives",
-        "export": "@sdkwork/clawroutes-pc-commons/components/AiResourceSelectorModal",
-        "provider": "@sdkwork/clawroutes-pc-commons"
+        "name": "cloudrouter.resourceAdminPrimitives",
+        "export": "@sdkwork/cloudroutes-pc-commons/components/AiResourceSelectorModal",
+        "provider": "@sdkwork/cloudroutes-pc-commons"
       }
     ],
     "runtimeEntrypoints": [

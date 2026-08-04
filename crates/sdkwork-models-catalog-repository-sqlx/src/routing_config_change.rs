@@ -3,7 +3,7 @@ use sqlx::{Postgres, Sqlite, Transaction};
 
 use sdkwork_models_contract_service::{DomainError, DomainResult};
 
-use crate::runtime_id::next_claw_runtime_id;
+use crate::runtime_id::next_cloud_runtime_id;
 
 pub(crate) const AI_ROUTING_CONFIG_SCOPE: &str = "routing";
 const GLOBAL_ROUTING_CONFIG_TENANT_ID: i64 = 0;
@@ -97,7 +97,7 @@ async fn bump_sqlite_ai_routing_config_version(
     organization_id: i64,
 ) -> DomainResult<i64> {
     let uuid = config_version_uuid(tenant_id, organization_id, config_scope);
-    let id = next_claw_runtime_id("ai_config_version")?;
+    let id = next_cloud_runtime_id("ai_config_version")?;
     sqlx::query(
         r#"
         INSERT INTO ai_config_version
@@ -155,7 +155,7 @@ async fn bump_postgres_ai_routing_config_version(
     organization_id: i64,
 ) -> DomainResult<i64> {
     let uuid = config_version_uuid(tenant_id, organization_id, config_scope);
-    let id = next_claw_runtime_id("ai_config_version")?;
+    let id = next_cloud_runtime_id("ai_config_version")?;
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_config_version
@@ -208,7 +208,7 @@ async fn insert_sqlite_ai_routing_config_change_event(
         change.changed_object_id,
         change.request_id,
     );
-    let id = next_claw_runtime_id("ai_config_change_event")?;
+    let id = next_cloud_runtime_id("ai_config_change_event")?;
     sqlx::query(
         r#"
         INSERT INTO ai_config_change_event
@@ -257,7 +257,7 @@ async fn insert_postgres_ai_routing_config_change_event(
         change.changed_object_id,
         change.request_id,
     );
-    let id = next_claw_runtime_id("ai_config_change_event")?;
+    let id = next_cloud_runtime_id("ai_config_change_event")?;
     sqlx::query(
         r#"
         INSERT INTO ai_config_change_event

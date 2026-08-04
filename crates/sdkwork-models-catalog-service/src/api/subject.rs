@@ -1,5 +1,5 @@
 use axum::response::Response;
-use sdkwork_claw_http::{TrustedRequestSubject, TrustedRequestSubjectError};
+use sdkwork_cloudrouter_http::{TrustedRequestSubject, TrustedRequestSubjectError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 use sdkwork_web_core::WebRequestContext;
 
@@ -81,7 +81,7 @@ mod tests {
     use super::*;
     use axum::body::to_bytes;
     use axum::http::StatusCode;
-    use sdkwork_claw_http::TrustedRequestSubject;
+    use sdkwork_cloudrouter_http::TrustedRequestSubject;
     use sdkwork_web_core::{ServerRequestId, WebApiSurface, WebAuthMode, WebTransportFacts};
 
     fn test_context() -> WebRequestContext {

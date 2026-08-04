@@ -8,7 +8,7 @@ Updated: 2026-07-31
 
 ## 1. Background
 
-SDKWork Models is the portable AI model catalog, pricing evidence, and cross-language SDK workspace for the SDKWork platform. It provides authoritative model metadata, admin APIs, and generated SDK families consumed by Claw Router and standalone deployments.
+SDKWork Models is the portable AI model catalog, pricing evidence, and cross-language SDK workspace for the SDKWork platform. It provides authoritative model metadata, admin APIs, and generated SDK families consumed by Cloud Router and standalone deployments.
 
 ## 2. Target Users
 
@@ -31,9 +31,9 @@ SDKWork Models is the portable AI model catalog, pricing evidence, and cross-lan
 
 ## 4. Non-Goals
 
-- LLM inference routing (owned by Claw Router)
-- Site-level admin (owned by Claw Router)
-- Full PC operator shell without composed host (admin libraries require Claw Router PC commons)
+- LLM inference routing (owned by Cloud Router)
+- Site-level admin (owned by Cloud Router)
+- Full PC operator shell without composed host (admin libraries require Cloud Router PC commons)
 
 ## 5. Success Metrics
 

@@ -10,9 +10,9 @@ import {
   readRequiredString,
   readString,
   type ApiRecord,
-} from '@sdkwork/clawroutes-pc-commons/api-result';
-import { getModelsBackendSdkClient } from '@sdkwork/clawroutes-pc-commons/sdk-clients';
-import { requiredSafePathSegment } from '@sdkwork/clawroutes-pc-commons/sdk-request-boundary';
+} from '@sdkwork/cloudroutes-pc-commons/api-result';
+import { getModelsBackendSdkClient } from '@sdkwork/cloudroutes-pc-commons/sdk-clients';
+import { requiredSafePathSegment } from '@sdkwork/cloudroutes-pc-commons/sdk-request-boundary';
 import type {
   AdminAiResourceGroupCreateRequest,
   AdminAiResourceGroupMemberInput,

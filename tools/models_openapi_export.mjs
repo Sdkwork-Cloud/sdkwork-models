@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { migrateOpenApiDocument } from "../../sdkwork-specs/tools/lib/migrate-openapi-legacy-envelope.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const clawRouterRoot = join(root, "..", "sdkwork-clawrouter");
+const cloudRouterRoot = join(root, "..", "sdkwork-cloudrouter");
 
 const BACKEND_PATH_PREFIXES = [
   "/backend/v3/api/ai/model_vendors",
@@ -765,7 +765,7 @@ function mergeModelAccessChannelAppPath(document) {
   presetOperation.operationId = "modelAccessChannelPresets.list";
   presetOperation.summary = "List official model access channel presets";
   presetOperation.description =
-    "List official provider presets from the clawrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.";
+    "List official provider presets from the cloudrouter overlay and the authoritative public model catalog. Presets contain public base URLs only; credentials are configured through sdkwork-agents Config SPI.";
   presetOperation.parameters = [];
   presetOperation.responses = {
     "200": operationSuccessResponse(
@@ -2214,12 +2214,12 @@ function assertCurrent(targetPath, document) {
 const checkOnly = process.argv.includes("--check");
 
 const backendSource = join(
-  clawRouterRoot,
-  "generated/openapi/clawrouter-models-catalog-backend-openapi.json",
+  cloudRouterRoot,
+  "generated/openapi/cloudrouter-models-catalog-backend-openapi.json",
 );
 const appSource = join(
-  clawRouterRoot,
-  "generated/openapi/clawrouter-models-catalog-app-openapi.json",
+  cloudRouterRoot,
+  "generated/openapi/cloudrouter-models-catalog-app-openapi.json",
 );
 
 const backendDocument = decorateGatewayContract(

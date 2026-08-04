@@ -3869,7 +3869,7 @@
       },
       "AdminAiModelItem": {
         "additionalProperties": false,
-        "description": "Admin ai model item schema exposed by Claw Router.",
+        "description": "Admin ai model item schema exposed by Cloud Router.",
         "properties": {
           "apiFormat": {
             "description": "Api format field on admin ai model item.",
@@ -4123,7 +4123,7 @@
       },
       "AdminAiModelPage": {
         "additionalProperties": false,
-        "description": "Admin ai model page schema exposed by Claw Router.",
+        "description": "Admin ai model page schema exposed by Cloud Router.",
         "name": "AdminAiModelPage",
         "properties": {
           "items": {
@@ -4151,7 +4151,7 @@
       },
       "AdminAiModelRegionPrice": {
         "additionalProperties": false,
-        "description": "Admin ai model region price schema exposed by Claw Router.",
+        "description": "Admin ai model region price schema exposed by Cloud Router.",
         "properties": {
           "cacheReadPrice": {
             "description": "Cache read price field on admin ai model region price.",
@@ -6014,7 +6014,7 @@
       },
       "AdminModelVendorItem": {
         "additionalProperties": false,
-        "description": "Admin model vendor item schema exposed by Claw Router.",
+        "description": "Admin model vendor item schema exposed by Cloud Router.",
         "properties": {
           "clientApiCompatibility": {
             "additionalProperties": {
@@ -6089,7 +6089,7 @@
       },
       "AdminModelVendorListResponse": {
         "additionalProperties": false,
-        "description": "Admin model vendor list response schema exposed by Claw Router.",
+        "description": "Admin model vendor list response schema exposed by Cloud Router.",
         "name": "AdminModelVendorListResponse",
         "properties": {
           "items": {
@@ -6245,7 +6245,7 @@
         "type": "object"
       },
       "JsonValue": {
-        "description": "JSON value accepted by flexible Claw Router metadata and extension maps.",
+        "description": "JSON value accepted by flexible Cloud Router metadata and extension maps.",
         "oneOf": [
           {
             "description": "String JSON value.",
@@ -6454,7 +6454,7 @@
       },
       "ModelRankingHistoryEntry": {
         "additionalProperties": false,
-        "description": "Model ranking history entry schema exposed by Claw Router.",
+        "description": "Model ranking history entry schema exposed by Cloud Router.",
         "properties": {
           "catalogKey": {
             "description": "Catalog key field on model ranking history entry.",
@@ -6490,7 +6490,7 @@
       },
       "ModelRankingHistoryPoint": {
         "additionalProperties": false,
-        "description": "Model ranking history point schema exposed by Claw Router.",
+        "description": "Model ranking history point schema exposed by Cloud Router.",
         "properties": {
           "date": {
             "description": "Date field on model ranking history point.",
@@ -6518,7 +6518,7 @@
       },
       "ModelRankingItem": {
         "additionalProperties": false,
-        "description": "Model ranking item schema exposed by Claw Router.",
+        "description": "Model ranking item schema exposed by Cloud Router.",
         "properties": {
           "baseVolume": {
             "description": "Base volume field on model ranking item.",
@@ -6644,7 +6644,7 @@
       },
       "ModelRankingRefreshJobHistoryPage": {
         "additionalProperties": false,
-        "description": "Model ranking refresh job history page schema exposed by Claw Router.",
+        "description": "Model ranking refresh job history page schema exposed by Cloud Router.",
         "name": "ModelRankingRefreshJobHistoryPage",
         "properties": {
           "items": {
@@ -6671,7 +6671,7 @@
       },
       "ModelRankingRefreshJobItem": {
         "additionalProperties": false,
-        "description": "Model ranking refresh job item schema exposed by Claw Router.",
+        "description": "Model ranking refresh job item schema exposed by Cloud Router.",
         "properties": {
           "durationMs": {
             "description": "Duration ms field on model ranking refresh job item.",
@@ -6800,7 +6800,7 @@
       },
       "ModelRankingRefreshStatus": {
         "additionalProperties": false,
-        "description": "Model ranking refresh status schema exposed by Claw Router.",
+        "description": "Model ranking refresh status schema exposed by Cloud Router.",
         "name": "ModelRankingRefreshStatus",
         "properties": {
           "cacheMaxAgeSeconds": {
@@ -7118,7 +7118,7 @@
             "type": "object"
           }
         ],
-        "description": "Model rankings jobs list result schema exposed by Claw Router.",
+        "description": "Model rankings jobs list result schema exposed by Cloud Router.",
         "x-operation-id": "modelRankings.jobs.list"
       },
       "ModelRankingsListResult": {
@@ -7145,12 +7145,12 @@
             "type": "object"
           }
         ],
-        "description": "Model rankings list result schema exposed by Claw Router.",
+        "description": "Model rankings list result schema exposed by Cloud Router.",
         "x-operation-id": "modelRankings.list"
       },
       "ModelRankingsPage": {
         "additionalProperties": false,
-        "description": "Model rankings page schema exposed by Claw Router.",
+        "description": "Model rankings page schema exposed by Cloud Router.",
         "name": "ModelRankingsPage",
         "properties": {
           "history": {
@@ -7194,7 +7194,7 @@
       },
       "ModelRankingsSource": {
         "additionalProperties": false,
-        "description": "Model rankings source schema exposed by Claw Router.",
+        "description": "Model rankings source schema exposed by Cloud Router.",
         "properties": {
           "cacheMaxAgeSeconds": {
             "description": "Cache max age seconds field on model rankings source.",
@@ -7302,7 +7302,7 @@
             "type": "object"
           }
         ],
-        "description": "Model rankings status retrieve result schema exposed by Claw Router.",
+        "description": "Model rankings status retrieve result schema exposed by Cloud Router.",
         "x-operation-id": "modelRankings.status.retrieve"
       },
       "ModelVendorsListResult": {
@@ -7347,7 +7347,7 @@
             "type": "object"
           }
         ],
-        "description": "Model vendors list result schema exposed by Claw Router.",
+        "description": "Model vendors list result schema exposed by Cloud Router.",
         "x-operation-id": "modelVendors.list"
       },
       "ModelsListResult": {
@@ -7374,7 +7374,7 @@
             "type": "object"
           }
         ],
-        "description": "Models list result schema exposed by Claw Router.",
+        "description": "Models list result schema exposed by Cloud Router.",
         "x-operation-id": "models.list"
       },
       "OffsetPageInfo": {

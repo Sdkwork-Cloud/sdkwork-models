@@ -10,21 +10,21 @@ The catalog is designed for two consumers:
 
 - applications that want to load model and price information directly through a
   language SDK
-- ClawRouter, which imports the same catalog into its canonical `ai_*` model
+- CloudRouter, which imports the same catalog into its canonical `ai_*` model
   and pricing tables during installation or catalog refresh
 
 ## Status
 
 Production catalog repository for Sdkwork model intelligence. The catalog ships as
 versioned JSON under `models/`, consumed by `@sdkwork/models` SDKs, the standalone
-gateway, and ClawRouter catalog sync.
+gateway, and CloudRouter catalog sync.
 
 Current catalog version: **2026.07.05.3** (see `sdkwork-models.json`). TTS voice
 (speaker) catalog uses `voices.json` and `model-voices/` bindings; video generation
 profiles use `model-video-profiles/` per model. See `specs/voice-catalog.spec.json`
 and `specs/video-generation-profile.spec.json`.
 
-ClawRouter submodule mount point:
+CloudRouter submodule mount point:
 
 ```text
 data/sdkwork-models
@@ -93,7 +93,7 @@ sdkwork-models/
           <modelId>.json
         rankings.json
   overlays/
-    clawrouter/
+    cloudrouter/
   sources/
     vendor-sources.json
     official-model-snapshots.json
@@ -390,9 +390,9 @@ Applications can use this catalog in three ways:
 3. Load immutable catalog JSON from GitHub, CDN, object storage, or an internal
    artifact service with `catalogVersion` and `sha256` verification.
 
-## ClawRouter Integration
+## CloudRouter Integration
 
-ClawRouter imports this catalog into:
+CloudRouter imports this catalog into:
 
 - `ai_billing_meter`
 - `ai_model_vendor`
@@ -402,9 +402,9 @@ ClawRouter imports this catalog into:
 - `ai_model_pricing`
 - `ai_model_rank_snapshot`
 
-ClawRouter-specific providers, channels, route rules, secrets, and tenant
+CloudRouter-specific providers, channels, route rules, secrets, and tenant
 policies remain outside the portable model catalog and belong in
-`overlays/clawrouter/` or ClawRouter runtime configuration.
+`overlays/cloudrouter/` or CloudRouter runtime configuration.
 
 Installer and refresh details are documented in:
 
@@ -412,24 +412,24 @@ Installer and refresh details are documented in:
 ../../docs/33-sdkwork-models-install-flow.md
 ```
 
-At runtime, ClawRouter resolves the catalog from `SDKWORK_MODELS_CATALOG_ROOT`
+At runtime, CloudRouter resolves the catalog from `SDKWORK_MODELS_CATALOG_ROOT`
 when set, then falls back to the bundled local Rust package catalog. The
 environment variable must point at this project root.
 
-In the local ClawRouter workspace, `pnpm.cmd dev` and `pnpm.cmd dev:server`
+In the local CloudRouter workspace, `pnpm.cmd dev` and `pnpm.cmd dev:server`
 default `SDKWORK_MODELS_CATALOG_ROOT` to this checkout-local
 `data/sdkwork-models` directory and run `refresh-catalog --force` before
 starting the Rust services. Updating JSON files here is enough for the next dev
 startup to update the SQLite dev database.
 
-Installed ClawRouter databases can refresh from the catalog without a full
+Installed CloudRouter databases can refresh from the catalog without a full
 reinstall:
 
 ```powershell
-sdkwork-claw-installer refresh-catalog
-sdkwork-claw-installer refresh-catalog --vendor openai
-sdkwork-claw-installer refresh-catalog --catalog-root D:\release\sdkwork-models --catalog-version 2026.06.24.3
-sdkwork-claw-installer refresh-catalog --vendor alibaba --dry-run
+sdkwork-cloudrouter-installer refresh-catalog
+sdkwork-cloudrouter-installer refresh-catalog --vendor openai
+sdkwork-cloudrouter-installer refresh-catalog --catalog-root D:\release\sdkwork-models --catalog-version 2026.06.24.3
+sdkwork-cloudrouter-installer refresh-catalog --vendor alibaba --dry-run
 ```
 
 Installer commands emit one camelCase JSON object to stdout. Refresh output
@@ -449,7 +449,7 @@ lets update tooling lint invocations without provisioning a database first.
 Non-refresh commands reject unexpected extra arguments; only `refresh-catalog`
 accepts refresh-specific options.
 
-The backend admin API and generated `@sdkwork/clawrouter-backend-sdk` expose
+The backend admin API and generated `@sdkwork/cloudrouter-backend-sdk` expose
 the same refresh report as `AdminModelCatalogSyncResponse`. Application-level
 service wrappers must preserve the full report, including all count fields,
 `snapshotId`, and `syncRunId`, while also normalizing the returned `vendors`
@@ -479,7 +479,7 @@ freshness, and create or verify release metadata:
 pnpm run check
 ```
 
-ClawRouter deployments should pin a catalog tag, release artifact, or submodule
+CloudRouter deployments should pin a catalog tag, release artifact, or submodule
 commit. Production installs must not depend on a floating branch head.
 
 ## Release Versioning

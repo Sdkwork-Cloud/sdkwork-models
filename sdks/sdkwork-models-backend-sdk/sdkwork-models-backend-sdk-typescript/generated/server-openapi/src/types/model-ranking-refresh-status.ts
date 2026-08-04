@@ -1,6 +1,6 @@
 import type { ModelRankingRefreshJobItem } from './model-ranking-refresh-job-item';
 
-/** Model ranking refresh status schema exposed by Claw Router. */
+/** Model ranking refresh status schema exposed by Cloud Router. */
 export interface ModelRankingRefreshStatus {
   /** Cache max age seconds field on model ranking refresh status. */
   cacheMaxAgeSeconds: number;

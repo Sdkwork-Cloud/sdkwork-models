@@ -35,7 +35,7 @@ This workspace does not own:
 ## Catalog Root
 
 Set `SDKWORK_MODELS_CATALOG_ROOT` to this repository root when loading from a local checkout.
-When unset, SDKs fall back to the ClawRouter submodule mount `data/sdkwork-models`.
+When unset, SDKs fall back to the CloudRouter submodule mount `data/sdkwork-models`.
 
 ## Verification
 

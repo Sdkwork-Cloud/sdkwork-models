@@ -1,6 +1,6 @@
 import type { JsonValue } from './json-value';
 
-/** Admin model vendor item schema exposed by Claw Router. */
+/** Admin model vendor item schema exposed by Cloud Router. */
 export interface AdminModelVendorItem {
   /** Client api compatibility field on admin model vendor item. */
   clientApiCompatibility: Record<string, JsonValue>;

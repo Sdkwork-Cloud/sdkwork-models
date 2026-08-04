@@ -1,6 +1,6 @@
 import type { ModelRankingHistoryEntry } from './model-ranking-history-entry';
 
-/** Model ranking history point schema exposed by Claw Router. */
+/** Model ranking history point schema exposed by Cloud Router. */
 export interface ModelRankingHistoryPoint {
   /** Date field on model ranking history point. */
   date: string;

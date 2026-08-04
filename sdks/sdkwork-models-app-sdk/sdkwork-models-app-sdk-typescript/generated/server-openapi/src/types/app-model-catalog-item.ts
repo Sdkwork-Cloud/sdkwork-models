@@ -1,7 +1,7 @@
 import type { AppModelCatalogPriceAvailability } from './app-model-catalog-price-availability';
 import type { AppModelCatalogReferencePrice } from './app-model-catalog-reference-price';
 
-/** App model catalog item schema exposed by Claw Router. */
+/** App model catalog item schema exposed by Cloud Router. */
 export interface AppModelCatalogItem {
   /** Api format field on app model catalog item. */
   apiFormat: string | null;
