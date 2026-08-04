@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sdkwork/models-backend-sdk": "workspace:*"
+    "@sdkwork/models-backend-sdk": "workspace:*",
+    "@sdkwork/utils": "workspace:*"
   },
   "peerDependencies": {
     "@sdkwork/clawroutes-pc-commons": "workspace:*",

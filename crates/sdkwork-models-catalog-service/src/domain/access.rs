@@ -11,6 +11,9 @@ pub struct GatewayApiKey {
     pub key_prefix: String,
     pub key_display_masked: String,
     pub key_hash: String,
+    /// Raw key material when the deployment stores it (plaintext or decrypted
+    /// ciphertext); `None` for legacy keys that never had a stored secret.
+    pub raw_key: Option<String>,
     pub policy_id: Option<i64>,
     pub quota_policy_id: Option<i64>,
     pub created_at: String,
@@ -33,6 +36,7 @@ impl GatewayApiKey {
             key_display_masked: mask_key_prefix(&key_prefix),
             key_prefix,
             key_hash: key_hash.to_owned(),
+            raw_key: None,
             policy_id: None,
             quota_policy_id: None,
             created_at: String::new(),

@@ -7,6 +7,7 @@ import { ConfirmDialog } from '@sdkwork/clawroutes-pc-commons/components/Confirm
 import { readMediaResourceUrl } from '@sdkwork/clawroutes-pc-commons/media-resource';
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { formatMoney } from '@sdkwork/utils/money';
 import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
 import { MODEL_PRICING_REGIONS, createModelInputFromForm, createVendorInputFromForm, updateModelInputFromForm } from './modelForm';
 import { VendorPickerModal } from './vendorPickerModal';
@@ -1127,24 +1128,17 @@ function formatPrice(value: string, currency: string): string {
     return '-';
   }
   const normalizedCurrency = currency.trim().toUpperCase();
-  const symbol = currencySymbol(normalizedCurrency);
-  return symbol ? `${symbol}${normalized}` : `${normalizedCurrency || 'USD'} ${normalized}`;
-}
-
-function currencySymbol(currency: string): string {
-  switch (currency) {
-    case 'CNY':
-    case 'JPY':
-      return '¥';
-    case 'USD':
-      return '$';
-    case 'EUR':
-      return '€';
-    case 'GBP':
-      return '£';
-    default:
-      return '';
+  const formatted = formatMoney(normalized, {
+    currency: normalizedCurrency,
+    locale: 'en-US',
+    mode: 'symbol',
+    minFractionDigits: 0,
+    maxFractionDigits: 6,
+  });
+  if (formatted !== null) {
+    return formatted;
   }
+  return `${normalizedCurrency || 'USD'} ${normalized}`;
 }
 
 function modelTypeI18nKey(type: Model['type']): string {
