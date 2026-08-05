@@ -157,8 +157,28 @@ export function isConfiguredOfficialModelAccessChannel(
   presets: readonly OfficialModelVendorPreset[] = SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS,
 ): boolean {
   if (channel.kind !== 'official') {
+    return false;
+  }
+  if (channel.offerings.length !== 1) {
+    return false;
+  }
+  const preset = findOfficialModelVendorPreset(
+    channel.offerings[0]?.vendorCode ?? '',
+    presets,
+  );
+  if (!preset) {
+    return false;
+  }
+  // A channel pointing anywhere else (e.g. a gateway relay imported with the
+  // `official` kind) is not managed by the official preset: it must stay
+  // editable instead of being silently replaced by the preset's data.
+  const channelBaseUrl = channel.baseUrl?.trim();
+  if (!channelBaseUrl || !preset.baseUrl) {
     return true;
   }
-  return channel.offerings.length === 1
-    && Boolean(findOfficialModelVendorPreset(channel.offerings[0]?.vendorCode ?? '', presets));
+  try {
+    return new URL(channelBaseUrl).origin === new URL(preset.baseUrl).origin;
+  } catch {
+    return true;
+  }
 }

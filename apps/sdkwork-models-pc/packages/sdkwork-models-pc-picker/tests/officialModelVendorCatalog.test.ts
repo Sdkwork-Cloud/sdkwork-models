@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   applyOfficialModelVendorCatalogEntry,
+  isConfiguredOfficialModelAccessChannel,
   resolveOfficialModelVendorCatalog,
   resolveOfficialModelVendorPresets,
 } from '../src/agent-model-access-selector/officialModelVendorCatalog.ts';
@@ -207,4 +208,56 @@ test('generated fallback preserves canonical model capabilities without invented
   assert.deepEqual(fallback.outputModalities, generated.outputModalities);
   assert.equal(fallback.supportsTools, generated.supportsTools);
   assert.equal(fallback.toolCallRounds, undefined);
+});
+
+test('official-kind channels are preset-managed only when vendor and base URL match', () => {
+  const openaiPreset = SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS.find(
+    (preset) => preset.vendorCode === 'openai',
+  );
+  assert.ok(openaiPreset, 'openai preset present');
+  const channelFor = (baseUrl: string | undefined) => ({
+    id: 'official.openai',
+    code: 'official.openai',
+    name: 'OpenAI',
+    kind: 'official' as const,
+    baseUrl,
+    offerings: [{ vendorCode: 'openai', vendorName: 'OpenAI', models: [{ model: 'gpt-5.4', displayName: 'GPT-5.4' }] }],
+    supportedAgentProviderIds: ['codex'],
+  });
+  // Matching the preset base URL: managed by the preset (read-only).
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel(channelFor(openaiPreset.baseUrl)),
+    true,
+  );
+  // Same origin with a trailing path: still managed.
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel(channelFor(`${openaiPreset.baseUrl}/v1/`)),
+    true,
+  );
+  // A different endpoint (e.g. a gateway relay imported as official): not
+  // preset-managed, stays editable.
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel(channelFor('https://relay.example.com/v1')),
+    false,
+  );
+  // Unknown vendor code: not preset-managed.
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel(channelFor('https://relay.example.com/v1')),
+    false,
+  );
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel({
+      ...channelFor(openaiPreset.baseUrl),
+      offerings: [{ vendorCode: 'relay-vendor', vendorName: 'Relay', models: [] }],
+    }),
+    false,
+  );
+  // Non-official kinds are never preset-managed.
+  assert.equal(
+    isConfiguredOfficialModelAccessChannel({
+      ...channelFor(openaiPreset.baseUrl),
+      kind: 'relay',
+    }),
+    false,
+  );
 });

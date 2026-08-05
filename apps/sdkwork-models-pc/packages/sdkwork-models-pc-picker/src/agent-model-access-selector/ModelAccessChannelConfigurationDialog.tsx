@@ -81,6 +81,24 @@ function findOfficialEntry(
   return officialCatalog.find((entry) => sameCode(entry.vendorCode, vendorCode));
 }
 
+/** Whether the official preset entry matches the channel's own base URL
+ * (same origin). A channel pointing at a gateway/relay endpoint must not be
+ * replaced by the official preset's data. */
+function officialEntryMatchesChannelBaseUrl(
+  entry: OfficialModelVendorCatalogEntry,
+  draft: ModelAccessChannelConfigurationDraft,
+): boolean {
+  const channelBaseUrl = draft.baseUrl.trim();
+  if (!channelBaseUrl || !entry.baseUrl) {
+    return true;
+  }
+  try {
+    return new URL(channelBaseUrl).origin === new URL(entry.baseUrl).origin;
+  } catch {
+    return true;
+  }
+}
+
 function createInitialDraft(
   initialChannel: ModelAccessChannel | undefined,
   providerOptions: readonly AgentProviderOption[],
@@ -93,9 +111,13 @@ function createInitialDraft(
   if (baseDraft.kind !== 'official') {
     return baseDraft;
   }
-  const selectedEntry = findOfficialEntry(baseDraft, officialCatalog)
-    ?? officialCatalog.find((entry) => entry.models.length > 0);
-  return selectedEntry
+  // Replay the official preset only when it actually matches the channel
+  // (same vendor and base URL origin). Official-kind channels that point
+  // elsewhere — e.g. a gateway relay imported with `kind=official` — keep
+  // their own data and stay editable instead of being silently overwritten
+  // with an unrelated official preset.
+  const selectedEntry = findOfficialEntry(baseDraft, officialCatalog);
+  return selectedEntry && officialEntryMatchesChannelBaseUrl(selectedEntry, baseDraft)
     ? applyOfficialModelVendorCatalogEntry(baseDraft, selectedEntry)
     : baseDraft;
 }

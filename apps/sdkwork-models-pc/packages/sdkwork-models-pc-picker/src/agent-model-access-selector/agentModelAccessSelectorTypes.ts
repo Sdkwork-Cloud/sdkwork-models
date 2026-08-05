@@ -78,6 +78,10 @@ export interface ModelOfferingModel {
   displayName: string;
   modelOptionId?: string;
   sortOrder?: ModelCatalogSortOrder;
+  /** Context window in tokens; preserved from catalog / import metadata. */
+  contextTokens?: number;
+  maxOutputTokens?: number;
+  toolCallRounds?: number;
 }
 
 export interface ModelOffering {
@@ -116,6 +120,10 @@ export interface ModelAccessChannel {
 export interface ModelOfferingConfigurationModelDraft {
   modelId: string;
   displayName: string;
+  /** Context window in tokens; preserved from catalog / import metadata. */
+  contextTokens?: number;
+  maxOutputTokens?: number;
+  toolCallRounds?: number;
 }
 
 export interface ModelOfferingConfigurationDraft {

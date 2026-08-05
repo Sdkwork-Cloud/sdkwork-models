@@ -70,9 +70,11 @@ function normalizeConfigurationModels(
   models: readonly ModelOfferingConfigurationModelDraft[],
   compatibilityModelIds: readonly string[],
 ): ModelOfferingConfigurationModelDraft[] {
-  const source = models.length > 0
+  const source: readonly ModelOfferingConfigurationModelDraft[] = models.length > 0
     ? models
-    : compatibilityModelIds.map((modelId) => ({ modelId, displayName: modelId }));
+    : compatibilityModelIds.map((modelId) => (
+        { modelId, displayName: modelId } satisfies ModelOfferingConfigurationModelDraft
+      ));
   const seen = new Set<string>();
   const normalized: ModelOfferingConfigurationModelDraft[] = [];
   for (const model of source) {
@@ -85,6 +87,9 @@ function normalizeConfigurationModels(
     normalized.push({
       modelId,
       displayName: model.displayName.trim() || modelId,
+      ...(model.contextTokens == null ? {} : { contextTokens: model.contextTokens }),
+      ...(model.maxOutputTokens == null ? {} : { maxOutputTokens: model.maxOutputTokens }),
+      ...(model.toolCallRounds == null ? {} : { toolCallRounds: model.toolCallRounds }),
     });
   }
   return normalized;
@@ -93,11 +98,17 @@ function normalizeConfigurationModels(
 export function createModelOfferingConfigurationDraft(
   vendorCode = '',
   vendorName = '',
-  models: readonly Pick<AgentModelCatalogOption, 'label' | 'modelId'>[] = [],
+  models: readonly Pick<
+    AgentModelCatalogOption,
+    'label' | 'modelId' | 'contextTokens' | 'maxOutputTokens' | 'toolCallRounds'
+  >[] = [],
 ): ModelOfferingConfigurationDraft {
   const configurationModels = models.map((model) => ({
     modelId: model.modelId,
     displayName: model.label,
+    ...(model.contextTokens == null ? {} : { contextTokens: model.contextTokens }),
+    ...(model.maxOutputTokens == null ? {} : { maxOutputTokens: model.maxOutputTokens }),
+    ...(model.toolCallRounds == null ? {} : { toolCallRounds: model.toolCallRounds }),
   }));
   return {
     vendorCode,
@@ -173,6 +184,9 @@ export function createModelAccessChannelConfigurationDraft(
       const models = offering.models.map((model) => ({
         modelId: model.model,
         displayName: model.displayName || model.model,
+        ...(model.contextTokens == null ? {} : { contextTokens: model.contextTokens }),
+        ...(model.maxOutputTokens == null ? {} : { maxOutputTokens: model.maxOutputTokens }),
+        ...(model.toolCallRounds == null ? {} : { toolCallRounds: model.toolCallRounds }),
       }));
       return {
         vendorCode: offering.vendorCode,

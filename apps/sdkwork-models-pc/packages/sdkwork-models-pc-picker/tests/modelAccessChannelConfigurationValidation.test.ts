@@ -251,3 +251,41 @@ test('names without ASCII slug characters still produce a distinct channel ident
   assert.match(first.channelId, /^model-access\.relay\.custom-/u);
   assert.match(second.channelId, /^model-access\.relay\.custom-/u);
 });
+
+test('token metadata round-trips through drafts and normalization', () => {
+  const channel = {
+    id: 'relay-cloud-router',
+    code: 'relay-cloud-router',
+    name: 'Cloud Router',
+    kind: 'relay',
+    offerings: [{
+      vendorCode: 'openai',
+      vendorName: 'OpenAI',
+      models: [{
+        model: 'gpt-5.4',
+        displayName: 'GPT-5.4',
+        contextTokens: 400000,
+        maxOutputTokens: 128000,
+        toolCallRounds: 4,
+      }, {
+        model: 'gpt-5.4-mini',
+        displayName: 'GPT-5.4 Mini',
+      }],
+    }],
+    supportedAgentProviderIds: ['codex'],
+  };
+  const draft = createModelAccessChannelConfigurationDraft(channel);
+  const first = draft.offerings[0].models[0];
+  assert.equal(first.contextTokens, 400000);
+  assert.equal(first.maxOutputTokens, 128000);
+  assert.equal(first.toolCallRounds, 4);
+  // Models without metadata stay absent (not null) after normalization.
+  const normalized = normalizeModelAccessChannelConfigurationDraft(
+    { ...draft, kind: 'relay' },
+  );
+  const normalizedFirst = normalized.offerings[0].models[0];
+  assert.equal(normalizedFirst.contextTokens, 400000);
+  assert.equal(normalizedFirst.maxOutputTokens, 128000);
+  assert.equal(normalizedFirst.toolCallRounds, 4);
+  assert.equal('contextTokens' in normalized.offerings[0].models[1], false);
+});

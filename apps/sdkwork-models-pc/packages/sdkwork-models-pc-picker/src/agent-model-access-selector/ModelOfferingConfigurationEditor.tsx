@@ -9,6 +9,7 @@ import type {
   AgentModelAccessSelectorMessages,
   AgentModelCatalogOption,
   ModelOfferingConfigurationDraft,
+  ModelOfferingConfigurationModelDraft,
   ModelVendor,
 } from './agentModelAccessSelectorTypes';
 import {
@@ -19,6 +20,21 @@ import {
 } from './modelOfferingConfigurationRows';
 import { compareAgentModelCatalogOptions } from './agentModelAccessCatalog';
 import { VendorCodeCombobox } from './VendorCodeCombobox';
+
+/** Read-only token metadata summary for a model row (hover hint). */
+function modelTokenSummary(model: ModelOfferingConfigurationModelDraft): string | undefined {
+  const parts: string[] = [];
+  if (model.contextTokens != null) {
+    parts.push(`ctx ${model.contextTokens.toLocaleString()}`);
+  }
+  if (model.maxOutputTokens != null) {
+    parts.push(`out ${model.maxOutputTokens.toLocaleString()}`);
+  }
+  if (model.toolCallRounds != null) {
+    parts.push(`${model.toolCallRounds} rounds`);
+  }
+  return parts.length > 0 ? parts.join(' · ') : undefined;
+}
 
 export interface ModelOfferingConfigurationEditorProps {
   catalogModels: readonly AgentModelCatalogOption[];
@@ -187,6 +203,7 @@ export function ModelOfferingConfigurationEditor({
                 onChange={(event) => updateModel(index, { modelId: event.target.value })}
                 placeholder={messages.modelsForVendorPlaceholder}
                 spellCheck={false}
+                title={modelTokenSummary(model)}
                 value={model.modelId}
               />
               <div className="sdkwork-model-access-model-row-actions">

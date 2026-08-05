@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { Building2, ChevronRight, Pencil, Plus, Route, Settings2 } from 'lucide-react';
 import {
   ModelAccessChannelConfigurationDialog,
+  isConfiguredOfficialModelAccessChannel,
   type AgentModelCatalogOption,
   type AgentProviderOption,
   type ModelAccessChannel,
@@ -484,7 +485,10 @@ export function ModelManagementSettingsCenter({
             providerOptions,
             engineSelections,
             messages,
-            selectedChannel.kind !== 'official',
+            // Official-kind channels managed by their official preset stay
+            // read-only; official-kind channels pointing elsewhere (e.g. a
+            // gateway relay imported via deep link) stay editable.
+            !isConfiguredOfficialModelAccessChannel(selectedChannel),
             () => {
               dialogTriggerRef.current = null;
               setEditingChannelCode(selectedSupplierId);
