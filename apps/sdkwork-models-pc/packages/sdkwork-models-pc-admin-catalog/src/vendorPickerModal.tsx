@@ -100,7 +100,7 @@ export function VendorPickerModal({
                     <span className="block truncate text-xs text-slate-500">{vendor.vendorCode}</span>
                   </span>
                   <span data-admin-vendor-picker-vendor-status className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200 dark:bg-[#171719] dark:text-slate-300 dark:ring-white/10">
-                    {vendor.status}
+                    {t(`admin.model.status.${vendor.status}`, vendor.status)}
                   </span>
                 </button>
               );

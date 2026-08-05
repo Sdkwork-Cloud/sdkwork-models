@@ -27,7 +27,12 @@ async fn test_pool() -> SqlitePool {
 }
 
 async fn test_store() -> SqliteUserModelConfigStore {
-    let store = SqliteUserModelConfigStore::new(test_pool().await);
+    let store = SqliteUserModelConfigStore::with_api_key_secret_store(
+        test_pool().await,
+        Arc::new(
+            sdkwork_models_user_config_repository_sqlx::sqlite_store::InMemoryApiKeySecretStore::default(),
+        ),
+    );
     store.initialize_schema().await.expect("initialize schema");
     store
 }

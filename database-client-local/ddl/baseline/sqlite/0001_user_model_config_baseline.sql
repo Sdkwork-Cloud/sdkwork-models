@@ -77,8 +77,11 @@ CREATE TABLE IF NOT EXISTS user_model_channel_model (
 CREATE INDEX IF NOT EXISTS idx_user_model_channel_model_offering
     ON user_model_channel_model (offering_id, sort_order, id);
 
--- Locally persisted API key for a channel (plaintext at OS file permission
--- level; reserved for future encryption-at-rest upgrade).
+-- API key presence marker per channel. The raw credential never lives in
+-- this table: it is stored in the OS credential store (Keyring) behind the
+-- repository's ApiKeySecretStore port (DATABASE_SPEC.md §33.4). The api_key
+-- column keeps the legacy NOT NULL shape with a non-secret marker value so
+-- existing tooling that reads the table shape stays compatible.
 CREATE TABLE IF NOT EXISTS user_model_key (
     channel_code TEXT NOT NULL,
     api_key TEXT NOT NULL,

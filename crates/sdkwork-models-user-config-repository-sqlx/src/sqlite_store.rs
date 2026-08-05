@@ -2,9 +2,18 @@
 //!
 //! The authoritative schema is the database-client-local baseline DDL; this
 //! store initializes its tables from that single source (`include_str!`).
+//!
+//! API keys never live in the SQLite file: raw credentials are stored in the
+//! operating-system credential store (OS Keyring) behind the
+//! `ApiKeySecretStore` port, and SQLite keeps only the `api_key_configured`
+//! channel flag. This follows `DATABASE_SPEC.md` §33.4 ("Access/refresh
+//! tokens, private keys, and raw credentials belong in OS secure storage or
+//! an approved secret store, not ordinary SQLite columns").
 
+use keyring::{Entry, Error as KeyringError};
 use serde::{Deserialize, Serialize};
 use sqlx::{Row, Sqlite, SqlitePool, Transaction};
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::{
@@ -19,14 +28,124 @@ const USER_MODEL_CONFIG_SCHEMA_SQL: &str = include_str!(
     "../../../database-client-local/ddl/baseline/sqlite/0001_user_model_config_baseline.sql"
 );
 
-#[derive(Debug, Clone)]
+const API_KEY_CREDENTIAL_SERVICE: &str = "com.sdkwork.models.user-config";
+const MAX_API_KEY_BYTES: usize = 16 * 1024;
+
+/// Secret-store port for channel API keys. The SQLite store never persists
+/// the raw credential; it only records the configured flag. Tests inject an
+/// in-memory implementation, production uses the OS credential store.
+pub trait ApiKeySecretStore: Send + Sync {
+    fn read(&self, channel_code: &str) -> Result<Option<String>, String>;
+    fn write(&self, channel_code: &str, api_key: &str) -> Result<(), String>;
+    fn delete(&self, channel_code: &str) -> Result<(), String>;
+}
+
+fn api_key_account(channel_code: &str) -> String {
+    format!("model-config.api-key.{channel_code}")
+}
+
+/// OS credential store backed API key secret store.
+#[derive(Debug, Clone, Default)]
+pub struct OsKeyringApiKeySecretStore;
+
+impl ApiKeySecretStore for OsKeyringApiKeySecretStore {
+    fn read(&self, channel_code: &str) -> Result<Option<String>, String> {
+        match Entry::new(API_KEY_CREDENTIAL_SERVICE, &api_key_account(channel_code))
+            .map_err(|_| "the operating-system credential store is unavailable".to_owned())?
+            .get_secret()
+        {
+            Ok(value) => {
+                let raw = String::from_utf8(value)
+                    .map_err(|_| "stored channel API key is not valid UTF-8".to_owned())?;
+                Ok(Some(raw))
+            }
+            Err(KeyringError::NoEntry) => Ok(None),
+            Err(_) => Err("the operating-system credential store is unavailable".to_owned()),
+        }
+    }
+
+    fn write(&self, channel_code: &str, api_key: &str) -> Result<(), String> {
+        if api_key.is_empty() {
+            return Err("channel API key must not be empty".to_owned());
+        }
+        if api_key.len() > MAX_API_KEY_BYTES {
+            return Err(format!(
+                "channel API key exceeds the {MAX_API_KEY_BYTES}-byte credential limit"
+            ));
+        }
+        Entry::new(API_KEY_CREDENTIAL_SERVICE, &api_key_account(channel_code))
+            .map_err(|_| "the operating-system credential store is unavailable".to_owned())?
+            .set_secret(api_key.as_bytes())
+            .map_err(|_| "the operating-system credential store is unavailable".to_owned())
+    }
+
+    fn delete(&self, channel_code: &str) -> Result<(), String> {
+        match Entry::new(API_KEY_CREDENTIAL_SERVICE, &api_key_account(channel_code))
+            .map_err(|_| "the operating-system credential store is unavailable".to_owned())?
+            .delete_credential()
+        {
+            Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
+            Err(_) => Err("the operating-system credential store is unavailable".to_owned()),
+        }
+    }
+}
+
+/// In-memory API key secret store for tests and non-OS environments.
+#[derive(Debug, Default)]
+pub struct InMemoryApiKeySecretStore {
+    values: std::sync::Mutex<std::collections::HashMap<String, String>>,
+}
+
+impl ApiKeySecretStore for InMemoryApiKeySecretStore {
+    fn read(&self, channel_code: &str) -> Result<Option<String>, String> {
+        Ok(self
+            .values
+            .lock()
+            .map_err(|_| "in-memory secret store lock is poisoned".to_owned())?
+            .get(channel_code)
+            .cloned())
+    }
+
+    fn write(&self, channel_code: &str, api_key: &str) -> Result<(), String> {
+        self.values
+            .lock()
+            .map_err(|_| "in-memory secret store lock is poisoned".to_owned())?
+            .insert(channel_code.to_owned(), api_key.to_owned());
+        Ok(())
+    }
+
+    fn delete(&self, channel_code: &str) -> Result<(), String> {
+        self.values
+            .lock()
+            .map_err(|_| "in-memory secret store lock is poisoned".to_owned())?
+            .remove(channel_code);
+        Ok(())
+    }
+}
+
 pub struct SqliteUserModelConfigStore {
     pool: SqlitePool,
+    api_key_secret_store: Arc<dyn ApiKeySecretStore>,
 }
 
 impl SqliteUserModelConfigStore {
     pub fn new(pool: SqlitePool) -> Self {
-        Self { pool }
+        Self {
+            pool,
+            api_key_secret_store: Arc::new(OsKeyringApiKeySecretStore),
+        }
+    }
+
+    /// Constructs the store with an explicit API key secret store; used by
+    /// tests and by hosts that provide their own credential-store binding.
+    pub fn with_api_key_secret_store(
+        pool: SqlitePool,
+        api_key_secret_store: Arc<dyn ApiKeySecretStore>,
+    ) -> Self {
+        Self {
+            pool,
+            api_key_secret_store,
+        }
     }
 
     pub fn pool(&self) -> &SqlitePool {
@@ -356,6 +475,11 @@ impl UserModelConfigStore for SqliteUserModelConfigStore {
     }
 
     async fn delete_channel(&self, code: &str) -> UserModelConfigStoreResult<()> {
+        // Remove the credential first: if the OS store is unavailable the
+        // channel must not be half-deleted while its credential survives.
+        self.api_key_secret_store
+            .delete(code)
+            .map_err(|error| UserModelConfigStoreError::SecretStore(error))?;
         sqlx::query("DELETE FROM user_model_channel WHERE code = ?")
             .bind(code)
             .execute(&self.pool)
@@ -364,25 +488,40 @@ impl UserModelConfigStore for SqliteUserModelConfigStore {
     }
 
     async fn upsert_api_key(&self, key: &crate::UserModelApiKey) -> UserModelConfigStoreResult<()> {
+        // Raw credentials go to the OS credential store only; the SQLite file
+        // records the configured flag so channel lists can render key state
+        // without ever exposing the credential.
+        self.api_key_secret_store
+            .write(&key.channel_code, &key.api_key)
+            .map_err(|error| UserModelConfigStoreError::SecretStore(error))?;
+        let timestamp = now_rfc3339();
+        let mut transaction = self.pool.begin().await?;
         sqlx::query(
             "INSERT INTO user_model_key (channel_code, api_key, updated_at) VALUES (?, ?, ?) \
              ON CONFLICT(channel_code) DO UPDATE SET \
              api_key = excluded.api_key, updated_at = excluded.updated_at",
         )
         .bind(&key.channel_code)
-        .bind(&key.api_key)
-        .bind(now_rfc3339())
-        .execute(&self.pool)
+        .bind("__keyring__")
+        .bind(&timestamp)
+        .execute(&mut *transaction)
         .await?;
+        sqlx::query(
+            "UPDATE user_model_channel SET api_key_configured = 1, updated_at = ? \
+             WHERE code = ?",
+        )
+        .bind(&timestamp)
+        .bind(&key.channel_code)
+        .execute(&mut *transaction)
+        .await?;
+        transaction.commit().await?;
         Ok(())
     }
 
     async fn get_api_key(&self, channel_code: &str) -> UserModelConfigStoreResult<Option<String>> {
-        let row = sqlx::query("SELECT api_key FROM user_model_key WHERE channel_code = ?")
-            .bind(channel_code)
-            .fetch_optional(&self.pool)
-            .await?;
-        Ok(row.map(|row| row.get::<String, _>("api_key")))
+        self.api_key_secret_store
+            .read(channel_code)
+            .map_err(|error| UserModelConfigStoreError::SecretStore(error))
     }
 
     async fn list_engine_configs(

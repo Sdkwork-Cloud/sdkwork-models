@@ -83,6 +83,9 @@ pub struct UserModelEngineSelection {
 pub enum UserModelConfigStoreError {
     Sql(sqlx::Error),
     Message(String),
+    /// The OS credential store (Keyring) is unavailable or rejected the
+    /// operation; API keys are never persisted in the SQLite file.
+    SecretStore(String),
 }
 
 impl fmt::Display for UserModelConfigStoreError {
@@ -90,6 +93,9 @@ impl fmt::Display for UserModelConfigStoreError {
         match self {
             Self::Sql(error) => write!(formatter, "user model config store error: {error}"),
             Self::Message(message) => write!(formatter, "{message}"),
+            Self::SecretStore(message) => {
+                write!(formatter, "user model config secret store error: {message}")
+            }
         }
     }
 }

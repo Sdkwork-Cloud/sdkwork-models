@@ -5,6 +5,7 @@ edition = "2021"
 description = "Client-local user model configuration repository (sqlite)"
 
 [dependencies]
+keyring = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 sqlx = { workspace = true, features = ["sqlite", "runtime-tokio"] }
