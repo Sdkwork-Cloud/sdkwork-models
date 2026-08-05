@@ -25,7 +25,8 @@
       "en-US"
     ],
     "activeSeedLocales": [
-      "zh-CN"
+      "zh-CN",
+      "en-US"
     ],
     "driftCheckIntervalSec": 60
   },

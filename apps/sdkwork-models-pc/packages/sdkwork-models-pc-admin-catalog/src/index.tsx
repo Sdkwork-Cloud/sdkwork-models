@@ -27,6 +27,8 @@ const PRICE_POPOVER_MAX_WIDTH = 480;
 const PRICE_POPOVER_VIEWPORT_PADDING = 16;
 const PRICE_POPOVER_Z_INDEX = 2_147_483_000;
 
+type TranslationFunction = ReturnType<typeof useTranslation>['t'];
+
 function ModelPricePopover({
   anchor,
   ariaLabel,
@@ -1227,7 +1229,7 @@ export function ModelMappingAdmin() {
       if (mappingsLoadSeqRef.current !== requestSeq) {
         return;
       }
-      setLoadError(error instanceof Error ? error.message : 'Failed to load model mappings');
+      setLoadError(error instanceof Error ? error.message : t('admin.model.mapping.errors.loadMappings'));
     } finally {
       if (mappingsLoadSeqRef.current === requestSeq) {
         setLoading(false);
@@ -1244,7 +1246,7 @@ export function ModelMappingAdmin() {
     try {
       setVendors(await ModelService.fetchVendors());
     } catch (error) {
-      setCatalogError(error instanceof Error ? error.message : 'Failed to load model catalog');
+      setCatalogError(error instanceof Error ? error.message : t('admin.model.mapping.errors.loadCatalog'));
     }
   };
 
@@ -1303,11 +1305,11 @@ export function ModelMappingAdmin() {
   };
 
   const clearEditorFieldError = (field: ModelMappingFieldErrorKey) => {
-    setEditorError((current) => clearModelMappingFormFieldError(current, field));
+    setEditorError((current) => clearModelMappingFormFieldError(current, field, t));
   };
 
   const clearEditorRowError = (rowId: string, field: ModelMappingRowFieldKey) => {
-    setEditorError((current) => clearModelMappingFormRowError(current, rowId, field));
+    setEditorError((current) => clearModelMappingFormRowError(current, rowId, field, t));
   };
 
   const handleSaveMapping = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -1317,7 +1319,7 @@ export function ModelMappingAdmin() {
     setEditorError(null);
     const formData = new FormData(event.currentTarget);
     try {
-      const input = modelMappingInputFromForm(formData);
+      const input = modelMappingInputFromForm(formData, t);
       if (editingMapping) {
         const updated = await ModelMappingService.updateMapping(editingMapping.id, input);
         setMappings((current) => current.map((item) => item.id === updated.id ? updated : item));
@@ -1329,7 +1331,7 @@ export function ModelMappingAdmin() {
       setEditingMapping(null);
       setEditorError(null);
     } catch (error) {
-      setEditorError(modelMappingFormErrorsFromError(error));
+      setEditorError(modelMappingFormErrorsFromError(error, t));
     } finally {
       setSaving(false);
     }
@@ -1343,7 +1345,7 @@ export function ModelMappingAdmin() {
         setMappings((current) => current.filter((item) => item.id !== mapping.id));
       }
     } catch (error) {
-      setLoadError(error instanceof Error ? error.message : 'Failed to delete model mapping');
+      setLoadError(error instanceof Error ? error.message : t('admin.model.mapping.errors.deleteMapping'));
     }
   };
 
@@ -1441,7 +1443,7 @@ export function ModelMappingAdmin() {
                 <tr key={mapping.id} className="transition hover:bg-slate-50 dark:hover:bg-white/5">
                   <td className="px-5 py-3.5">
                     <div className="font-semibold text-slate-900 dark:text-white">{t(`admin.model.mapping.scope.${mapping.bindingType}`)}</div>
-                    <div className="mt-1 text-xs text-slate-500">{mappingBindingIdentity(mapping)}</div>
+                    <div className="mt-1 text-xs text-slate-500">{mappingBindingIdentity(mapping, t)}</div>
                   </td>
                   <td className="px-5 py-3.5">
                     <ModelMappingBindingsCell mapping={mapping} />
@@ -1654,7 +1656,7 @@ function ModelMappingFormModal({
                 >
                   <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">{t('admin.model.mapping.form.sourceVendor')}</span>
                   <span className="mt-1 block truncate font-semibold">{sourceVendor?.name ?? (sourceVendorCode || t('admin.model.mapping.form.selectVendor'))}</span>
-                  <span className="mt-1 block truncate text-xs text-slate-500">{sourceVendor?.vendorCode ?? (sourceVendorCode || '-')}</span>
+                  <span className="mt-1 block truncate text-xs text-slate-500">{sourceVendor?.vendorCode ?? (sourceVendorCode || t('admin.model.mapping.noData'))}</span>
                 </button>
                 {fieldErrors.sourceVendorCode && <span className="-mt-2 block text-xs font-medium text-rose-600 dark:text-rose-300">{fieldErrors.sourceVendorCode}</span>}
                 <button
@@ -1666,7 +1668,7 @@ function ModelMappingFormModal({
                 >
                   <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">{t('admin.model.mapping.form.targetVendor')}</span>
                   <span className="mt-1 block truncate font-semibold">{targetVendor?.name ?? (targetVendorCode || t('admin.model.mapping.form.selectVendor'))}</span>
-                  <span className="mt-1 block truncate text-xs text-slate-500">{targetVendor?.vendorCode ?? (targetVendorCode || '-')}</span>
+                  <span className="mt-1 block truncate text-xs text-slate-500">{targetVendor?.vendorCode ?? (targetVendorCode || t('admin.model.mapping.noData'))}</span>
                 </button>
                 {fieldErrors.targetVendorCode && <span className="-mt-2 block text-xs font-medium text-rose-600 dark:text-rose-300">{fieldErrors.targetVendorCode}</span>}
               </div>
@@ -1933,7 +1935,7 @@ function ModelComboboxCell({
       }).catch((error: unknown) => {
         if (requestSequenceRef.current === requestSequence) {
           setModels([]);
-          setLoadError(error instanceof Error ? error.message : 'Failed to load model options');
+          setLoadError(error instanceof Error ? error.message : t('admin.model.mapping.errors.loadOptions'));
         }
       }).finally(() => {
         if (requestSequenceRef.current === requestSequence) {
@@ -2041,6 +2043,7 @@ function ModelMappingRelationsCell({
   mapping: ModelMappingRule;
   onOpenEditor: (mapping: ModelMappingRule) => void;
 }) {
+  const { t } = useTranslation();
   const visibleItems = mapping.mappingItems.slice(0, 3);
   return (
     <button
@@ -2050,7 +2053,7 @@ function ModelMappingRelationsCell({
     >
       <div className="space-y-1.5">
         {visibleItems.length === 0 ? (
-          <span className="text-xs text-slate-400">-</span>
+          <span className="text-xs text-slate-400">{t('admin.model.mapping.noData')}</span>
         ) : visibleItems.map((item) => (
           <div key={item.id} className="flex min-w-0 items-center gap-2 text-xs">
             <span className="truncate font-mono font-semibold text-slate-800 dark:text-slate-100">{item.sourceModel}</span>
@@ -2112,9 +2115,9 @@ function ModelMappingRelationEditorModal({
     const formData = new FormData(form);
     try {
       const errors = createEmptyModelMappingFormErrors();
-      const rows = readMappingRowsFromForm(formData, errors);
-      validateUniqueModelMappingRows(rows, errors);
-      throwModelMappingValidationErrorIfNeeded(errors);
+      const rows = readMappingRowsFromForm(formData, errors, t);
+      validateUniqueModelMappingRows(rows, errors, t);
+      throwModelMappingValidationErrorIfNeeded(errors, t);
       const input: ModelMappingUpdateInput = {
         mappingItems: rows.map((row): ModelMappingRuleItemInput => ({
           id: persistedChildId(row.persistedId),
@@ -2126,7 +2129,7 @@ function ModelMappingRelationEditorModal({
       const updated = await ModelMappingService.updateMapping(mapping.id, input);
       onUpdated(updated);
     } catch (caught) {
-      onError(modelMappingFormErrorsFromError(caught));
+      onError(modelMappingFormErrorsFromError(caught, t));
     } finally {
       onSavingChange(false);
     }
@@ -2193,13 +2196,13 @@ function ModelMappingRelationEditorModal({
 function ModelMappingBindingsCell({ mapping }: { mapping: ModelMappingRule }) {
   const { t } = useTranslation();
   if (mapping.bindings.length === 0) {
-    return <span className="text-xs text-slate-400">-</span>;
+    return <span className="text-xs text-slate-400">{t('admin.model.mapping.noData')}</span>;
   }
   return (
     <div className="flex max-w-[320px] flex-wrap gap-1.5">
       {mapping.bindings.slice(0, 3).map((binding) => (
         <span key={binding.id} className="max-w-[220px] truncate rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 dark:bg-white/10 dark:text-slate-300">
-          {t(`admin.model.mapping.scope.${binding.bindingType}`)}: {binding.bindingType === 'global' ? 'all' : (binding.bindingName || binding.bindingCode || binding.bindingId || '-')}
+          {t(`admin.model.mapping.scope.${binding.bindingType}`)}: {binding.bindingType === 'global' ? t('admin.model.mapping.allRequests') : (binding.bindingName || binding.bindingCode || binding.bindingId || t('admin.model.mapping.noData'))}
         </span>
       ))}
       {mapping.bindings.length > 3 && (
@@ -2242,7 +2245,14 @@ function FormInput({
   );
 }
 
+const STATUS_PILL_LABEL_KEYS: Record<string, string> = {
+  active: 'admin.model.mapping.status.active',
+  disabled: 'admin.model.mapping.status.disabled',
+};
+
 function StatusPill({ value }: { value: string }) {
+  const { t } = useTranslation();
+  const labelKey = STATUS_PILL_LABEL_KEYS[value];
   const tone = value === 'active' || value === 'healthy' || value === 'success'
     ? 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-500/30'
     : value === 'disabled' || value === 'unhealthy' || value === 'failed'
@@ -2250,19 +2260,19 @@ function StatusPill({ value }: { value: string }) {
       : 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30';
   return (
     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tone}`}>
-      {value}
+      {labelKey ? t(labelKey) : value}
     </span>
   );
 }
 
-function modelMappingInputFromForm(formData: FormData): ModelMappingCreateInput {
+function modelMappingInputFromForm(formData: FormData, t: TranslationFunction): ModelMappingCreateInput {
   const errors = createEmptyModelMappingFormErrors();
-  const sourceVendorCode = readRequiredFormString(formData, 'sourceVendorCode', 'Source vendor is required', errors);
-  const targetVendorCode = readRequiredFormString(formData, 'targetVendorCode', 'Target vendor is required', errors);
-  const bindings = readMappingBindingsFromForm(formData, errors);
-  const rows = readMappingRowsFromForm(formData, errors);
-  validateUniqueModelMappingRows(rows, errors);
-  throwModelMappingValidationErrorIfNeeded(errors);
+  const sourceVendorCode = readRequiredFormString(formData, 'sourceVendorCode', t('admin.model.mapping.errors.sourceVendorRequired'), errors);
+  const targetVendorCode = readRequiredFormString(formData, 'targetVendorCode', t('admin.model.mapping.errors.targetVendorRequired'), errors);
+  const bindings = readMappingBindingsFromForm(formData, errors, t);
+  const rows = readMappingRowsFromForm(formData, errors, t);
+  validateUniqueModelMappingRows(rows, errors, t);
+  throwModelMappingValidationErrorIfNeeded(errors, t);
   return {
     sourceVendorCode,
     targetVendorCode,
@@ -2286,33 +2296,33 @@ function modelMappingInputFromForm(formData: FormData): ModelMappingCreateInput 
   };
 }
 
-function readMappingBindingsFromForm(formData: FormData, errors: ModelMappingFormErrors): ModelMappingBindingDraft[] {
+function readMappingBindingsFromForm(formData: FormData, errors: ModelMappingFormErrors, t: TranslationFunction): ModelMappingBindingDraft[] {
   const value = readFormString(formData, 'bindingsJson');
   if (!value) {
-    addModelMappingFieldError(errors, 'mappingBindings', 'Binding content is required');
+    addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingRequired'));
     return [];
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(value);
   } catch {
-    addModelMappingFieldError(errors, 'mappingBindings', 'Model mapping bindings are invalid');
+    addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingsInvalid'));
     return [];
   }
   if (!Array.isArray(parsed)) {
-    addModelMappingFieldError(errors, 'mappingBindings', 'Model mapping bindings are invalid');
+    addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingsInvalid'));
     return [];
   }
   if (parsed.length === 0) {
-    addModelMappingFieldError(errors, 'mappingBindings', 'Binding content is required');
+    addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingRequired'));
   }
   if (parsed.length > MODEL_MAPPING_MAX_ROWS) {
-    addModelMappingFieldError(errors, 'mappingBindings', `Model mapping bindings cannot exceed ${MODEL_MAPPING_MAX_ROWS}`);
+    addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingsTooMany', { count: MODEL_MAPPING_MAX_ROWS }));
   }
   const bindings = parsed.map((item, index): ModelMappingBindingDraft => {
     const fallbackId = `binding_${index}`;
     if (!item || typeof item !== 'object') {
-      addModelMappingFieldError(errors, 'mappingBindings', 'Model mapping bindings are invalid');
+      addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingsInvalid'));
       return createMappingBindingDraft(null, 'global', fallbackId);
     }
     const record = item as Record<string, unknown>;
@@ -2323,7 +2333,7 @@ function readMappingBindingsFromForm(formData: FormData, errors: ModelMappingFor
     const bindingName = typeof record.bindingName === 'string' ? record.bindingName.trim() : '';
     const persistedId = typeof record.persistedId === 'string' && record.persistedId.trim() ? record.persistedId.trim() : persistedChildId(rowId);
     if (bindingType !== 'global' && !bindingCode && !bindingId) {
-      addModelMappingFieldError(errors, 'mappingBindings', 'Binding content is required');
+      addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.bindingRequired'));
     }
     return {
       id: rowId,
@@ -2335,36 +2345,36 @@ function readMappingBindingsFromForm(formData: FormData, errors: ModelMappingFor
       enabled: typeof record.enabled === 'boolean' ? record.enabled : true,
     };
   });
-  validateUniqueModelMappingBindings(bindings, errors);
+  validateUniqueModelMappingBindings(bindings, errors, t);
   return bindings;
 }
 
-function readMappingRowsFromForm(formData: FormData, errors: ModelMappingFormErrors): ModelMappingRowDraft[] {
+function readMappingRowsFromForm(formData: FormData, errors: ModelMappingFormErrors, t: TranslationFunction): ModelMappingRowDraft[] {
   const value = readFormString(formData, 'rowsJson');
   if (!value) {
-    addModelMappingFieldError(errors, 'mappingRows', 'Model mapping rows are required');
+    addModelMappingFieldError(errors, 'mappingRows', t('admin.model.mapping.errors.rowsRequired'));
     return [];
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(value);
   } catch {
-    addModelMappingFieldError(errors, 'mappingRows', 'Model mapping rows are invalid');
+    addModelMappingFieldError(errors, 'mappingRows', t('admin.model.mapping.errors.rowsInvalid'));
     return [];
   }
   if (!Array.isArray(parsed)) {
-    addModelMappingFieldError(errors, 'mappingRows', 'Model mapping rows are invalid');
+    addModelMappingFieldError(errors, 'mappingRows', t('admin.model.mapping.errors.rowsInvalid'));
     return [];
   }
   if (parsed.length > MODEL_MAPPING_MAX_ROWS) {
-    addModelMappingFieldError(errors, 'mappingRows', `Model mapping rows cannot exceed ${MODEL_MAPPING_MAX_ROWS}`);
+    addModelMappingFieldError(errors, 'mappingRows', t('admin.model.mapping.errors.rowsTooMany', { count: MODEL_MAPPING_MAX_ROWS }));
   }
   const rows = parsed
     .map((item, index): ModelMappingRowDraft => {
       const fallbackId = `row_${index}`;
       if (!item || typeof item !== 'object') {
-        addModelMappingRowError(errors, fallbackId, 'sourceModel', `Model mapping row ${index + 1} is invalid`);
-        addModelMappingRowError(errors, fallbackId, 'targetModel', `Model mapping row ${index + 1} is invalid`);
+        addModelMappingRowError(errors, fallbackId, 'sourceModel', t('admin.model.mapping.errors.rowInvalid', { index: index + 1 }));
+        addModelMappingRowError(errors, fallbackId, 'targetModel', t('admin.model.mapping.errors.rowInvalid', { index: index + 1 }));
         return { id: fallbackId, persistedId: null, sourceModel: '', targetModel: '', enabled: true };
       }
       const record = item as Record<string, unknown>;
@@ -2373,13 +2383,13 @@ function readMappingRowsFromForm(formData: FormData, errors: ModelMappingFormErr
       const sourceModel = typeof record.sourceModel === 'string' ? record.sourceModel.trim() : '';
       const targetModel = typeof record.targetModel === 'string' ? record.targetModel.trim() : '';
       if (!sourceModel) {
-        addModelMappingRowError(errors, rowId, 'sourceModel', 'Source model is required');
+        addModelMappingRowError(errors, rowId, 'sourceModel', t('admin.model.mapping.errors.sourceModelRequired'));
       }
       if (!targetModel) {
-        addModelMappingRowError(errors, rowId, 'targetModel', 'Target model is required');
+        addModelMappingRowError(errors, rowId, 'targetModel', t('admin.model.mapping.errors.targetModelRequired'));
       }
-      validateModelMappingModelValue(sourceModel, 'Source model', errors, rowId, 'sourceModel');
-      validateModelMappingModelValue(targetModel, 'Target model', errors, rowId, 'targetModel');
+      validateModelMappingModelValue(sourceModel, t('admin.model.mapping.form.sourceModel'), errors, rowId, 'sourceModel', t);
+      validateModelMappingModelValue(targetModel, t('admin.model.mapping.form.targetModel'), errors, rowId, 'targetModel', t);
       return {
         id: rowId,
         persistedId,
@@ -2389,7 +2399,7 @@ function readMappingRowsFromForm(formData: FormData, errors: ModelMappingFormErr
       };
     });
   if (rows.length === 0) {
-    addModelMappingFieldError(errors, 'mappingRows', 'At least one complete model mapping row is required');
+    addModelMappingFieldError(errors, 'mappingRows', t('admin.model.mapping.errors.oneRowRequired'));
   }
   return rows;
 }
@@ -2400,13 +2410,14 @@ function validateModelMappingModelValue(
   errors: ModelMappingFormErrors,
   rowId: string,
   field: ModelMappingRowFieldKey,
+  t: TranslationFunction,
 ): void {
   if (value.length > MODEL_MAPPING_MODEL_VALUE_MAX_LENGTH) {
-    addModelMappingRowError(errors, rowId, field, `${label} cannot exceed ${MODEL_MAPPING_MODEL_VALUE_MAX_LENGTH} characters`);
+    addModelMappingRowError(errors, rowId, field, t('admin.model.mapping.errors.modelTooLong', { label, count: MODEL_MAPPING_MODEL_VALUE_MAX_LENGTH }));
   }
 }
 
-function validateUniqueModelMappingRows(rows: readonly ModelMappingRowDraft[], errors: ModelMappingFormErrors): void {
+function validateUniqueModelMappingRows(rows: readonly ModelMappingRowDraft[], errors: ModelMappingFormErrors, t: TranslationFunction): void {
   const seen = new Set<string>();
   for (const row of rows) {
     if (!row.sourceModel) {
@@ -2414,19 +2425,19 @@ function validateUniqueModelMappingRows(rows: readonly ModelMappingRowDraft[], e
     }
     const sourceModel = row.sourceModel.toLowerCase();
     if (seen.has(sourceModel)) {
-      addModelMappingRowError(errors, row.id, 'sourceModel', 'Duplicate source model mapping is not allowed');
+      addModelMappingRowError(errors, row.id, 'sourceModel', t('admin.model.mapping.errors.duplicateSourceModel'));
       continue;
     }
     seen.add(sourceModel);
   }
 }
 
-function validateUniqueModelMappingBindings(bindings: readonly ModelMappingBindingDraft[], errors: ModelMappingFormErrors): void {
+function validateUniqueModelMappingBindings(bindings: readonly ModelMappingBindingDraft[], errors: ModelMappingFormErrors, t: TranslationFunction): void {
   const seen = new Set<string>();
   for (const binding of bindings) {
     const identity = `${binding.bindingType}:${binding.bindingType === 'global' ? 'global' : (binding.bindingId || binding.bindingCode).toLowerCase()}`;
     if (seen.has(identity)) {
-      addModelMappingFieldError(errors, 'mappingBindings', 'Duplicate binding content is not allowed');
+      addModelMappingFieldError(errors, 'mappingBindings', t('admin.model.mapping.errors.duplicateBinding'));
       continue;
     }
     seen.add(identity);
@@ -2476,44 +2487,46 @@ function addModelMappingRowError(
   }
 }
 
-function modelMappingFormErrorsFromError(error: unknown): ModelMappingFormErrors {
+function modelMappingFormErrorsFromError(error: unknown, t: TranslationFunction): ModelMappingFormErrors {
   if (error instanceof ModelMappingFormValidationError) {
     return error.errors;
   }
   return {
-    message: error instanceof Error ? error.message : 'Failed to save model mapping',
+    message: error instanceof Error ? error.message : t('admin.model.mapping.errors.saveMapping'),
     fieldErrors: {},
     rowErrors: {},
     firstErrorKey: null,
   };
 }
 
-function throwModelMappingValidationErrorIfNeeded(errors: ModelMappingFormErrors): void {
+function throwModelMappingValidationErrorIfNeeded(errors: ModelMappingFormErrors, t: TranslationFunction): void {
   if (Object.keys(errors.fieldErrors).length === 0 && Object.keys(errors.rowErrors).length === 0) {
     return;
   }
   throw new ModelMappingFormValidationError({
     ...errors,
-    message: 'Please fix the highlighted model mapping fields before saving.',
+    message: t('admin.model.mapping.errors.fixFields'),
   });
 }
 
 function clearModelMappingFormFieldError(
   errors: ModelMappingFormErrors | null,
   field: ModelMappingFieldErrorKey,
+  t: TranslationFunction,
 ): ModelMappingFormErrors | null {
   if (!errors?.fieldErrors[field]) {
     return errors;
   }
   const fieldErrors = { ...errors.fieldErrors };
   delete fieldErrors[field];
-  return normalizeModelMappingFormErrors({ ...errors, fieldErrors });
+  return normalizeModelMappingFormErrors({ ...errors, fieldErrors }, t);
 }
 
 function clearModelMappingFormRowError(
   errors: ModelMappingFormErrors | null,
   rowId: string,
   field: ModelMappingRowFieldKey,
+  t: TranslationFunction,
 ): ModelMappingFormErrors | null {
   if (!errors?.rowErrors[rowId]?.[field]) {
     return errors;
@@ -2526,16 +2539,16 @@ function clearModelMappingFormRowError(
   } else {
     delete rowErrors[rowId];
   }
-  return normalizeModelMappingFormErrors({ ...errors, rowErrors });
+  return normalizeModelMappingFormErrors({ ...errors, rowErrors }, t);
 }
 
-function normalizeModelMappingFormErrors(errors: ModelMappingFormErrors): ModelMappingFormErrors | null {
+function normalizeModelMappingFormErrors(errors: ModelMappingFormErrors, t: TranslationFunction): ModelMappingFormErrors | null {
   if (Object.keys(errors.fieldErrors).length === 0 && Object.keys(errors.rowErrors).length === 0) {
     return null;
   }
   return {
     ...errors,
-    message: errors.message || 'Please fix the highlighted model mapping fields before saving.',
+    message: errors.message || t('admin.model.mapping.errors.fixFields'),
     firstErrorKey: null,
   };
 }
@@ -2637,12 +2650,12 @@ function readMappingBindingTypeValue(value: unknown): ModelMappingRule['bindingT
   return 'global';
 }
 
-function mappingBindingIdentity(mapping: ModelMappingRule): string {
+function mappingBindingIdentity(mapping: ModelMappingRule, t: TranslationFunction): string {
   const binding = mapping.bindings[0];
   if (!binding || binding.bindingType === 'global') {
-    return 'all requests';
+    return t('admin.model.mapping.allRequests');
   }
-  return binding.bindingName || binding.bindingCode || binding.bindingId || '-';
+  return binding.bindingName || binding.bindingCode || binding.bindingId || t('admin.model.mapping.noData');
 }
 
 function readFormString(formData: FormData, name: string): string {

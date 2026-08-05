@@ -1,5 +1,7 @@
 export * from './model-picker-types';
 export * from './ModelPicker';
+export * from './vendor-icons/VendorIcon';
+export * from './vendor-icons/vendorIconCatalog';
 export * from './unified-agent-model-selector/UnifiedAgentModelSelector';
 export * from './unified-agent-model-selector/UnifiedModelConfigurationDialog';
 export * from './unified-agent-model-selector/unifiedAgentModelSelectorTypes';

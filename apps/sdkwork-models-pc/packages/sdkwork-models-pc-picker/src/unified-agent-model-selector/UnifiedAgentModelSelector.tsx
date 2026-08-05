@@ -18,6 +18,7 @@ import type {
   UnifiedAgentModelSelectorProps,
 } from './unifiedAgentModelSelectorTypes';
 import { useUnifiedAgentModelSelectorAnchor } from './useUnifiedAgentModelSelectorAnchor';
+import { VendorIcon } from '../vendor-icons/VendorIcon';
 import './unified-agent-model-selector.css';
 
 export function UnifiedAgentModelSelector({
@@ -215,7 +216,7 @@ export function UnifiedAgentModelSelector({
                 type="button"
               >
                 <span aria-hidden="true" className="sdkwork-unified-model-option-icon">
-                  {renderModelIcon?.(option) ?? <Bot size={17} />}
+                  {renderModelIcon?.(option) ?? resolveDefaultOptionIcon(option)}
                 </span>
                 <span className="sdkwork-unified-model-option-copy">
                   <span className="sdkwork-unified-model-option-heading">
@@ -370,4 +371,23 @@ export function UnifiedAgentModelSelector({
       ) : null}
     </div>
   );
+}
+
+/**
+ * Default option icon when the consumer provides no renderer: the vendor
+ * brand icon (or initials chip) when the option carries vendor identity,
+ * otherwise the generic Bot placeholder.
+ */
+function resolveDefaultOptionIcon(option: UnifiedAgentModelOption) {
+  if (option.iconKey || option.vendorCode) {
+    return (
+      <VendorIcon
+        iconKey={option.iconKey}
+        vendorCode={option.vendorCode}
+        name={option.label}
+        size={17}
+      />
+    );
+  }
+  return <Bot size={17} />;
 }

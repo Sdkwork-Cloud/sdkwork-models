@@ -40,6 +40,9 @@ import { resolveOfficialModelVendorPresets } from './officialModelVendorCatalog'
 import { resolveAgentModelCatalog } from './generatedAgentModelFallback';
 import { ModelAccessChannelConfigurationDialog } from './ModelAccessChannelConfigurationDialog';
 import { useAgentModelAccessSelectorAnchor } from './useAgentModelAccessSelectorAnchor';
+import { VendorIcon } from '../vendor-icons/VendorIcon';
+import { resolveVendorIconKey } from '../vendor-icons/vendorIconCatalog';
+import { hasVendorIconSvg } from '../vendor-icons/vendorIconSvgs';
 import './agent-model-access-selector.css';
 
 function supportsProvider(
@@ -357,8 +360,9 @@ export function AgentModelAccessSelector({
     const selected = model.id === selectedModelOptionId;
     const selecting = selectingKey === `model:${model.id}`;
     // The consumer may opt out of the leading icon entirely; the row then
-    // collapses to the label and status columns for a tighter layout.
-    const modelIcon = renderModelIcon?.(model);
+    // collapses to the label and status columns for a tighter layout. Without
+    // a custom renderer the vendor brand icon is used when one resolves.
+    const modelIcon = renderModelIcon?.(model) ?? resolveDefaultModelIcon(model);
     return (
       <button
         key={model.id}
@@ -792,4 +796,21 @@ export function AgentModelAccessSelector({
       ) : null}
     </div>
   );
+}
+
+/**
+ * Default model row icon when the consumer provides no renderer: the vendor
+ * brand icon resolved from the option's icon key or vendor code. Unknown
+ * vendors resolve to `null` so the row keeps collapsing via `data-no-icon`.
+ */
+function resolveDefaultModelIcon(model: AgentModelCatalogOption) {
+  const iconKey = model.iconKey ?? resolveVendorIconKey(model.vendorCode);
+  return hasVendorIconSvg(iconKey) ? (
+    <VendorIcon
+      iconKey={iconKey}
+      vendorCode={model.vendorCode}
+      name={model.label}
+      size={16}
+    />
+  ) : null;
 }

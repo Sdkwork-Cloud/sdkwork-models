@@ -1,0 +1,25 @@
+/* Vendor icon rendering for sdkwork-models PC pickers. */
+.sdkwork-vendor-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.sdkwork-vendor-icon > svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.sdkwork-vendor-icon--fallback {
+  border-radius: 6px;
+  background: #3d3d42;
+  color: #d7d7dc;
+  font-weight: 600;
+  line-height: 1;
+  overflow: hidden;
+}

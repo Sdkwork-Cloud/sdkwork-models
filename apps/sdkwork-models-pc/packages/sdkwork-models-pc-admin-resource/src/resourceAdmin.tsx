@@ -27,6 +27,8 @@ type GroupFormState = {
   memberCodes: string[];
 };
 
+type TranslationFunction = ReturnType<typeof useTranslation>['t'];
+
 type ResourceSelectorContext = 'create' | 'assignment';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -630,11 +632,11 @@ export function ResourceAdmin() {
                             <div className="font-medium text-slate-900 dark:text-white">{resource.displayName}</div>
                             <div className="font-mono text-xs text-slate-500">{resource.resourceCode}</div>
                           </td>
-                          <td className="px-5 py-3">{resource.resourceType}</td>
-                          <td className="px-5 py-3">{resource.vendorCode ?? '-'}</td>
-                          <td className="px-5 py-3">{resource.modalityCode ?? '-'}</td>
-                          <td className="px-5 py-3">{resource.memberRole}</td>
-                          <td className="px-5 py-3">{resource.status}</td>
+                          <td className="px-5 py-3">{resourceTypeLabel(resource.resourceType, t)}</td>
+                          <td className="px-5 py-3">{resource.vendorCode ?? t('admin.model.resources.noData')}</td>
+                          <td className="px-5 py-3">{resource.modalityCode ?? t('admin.model.resources.noData')}</td>
+                          <td className="px-5 py-3">{memberRoleLabel(resource.memberRole, t)}</td>
+                          <td className="px-5 py-3">{resourceStatusLabel(resource.status, t)}</td>
                           <td className="px-5 py-3">
                             <button
                               type="button"
@@ -743,8 +745,8 @@ export function ResourceAdmin() {
                     onChange={(event) => setForm({ ...form, status: event.target.value as GroupFormState['status'] })}
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-white/10 dark:bg-[#1a1a1a] dark:text-white"
                   >
-                    <option value="active">active</option>
-                    <option value="disabled">disabled</option>
+                    <option value="active">{t('admin.model.resources.statuses.active')}</option>
+                    <option value="disabled">{t('admin.model.resources.statuses.disabled')}</option>
                   </select>
                 </label>
                 <label className="block text-sm md:col-span-2">
@@ -795,7 +797,7 @@ export function ResourceAdmin() {
                               <div className="font-medium">{resource.displayName}</div>
                               <div className="font-mono text-xs text-slate-500">{resource.resourceCode}</div>
                             </td>
-                            <td className="px-3 py-2">{resource.vendorCode ?? '-'}</td>
+                            <td className="px-3 py-2">{resource.vendorCode ?? t('admin.model.resources.noData')}</td>
                             <td className="px-3 py-2">
                               <button
                                 type="button"
@@ -884,6 +886,8 @@ export function ResourceAdmin() {
             done: t('admin.model.resources.actions.save'),
             close: t('admin.model.resources.actions.cancel'),
             retry: t('admin.model.resources.actions.retry'),
+            noData: t('admin.model.resources.noData'),
+            statusLabel: (status) => resourceStatusLabel(status, t),
             columns: {
               resource: t('admin.model.resources.columns.resource'),
               kind: t('admin.model.resources.columns.kind'),
@@ -950,4 +954,38 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
   }, [delayMs, value]);
 
   return debouncedValue;
+}
+
+const RESOURCE_TYPE_LABEL_KEYS: Record<string, string> = {
+  vendor: 'admin.model.resources.types.vendor',
+  modality: 'admin.model.resources.types.modality',
+  api_endpoint: 'admin.model.resources.types.apiEndpoint',
+  model_api: 'admin.model.resources.types.modelApi',
+  bundle: 'admin.model.resources.types.bundle',
+};
+
+function resourceTypeLabel(resourceType: string, t: TranslationFunction): string {
+  const key = RESOURCE_TYPE_LABEL_KEYS[resourceType];
+  return key ? t(key) : resourceType;
+}
+
+const MEMBER_ROLE_LABEL_KEYS: Record<ResourceGroupResourceItem['memberRole'], string> = {
+  included: 'admin.model.resources.roles.included',
+  optional: 'admin.model.resources.roles.optional',
+  fallback: 'admin.model.resources.roles.fallback',
+};
+
+function memberRoleLabel(role: ResourceGroupResourceItem['memberRole'], t: TranslationFunction): string {
+  return t(MEMBER_ROLE_LABEL_KEYS[role]);
+}
+
+const RESOURCE_STATUS_LABEL_KEYS: Record<string, string> = {
+  active: 'admin.model.resources.statuses.active',
+  disabled: 'admin.model.resources.statuses.disabled',
+  inactive: 'admin.model.resources.statuses.inactive',
+};
+
+function resourceStatusLabel(status: string, t: TranslationFunction): string {
+  const key = RESOURCE_STATUS_LABEL_KEYS[status];
+  return key ? t(key) : status;
 }
