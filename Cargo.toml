@@ -40,6 +40,7 @@ sdkwork-cloudrouter-http = { path = "../sdkwork-cloudrouter/crates/sdkwork-cloud
 sdkwork-database-id = { path = "../sdkwork-database/crates/sdkwork-database-id", package = "sdkwork-database-id", features = ["postgres", "sqlite"] }
 sdkwork-utils-rust = { path = "../sdkwork-utils/packages/sdkwork-utils-rust" }
 sdkwork-web-core = { path = "../sdkwork-web-framework/crates/sdkwork-web-core" }
+sdkwork-web-bootstrap = { path = "../sdkwork-web-framework/crates/sdkwork-web-bootstrap" }
 sdkwork-web-axum = { path = "../sdkwork-web-framework/crates/sdkwork-web-axum" }
 sdkwork-iam-web-adapter = { path = "../sdkwork-iam/crates/sdkwork-iam-web-adapter" }
 sdkwork-models = { path = "sdks/sdkwork-models-sdk/sdkwork-models-sdk-rust" }
