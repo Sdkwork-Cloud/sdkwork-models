@@ -367,8 +367,8 @@ pub fn add_seconds_to_timestamp(value: &str, seconds: i64) -> String {
 
 fn default_source_tables() -> Vec<String> {
     vec![
-        "ai_usage".to_owned(),
-        "ai_request_trace".to_owned(),
+        "ai_metering_usage".to_owned(),
+        "ai_metering_request_trace".to_owned(),
         "ai_model_rank_snapshot".to_owned(),
     ]
 }

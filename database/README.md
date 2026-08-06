@@ -22,13 +22,11 @@ Cloud Router retains tenant routing overlays (`ai_model_mapping_*`), gateway cha
 
 ## Initialization state
 
-This module is pre-launch and consolidated on a single greenfield baseline:
+This module is in **initialization state** for greenfield deployments:
 
-1. **Baseline** — `database/ddl/baseline/postgres/0001_sdkwork-models_baseline.sql` contains the full initial-state PostgreSQL DDL snapshot, including the pre-launch greenfield migration inventory (supplier ownership columns, canonical `account_id` pricing identity, model usage scopes) folded into the baseline before launch.
-2. **Migrations** — `database/migrations/postgres/` is reserved for post-GA incremental schema changes only. It is intentionally empty at initialization; new installations bootstrap from the complete baseline, and shared development schemas converge by resetting the module state to the baseline instead of replaying forward-only migrations.
+1. **Baseline** — `database/ddl/baseline/{engine}/0001_sdkwork-models_baseline.sql` contains the full DDL snapshot.
+2. **Migrations** — `database/migrations/{engine}/` is reserved for post-GA incremental schema changes only. It is intentionally empty at initialization.
 3. **Drift** — run `pnpm db:drift:check` before release.
-
-The authoritative server contract is PostgreSQL-only. SQLite persistence, when required by a native client, must live in a separately owned `client-local` database module.
 
 ## Commands
 

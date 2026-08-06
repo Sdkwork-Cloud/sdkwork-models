@@ -325,7 +325,7 @@ async fn load_ranking_aggregates(
                 SUM(COALESCE(u.total_tokens, 0)) AS token_count,
                 sdkwork_decimal_sum(u.customer_charge_amount) AS cost_amount,
                 COALESCE(NULLIF(MAX(u.currency), ''), 'USD') AS currency
-            FROM ai_usage u
+            FROM ai_metering_usage u
             JOIN model_scope m
               ON m.catalog_key = u.catalog_key
              AND m.model_row_no = 1
@@ -572,7 +572,7 @@ fn ranking_metadata(
         "refreshIntervalSeconds": command.refresh_interval_seconds,
         "nextRefreshAt": next_refresh_at,
         "cacheMaxAgeSeconds": command.cache_max_age_seconds,
-        "sourceTables": ["ai_usage", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }
@@ -595,7 +595,7 @@ fn audit_payload(command: &ModelRankingRefreshAuditCommand) -> Result<String, Do
         "consecutiveFailureCount": command.consecutive_failure_count.max(0),
         "alertRecommended": command.alert_recommended,
         "alertSeverity": command.alert_severity,
-        "sourceTables": ["ai_usage", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }

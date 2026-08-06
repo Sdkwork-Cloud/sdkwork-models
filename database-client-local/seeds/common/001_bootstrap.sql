@@ -1,1 +1,0 @@
--- No bootstrap seeds for the user model configuration store.
