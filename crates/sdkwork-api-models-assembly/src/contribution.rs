@@ -5,7 +5,6 @@ use std::sync::Arc;
 use sdkwork_database_sqlx::DatabasePool;
 use sdkwork_models_catalog_repository_sqlx::{
     PostgresAdminAiResourceStore, PostgresModelCatalogAdminStore, PostgresModelRankingsReadStore,
-    SqliteAdminAiResourceStore, SqliteModelCatalogAdminStore, SqliteModelRankingsReadStore,
 };
 use sdkwork_models_contract_service::{
     AdminAiResourceStore, EntityUuidGenerator, ModelCatalogAdminStore, ModelRankingsReadModelStore,
@@ -44,24 +43,9 @@ pub async fn assemble_app_api_contribution() -> Result<ApiAssemblyContribution, 
                 Arc::clone(&entity_uuid_generator),
             )
         }
-        DatabasePool::Sqlite(pool, _) => {
-            let read_store: Arc<dyn ModelRankingsReadModelStore + Send + Sync> =
-                Arc::new(SqliteModelRankingsReadStore::new(pool.clone()));
-            let resource_store = Arc::new(SqliteAdminAiResourceStore::new(pool.clone()));
-            resource_store
-                .initialize_schema()
-                .await
-                .map_err(|error| format!("initialize client-local AI resource schema failed: {error}"))?;
-            sdkwork_routes_models_catalog_app_api::gateway_mount(
-                host.pricing_catalog(),
-                host.voice_catalog(),
-                read_store,
-                Arc::new(SqliteModelCatalogAdminStore::new(pool.clone()))
-                    as Arc<dyn ModelCatalogAdminStore + Send + Sync>,
-                resource_store as Arc<dyn AdminAiResourceStore + Send + Sync>,
-                Arc::clone(&entity_uuid_generator),
-            )
-        }
+        DatabasePool::Sqlite(_, _) => unreachable!(
+            "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
+        ),
     };
     let route_manifest = sdkwork_routes_models_catalog_app_api::app_route_manifest();
     ApiAssemblyContribution::from_manifest(
@@ -91,9 +75,9 @@ impl ReadinessCheck for ModelsDatabaseReadinessCheck {
         let host = Arc::clone(&self.host);
         Box::pin(async move {
             let result = match host.database_pool() {
-                DatabasePool::Sqlite(pool, _) => {
-                    sqlx::query("SELECT 1").execute(pool).await.map(|_| ())
-                }
+                DatabasePool::Sqlite(_, _) => unreachable!(
+                    "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
+                ),
                 DatabasePool::Postgres(pool, _) => {
                     sqlx::query("SELECT 1").execute(pool).await.map(|_| ())
                 }

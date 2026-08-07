@@ -12,7 +12,7 @@
   "mode": "apply",
   "hasChanges": true,
   "hasDestructiveChanges": false,
-  "changeFingerprint": "82787c93cdd608badd052afdf0d2c7f7d3f78599806b74ef0df254e35512d9e8",
+  "changeFingerprint": "a53e05876913605163d68b7f5e515ec764355e4130b0d22f720d86c0318ceb43",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
@@ -22,11 +22,8 @@
       {
         "area": "models",
         "paths": [
-          "src/types/admin-ai-model-create-request.ts",
-          "src/types/admin-ai-model-update-request.ts",
-          "src/types/admin-ai-resource-create-request.ts",
-          "src/types/admin-ai-resource-item.ts",
-          "src/types/admin-ai-resource-update-request.ts"
+          "src/types/admin-ai-resource-group-resource-item.ts",
+          "src/types/admin-ai-resource-item.ts"
         ]
       }
     ],
@@ -152,20 +149,17 @@
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 5,
+    "writtenFiles": 2,
     "skippedScaffoldFiles": 2,
-    "skippedUnchangedGeneratedFiles": 86,
+    "skippedUnchangedGeneratedFiles": 89,
     "deletedGeneratedFiles": 0,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "82787c93cdd608badd052afdf0d2c7f7d3f78599806b74ef0df254e35512d9e8",
+    "changeFingerprint": "a53e05876913605163d68b7f5e515ec764355e4130b0d22f720d86c0318ceb43",
     "changes": {
       "createdGeneratedFiles": [],
       "updatedGeneratedFiles": [
-        "src/types/admin-ai-model-create-request.ts",
-        "src/types/admin-ai-model-update-request.ts",
-        "src/types/admin-ai-resource-create-request.ts",
-        "src/types/admin-ai-resource-item.ts",
-        "src/types/admin-ai-resource-update-request.ts"
+        "src/types/admin-ai-resource-group-resource-item.ts",
+        "src/types/admin-ai-resource-item.ts"
       ],
       "unchangedGeneratedFiles": [
         "bin/publish-core.mjs",
@@ -187,18 +181,21 @@
         "src/http/index.ts",
         "src/index.ts",
         "src/sdk.ts",
+        "src/types/admin-ai-model-create-request.ts",
         "src/types/admin-ai-model-item.ts",
         "src/types/admin-ai-model-page.ts",
         "src/types/admin-ai-model-region-price-request.ts",
         "src/types/admin-ai-model-region-price.ts",
+        "src/types/admin-ai-model-update-request.ts",
+        "src/types/admin-ai-resource-create-request.ts",
         "src/types/admin-ai-resource-group-create-request.ts",
         "src/types/admin-ai-resource-group-item.ts",
         "src/types/admin-ai-resource-group-member-input.ts",
         "src/types/admin-ai-resource-group-member-update-request.ts",
-        "src/types/admin-ai-resource-group-resource-item.ts",
         "src/types/admin-ai-resource-group-update-request.ts",
         "src/types/admin-ai-resource-member-input.ts",
         "src/types/admin-ai-resource-member-item.ts",
+        "src/types/admin-ai-resource-update-request.ts",
         "src/types/admin-model-catalog-sync-request.ts",
         "src/types/admin-model-mapping-create-request.ts",
         "src/types/admin-model-mapping-resolve-request.ts",
@@ -272,11 +269,8 @@
         {
           "area": "models",
           "paths": [
-            "src/types/admin-ai-model-create-request.ts",
-            "src/types/admin-ai-model-update-request.ts",
-            "src/types/admin-ai-resource-create-request.ts",
-            "src/types/admin-ai-resource-item.ts",
-            "src/types/admin-ai-resource-update-request.ts"
+            "src/types/admin-ai-resource-group-resource-item.ts",
+            "src/types/admin-ai-resource-item.ts"
           ]
         }
       ],

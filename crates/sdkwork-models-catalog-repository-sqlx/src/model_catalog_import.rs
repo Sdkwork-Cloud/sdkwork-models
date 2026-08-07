@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 
 use sha2::{Digest, Sha256};
 
-use sdkwork_models::{ClientApiCompatibility, ModelCatalog, ModelInfo, TtsVoice, VendorCatalog};
+use sdkwork_models::{ClientApiCompatibility, ModelCatalog, ModelInfo, TtsVoice, VendorApiEndpoint, VendorCatalog};
 
 use sdkwork_models_contract_service::{
     AdminAiModelItem, AdminAiModelRegionPriceCommand, AdminModelSubject, AdminModelVendorItem,
@@ -236,6 +236,7 @@ pub(crate) struct CatalogVendorRecord {
     pub model_families: Vec<String>,
     pub capabilities: Vec<String>,
     pub supported_protocols: Vec<String>,
+    pub api_endpoints: BTreeMap<String, VendorApiEndpoint>,
     pub client_api_compatibility: BTreeMap<String, ClientApiCompatibility>,
     pub open_source: bool,
     pub sort_order: i32,
@@ -260,6 +261,7 @@ pub(crate) fn catalog_vendor_records(catalog: &ModelCatalog) -> Vec<CatalogVendo
                 model_families: Vec::new(),
                 capabilities: Vec::new(),
                 supported_protocols: Vec::new(),
+                api_endpoints: BTreeMap::new(),
                 client_api_compatibility: BTreeMap::new(),
                 open_source: vendor.open_source.unwrap_or(false),
                 sort_order: vendor.sort_order.unwrap_or(1_000_000),
@@ -271,6 +273,12 @@ pub(crate) fn catalog_vendor_records(catalog: &ModelCatalog) -> Vec<CatalogVendo
             &mut record.supported_protocols,
             vendor.supported_protocols.iter(),
         );
+        for (family, endpoint) in &vendor.api_endpoints {
+            record
+                .api_endpoints
+                .entry(family.clone())
+                .or_insert_with(|| endpoint.clone());
+        }
         for (client_api_code, compatibility) in &vendor.client_api_compatibility {
             match record.client_api_compatibility.get(client_api_code) {
                 Some(existing)
@@ -728,6 +736,8 @@ pub(crate) struct CatalogAiResourceProjection {
     pub metadata_schema: String,
     pub description: Option<String>,
     pub sort_order: i32,
+    /// Vendor compatibility API endpoints; only vendor-kind projections carry it.
+    pub api_endpoints: Option<BTreeMap<String, VendorApiEndpoint>>,
 }
 
 pub(crate) fn catalog_modality_projections(
@@ -959,6 +969,11 @@ pub(crate) fn catalog_ai_resource_projections(
                 metadata_schema: "{}".to_owned(),
                 description: ai_resource_description(vendor.description.clone()),
                 sort_order: (index as i32) + 1,
+                api_endpoints: if vendor.api_endpoints.is_empty() {
+                    None
+                } else {
+                    Some(vendor.api_endpoints.clone())
+                },
             },
         );
     }
@@ -991,6 +1006,7 @@ pub(crate) fn catalog_ai_resource_projections(
                 metadata_schema: "{}".to_owned(),
                 description: ai_resource_description(Some(modality.description)),
                 sort_order: 5_000 + modality.sort_order + (index as i32),
+                api_endpoints: None,
             },
         );
     }
@@ -1017,6 +1033,7 @@ pub(crate) fn catalog_ai_resource_projections(
                     "Model catalog API endpoint capability".to_owned(),
                 )),
                 sort_order: 10_000 + endpoint.sort_order,
+                api_endpoints: None,
             },
         );
     }
@@ -1067,6 +1084,7 @@ pub(crate) fn catalog_ai_resource_projections(
                 metadata_schema: "{}".to_owned(),
                 description: ai_resource_description(model.description.clone()),
                 sort_order: 20_000 + (index as i32) + 1,
+                api_endpoints: None,
             },
         );
     }

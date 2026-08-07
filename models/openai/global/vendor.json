@@ -85,6 +85,12 @@
     "openai_responses",
     "openai_compatible"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.openai.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "openai",
   "vendorType": "commercial",
   "websiteUrl": "https://openai.com"

@@ -77,6 +77,16 @@
     "anthropic_messages",
     "vendor_native"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "open.bigmodel.cn",
+      "pathPrefix": "/api/paas/v4"
+    },
+    "anthropic": {
+      "host": "open.bigmodel.cn",
+      "pathPrefix": "/api/anthropic"
+    }
+  },
   "vendorCode": "zhipu",
   "vendorType": "commercial",
   "websiteUrl": "https://www.zhipuai.cn"

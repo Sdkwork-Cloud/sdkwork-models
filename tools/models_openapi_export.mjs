@@ -1480,6 +1480,8 @@ function adminAiResourceItemSchema() {
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
       apiEndpointCode: safeCodeSchema(128, true),
+      method: visibleAsciiStringSchema(8, true),
+      path: visibleAsciiStringSchema(256, true),
       catalogKey: visibleAsciiStringSchema(256, true),
       model: visibleAsciiStringSchema(128, true),
       providerNativeModel: visibleAsciiStringSchema(256, true),
@@ -1553,6 +1555,8 @@ function adminAiResourceGroupResourceItemSchema() {
       vendorCode: safeCodeSchema(64, true),
       modalityCode: safeCodeSchema(64, true),
       apiEndpointCode: safeCodeSchema(128, true),
+      method: visibleAsciiStringSchema(8, true),
+      path: visibleAsciiStringSchema(256, true),
       catalogKey: visibleAsciiStringSchema(256, true),
       model: visibleAsciiStringSchema(128, true),
       providerNativeModel: visibleAsciiStringSchema(256, true),
@@ -2178,8 +2182,21 @@ function decorateGatewayContract(document, surface) {
       }
       operation["x-sdkwork-api-surface"] = surface;
       operation["x-sdkwork-request-context"] = "WebRequestContext";
-      operation["x-sdkwork-auth-mode"] = "dual-token";
-      operation.security = [{ AccessToken: [], AuthToken: [] }];
+      // Preserve anonymous GET declarations from the composed host catalog
+      // mount authority (catalog listing routes are public reference data).
+      // Non-GET operations and backend surfaces are always dual-token.
+      const alreadyAnonymous =
+        appSurface &&
+        method === "get" &&
+        operation["x-sdkwork-auth-mode"] === "anonymous" &&
+        Array.isArray(operation.security) &&
+        operation.security.length === 0;
+      operation["x-sdkwork-auth-mode"] = alreadyAnonymous
+        ? "anonymous"
+        : "dual-token";
+      operation.security = alreadyAnonymous
+        ? []
+        : [{ AccessToken: [], AuthToken: [] }];
       if (!appSurface) {
         operation["x-sdkwork-permission"] = gatewayPermission(
           operation.operationId,

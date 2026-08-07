@@ -141,42 +141,9 @@ pub const LIST_MODELS_COUNT_WHERE_SQLITE: &str = r#"
           AND (? IS NULL OR m.routing_state = ?)
         "#;
 
-pub fn sqlite_capability_in_clause(code_count: usize) -> String {
-    if code_count == 0 {
-        return String::new();
-    }
-    let placeholders = (0..code_count).map(|_| "?").collect::<Vec<_>>().join(", ");
-    format!(" AND m.capability IN ({placeholders})")
-}
 
-pub fn sqlite_vendor_codes_in_clause(code_count: usize) -> String {
-    if code_count == 0 {
-        return String::new();
-    }
-    let placeholders = (0..code_count).map(|_| "?").collect::<Vec<_>>().join(", ");
-    format!(" AND m.vendor_code IN ({placeholders})")
-}
 
-pub fn sqlite_modalities_clause(modality_count: usize) -> String {
-    if modality_count == 0 {
-        return String::new();
-    }
-    let placeholders = (0..modality_count)
-        .map(|_| "?")
-        .collect::<Vec<_>>()
-        .join(", ");
-    format!(
-        " AND EXISTS (SELECT 1 FROM json_each(COALESCE(m.modalities, '[]')) modality WHERE lower(CAST(modality.value AS TEXT)) IN ({placeholders}))"
-    )
-}
 
-pub fn sqlite_release_stages_clause(stage_count: usize) -> String {
-    if stage_count == 0 {
-        return String::new();
-    }
-    let placeholders = (0..stage_count).map(|_| "?").collect::<Vec<_>>().join(", ");
-    format!(" AND m.release_stage IN ({placeholders})")
-}
 
 pub fn normalized_search_pattern(query: &ListAdminAiModelsQuery) -> Option<String> {
     query

@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "d3e75228fc527697d7baab9703974c0d2fc7c6817bc2edd52611bc6298833f01"
+      "sha256": "8a36bacef72757de809aa7eceb2a4cda804f96e1189cddf422005b42bba6dc8a"
     },
     {
       "path": "src/api/base.ts",
@@ -128,31 +128,31 @@
     },
     {
       "path": "src/types/app-model-catalog-group.ts",
-      "sha256": "eb6346d44454fb70953c8e843ec1e774fc9ab77ac135c390572ed0fb1d65b500"
+      "sha256": "b35eb664d8fadb0701522035107a4800b7bde3d7aa2dfee2cd26e3e89e78e1d1"
     },
     {
       "path": "src/types/app-model-catalog-item.ts",
-      "sha256": "f8450e639f78bee4bfe2006e7b57521a59501e90b4ce71fe0f7ccdb5797542c2"
+      "sha256": "44fd36ff76b1ffdde538dc730411b1d37cee8e1f633351e9015528126d8dd1d9"
     },
     {
       "path": "src/types/app-model-catalog-page.ts",
-      "sha256": "99a09931b427a4d7ae840ab3891ab807119c6c24f0ef1604ebf0bee0534e1d6f"
+      "sha256": "52726329be1150e60a00f9dcec917697516547ccaa8ea79c49241a11c54572b0"
     },
     {
       "path": "src/types/app-model-catalog-price-availability.ts",
-      "sha256": "81ebf5aa604d2b12159ca1805d8364a38c425cf0957e345a0ec162fac49d973a"
+      "sha256": "8ed510b3625edfa1dfa15b473a3e0532b0ac0141d8f69133f1ba6d4b28c1caa3"
     },
     {
       "path": "src/types/app-model-catalog-reference-price.ts",
-      "sha256": "b4ff714de69282dc3df1d6baec526d3c9f15ac3eb43e0ac3f87314c0287c5dde"
+      "sha256": "612701e0b1dc6b2a3165e95c426e624ff2ee4321549b393d80d0a90b542f221c"
     },
     {
       "path": "src/types/app-model-vendor-catalog-response.ts",
-      "sha256": "fa2183bd74474f5f2668fb0947717063366721d4205a1a999361a4acf69b5c81"
+      "sha256": "44012f320776773a779767274d0629694761b05908fd258a0c647030bd75cdf4"
     },
     {
       "path": "src/types/app-model-vendor-option.ts",
-      "sha256": "01511425bb91f8af963f257f4de0fea7a8446d77ab07e5aa5e47c3497cd4c165"
+      "sha256": "770f8d2a3195f19073996779d373987fc2764c8805a50ac6ac494028a0dedf3b"
     },
     {
       "path": "src/types/common.ts",
@@ -184,35 +184,35 @@
     },
     {
       "path": "src/types/model-ranking-history-entry.ts",
-      "sha256": "e6fc945f2790cc97c39c2cb3fb1665f6f0c7a2e806aba20b0a43413e8ff02a41"
+      "sha256": "4687124bf9629d657f86bb0a94ea674ba79e6ec136d935045ea481fa8d245b07"
     },
     {
       "path": "src/types/model-ranking-history-point.ts",
-      "sha256": "813a4055676558feb8535a16ce6b21b6b28d10e6f54926b56a8246b75fc41aef"
+      "sha256": "ae26e7524172f6fd31299d7c1fd83a3a2abf1e6c3ab5090152c2709a27929f09"
     },
     {
       "path": "src/types/model-ranking-item.ts",
-      "sha256": "16d136b818f464dfa39f623c62845a11891f57bd53a8d59debfab54618c6bd2f"
+      "sha256": "989d65b2829f279cd387ddd9855f7ce8626e74c312341a8b3657a70f432d7f89"
     },
     {
       "path": "src/types/model-rankings-list-result.ts",
-      "sha256": "81c21e1699f2ed045d7e94723cdfc58ed251497167327072a271da49f368179a"
+      "sha256": "007cc5c8b3fbd640f7dfab8bd8c29cbd403930b64a710822cc3f569d0d08c209"
     },
     {
       "path": "src/types/model-rankings-page.ts",
-      "sha256": "489f899d46ac6cb8d2e06c896d5a911818bac021ff89a32448b4deff3b445031"
+      "sha256": "92b14362aab6cfa031913c3e8e1609f20132a3fc15a6e7b0028b8d36fd652e1a"
     },
     {
       "path": "src/types/model-rankings-source.ts",
-      "sha256": "a3ab43f40f2422f64b945d5ab0348f307b9fc80e17af8ad367a98f670ef15231"
+      "sha256": "2d48a535a079b75be317d54ebccae06ea75a7b3b97de947ccd8448b2e1fc8707"
     },
     {
       "path": "src/types/model-vendors-list-result.ts",
-      "sha256": "66ff62c2e7abf23538e72ab6e50576caba0d78d56a68b84e8f616c597848a2ee"
+      "sha256": "78ab9377dcfdb32c27f570c5ac70a95eab92241e14c64b5aa4dcc01042441707"
     },
     {
       "path": "src/types/models-list-result.ts",
-      "sha256": "3fc757d89e60273ac1da8f7c0eb096c376f79c4ed9404b614f18678190920cb9"
+      "sha256": "a827c73165ea2d3f91e8ea6d4f91289a4c6fd8451b72ede5f7a05e2760fe47a1"
     },
     {
       "path": "src/types/page-info.ts",

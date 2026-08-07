@@ -23,8 +23,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -47,8 +47,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -95,8 +95,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -119,8 +119,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -143,8 +143,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -167,8 +167,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -191,8 +191,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -215,8 +215,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",
@@ -239,8 +239,8 @@
         "ai"
       ],
       "auth": {
-        "mode": "dual-token",
-        "required": true
+        "mode": "anonymous",
+        "required": false
       },
       "handler": {
         "module": "crate::routes",

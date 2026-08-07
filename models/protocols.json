@@ -1,4 +1,42 @@
 {
+  "families": [
+    {
+      "description": "OpenAI-compatible API family. Vendors expose Chat Completions / Responses compatible endpoints under one of these standard path prefixes.",
+      "familyCode": "openai",
+      "standardPathPrefixes": [
+        "",
+        "/v1",
+        "/api/v1",
+        "/api/v3",
+        "/compatible-mode/v1",
+        "/api/paas/v4"
+      ]
+    },
+    {
+      "description": "Anthropic-compatible API family. Vendors expose Messages compatible endpoints under one of these standard path prefixes.",
+      "familyCode": "anthropic",
+      "standardPathPrefixes": [
+        "",
+        "/v1",
+        "/anthropic",
+        "/api/anthropic"
+      ]
+    },
+    {
+      "description": "Google Gemini compatible API family. Vendors expose Gemini compatible endpoints under one of these standard path prefixes.",
+      "familyCode": "google",
+      "standardPathPrefixes": [
+        "",
+        "/v1beta",
+        "/v1"
+      ]
+    },
+    {
+      "description": "Vendor native API family. Native endpoints are not standard compatibility endpoints and must not appear in vendor apiEndpoints.",
+      "familyCode": "vendor_native",
+      "standardPathPrefixes": []
+    }
+  ],
   "protocols": [
     {
       "displayName": "OpenAI Chat Completions Compatible",

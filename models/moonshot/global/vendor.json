@@ -70,6 +70,12 @@
   "supportedProtocols": [
     "openai_compatible"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.moonshot.ai",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "moonshot",
   "vendorType": "commercial",
   "websiteUrl": "https://www.kimi.com"

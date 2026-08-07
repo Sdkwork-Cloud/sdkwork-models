@@ -92,11 +92,11 @@
     },
     {
       "path": "src/types/admin-ai-model-item.ts",
-      "sha256": "7db29594e224c278a443d7b9ea9355b74bca1b109e5d32f538ba92e20b4c66fd"
+      "sha256": "04d56acf7c9443d8ae6242dc85d4577c2c8e3676659f60e8f8c8c3d8de3b9641"
     },
     {
       "path": "src/types/admin-ai-model-page.ts",
-      "sha256": "2e956a79de7fd8e82808b807a6336e975bdd8c6161393663845f4ea27c992681"
+      "sha256": "d3652ce064a1d068f354d7a68e222e9a1b2549de10fc79a3c3e72b01001041e0"
     },
     {
       "path": "src/types/admin-ai-model-region-price-request.ts",
@@ -104,7 +104,7 @@
     },
     {
       "path": "src/types/admin-ai-model-region-price.ts",
-      "sha256": "a0b229ae8fa928e920e759e4b7be6a010f6f92226989dafa11003a6b1e1b561f"
+      "sha256": "71070a03444392654497c0e5c9ed785de20ad056522c6a3488b77ee520975b4a"
     },
     {
       "path": "src/types/admin-ai-model-update-request.ts",
@@ -132,7 +132,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-group-resource-item.ts",
-      "sha256": "27d835fa1d5dfaae0274bed853a8e1d53071dc438b5dda250d0faaf2c0d8d86e"
+      "sha256": "b913c761047eec80b1cdd83e533fa56b3b2a2d28d51e46c3510cc8f5d8e1d34a"
     },
     {
       "path": "src/types/admin-ai-resource-group-update-request.ts",
@@ -140,7 +140,7 @@
     },
     {
       "path": "src/types/admin-ai-resource-item.ts",
-      "sha256": "c2855fc0856d6df16d1cd1a1c5a61e5d46a71994cd43e656dbdc1ccb08a005ef"
+      "sha256": "c181037732841e7ac12f7354e8cedaf2854caf1ff75004fb65e1e53d15766bdc"
     },
     {
       "path": "src/types/admin-ai-resource-member-input.ts",
@@ -184,11 +184,11 @@
     },
     {
       "path": "src/types/admin-model-vendor-item.ts",
-      "sha256": "1160d584200a15e1c7a65509535965334d9bce10116b4fef670779705f9a6d14"
+      "sha256": "d8d8cd07bda9268e110694d4292eebb7aaff40b1d520c62f49de63726de73a4b"
     },
     {
       "path": "src/types/admin-model-vendor-list-response.ts",
-      "sha256": "325d00cfa372fd174e4aa79dc6b76378b1e58d1d72593318983cca482f8a4fc1"
+      "sha256": "dab2dec86d21f044ee5a277147712e35325326d5aeb61714b68ac9c7f87bf46b"
     },
     {
       "path": "src/types/ai-resource-group-resources-page.ts",
@@ -224,7 +224,7 @@
     },
     {
       "path": "src/types/json-value.ts",
-      "sha256": "22654cfefd5c2d5b7d4055c69738f83a6ec78e22cf28435ee38e04224788116d"
+      "sha256": "a6e404fc161c0949c57b98d8bb11e7135e91967ef287ea1b651496912630521d"
     },
     {
       "path": "src/types/model-catalog-sync-result.ts",
@@ -244,27 +244,27 @@
     },
     {
       "path": "src/types/model-ranking-history-entry.ts",
-      "sha256": "e6fc945f2790cc97c39c2cb3fb1665f6f0c7a2e806aba20b0a43413e8ff02a41"
+      "sha256": "4687124bf9629d657f86bb0a94ea674ba79e6ec136d935045ea481fa8d245b07"
     },
     {
       "path": "src/types/model-ranking-history-point.ts",
-      "sha256": "813a4055676558feb8535a16ce6b21b6b28d10e6f54926b56a8246b75fc41aef"
+      "sha256": "ae26e7524172f6fd31299d7c1fd83a3a2abf1e6c3ab5090152c2709a27929f09"
     },
     {
       "path": "src/types/model-ranking-item.ts",
-      "sha256": "16d136b818f464dfa39f623c62845a11891f57bd53a8d59debfab54618c6bd2f"
+      "sha256": "989d65b2829f279cd387ddd9855f7ce8626e74c312341a8b3657a70f432d7f89"
     },
     {
       "path": "src/types/model-ranking-refresh-job-history-page.ts",
-      "sha256": "14a256cce7c8eb8e22c8c796f710a7f6f0ac683f540cf0d2c33a3a91ab15f55c"
+      "sha256": "bb5857252ff4129e984a93459512593662c7324263bfd4ec7725034f803e8074"
     },
     {
       "path": "src/types/model-ranking-refresh-job-item.ts",
-      "sha256": "323eacf31c87c51919df11a43dfe497c41817f6c80e05dda6074f143c625494c"
+      "sha256": "3dd78daf4b92b2a9d9a73a3d7f78e871cdef9cfde438a6a70ea0e65aef1eaf72"
     },
     {
       "path": "src/types/model-ranking-refresh-status.ts",
-      "sha256": "527a1a260bece8935c816ea140a9797e0c897f565140ec0429e6d3b7c2f67033"
+      "sha256": "8854902e8174ac6f4abff93bb83b8acae7ee5267549d9618fa7230679fdfb49b"
     },
     {
       "path": "src/types/model-ranking-refresh-trigger-request.ts",
@@ -276,15 +276,15 @@
     },
     {
       "path": "src/types/model-rankings-jobs-list-result.ts",
-      "sha256": "f60b0763694892f917e4c5ba7966895d58f9e8cb9e183a82c33862f335d78b01"
+      "sha256": "807ad28ccfb4d4735e4b3641e6b4428d060e85278d8a9e361d96c5a41760417c"
     },
     {
       "path": "src/types/model-rankings-list-result.ts",
-      "sha256": "81c21e1699f2ed045d7e94723cdfc58ed251497167327072a271da49f368179a"
+      "sha256": "007cc5c8b3fbd640f7dfab8bd8c29cbd403930b64a710822cc3f569d0d08c209"
     },
     {
       "path": "src/types/model-rankings-page.ts",
-      "sha256": "489f899d46ac6cb8d2e06c896d5a911818bac021ff89a32448b4deff3b445031"
+      "sha256": "92b14362aab6cfa031913c3e8e1609f20132a3fc15a6e7b0028b8d36fd652e1a"
     },
     {
       "path": "src/types/model-rankings-refresh-response.ts",
@@ -292,19 +292,19 @@
     },
     {
       "path": "src/types/model-rankings-source.ts",
-      "sha256": "a3ab43f40f2422f64b945d5ab0348f307b9fc80e17af8ad367a98f670ef15231"
+      "sha256": "2d48a535a079b75be317d54ebccae06ea75a7b3b97de947ccd8448b2e1fc8707"
     },
     {
       "path": "src/types/model-rankings-status-retrieve-result.ts",
-      "sha256": "304f8aa035bb3cc5c5186739ab9dd0ad7fa8a20b867ada89def85ff7c7614cd1"
+      "sha256": "cd86b384c2e099465bddd858c70cd8b4f1b64eb2bb00967d9db50d6a4b833cc8"
     },
     {
       "path": "src/types/model-vendors-list-result.ts",
-      "sha256": "4cb4bd8e1721bfe99c84f31587190dea1d784f8fe424316862026047d61aeb65"
+      "sha256": "5c2a2426012fe39539fed2f0828cf5ea49314edd61bf8905439eb18ca4e7aa6a"
     },
     {
       "path": "src/types/models-list-result.ts",
-      "sha256": "c948c97cc4c54162bcef42e754ee31be7a0ac4a9cdb6d5f8ede4ec2df3c2742b"
+      "sha256": "c6427731597a599956d02035e7116c37725f354a937bc31e52d9387554005dd5"
     },
     {
       "path": "src/types/models-sync-response.ts",

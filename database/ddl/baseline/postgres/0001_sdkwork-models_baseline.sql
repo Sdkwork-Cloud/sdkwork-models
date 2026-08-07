@@ -251,6 +251,7 @@ CREATE TABLE IF NOT EXISTS ai_resource (
     resource_code VARCHAR(192) NOT NULL,
     resource_type VARCHAR(64) NOT NULL,
     display_name VARCHAR(128),
+    display_name_i18n JSONB NOT NULL DEFAULT '{}'::jsonb,
     vendor_id BIGINT,
     vendor_code VARCHAR(64),
     modality_id BIGINT,

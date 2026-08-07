@@ -19,12 +19,6 @@ pub type AiRoutingConfigChangeFuture<'a> =
     Pin<Box<dyn Future<Output = DomainResult<i64>> + Send + 'a>>;
 
 pub trait AiRoutingConfigChangeRecorder: Send + Sync {
-    fn record_sqlite_change<'a>(
-        &'a self,
-        tx: &'a mut sqlx::Transaction<'a, sqlx::Sqlite>,
-        change: AiRoutingConfigChange<'a>,
-    ) -> AiRoutingConfigChangeFuture<'a>;
-
     fn record_postgres_change<'a>(
         &'a self,
         tx: &'a mut sqlx::Transaction<'a, sqlx::Postgres>,
@@ -35,14 +29,6 @@ pub trait AiRoutingConfigChangeRecorder: Send + Sync {
 pub struct NoopAiRoutingConfigChangeRecorder;
 
 impl AiRoutingConfigChangeRecorder for NoopAiRoutingConfigChangeRecorder {
-    fn record_sqlite_change<'a>(
-        &'a self,
-        _tx: &'a mut sqlx::Transaction<'a, sqlx::Sqlite>,
-        _change: AiRoutingConfigChange<'a>,
-    ) -> AiRoutingConfigChangeFuture<'a> {
-        Box::pin(async { Ok(0) })
-    }
-
     fn record_postgres_change<'a>(
         &'a self,
         _tx: &'a mut sqlx::Transaction<'a, sqlx::Postgres>,

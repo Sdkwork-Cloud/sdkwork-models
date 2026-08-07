@@ -41,6 +41,8 @@ export interface ResourceGroupResourceItem {
   vendorCode: string | null;
   modalityCode: string | null;
   apiEndpointCode: string | null;
+  method: string | null;
+  path: string | null;
   catalogKey: string | null;
   model: string | null;
   providerNativeModel: string | null;
@@ -57,6 +59,8 @@ export interface ResourceGroupAssignableResourceItem {
   vendorCode: string | null;
   modalityCode: string | null;
   apiEndpointCode: string | null;
+  method: string | null;
+  path: string | null;
   catalogKey: string | null;
   model: string | null;
   providerNativeModel: string | null;
@@ -344,6 +348,8 @@ function normalizeResourceGroupResourceItem(value: unknown): ResourceGroupResour
     vendorCode: readNullableString(item, 'vendorCode'),
     modalityCode: readNullableString(item, 'modalityCode'),
     apiEndpointCode: readNullableString(item, 'apiEndpointCode'),
+    method: readNullableString(item, 'method'),
+    path: readNullableString(item, 'path'),
     catalogKey: readNullableString(item, 'catalogKey'),
     model: readNullableString(item, 'model'),
     providerNativeModel: readNullableString(item, 'providerNativeModel'),
@@ -363,6 +369,8 @@ function normalizeAssignableResourceItem(value: unknown): ResourceGroupAssignabl
     vendorCode: readNullableString(item, 'vendorCode'),
     modalityCode: readNullableString(item, 'modalityCode'),
     apiEndpointCode: readNullableString(item, 'apiEndpointCode'),
+    method: readNullableString(item, 'method'),
+    path: readNullableString(item, 'path'),
     catalogKey: readNullableString(item, 'catalogKey'),
     model: readNullableString(item, 'model'),
     providerNativeModel: readNullableString(item, 'providerNativeModel'),

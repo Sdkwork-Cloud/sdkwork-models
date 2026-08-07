@@ -69,6 +69,12 @@
   "supportedProtocols": [
     "openai_compatible"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.hunyuan.cloud.tencent.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "tencent",
   "vendorType": "commercial",
   "websiteUrl": "https://cloud.tencent.com"

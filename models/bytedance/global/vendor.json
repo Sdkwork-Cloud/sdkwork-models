@@ -72,6 +72,12 @@
     "openai_compatible",
     "vendor_native"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "ark.cn-beijing.volces.com",
+      "pathPrefix": "/api/v3"
+    }
+  },
   "vendorCode": "bytedance",
   "vendorType": "commercial",
   "websiteUrl": "https://seed.bytedance.com"

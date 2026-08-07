@@ -9,6 +9,18 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts"
     },
+    "./model-picker": {
+      "types": "./src/ModelPicker.tsx",
+      "import": "./src/ModelPicker.tsx"
+    },
+    "./model-picker-types": {
+      "types": "./src/model-picker-types.ts",
+      "import": "./src/model-picker-types.ts"
+    },
+    "./mainstream-catalog": {
+      "types": "./src/unified-agent-model-selector/mainstreamAgentModelCatalog.ts",
+      "import": "./src/unified-agent-model-selector/mainstreamAgentModelCatalog.ts"
+    },
     "./style.css": "./src/agent-model-access-selector/agent-model-access-selector.css"
   },
   "scripts": {

@@ -9,7 +9,6 @@ use tracing::warn;
 #[derive(Clone, Debug)]
 pub enum ModelsReadinessProbe {
     Static,
-    Sqlite(sqlx::SqlitePool),
     Postgres(sqlx::PgPool),
 }
 
@@ -37,9 +36,9 @@ pub fn models_health_router_with_database_pool(
         sdkwork_database_sqlx::DatabasePool::Postgres(pool, _) => {
             models_health_router_with_readiness(ModelsReadinessProbe::Postgres(pool.clone()))
         }
-        sdkwork_database_sqlx::DatabasePool::Sqlite(pool, _) => {
-            models_health_router_with_readiness(ModelsReadinessProbe::Sqlite(pool.clone()))
-        }
+        sdkwork_database_sqlx::DatabasePool::Sqlite(_, _) => unreachable!(
+            "models gateway readiness requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
+        ),
     }
 }
 
@@ -65,29 +64,6 @@ async fn ready_check(State(probe): State<ModelsReadinessProbe>) -> Response {
             })),
         )
             .into_response(),
-        ModelsReadinessProbe::Sqlite(pool) => match sqlx::query("SELECT 1").execute(&pool).await {
-            Ok(_) => (
-                StatusCode::OK,
-                Json(json!({
-                    "status": "ready",
-                    "service": "sdkwork-models",
-                    "database": "sqlite"
-                })),
-            )
-                .into_response(),
-            Err(error) => {
-                warn!(service = "sdkwork-models", database = "sqlite", %error, "readiness probe failed");
-                (
-                    StatusCode::SERVICE_UNAVAILABLE,
-                    Json(json!({
-                        "status": "not_ready",
-                        "service": "sdkwork-models",
-                        "database": "sqlite"
-                    })),
-                )
-                    .into_response()
-            }
-        },
         ModelsReadinessProbe::Postgres(pool) => {
             match sqlx::query("SELECT 1").execute(&pool).await {
                 Ok(_) => (

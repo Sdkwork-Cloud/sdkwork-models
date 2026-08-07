@@ -9,15 +9,10 @@ pub mod runtime_id;
 pub mod sql_model_rankings;
 
 pub mod postgres;
-pub mod sqlite;
 
 pub use postgres::{
     PostgresAdminAiResourceStore, PostgresModelCatalogAdminStore, PostgresModelRankingRefreshStore,
     PostgresModelRankingsReadStore,
-};
-pub use sqlite::{
-    SqliteAdminAiResourceStore, SqliteModelCatalogAdminStore, SqliteModelRankingRefreshStore,
-    SqliteModelRankingsReadStore,
 };
 
 pub use sdkwork_models_contract_service::DEFAULT_CATALOG_REFRESH_SOURCE;

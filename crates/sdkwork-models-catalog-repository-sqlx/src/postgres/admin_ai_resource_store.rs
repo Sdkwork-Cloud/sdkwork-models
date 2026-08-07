@@ -488,41 +488,41 @@ async fn list_ai_resources(
     let rows = sqlx::query(
         r#"
         SELECT
-            id,
-            resource_code,
-            resource_type AS resource_type,
-            COALESCE(NULLIF(display_name, ''), resource_code) AS display_name,
-            vendor_code,
-            modality_code,
-            api_code AS api_endpoint_code,
-            catalog_key,
-            model,
-            provider_native_model,
-            NULLIF(resource_schema ->> 'accessChannelKind', '') AS access_channel_kind,
-            NULLIF(resource_schema ->> 'baseUrl', '') AS base_url,
-            NULLIF(resource_schema ->> 'defaultVendorCode', '') AS default_vendor_code,
-            NULLIF(resource_schema ->> 'defaultModelId', '') AS default_model_id,
-            COALESCE(resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)::text AS supported_agent_provider_ids_json,
-            CASE WHEN jsonb_typeof(resource_schema -> 'contextTokens') = 'number'
-                THEN (resource_schema ->> 'contextTokens')::bigint
+            ai_resource.id,
+            ai_resource.resource_code,
+            ai_resource.resource_type AS resource_type,
+            COALESCE(NULLIF(ai_resource.display_name, ''), ai_resource.resource_code) AS display_name,
+            ai_resource.vendor_code,
+            ai_resource.modality_code,
+            ai_resource.api_code AS api_endpoint_code,
+            ai_resource.catalog_key,
+            ai_resource.model,
+            ai_resource.provider_native_model,
+            NULLIF(ai_resource.resource_schema ->> 'accessChannelKind', '') AS access_channel_kind,
+            NULLIF(ai_resource.resource_schema ->> 'baseUrl', '') AS base_url,
+            NULLIF(ai_resource.resource_schema ->> 'defaultVendorCode', '') AS default_vendor_code,
+            NULLIF(ai_resource.resource_schema ->> 'defaultModelId', '') AS default_model_id,
+            COALESCE(ai_resource.resource_schema -> 'supportedAgentProviderIds', '[]'::jsonb)::text AS supported_agent_provider_ids_json,
+            CASE WHEN jsonb_typeof(ai_resource.resource_schema -> 'contextTokens') = 'number'
+                THEN (ai_resource.resource_schema ->> 'contextTokens')::bigint
             END AS context_tokens,
-            CASE WHEN jsonb_typeof(resource_schema -> 'maxOutputTokens') = 'number'
-                THEN (resource_schema ->> 'maxOutputTokens')::bigint
+            CASE WHEN jsonb_typeof(ai_resource.resource_schema -> 'maxOutputTokens') = 'number'
+                THEN (ai_resource.resource_schema ->> 'maxOutputTokens')::bigint
             END AS max_output_tokens,
-            CASE WHEN jsonb_typeof(resource_schema -> 'toolCallRounds') = 'number'
-                THEN (resource_schema ->> 'toolCallRounds')::bigint
+            CASE WHEN jsonb_typeof(ai_resource.resource_schema -> 'toolCallRounds') = 'number'
+                THEN (ai_resource.resource_schema ->> 'toolCallRounds')::bigint
             END AS tool_call_rounds,
-            CASE WHEN jsonb_typeof(resource_schema -> 'supportsMultimodal') = 'boolean'
-                THEN (resource_schema ->> 'supportsMultimodal')::boolean
+            CASE WHEN jsonb_typeof(ai_resource.resource_schema -> 'supportsMultimodal') = 'boolean'
+                THEN (ai_resource.resource_schema ->> 'supportsMultimodal')::boolean
             END AS supports_multimodal,
             COALESCE(
-                NULLIF(resource_schema ->> 'description', ''),
-                NULLIF(description, '')
+                NULLIF(ai_resource.resource_schema ->> 'description', ''),
+                NULLIF(ai_resource.description, '')
             ) AS description,
-            NULLIF(resource_schema ->> 'capability', '') AS capability,
-            COALESCE(resource_schema -> 'capabilities', '[]'::jsonb)::text AS capabilities_json,
+            NULLIF(ai_resource.resource_schema ->> 'capability', '') AS capability,
+            COALESCE(ai_resource.resource_schema -> 'capabilities', '[]'::jsonb)::text AS capabilities_json,
             COALESCE(
-                NULLIF(resource_schema ->> 'compositionMode', ''),
+                NULLIF(ai_resource.resource_schema ->> 'compositionMode', ''),
                 (
                     SELECT NULLIF(g.selection_mode, '')
                     FROM ai_resource_group g
@@ -534,8 +534,8 @@ async fn list_ai_resources(
                 ),
                 'single'
             ) AS composition_mode,
-            status,
-            sort_order
+            ai_resource.status,
+            ai_resource.sort_order
         FROM ai_resource
         WHERE (
                 (tenant_id = $1 AND organization_id = $2)
@@ -3187,6 +3187,8 @@ fn item_from_row(
         vendor_code: optional_string_cell(&row, "vendor_code"),
         modality_code: optional_string_cell(&row, "modality_code"),
         api_endpoint_code: optional_string_cell(&row, "api_endpoint_code"),
+        method: optional_string_cell(&row, "method"),
+        path: optional_string_cell(&row, "path"),
         catalog_key: optional_string_cell(&row, "catalog_key"),
         model: optional_string_cell(&row, "model"),
         provider_native_model: optional_string_cell(&row, "provider_native_model"),
@@ -3354,6 +3356,8 @@ fn group_resource_from_row(
         vendor_code: optional_string_cell(&row, "vendor_code"),
         modality_code: optional_string_cell(&row, "modality_code"),
         api_endpoint_code: optional_string_cell(&row, "api_endpoint_code"),
+        method: optional_string_cell(&row, "method"),
+        path: optional_string_cell(&row, "path"),
         catalog_key: optional_string_cell(&row, "catalog_key"),
         model: optional_string_cell(&row, "model"),
         provider_native_model: optional_string_cell(&row, "provider_native_model"),

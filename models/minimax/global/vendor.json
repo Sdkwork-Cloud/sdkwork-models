@@ -79,6 +79,12 @@
     "openai_compatible",
     "vendor_native"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.minimaxi.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "minimax",
   "vendorType": "commercial",
   "websiteUrl": "https://www.minimax.io"

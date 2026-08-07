@@ -3,25 +3,25 @@ use sdkwork_web_core::{HttpMethod, HttpRoute, HttpRouteManifest};
 use crate::paths::SDK_DOMAIN;
 
 const HTTP_ROUTES: &[HttpRoute] = &[
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/model_vendors",
         SDK_DOMAIN,
         "modelVendors.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/models",
         SDK_DOMAIN,
         "models.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/model_access_channels",
         SDK_DOMAIN,
         "modelAccessChannels.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/model_access_channel_presets",
         SDK_DOMAIN,
@@ -33,31 +33,31 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         SDK_DOMAIN,
         "modelAccessChannels.upsert",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/model_rankings",
         SDK_DOMAIN,
         "modelRankings.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/voices",
         SDK_DOMAIN,
         "voices.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/models/{modelId}/voices",
         SDK_DOMAIN,
         "modelVoices.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/video_profiles",
         SDK_DOMAIN,
         "videoProfiles.list",
     ),
-    HttpRoute::dual_token(
+    HttpRoute::public(
         HttpMethod::Get,
         "/app/v3/api/ai/models/{modelId}/video_profiles",
         SDK_DOMAIN,

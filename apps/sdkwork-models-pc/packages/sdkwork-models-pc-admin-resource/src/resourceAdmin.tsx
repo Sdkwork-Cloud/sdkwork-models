@@ -618,6 +618,7 @@ export function ResourceAdmin() {
                       <tr>
                         <th className="px-5 py-3">{t('admin.model.resources.columns.resource')}</th>
                         <th className="px-5 py-3">{t('admin.model.resources.columns.kind')}</th>
+                        <th className="px-5 py-3">{t('admin.model.resources.columns.path')}</th>
                         <th className="px-5 py-3">{t('admin.model.resources.columns.vendor')}</th>
                         <th className="px-5 py-3">{t('admin.model.resources.columns.modality')}</th>
                         <th className="px-5 py-3">{t('admin.model.resources.columns.role')}</th>
@@ -633,6 +634,7 @@ export function ResourceAdmin() {
                             <div className="font-mono text-xs text-slate-500">{resource.resourceCode}</div>
                           </td>
                           <td className="px-5 py-3">{resourceTypeLabel(resource.resourceType, t)}</td>
+                          <td className="px-5 py-3">{resourceEndpointLabel(resource, t)}</td>
                           <td className="px-5 py-3">{resource.vendorCode ?? t('admin.model.resources.noData')}</td>
                           <td className="px-5 py-3">{resource.modalityCode ?? t('admin.model.resources.noData')}</td>
                           <td className="px-5 py-3">{memberRoleLabel(resource.memberRole, t)}</td>
@@ -967,6 +969,21 @@ const RESOURCE_TYPE_LABEL_KEYS: Record<string, string> = {
 function resourceTypeLabel(resourceType: string, t: TranslationFunction): string {
   const key = RESOURCE_TYPE_LABEL_KEYS[resourceType];
   return key ? t(key) : resourceType;
+}
+
+function resourceEndpointLabel(
+  resource: Pick<ResourceGroupResourceItem, 'resourceType' | 'method' | 'path'>,
+  t: TranslationFunction,
+): React.ReactNode {
+  if (resource.resourceType !== 'api_endpoint' || !resource.method || !resource.path) {
+    return t('admin.model.resources.noData');
+  }
+  return (
+    <span className="font-mono text-xs text-slate-600 dark:text-slate-300">
+      <span className="mr-1 font-semibold text-indigo-600 dark:text-indigo-300">{resource.method}</span>
+      {resource.path}
+    </span>
+  );
 }
 
 const MEMBER_ROLE_LABEL_KEYS: Record<ResourceGroupResourceItem['memberRole'], string> = {

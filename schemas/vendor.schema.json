@@ -94,6 +94,14 @@
         "pattern": "^[a-z][a-z0-9_]*$"
       }
     },
+    "apiEndpoints": {
+      "description": "Standard compatibility Base URL endpoints keyed by protocol family (openai, anthropic, google). baseUri is derived as https://{host}{pathPrefix}; pathPrefix must be a member of the family's standardPathPrefixes declared in models/protocols.json. Vendors without a standard compatibility endpoint may omit this property.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/apiEndpoint"
+      }
+    },
     "clientApiCompatibility": {
       "description": "Vendor-level compatibility declarations for client APIs with non-generic behavior. Region-specific base URLs, deployment properties, and prices stay outside model identity and are modeled by regional endpoint and pricing resources.",
       "type": "object",
@@ -128,6 +136,26 @@
     }
   },
   "$defs": {
+    "apiEndpoint": {
+      "type": "object",
+      "required": [
+        "host",
+        "pathPrefix"
+      ],
+      "properties": {
+        "host": {
+          "description": "Vendor API host without scheme or path, e.g. api.deepseek.com.",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+        },
+        "pathPrefix": {
+          "description": "Standard path prefix of the family's compatibility API; empty string or a value starting with '/' and not ending with '/'.",
+          "type": "string",
+          "pattern": "^(/.*|)$"
+        }
+      },
+      "additionalProperties": false
+    },
     "capability": {
       "enum": [
         "chat",

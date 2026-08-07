@@ -75,6 +75,12 @@
     "openai_compatible",
     "vendor_native"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "dashscope.aliyuncs.com",
+      "pathPrefix": "/compatible-mode/v1"
+    }
+  },
   "vendorCode": "alibaba",
   "vendorType": "commercial",
   "websiteUrl": "https://www.aliyun.com"

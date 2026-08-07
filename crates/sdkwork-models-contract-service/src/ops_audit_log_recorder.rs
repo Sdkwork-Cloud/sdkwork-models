@@ -19,12 +19,6 @@ pub struct OpsAuditLogEntry<'a> {
 pub type OpsAuditLogFuture<'a> = Pin<Box<dyn Future<Output = DomainResult<()>> + Send + 'a>>;
 
 pub trait OpsAuditLogRecorder: Send + Sync {
-    fn record_sqlite_audit_log<'a>(
-        &'a self,
-        tx: &'a mut sqlx::Transaction<'a, sqlx::Sqlite>,
-        entry: OpsAuditLogEntry<'a>,
-    ) -> OpsAuditLogFuture<'a>;
-
     fn record_postgres_audit_log<'a>(
         &'a self,
         tx: &'a mut sqlx::Transaction<'a, sqlx::Postgres>,
@@ -35,14 +29,6 @@ pub trait OpsAuditLogRecorder: Send + Sync {
 pub struct NoopOpsAuditLogRecorder;
 
 impl OpsAuditLogRecorder for NoopOpsAuditLogRecorder {
-    fn record_sqlite_audit_log<'a>(
-        &'a self,
-        _tx: &'a mut sqlx::Transaction<'a, sqlx::Sqlite>,
-        _entry: OpsAuditLogEntry<'a>,
-    ) -> OpsAuditLogFuture<'a> {
-        Box::pin(async { Ok(()) })
-    }
-
     fn record_postgres_audit_log<'a>(
         &'a self,
         _tx: &'a mut sqlx::Transaction<'a, sqlx::Postgres>,

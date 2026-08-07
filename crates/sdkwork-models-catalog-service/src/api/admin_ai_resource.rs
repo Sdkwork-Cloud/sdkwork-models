@@ -88,6 +88,10 @@ struct AdminAiResourceItemResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     api_endpoint_code: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    method: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     catalog_key: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     model: Option<String>,
@@ -200,6 +204,10 @@ struct AdminAiResourceGroupResourceItemResponse {
     modality_code: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     api_endpoint_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    method: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     catalog_key: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -801,6 +809,8 @@ fn to_item_response(item: AdminAiResourceItem) -> AdminAiResourceItemResponse {
         vendor_code: item.vendor_code,
         modality_code: item.modality_code,
         api_endpoint_code: item.api_endpoint_code,
+        method: item.method,
+        path: item.path,
         catalog_key: item.catalog_key,
         model: item.model,
         provider_native_model: item.provider_native_model,
@@ -858,6 +868,8 @@ fn to_group_resource_response(
         vendor_code: item.vendor_code,
         modality_code: item.modality_code,
         api_endpoint_code: item.api_endpoint_code,
+        method: item.method,
+        path: item.path,
         catalog_key: item.catalog_key,
         model: item.model,
         provider_native_model: item.provider_native_model,

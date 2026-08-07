@@ -86,6 +86,12 @@
     "google_gemini",
     "vendor_native"
   ],
+  "apiEndpoints": {
+    "google": {
+      "host": "generativelanguage.googleapis.com",
+      "pathPrefix": "/v1beta"
+    }
+  },
   "vendorCode": "google",
   "vendorType": "commercial",
   "websiteUrl": "https://ai.google.dev"

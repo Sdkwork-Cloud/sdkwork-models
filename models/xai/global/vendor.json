@@ -72,6 +72,12 @@
   "supportedProtocols": [
     "openai_compatible"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.x.ai",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "xai",
   "vendorType": "commercial",
   "websiteUrl": "https://x.ai"

@@ -55,6 +55,13 @@ pub struct ClientApiCompatibility {
     pub source: SourceEvidence,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct VendorApiEndpoint {
+    pub host: String,
+    pub path_prefix: String,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct ModelVendor {
@@ -78,6 +85,8 @@ pub struct ModelVendor {
     pub capabilities: Vec<String>,
     #[serde(default)]
     pub supported_protocols: Vec<String>,
+    #[serde(default)]
+    pub api_endpoints: BTreeMap<String, VendorApiEndpoint>,
     pub client_api_compatibility: BTreeMap<String, ClientApiCompatibility>,
     pub open_source: Option<bool>,
     pub sort_order: Option<i32>,

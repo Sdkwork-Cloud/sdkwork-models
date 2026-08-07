@@ -71,7 +71,7 @@ function routeManifest(profile) {
         path: routePath,
         operationId: operation.operationId,
         tags: operation.tags ?? ["intelligence"],
-        auth: { mode: authMode, required: authMode !== "public" },
+        auth: { mode: authMode, required: authMode !== "public" && authMode !== "anonymous" },
         handler: { module: "crate::routes", name: null },
         ownership: {
           owner: "sdkwork-models",

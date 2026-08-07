@@ -207,6 +207,16 @@
     "openai_compatible",
     "anthropic_messages"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.deepseek.com",
+      "pathPrefix": "/v1"
+    },
+    "anthropic": {
+      "host": "api.deepseek.com",
+      "pathPrefix": "/anthropic"
+    }
+  },
   "vendorCode": "deepseek",
   "vendorType": "commercial",
   "websiteUrl": "https://www.deepseek.com"

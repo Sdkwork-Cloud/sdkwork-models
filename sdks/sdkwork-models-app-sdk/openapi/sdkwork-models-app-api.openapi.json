@@ -132,12 +132,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List model rankings",
         "tags": [
           "ai"
@@ -151,7 +146,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
@@ -219,12 +214,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List model vendors",
         "tags": [
           "ai"
@@ -238,7 +228,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
@@ -447,12 +437,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List models",
         "tags": [
           "ai"
@@ -473,7 +458,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -596,12 +581,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List TTS voices",
         "tags": [
           "ai"
@@ -615,7 +595,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "voices",
@@ -702,12 +682,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List model TTS voices",
         "tags": [
           "ai"
@@ -721,7 +696,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVoices",
@@ -853,12 +828,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List video generation profiles",
         "tags": [
           "ai"
@@ -872,7 +842,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "videoProfiles",
@@ -959,12 +929,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List model video generation profiles",
         "tags": [
           "ai"
@@ -978,7 +943,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVideoProfiles",
@@ -1116,12 +1081,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List model access channels",
         "tags": [
           "ai"
@@ -1138,7 +1098,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelAccessChannels",
@@ -1340,12 +1300,7 @@
             "description": "Error response."
           }
         },
-        "security": [
-          {
-            "AccessToken": [],
-            "AuthToken": []
-          }
-        ],
+        "security": [],
         "summary": "List official model access channel presets",
         "tags": [
           "ai"
@@ -1359,7 +1314,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
-        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelAccessChannelPresets",

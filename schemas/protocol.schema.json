@@ -6,11 +6,19 @@
   "type": "object",
   "required": [
     "schemaVersion",
+    "families",
     "protocols"
   ],
   "properties": {
     "schemaVersion": {
       "type": "string"
+    },
+    "families": {
+      "description": "Standard compatibility families and their allowed base URL path prefixes. Vendor apiEndpoints.pathPrefix must be a member of the family's standardPathPrefixes.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/family"
+      }
     },
     "protocols": {
       "type": "array",
@@ -22,6 +30,30 @@
   },
   "additionalProperties": false,
   "$defs": {
+    "family": {
+      "type": "object",
+      "required": [
+        "familyCode",
+        "standardPathPrefixes"
+      ],
+      "properties": {
+        "familyCode": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "standardPathPrefixes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(/.*|)$"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "protocol": {
       "type": "object",
       "required": [

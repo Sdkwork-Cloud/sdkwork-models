@@ -9,6 +9,8 @@ export interface AdminAiResourceItem {
   vendorCode?: string | null;
   modalityCode?: string | null;
   apiEndpointCode?: string | null;
+  method?: string | null;
+  path?: string | null;
   catalogKey?: string | null;
   model?: string | null;
   providerNativeModel?: string | null;

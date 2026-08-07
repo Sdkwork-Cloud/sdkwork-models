@@ -74,6 +74,7 @@ export function validateCatalog(root) {
   const meterCodes = new Set(loadMeters(root).map((meter) => meter.meterCode));
   const protocolFile = readJsonFile(join(root, manifest.modelsRoot, "protocols.json"));
   const protocolCodes = new Set();
+  const protocolFamilyByCode = new Map();
   for (const [index, protocol] of (protocolFile.protocols ?? []).entries()) {
     if (typeof protocol.protocolCode !== "string" || protocol.protocolCode.length === 0) {
       issues.push(issue("protocol.code.invalid", `models/protocols.json#/protocols/${index}/protocolCode`, "protocolCode must be a non-empty string"));
@@ -83,6 +84,17 @@ export function validateCatalog(root) {
       issues.push(issue("protocol.code.duplicate", `models/protocols.json#/protocols/${index}/protocolCode`, `${protocol.protocolCode} is duplicated`));
     }
     protocolCodes.add(protocol.protocolCode);
+    if (typeof protocol.family === "string") {
+      protocolFamilyByCode.set(protocol.protocolCode, protocol.family);
+    }
+  }
+  // 兼容族标准路径规律:familyCode -> 允许的 pathPrefix 集合(models/protocols.json#/families)
+  const familyPathPrefixes = new Map();
+  for (const family of (protocolFile.families ?? [])) {
+    if (typeof family.familyCode !== "string") {
+      continue;
+    }
+    familyPathPrefixes.set(family.familyCode, new Set(family.standardPathPrefixes ?? []));
   }
   const routingResourceIndex = loadRoutingResourceIndex(root);
   const seenVendorRegions = new Set();
@@ -133,6 +145,13 @@ export function validateCatalog(root) {
       }
       supportedProtocols.add(protocolCode);
     }
+    validateApiEndpoints({
+      vendor: bundle.vendor,
+      protocolFamilyByCode,
+      familyPathPrefixes,
+      pathPrefix,
+      issues,
+    });
     validateClientApiCompatibility({
       vendor: bundle.vendor,
       protocolCodes,
@@ -773,6 +792,59 @@ function validateClientApiCompatibility({ vendor, protocolCodes, routingResource
       if (!item.resourceCodes?.includes(standard.defaultResourceCode)) {
         issues.push(issue("vendor.client_api_compatibility.default_resource_missing", `${itemPath}/resourceCodes`, `${clientApiCode} support must include ${standard.defaultResourceCode}`));
       }
+    }
+  }
+}
+
+// 标准兼容族:vendor apiEndpoints 仅允许这些 family 作为 key
+const API_ENDPOINT_FAMILIES = new Set(["openai", "anthropic", "google"]);
+
+/**
+ * 校验 vendor apiEndpoints 配置(兼容接口 Base URL 原始配置):
+ * - family key 必须是标准兼容族(openai/anthropic/google)
+ * - family 必须被 supportedProtocols 中同族协议声明支持
+ * - host 必须是纯小写域名(无协议、无路径)
+ * - pathPrefix 必须是该 family 标准集合(models/protocols.json#/families)中的值
+ */
+function validateApiEndpoints({ vendor, protocolFamilyByCode, familyPathPrefixes, pathPrefix, issues }) {
+  const endpoints = vendor.apiEndpoints;
+  if (endpoints === undefined || endpoints === null) {
+    // 允许缺失:部分 vendor 无标准兼容端点(如纯音频/视频厂商)
+    return;
+  }
+  if (typeof endpoints !== "object" || Array.isArray(endpoints)) {
+    issues.push(issue("vendor.api_endpoints.invalid", `${pathPrefix}/vendor.json#/apiEndpoints`, "apiEndpoints must be an object keyed by protocol family"));
+    return;
+  }
+  const supportedFamilies = new Set();
+  for (const protocolCode of vendor.supportedProtocols ?? []) {
+    const family = protocolFamilyByCode.get(protocolCode);
+    if (family) {
+      supportedFamilies.add(family);
+    }
+  }
+  for (const [family, endpoint] of Object.entries(endpoints)) {
+    const itemPath = `${pathPrefix}/vendor.json#/apiEndpoints/${family}`;
+    if (!API_ENDPOINT_FAMILIES.has(family)) {
+      issues.push(issue("vendor.api_endpoints.family.unknown", itemPath, `family ${family} is not a standard compatibility family; allowed: ${[...API_ENDPOINT_FAMILIES].join(", ")}`));
+      continue;
+    }
+    if (!supportedFamilies.has(family)) {
+      issues.push(issue("vendor.api_endpoint.unsupported_family", itemPath, `family ${family} must be supported by a protocolCode of the same family in supportedProtocols`));
+    }
+    if (!endpoint || typeof endpoint !== "object" || Array.isArray(endpoint)) {
+      issues.push(issue("vendor.api_endpoint.invalid", itemPath, "apiEndpoint must be an object with host and pathPrefix"));
+      continue;
+    }
+    if (typeof endpoint.host !== "string" || !/^[a-z0-9][a-z0-9.-]*$/.test(endpoint.host)) {
+      issues.push(issue("vendor.api_endpoint.host.invalid", `${itemPath}/host`, "host must be a lowercase domain without scheme or path"));
+    }
+    const standardPathPrefixes = familyPathPrefixes.get(family);
+    if (typeof endpoint.pathPrefix !== "string" || (endpoint.pathPrefix !== "" && (!endpoint.pathPrefix.startsWith("/") || endpoint.pathPrefix.endsWith("/")))) {
+      issues.push(issue("vendor.api_endpoint.path.invalid", `${itemPath}/pathPrefix`, "pathPrefix must be empty or start with '/' and not end with '/'"));
+    } else if (!standardPathPrefixes?.has(endpoint.pathPrefix)) {
+      const allowed = standardPathPrefixes ? [...standardPathPrefixes].map((value) => JSON.stringify(value)).join(", ") : "(family not declared in models/protocols.json)";
+      issues.push(issue("vendor.api_endpoint.path.not_standard", `${itemPath}/pathPrefix`, `pathPrefix ${JSON.stringify(endpoint.pathPrefix)} is not in the ${family} family standard set: ${allowed}`));
     }
   }
 }

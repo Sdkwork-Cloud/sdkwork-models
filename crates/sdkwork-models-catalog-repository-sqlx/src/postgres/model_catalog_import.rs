@@ -270,7 +270,14 @@ async fn import_vendors(
         .bind(SYSTEM_ORGANIZATION_ID)
         .bind(SYSTEM_DATA_SCOPE)
         .bind(ACTIVE_STATUS)
-        .bind(metadata_json(catalog, "sdkwork_models_vendor", serde_json::json!({ "sourceUrl": item.source_url })))
+        .bind(metadata_json(
+            catalog,
+            "sdkwork_models_vendor",
+            serde_json::json!({
+                "sourceUrl": item.source_url,
+                "apiEndpoints": item.api_endpoints,
+            }),
+        ))
         .bind(item.vendor_code)
         .bind(item.display_name)
         .bind(item.legal_name)
@@ -1038,7 +1045,8 @@ async fn import_ai_resources(
             serde_json::json!({
                 "resourceCode": &item.resource_code,
                 "resourceType": &item.resource_kind,
-                "compositionMode": &item.composition_mode
+                "compositionMode": &item.composition_mode,
+                "apiEndpoints": item.api_endpoints,
             }),
         ))
         .bind(item.resource_code)

@@ -70,6 +70,12 @@
     "openai_compatible",
     "anthropic_messages"
   ],
+  "apiEndpoints": {
+    "openai": {
+      "host": "api.stepfun.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "vendorCode": "stepfun",
   "vendorType": "commercial",
   "websiteUrl": "https://www.stepfun.com"

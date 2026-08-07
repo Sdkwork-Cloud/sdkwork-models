@@ -118,15 +118,11 @@ pub async fn migrate_client_local_models_database(applied_by: &str) -> Result<us
 
 pub async fn bootstrap_models_database_from_env() -> Result<ModelsDatabaseHost, String> {
     let _ = dotenvy::dotenv();
-    // Client-local SQLite (desktop standalone) resolves exclusively through
-    // SDKWORK_DATABASE_SQLITE_URL; otherwise the workspace PostgreSQL profile
-    // applies (ENVIRONMENT_SPEC §7.2).
-    let config = if sdkwork_database_config::client_local_sqlite_url_configured() {
-        DatabaseConfig::load_client_local_from_env("MODELS")
-    } else {
-        DatabaseConfig::from_env("MODELS")
-    }
-    .map_err(|error| format!("read models database config failed: {error}"))?;
+    // Server bootstrap resolves the workspace PostgreSQL profile exclusively;
+    // SQLite is not a valid server persistence engine (DATABASE_SPEC §3.1:
+    // authoritative-server persistence is PostgreSQL only).
+    let config = DatabaseConfig::from_env("MODELS")
+        .map_err(|error| format!("read models database config failed: {error}"))?;
     let pool = create_pool_from_config(config)
         .await
         .map_err(|error| format!("create models database pool failed: {error}"))?;
@@ -154,28 +150,6 @@ fn production_like_environment(value: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sdkwork_database_config::{DatabaseEngine, DeploymentMode};
-
-    async fn memory_pool() -> DatabasePool {
-        create_pool_from_config(DatabaseConfig {
-            engine: DatabaseEngine::Sqlite,
-            url: "sqlite::memory:".to_owned(),
-            max_connections: 1,
-            mode: DeploymentMode::Standalone,
-            ..DatabaseConfig::default()
-        })
-        .await
-        .expect("create in-memory database pool")
-    }
-
-    #[tokio::test]
-    async fn client_local_sqlite_pool_connects() {
-        // Desktop hosts connect the declared client-local SQLite pool; the
-        // role-aware config loader keeps server modules on PostgreSQL.
-        let host = connect_models_database(memory_pool().await)
-            .expect("client-local SQLite pool must connect");
-        assert!(host.pool().as_sqlite().is_some());
-    }
 
     #[test]
     fn production_like_environment_rejects_production_aliases() {
