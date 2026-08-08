@@ -22,6 +22,7 @@ tracing.workspace = true
 tracing-subscriber = "0.3"
 sdkwork_api_models_assembly.workspace = true
 sdkwork-web-axum.workspace = true
+sdkwork-web-bootstrap.workspace = true
 sdkwork-web-core.workspace = true
 sdkwork-database-sqlx = { workspace = true }
 

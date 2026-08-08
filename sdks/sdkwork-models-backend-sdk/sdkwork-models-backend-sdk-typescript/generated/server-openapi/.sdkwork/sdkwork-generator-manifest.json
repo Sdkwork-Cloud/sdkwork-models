@@ -40,7 +40,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "80a480e656fd842016048c2df61cc9d3353789400a2513095bc27490163432e3"
+      "sha256": "15ea901e217c837a1fed5e8bb6acf17e13ee35a0e527d7e5d6645b1cdbecb5f1"
     },
     {
       "path": "README.md",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "8a0a4cb9cc3cb855091ccd790e99feb9b9beff7637db48869173393ab544b9af"
+      "sha256": "8232d087b029fcd6897617116ca4f8609a728915cc0ca2f1796c66c00c8d89d9"
     },
     {
       "path": "src/http/index.ts",

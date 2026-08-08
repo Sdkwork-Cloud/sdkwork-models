@@ -43,7 +43,7 @@ pub async fn assemble_app_api_contribution() -> Result<ApiAssemblyContribution, 
                 Arc::clone(&entity_uuid_generator),
             )
         }
-        DatabasePool::Sqlite(_, _) => unreachable!(
+        _ => unreachable!(
             "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
         ),
     };
@@ -75,12 +75,12 @@ impl ReadinessCheck for ModelsDatabaseReadinessCheck {
         let host = Arc::clone(&self.host);
         Box::pin(async move {
             let result = match host.database_pool() {
-                DatabasePool::Sqlite(_, _) => unreachable!(
-                    "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
-                ),
                 DatabasePool::Postgres(pool, _) => {
                     sqlx::query("SELECT 1").execute(pool).await.map(|_| ())
                 }
+                _ => unreachable!(
+                    "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
+                ),
             };
             result.map_err(|error| format!("models database readiness probe failed: {error}"))
         })

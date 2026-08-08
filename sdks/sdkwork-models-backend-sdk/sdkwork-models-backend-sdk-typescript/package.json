@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit -p generated/server-openapi/tsconfig.json"
   },
   "dependencies": {
-    "@sdkwork/sdk-common": "^1.0.2"
+    "@sdkwork/sdk-common": "^1.0.2",
+    "@sdkwork/utils": "workspace:*"
   },
   "sdkwork": {
     "workspace": "sdkwork-models-backend-sdk",

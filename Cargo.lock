@@ -2384,6 +2384,7 @@ dependencies = [
  "sdkwork-api-models-assembly",
  "sdkwork-database-sqlx",
  "sdkwork-web-axum",
+ "sdkwork-web-bootstrap",
  "sdkwork-web-core",
  "serde_json",
  "sqlx",
@@ -2445,6 +2446,7 @@ dependencies = [
  "sdkwork-iam-context-service",
  "sdkwork-iam-web-adapter",
  "sdkwork-utils-rust",
+ "sdkwork-web-bootstrap",
  "sdkwork-web-core",
  "serde",
  "serde_json",
@@ -2571,7 +2573,6 @@ dependencies = [
 name = "sdkwork-database-sqlx"
 version = "0.1.0"
 dependencies = [
- "libsqlite3-sys",
  "sdkwork-database-config",
  "serde",
  "sqlx",

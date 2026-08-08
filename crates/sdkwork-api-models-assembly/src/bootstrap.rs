@@ -39,7 +39,7 @@ pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
                 Arc::clone(&entity_uuid_generator),
             )
         }
-        DatabasePool::Sqlite(_, _) => unreachable!(
+        _ => unreachable!(
             "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
         ),
     };
@@ -58,7 +58,7 @@ pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
                 host.voice_catalog(),
             )
         }
-        DatabasePool::Sqlite(_, _) => unreachable!(
+        _ => unreachable!(
             "models server assembly requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
         ),
     };

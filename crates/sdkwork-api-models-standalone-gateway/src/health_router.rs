@@ -36,7 +36,7 @@ pub fn models_health_router_with_database_pool(
         sdkwork_database_sqlx::DatabasePool::Postgres(pool, _) => {
             models_health_router_with_readiness(ModelsReadinessProbe::Postgres(pool.clone()))
         }
-        sdkwork_database_sqlx::DatabasePool::Sqlite(_, _) => unreachable!(
+        _ => unreachable!(
             "models gateway readiness requires a PostgreSQL pool (DATABASE_SPEC: authoritative-server persistence is PostgreSQL only)"
         ),
     }

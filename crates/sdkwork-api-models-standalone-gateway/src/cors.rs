@@ -1,68 +1,33 @@
 use sdkwork_web_axum::CanonicalCorsLayer;
 
-const PRODUCTION_DEFAULT_ORIGINS: &[&str] =
-    &["https://models.sdkwork.com", "https://admin.sdkwork.com"];
-
-const DEVELOPMENT_DEFAULT_ORIGINS: &[&str] = &[
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-];
-
 pub fn application_cors_layer() -> CanonicalCorsLayer {
-    let development = !matches!(
-        std::env::var("SDKWORK_MODELS_ENVIRONMENT")
-            .unwrap_or_else(|_| "development".to_owned())
-            .trim()
-            .to_ascii_lowercase()
-            .as_str(),
-        "prod" | "production" | "staging"
-    );
-    let mut policy = if development {
-        sdkwork_web_core::CorsPolicy::development_private_network()
-    } else {
-        sdkwork_web_core::CorsPolicy::default()
-    };
-    for origin in parse_allowed_origins() {
-        if let Ok(origin) = origin.to_str() {
-            if !policy
-                .allowed_origins
-                .iter()
-                .any(|allowed| allowed == origin)
-            {
-                policy.allowed_origins.push(origin.to_owned());
-            }
-        }
-    }
+    sdkwork_web_axum::cors_layer_from_policy(application_cors_policy())
+}
+
+/// Official policy construction: dev/test environments use the framework's
+/// `development_private_network` semantics (loopback/private-network dev-server
+/// origins); production uses the exact allowlist from the canonical
+/// `SDKWORK_CORS_ALLOWED_ORIGINS` key (legacy `SDKWORK_MODELS_CORS_ALLOWED_ORIGINS`
+/// still resolves with a deprecation warning). Local-only header extensions
+/// required by the models frontends are kept on top of the official defaults.
+fn application_cors_policy() -> sdkwork_web_core::CorsPolicy {
+    let environment =
+        sdkwork_web_bootstrap::web_environment_from_env(&["SDKWORK_MODELS_ENVIRONMENT"]);
+    let origins = sdkwork_web_bootstrap::cors_allowed_origins_from_env(&[
+        "SDKWORK_MODELS_CORS_ALLOWED_ORIGINS",
+    ]);
+    let mut policy = sdkwork_web_bootstrap::security_policy_for_environment(&environment, origins);
     for header in ["accept", "auth-token", "x-sdkwork-trace-id"] {
         if !policy
+            .cors
             .allowed_headers
             .iter()
             .any(|allowed| allowed == header)
         {
-            policy.allowed_headers.push(header.to_owned());
+            policy.cors.allowed_headers.push(header.to_owned());
         }
     }
-    sdkwork_web_axum::cors_layer_from_policy(policy)
-}
-
-fn parse_allowed_origins() -> Vec<axum::http::HeaderValue> {
-    if let Ok(raw) = std::env::var("SDKWORK_MODELS_CORS_ALLOWED_ORIGINS") {
-        return raw
-            .split(',')
-            .filter_map(|origin| axum::http::HeaderValue::from_str(origin.trim()).ok())
-            .collect();
-    }
-
-    let defaults = match std::env::var("SDKWORK_MODELS_ENVIRONMENT").as_deref() {
-        Ok("production") => PRODUCTION_DEFAULT_ORIGINS,
-        _ => DEVELOPMENT_DEFAULT_ORIGINS,
-    };
-    defaults
-        .iter()
-        .filter_map(|origin| axum::http::HeaderValue::from_str(origin).ok())
-        .collect()
+    policy.cors
 }
 
 #[cfg(test)]
@@ -70,15 +35,27 @@ mod tests {
     use super::*;
 
     #[test]
-    fn production_defaults_exclude_wildcard() {
+    fn environment_sensitive_policy_building() {
+        // Production: exact allowlist only, never wildcard.
         std::env::remove_var("SDKWORK_MODELS_CORS_ALLOWED_ORIGINS");
+        std::env::remove_var("SDKWORK_CORS_ALLOWED_ORIGINS");
         std::env::set_var("SDKWORK_MODELS_ENVIRONMENT", "production");
-        std::env::remove_var("SDKWORK_MODELS_CORS_ALLOW_ANY");
 
-        let origins = parse_allowed_origins();
-        assert_eq!(2, origins.len());
-        assert!(origins
+        let policy = application_cors_policy();
+        assert!(!policy.allow_all_origins);
+        assert!(!policy
+            .allowed_origins
             .iter()
-            .any(|value| value.to_str().ok() == Some("https://models.sdkwork.com")));
+            .any(|origin| origin == "*"));
+
+        // Development (default): loopback/private-network dev-server origins.
+        std::env::remove_var("SDKWORK_MODELS_ENVIRONMENT");
+        let policy = application_cors_policy();
+        policy
+            .validate_origin_value("http://192.168.50.12:5173")
+            .expect("private-network development origin");
+        policy
+            .validate_origin_value("https://evil.example.com")
+            .expect_err("public hostname must remain rejected");
     }
 }
