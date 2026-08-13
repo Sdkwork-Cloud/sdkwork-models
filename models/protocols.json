@@ -9,7 +9,8 @@
         "/api/v1",
         "/api/v3",
         "/compatible-mode/v1",
-        "/api/paas/v4"
+        "/api/paas/v4",
+        "/v1beta/openai"
       ]
     },
     {

@@ -59,6 +59,16 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "api.stepfun.com",
+      "pathPrefix": "/v1"
+    },
+    "openai_responses": {
+      "host": "api.stepfun.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 125,
@@ -67,8 +77,9 @@
     "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
   },
   "supportedProtocols": [
+    "anthropic_messages",
     "openai_compatible",
-    "anthropic_messages"
+    "openai_responses"
   ],
   "apiEndpoints": {
     "openai": {

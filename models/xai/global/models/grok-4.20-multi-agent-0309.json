@@ -5,6 +5,7 @@
     "reasoning"
   ],
   "catalogKey": "xai/grok-4.20-multi-agent-0309",
+  "codingVisible": true,
   "colorToken": "#111827",
   "contextTokens": 1000000,
   "description": "Grok 4.20 multi-agent model designed for orchestrated multi-agent workflows and tool-heavy tasks.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/docs/models"
   },
   "strengths": [
@@ -42,12 +43,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.920000",
-  "vendorCode": "xai",
-  "vendorName": "xAI",
-  "winRate": "0.915000",
   "usageScopes": [
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.915000"
 }

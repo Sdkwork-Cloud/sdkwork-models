@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "xai/grok-4.20-0309-non-reasoning",
+  "codingVisible": true,
   "colorToken": "#111827",
   "contextTokens": 1000000,
   "description": "Grok 4.20 non-reasoning model optimized for fast general-purpose chat and instruction following.",
@@ -29,7 +30,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/docs/models"
   },
   "strengths": [
@@ -41,12 +42,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.910000",
-  "vendorCode": "xai",
-  "vendorName": "xAI",
-  "winRate": "0.910000",
   "usageScopes": [
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.910000"
 }

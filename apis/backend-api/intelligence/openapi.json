@@ -195,15 +195,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelMappings",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       },
       "post": {
@@ -282,6 +282,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelMappings",
@@ -304,9 +306,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -403,6 +403,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelMappings",
@@ -422,9 +424,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -508,6 +508,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelMappings",
@@ -519,9 +521,7 @@
           "ai_model_mapping_rule_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       },
       "patch": {
@@ -610,6 +610,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelMappings",
@@ -632,9 +634,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -778,15 +778,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -900,15 +900,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings.jobs",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -1030,6 +1030,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-idempotent": true,
         "x-sdkwork-owner": "sdkwork-models",
@@ -1041,9 +1043,7 @@
           "ai_model_rank_snapshot",
           "ops_job_execution"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -1134,15 +1134,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelRankings.status",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -1221,15 +1221,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       },
       "post": {
@@ -1306,6 +1306,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVendors",
@@ -1325,9 +1327,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -1462,15 +1462,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       },
       "post": {
@@ -1547,6 +1547,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -1566,9 +1568,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -1666,6 +1666,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -1686,9 +1688,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -1770,6 +1770,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -1778,9 +1780,7 @@
         "x-write-tables": [
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       },
       "patch": {
@@ -1867,6 +1867,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "models",
@@ -1886,9 +1888,7 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.manage"
       }
     },
@@ -2021,6 +2021,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups",
@@ -2028,9 +2030,7 @@
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
         "x-sdkwork-pagination-mode": "offset",
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.read"
       },
       "post": {
@@ -2120,6 +2120,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups",
@@ -2130,9 +2132,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
@@ -2275,6 +2275,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups.resources",
@@ -2282,9 +2284,7 @@
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
         "x-sdkwork-pagination-mode": "offset",
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.read"
       }
     },
@@ -2367,6 +2367,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups",
@@ -2377,9 +2379,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       },
       "patch": {
@@ -2479,6 +2479,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups",
@@ -2489,9 +2491,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
@@ -2633,6 +2633,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups.resources",
@@ -2643,9 +2645,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       },
       "delete": {
@@ -2741,6 +2741,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resourceGroups.resources",
@@ -2751,9 +2753,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
@@ -2904,6 +2904,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resources",
@@ -2911,9 +2913,7 @@
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-resource/src/resourceGroupService.ts",
         "x-write-tables": [],
         "x-sdkwork-pagination-mode": "offset",
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.read"
       },
       "post": {
@@ -3001,6 +3001,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resources",
@@ -3011,9 +3013,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
@@ -3117,6 +3117,8 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "resources",
@@ -3127,9 +3129,7 @@
           "ai_resource_group_item",
           "ops_audit_log"
         ],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.resources.manage"
       }
     },
@@ -3264,15 +3264,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "voices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -3371,15 +3371,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVoices",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -3523,15 +3523,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "videoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     },
@@ -3630,15 +3630,15 @@
         "x-route-scope": "admin",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-backend-api",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
         "x-sdkwork-resource": "modelVideoProfiles",
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-backend-api",
         "x-source-file": "../sdkwork-models/apps/sdkwork-models-pc/packages/sdkwork-models-pc-admin-catalog/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "backend-api",
         "x-sdkwork-request-context": "WebRequestContext",
-        "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-permission": "intelligence.models.read"
       }
     }

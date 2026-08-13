@@ -733,6 +733,14 @@ fn optional_integer_cell(row: &sqlx::postgres::PgRow, column: &str) -> Option<i6
         .ok()
         .flatten()
         .or_else(|| {
+            // Snapshot tables declare INTEGER (int4) columns; decode them before
+            // falling back to the text cast.
+            row.try_get::<Option<i32>, _>(column)
+                .ok()
+                .flatten()
+                .map(i64::from)
+        })
+        .or_else(|| {
             string_cell(row, column)
                 .parse::<f64>()
                 .ok()

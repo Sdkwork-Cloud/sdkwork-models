@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://www.anthropic.com/news/claude-sonnet-5"
       },
       "unitPrice": "2.000000",
@@ -29,7 +29,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://www.anthropic.com/news/claude-sonnet-5"
       },
       "unitPrice": "10.000000",
@@ -45,7 +45,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
       },
       "tierCode": "cache_write_5m",
@@ -62,7 +62,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
       },
       "tierCode": "cache_write_1h",
@@ -79,7 +79,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
       },
       "unitPrice": "0.200000",

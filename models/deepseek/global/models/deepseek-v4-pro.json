@@ -4,9 +4,10 @@
     "chat"
   ],
   "catalogKey": "deepseek/deepseek-v4-pro",
+  "codingVisible": true,
   "colorToken": "#0f766e",
   "contextTokens": 1048576,
-  "description": "DeepSeek reasoning and coding model.",
+  "description": "DeepSeek V4 Pro flagship reasoning and coding model (V4-Pro-0813 GA) with Responses API and Codex support.",
   "displayName": "DeepSeek V4 Pro",
   "familyCode": "deepseek",
   "inputModalities": [
@@ -29,7 +30,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
   },
   "strengths": [
@@ -41,13 +42,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.910000",
-  "vendorCode": "deepseek",
-  "vendorName": "DeepSeek",
-  "winRate": "0.890000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "deepseek",
+  "vendorName": "DeepSeek",
+  "winRate": "0.890000"
 }

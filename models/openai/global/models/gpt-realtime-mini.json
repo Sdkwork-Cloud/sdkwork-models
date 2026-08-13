@@ -4,6 +4,7 @@
     "audio"
   ],
   "catalogKey": "openai/gpt-realtime-mini",
+  "codingVisible": false,
   "colorToken": "#10a37f",
   "contextTokens": 128000,
   "description": "Cost-efficient version of GPT-Realtime for voice interactions.",
@@ -27,7 +28,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/models"
   },
   "strengths": [
@@ -38,10 +39,9 @@
   "supportsJsonSchema": false,
   "supportsStreaming": true,
   "supportsTools": true,
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
   "usageScopes": [
     "agent"
   ],
-  "codingVisible": false
+  "vendorCode": "openai",
+  "vendorName": "OpenAI"
 }

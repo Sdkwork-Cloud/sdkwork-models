@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "anthropic/claude-sonnet-5",
+  "codingVisible": true,
   "colorToken": "#d97706",
   "contextTokens": 1000000,
   "description": "Claude Sonnet 5 is Anthropic's most agentic Sonnet model for coding, tool use, and autonomous workflows with introductory API pricing through August 2026.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://www.anthropic.com/news/claude-sonnet-5"
   },
   "strengths": [
@@ -43,13 +44,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.980000",
-  "vendorCode": "anthropic",
-  "vendorName": "Anthropic",
-  "winRate": "0.970000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.970000"
 }

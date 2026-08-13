@@ -68,6 +68,12 @@
   "operatingRegions": [
     "GLOBAL"
   ],
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "api.minimaxi.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "regionCode": "global",
   "schemaVersion": "1.0.0",
   "sortOrder": 120,

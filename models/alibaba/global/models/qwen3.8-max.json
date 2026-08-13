@@ -1,0 +1,57 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "alibaba/qwen3.8-max",
+  "codingVisible": true,
+  "colorToken": "#2563eb",
+  "contextTokens": 1000000,
+  "description": "Qwen3.8-Max international flagship reasoning and agent model generally available since August 3, 2026 with 1M context.",
+  "displayName": "Qwen3.8 Max",
+  "familyCode": "qwen",
+  "inputModalities": [
+    "text",
+    "image",
+    "video",
+    "document"
+  ],
+  "latencyP50Ms": 700,
+  "latencyP95Ms": 2300,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 65536,
+  "modelId": "qwen3.8-max",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1120.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-08-13T00:00:00Z",
+    "sourceUrl": "https://www.qwencloud.com/models/qwen3.8-max"
+  },
+  "strengths": [
+    "Native multimodal",
+    "Long context",
+    "Agents",
+    "Coding"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.995000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.955000"
+}

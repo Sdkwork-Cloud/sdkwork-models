@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "xai/grok-build-0.1",
+  "codingVisible": true,
   "colorToken": "#374151",
   "contextTokens": 256000,
   "description": "Grok Build lightweight model for fast, cost-efficient inference on simpler tasks.",
@@ -28,7 +29,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/docs/models"
   },
   "strengths": [
@@ -39,12 +40,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.700000",
-  "vendorCode": "xai",
-  "vendorName": "xAI",
-  "winRate": "0.780000",
   "usageScopes": [
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.780000"
 }

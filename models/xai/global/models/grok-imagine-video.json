@@ -4,6 +4,7 @@
     "video"
   ],
   "catalogKey": "xai/grok-imagine-video",
+  "codingVisible": false,
   "colorToken": "#111827",
   "description": "Grok Imagine video generation model supporting text, image, and video inputs.",
   "displayName": "Grok Imagine Video",
@@ -28,7 +29,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/developers/models/grok-imagine-video"
   },
   "strengths": [
@@ -40,9 +41,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.930000",
+  "usageScopes": [],
   "vendorCode": "xai",
   "vendorName": "xAI",
-  "winRate": "0.880000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.880000"
 }

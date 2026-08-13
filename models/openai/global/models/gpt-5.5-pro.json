@@ -4,9 +4,10 @@
     "chat"
   ],
   "catalogKey": "openai/gpt-5.5-pro",
+  "codingVisible": true,
   "colorToken": "#030712",
   "contextTokens": 1050000,
-  "description": "OpenAI GPT-5.5 Pro frontier model for maximum reasoning depth, coding, and agentic workloads.",
+  "description": "GPT-5.5 Pro kept for historical pricing and migration reference; superseded by the GPT-5.6 Sol family.",
   "displayName": "GPT-5.5 Pro",
   "familyCode": "gpt-5",
   "inputModalities": [
@@ -15,7 +16,7 @@
   ],
   "latencyP50Ms": 1240,
   "latencyP95Ms": 4200,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "maxInputTokens": 1050000,
   "maxOutputTokens": 128000,
   "modelId": "gpt-5.5-pro",
@@ -25,12 +26,13 @@
   "primaryCapability": "chat",
   "rankScore": "1190.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "replacementModel": "gpt-5.6-sol",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.5-pro"
   },
   "strengths": [
@@ -43,13 +45,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.995000",
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
-  "winRate": "0.995000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.995000"
 }

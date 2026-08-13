@@ -4,6 +4,7 @@
     "embedding"
   ],
   "catalogKey": "openai/text-embedding-3-small",
+  "codingVisible": false,
   "colorToken": "#64748b",
   "description": "Text embedding baseline for retrieval, search, and semantic indexing.",
   "displayName": "Text embedding 3 small",
@@ -26,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/guides/embeddings"
   },
   "strengths": [
@@ -39,9 +40,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.700000",
+  "usageScopes": [],
   "vendorCode": "openai",
   "vendorName": "OpenAI",
-  "winRate": "0.820000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.820000"
 }

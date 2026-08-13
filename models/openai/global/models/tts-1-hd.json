@@ -4,6 +4,7 @@
     "audio"
   ],
   "catalogKey": "openai/tts-1-hd",
+  "codingVisible": false,
   "colorToken": "#6366f1",
   "description": "High-definition text-to-speech model for premium audio fidelity.",
   "displayName": "TTS-1 HD",
@@ -26,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
   },
   "strengths": [
@@ -37,9 +38,8 @@
   "supportsStreaming": true,
   "supportsTools": false,
   "trendScore": "0.850000",
+  "usageScopes": [],
   "vendorCode": "openai",
   "vendorName": "OpenAI",
-  "winRate": "0.860000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.860000"
 }

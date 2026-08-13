@@ -1,0 +1,112 @@
+{
+  "catalogKey": "xai/grok-4.6",
+  "currency": "USD",
+  "modelId": "grok-4.6",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "up_to_200k",
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "up_to_200k",
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "up_to_200k",
+      "unitPrice": "0.500000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-input-over-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "over_200k",
+      "unitPrice": "4.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-output-over-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "over_200k",
+      "unitPrice": "12.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-12T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "xai-grok-4.6-cache-read-over-200k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://docs.x.ai/docs/models"
+      },
+      "tierCode": "over_200k",
+      "unitPrice": "1.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "xai"
+}

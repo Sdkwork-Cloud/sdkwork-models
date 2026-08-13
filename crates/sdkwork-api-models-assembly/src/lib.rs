@@ -9,6 +9,10 @@ mod generated;
 
 pub use bootstrap::{assemble_api_router, assemble_business_routes, ApiAssembly};
 pub use contribution::assemble_app_api_contribution;
+/// App-api surface route manifest owned by the dependency assembly.
+pub fn app_api_route_manifest() -> sdkwork_web_core::HttpRouteManifest {
+    sdkwork_routes_models_catalog_app_api::app_route_manifest()
+}
 
 pub fn assembly_route_count() -> usize {
     generated::ROUTE_CRATE_COUNT

@@ -152,6 +152,13 @@ export function validateCatalog(root) {
       pathPrefix,
       issues,
     });
+    validateProtocolBaseUrls({
+      vendor: bundle.vendor,
+      protocolFamilyByCode,
+      familyPathPrefixes,
+      pathPrefix,
+      issues,
+    });
     validateClientApiCompatibility({
       vendor: bundle.vendor,
       protocolCodes,
@@ -845,6 +852,54 @@ function validateApiEndpoints({ vendor, protocolFamilyByCode, familyPathPrefixes
     } else if (!standardPathPrefixes?.has(endpoint.pathPrefix)) {
       const allowed = standardPathPrefixes ? [...standardPathPrefixes].map((value) => JSON.stringify(value)).join(", ") : "(family not declared in models/protocols.json)";
       issues.push(issue("vendor.api_endpoint.path.not_standard", `${itemPath}/pathPrefix`, `pathPrefix ${JSON.stringify(endpoint.pathPrefix)} is not in the ${family} family standard set: ${allowed}`));
+    }
+  }
+}
+
+// LLM API 协议集:protocolBaseUrls 仅允许这些协议 code 作为 key
+const LLM_PROTOCOL_CODES = new Set(["openai_compatible", "openai_responses", "anthropic_messages"]);
+
+/**
+ * 校验 vendor protocolBaseUrls 配置(按 LLM API 协议 code 的官方默认 Base URL):
+ * - key 必须是 LLM 协议 code(openai_compatible/openai_responses/anthropic_messages)
+ * - 协议必须被 supportedProtocols 声明支持
+ * - host 必须是纯小写域名(无协议、无路径)
+ * - pathPrefix 必须是该协议族标准集合(models/protocols.json#/families)中的值
+ * - 未收录的协议(vendor_native、google_gemini、无官方地址的声明)直接省略
+ */
+function validateProtocolBaseUrls({ vendor, protocolFamilyByCode, familyPathPrefixes, pathPrefix, issues }) {
+  const baseUrls = vendor.protocolBaseUrls;
+  if (baseUrls === undefined || baseUrls === null) {
+    // 允许缺失:非 LLM 协议厂商或无官方默认地址的厂商省略该字段
+    return;
+  }
+  if (typeof baseUrls !== "object" || Array.isArray(baseUrls)) {
+    issues.push(issue("vendor.protocol_base_urls.invalid", `${pathPrefix}/vendor.json#/protocolBaseUrls`, "protocolBaseUrls must be an object keyed by LLM protocol code"));
+    return;
+  }
+  for (const [protocolCode, endpoint] of Object.entries(baseUrls)) {
+    const itemPath = `${pathPrefix}/vendor.json#/protocolBaseUrls/${protocolCode}`;
+    if (!LLM_PROTOCOL_CODES.has(protocolCode)) {
+      issues.push(issue("vendor.protocol_base_urls.protocol.unknown", itemPath, `protocol ${protocolCode} is not an LLM protocol code; allowed: ${[...LLM_PROTOCOL_CODES].join(", ")}`));
+      continue;
+    }
+    if (!(vendor.supportedProtocols ?? []).includes(protocolCode)) {
+      issues.push(issue("vendor.protocol_base_urls.unsupported_protocol", itemPath, `protocol ${protocolCode} must be declared in supportedProtocols`));
+    }
+    if (!endpoint || typeof endpoint !== "object" || Array.isArray(endpoint)) {
+      issues.push(issue("vendor.protocol_base_url.invalid", itemPath, "protocolBaseUrl must be an object with host and pathPrefix"));
+      continue;
+    }
+    if (typeof endpoint.host !== "string" || !/^[a-z0-9][a-z0-9.-]*$/.test(endpoint.host)) {
+      issues.push(issue("vendor.protocol_base_url.host.invalid", `${itemPath}/host`, "host must be a lowercase domain without scheme or path"));
+    }
+    const family = protocolFamilyByCode.get(protocolCode);
+    const standardPathPrefixes = family ? familyPathPrefixes.get(family) : undefined;
+    if (typeof endpoint.pathPrefix !== "string" || (endpoint.pathPrefix !== "" && (!endpoint.pathPrefix.startsWith("/") || endpoint.pathPrefix.endsWith("/")))) {
+      issues.push(issue("vendor.protocol_base_url.path.invalid", `${itemPath}/pathPrefix`, "pathPrefix must be empty or start with '/' and not end with '/'"));
+    } else if (!standardPathPrefixes?.has(endpoint.pathPrefix)) {
+      const allowed = standardPathPrefixes ? [...standardPathPrefixes].map((value) => JSON.stringify(value)).join(", ") : "(family not declared in models/protocols.json)";
+      issues.push(issue("vendor.protocol_base_url.path.not_standard", `${itemPath}/pathPrefix`, `pathPrefix ${JSON.stringify(endpoint.pathPrefix)} is not in the ${family} family standard set: ${allowed}`));
     }
   }
 }

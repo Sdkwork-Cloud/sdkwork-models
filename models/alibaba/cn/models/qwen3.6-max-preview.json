@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "alibaba/qwen3.6-max-preview",
+  "codingVisible": true,
   "colorToken": "#2563eb",
   "contextTokens": 262144,
   "description": "Previous Qwen3.6 Max preview generation superseded by Qwen3.8 Max preview at WAIC 2026 on July 19, 2026; kept for migration reference.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://qwenlm.github.io/blog/qwen3.8-max-preview/"
   },
   "strengths": [
@@ -42,13 +43,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.920000",
-  "vendorCode": "alibaba",
-  "vendorName": "Alibaba Cloud",
-  "winRate": "0.890000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.890000"
 }

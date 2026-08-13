@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.08.03.1",
-  "observedAt": "2026-08-03T00:00:00Z",
+  "catalogVersion": "2026.08.13.1",
+  "observedAt": "2026-08-13T00:00:00Z",
   "policy": {
     "officialFirst": true,
     "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
@@ -29,8 +29,8 @@
   "schemaVersion": "1.1.0",
   "vendors": [
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "Alibaba Cloud mainland China operation with Qwen LLM, Wanxiang image/video, and text embedding models.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "Alibaba Cloud mainland China operation with Qwen LLM, Wanxiang image/video, and text embedding models. Qwen3.8-Max generally available since 2026-08-03 with CNY 12/36 per 1M tokens.",
       "official": {
         "additionalUrls": [
           "https://help.aliyun.com/zh/model-studio/",
@@ -54,7 +54,8 @@
         "wan2.6-i2v",
         "wan2.6-r2v",
         "text-embedding-v3",
-        "text-embedding-v4"
+        "text-embedding-v4",
+        "qwen3.8-max"
       ],
       "supportedModels": [
         "qwen3.6-max-preview",
@@ -64,11 +65,12 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "Alibaba Cloud international Qwen operation modeled as the global region with USD billing from QwenCloud/DashScope. The mainland cn region keeps its independent CNY deployment and pricing.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "Alibaba Cloud international Qwen operation modeled as the global region with USD billing from QwenCloud/DashScope. Qwen3.8-Max generally available since 2026-08-03 with USD 2/6 per 1M tokens. The mainland cn region keeps its independent CNY deployment and pricing.",
       "official": {
         "additionalUrls": [
-          "https://dashscope-intl.aliyuncs.com/api/v1"
+          "https://dashscope-intl.aliyuncs.com/api/v1",
+          "https://www.qwencloud.com/models/qwen3.8-max"
         ],
         "modelsUrl": "https://www.qwencloud.com/models/qwen3.7-max",
         "pricingUrl": "https://www.qwencloud.com/models/qwen3.7-max"
@@ -76,14 +78,15 @@
       "references": [],
       "regionCode": "global",
       "requiredModels": [
-        "qwen3.7-max"
+        "qwen3.7-max",
+        "qwen3.8-max"
       ],
       "vendorCode": "alibaba",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "Official Claude families including Sonnet 5 (June 2026 GA) and Opus 5 (July 24, 2026). Claude Fable 5 public API access restored globally on 2026-07-01; Claude Mythos 5 remains limited to Project Glasswing approved organizations.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "Official Claude families including Sonnet 5 (June 2026 GA) and Opus 5 (July 24, 2026). The planned Sonnet 5 price increase to $3/$15 on 2026-09-01 was canceled on 2026-08-11; $2/$10 remains the long-term price. Claude Fable 5 public API access restored globally on 2026-07-01; Claude Mythos 5 remains limited to Project Glasswing approved organizations.",
       "official": {
         "additionalUrls": [
           "https://www.anthropic.com/pricing",
@@ -131,7 +134,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Baidu AI Cloud mainland China operation is modeled as the cn region of the vendor with CNY billing; ERNIE/Qianfan product names are not vendor identities.",
       "official": {
         "additionalUrls": [
@@ -161,7 +164,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "FLUX.2 Pro pricing uses official per-megapixel BFL rows rather than synthetic per-result pricing. Pending independent official snapshot re-verification before official_verified status.",
       "official": {
         "additionalUrls": [
@@ -187,7 +190,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "ByteDance mainland China operation is modeled as the cn region of the vendor with CNY billing. Doubao Seed 2.1 Pro/Turbo (260628) launched on 2026-06-23 via Volcengine Ark. Seedance 2.0 standard and fast models are listed for cn with official CNY per-second pricing.",
       "official": {
         "additionalUrls": [
@@ -226,7 +229,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "ByteDance international operation with Doubao Seed LLM and Seedance video families billed in USD.",
       "official": {
         "additionalUrls": [
@@ -263,8 +266,8 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "DeepSeek international API operation is modeled as the global region of the vendor with USD billing. Official English pricing page provides USD cache-hit, cache-miss input, and output prices.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "DeepSeek international API operation is modeled as the global region of the vendor with USD billing. Official English pricing page provides USD cache-hit, cache-miss input, and output prices. Peak/off-peak billing effective 2026-08-16 16:00 UTC (peak 01:00-04:00 and 06:00-10:00 UTC); DeepSeek V4 Pro GA (V4-Pro-0813) announced 2026-08-13.",
       "official": {
         "additionalUrls": [
           "https://api-docs.deepseek.com/"
@@ -291,8 +294,8 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "DeepSeek mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese pricing page provides CNY cache-hit, cache-miss input, and output prices.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "DeepSeek mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese pricing page provides CNY cache-hit, cache-miss input, and output prices. Peak/off-peak billing effective 2026-08-17 00:00 Beijing time (peak 09:00-12:00 and 14:00-18:00 Beijing); DeepSeek V4 Pro GA (V4-Pro-0813) announced 2026-08-13.",
       "official": {
         "additionalUrls": [
           "https://api-docs.deepseek.com/zh-cn/"
@@ -319,7 +322,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "ElevenLabs audio model catalog source. Added Flash v2.5, Multilingual v2 TTS, Scribe v2 Realtime STT, and Text-to-Sound v2 SFX with official API pricing.",
       "official": {
         "additionalUrls": [
@@ -345,7 +348,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Gemini 3.6 Flash and 3.5 Flash Lite GA July 21, 2026. Gemini 3.5 Flash and 3.1 Flash Lite remain active stable models. Imagen 4.0 family shuts down 2026-08-17 (Nano Banana 2 / gemini-3.1-flash-image-preview replaces it); Gemini 2.5 Flash Image shuts down 2026-10-02.",
       "official": {
         "additionalUrls": [
@@ -408,7 +411,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Kuaishou international operation is modeled as the global region of the vendor with USD billing; Kling is a model family, not the vendor identity. Kling Video 3.0 and Kling Sound text-to-audio / video-to-audio SFX APIs.",
       "official": {
         "additionalUrls": [
@@ -435,7 +438,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Kuaishou mainland China operation with Kling Video 3.0 models, Kling Sound SFX APIs, and official CNY per-task pricing.",
       "official": {
         "additionalUrls": [
@@ -461,7 +464,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Luma Dream Machine video models. Ray 2 and Ray 2 Flash officially deprecated; Ray 3.2 is the current flagship (June 9, 2026).",
       "official": {
         "additionalUrls": [
@@ -485,7 +488,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "MiniMax international operation with M3, Hailuo video, Music 3.0, Speech 2.8, and Image models. MiniMax H3 unified video model released 2026-07-31.",
       "official": {
         "additionalUrls": [
@@ -533,7 +536,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "MiniMax mainland China operation is modeled as the cn region of the vendor with CNY billing. Added Speech 2.8 Turbo/HD, Music 2.6, and Music 3.0 with official pay-as-you-go pricing.",
       "official": {
         "additionalUrls": [
@@ -573,7 +576,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Meituan mainland China operation is modeled as the cn region of the vendor with CNY billing. LongCat (Longmao) is tracked as the default model family entry pending richer official price-table snapshots.",
       "official": {
         "additionalUrls": [
@@ -593,7 +596,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Moonshot/Kimi international API operation is modeled as the global region of the vendor with USD billing. Official international landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -627,7 +630,7 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Moonshot/Kimi mainland China API operation is modeled as the cn region of the vendor with CNY billing. Official Chinese landing and pricing pages list K2.6 and K2.5 token prices.",
       "official": {
         "additionalUrls": [
@@ -661,8 +664,8 @@
       "verificationStatus": "official_verified"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "OpenAI official API model and pricing docs. Added GPT-4o mini TTS, TTS-1 HD, GPT-4o transcribe diarize, and Whisper-1 alongside GPT Realtime and transcription defaults.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "OpenAI official API model and pricing docs. GPT-5.6 Sol/Terra/Luna are the flagship family (GA 2026-07-09); Terra and Luna price cuts on 2026-07-30; Fast mode extended to long-context requests on 2026-08-05. GPT-5.5/5.4 families superseded and kept as legacy reference.",
       "official": {
         "additionalUrls": [
           "https://platform.openai.com/docs/pricing",
@@ -699,12 +702,9 @@
       ],
       "regionCode": "global",
       "requiredModels": [
-        "gpt-5.5",
-        "gpt-5.5-pro",
-        "gpt-5.4-pro",
-        "gpt-5.4",
-        "gpt-5.4-mini",
-        "gpt-5.4-nano",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna",
         "gpt-image-2",
         "gpt-realtime-2",
         "gpt-4o-mini-tts",
@@ -714,8 +714,14 @@
         "gpt-4o-transcribe"
       ],
       "supportedModels": [
-        "gpt-realtime-1.5",
+        "gpt-5.5",
+        "gpt-5.5-pro",
+        "gpt-5.4",
+        "gpt-5.4-pro",
+        "gpt-5.4-mini",
+        "gpt-5.4-nano",
         "gpt-5.2",
+        "gpt-realtime-1.5",
         "gpt-image-1.5",
         "gpt-4o-mini-transcribe",
         "gpt-4o-transcribe-diarize",
@@ -724,16 +730,13 @@
         "sora-2-pro",
         "gpt-realtime-mini",
         "gpt-realtime-translate",
-        "gpt-realtime-whisper",
-        "gpt-5.6-sol",
-        "gpt-5.6-terra",
-        "gpt-5.6-luna"
+        "gpt-realtime-whisper"
       ],
       "vendorCode": "openai",
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Stability AI image and audio API public docs. Added Stable Audio 2.5 music generation and text-to-audio SFX mode.",
       "official": {
         "additionalUrls": [
@@ -760,7 +763,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Mureka official API platform from Kunlun Tech for song and instrumental generation. Added V9.5 base and O3 reasoning model released at WAIC 2026.",
       "official": {
         "additionalUrls": [
@@ -788,7 +791,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Runway generative video and image API with Gen-4 video and image models billed per second or per image.",
       "official": {
         "additionalUrls": [
@@ -811,7 +814,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Suno API source.",
       "official": {
         "additionalUrls": [
@@ -831,7 +834,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Tencent Hunyuan legacy models (HY 2.0 Instruct/Think, turbos-latest) shut down 2026-06-26; Hunyuan 3 (hy3) is the current model.",
       "official": {
         "additionalUrls": [
@@ -860,7 +863,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "StepFun (阶跃星辰) mainland China operation is modeled as the cn region of the vendor with CNY billing. Step Flash and Step multimodal families are product lines, not vendor identities.",
       "official": {
         "additionalUrls": [
@@ -881,7 +884,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "ShengShu Technology Vidu mainland China API with Q3 video models, Audio 1.0 text-to-audio / timing-to-audio SFX APIs billed in CNY credits, and S1 real-time streaming interactive video model released July 3, 2026.",
       "official": {
         "additionalUrls": [
@@ -909,7 +912,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "ShengShu Technology Vidu international API with Q3 video models, Audio 1.0 text-to-audio / timing-to-audio SFX APIs billed in USD credits, and S1 real-time streaming interactive video model released July 3, 2026.",
       "official": {
         "additionalUrls": [
@@ -936,7 +939,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "AIsphere PixVerse (拍我AI) mainland China video models via Alibaba DashScope and domestic open platform.",
       "official": {
         "additionalUrls": [
@@ -956,7 +959,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "AIsphere PixVerse international open API with V6 text-to-video, image-to-video, and reference-to-video.",
       "official": {
         "additionalUrls": [
@@ -975,8 +978,8 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
-      "notes": "xAI official docs list Grok 4.3, 4.20 series, Build 0.1, and Grok Imagine image/video models.",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
+      "notes": "xAI official docs list Grok 4.6 (released 2026-08-12), Grok 4.5, Grok 4.3, 4.20 series, Build 0.1, and Grok Imagine image/video models. Grok 4.6 reprices whole requests above 200K input tokens at doubled rates.",
       "official": {
         "additionalUrls": [
           "https://docs.x.ai/",
@@ -1002,7 +1005,8 @@
         "grok-4.5",
         "grok-build-0.1",
         "grok-imagine-image",
-        "grok-imagine-video"
+        "grok-imagine-video",
+        "grok-4.6"
       ],
       "supportedModels": [
         "grok-imagine-image-quality",
@@ -1012,7 +1016,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Xiaomi MiMo open platform (platform.xiaomimimo.com). MiMo V2 Flash retired 2026-06-30 with requests routed to MiMo V2.5; MiMo V2.5 series is current.",
       "official": {
         "additionalUrls": [
@@ -1038,7 +1042,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Xiaomi MiMo open platform (platform.xiaomimimo.com). MiMo V2 Flash retired 2026-06-30 with requests routed to MiMo V2.5; MiMo V2.5 series is current.",
       "official": {
         "additionalUrls": [
@@ -1064,7 +1068,7 @@
       "verificationStatus": "official_url_declared"
     },
     {
-      "lastCheckedAt": "2026-08-03T00:00:00Z",
+      "lastCheckedAt": "2026-08-13T00:00:00Z",
       "notes": "Zhipu AI mainland China operation with GLM chat, CogView image, CogVideoX video, and Embedding-3 models.",
       "official": {
         "additionalUrls": [

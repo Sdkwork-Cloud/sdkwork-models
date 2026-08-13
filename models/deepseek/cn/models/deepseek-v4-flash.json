@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "deepseek/deepseek-v4-flash",
+  "codingVisible": true,
   "colorToken": "#0f766e",
   "contextTokens": 1048576,
   "description": "Fast DeepSeek V4 model for cost-sensitive reasoning and coding traffic.",
@@ -29,7 +30,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
   },
   "strengths": [
@@ -41,13 +42,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.900000",
-  "vendorCode": "deepseek",
-  "vendorName": "DeepSeek",
-  "winRate": "0.860000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "deepseek",
+  "vendorName": "DeepSeek",
+  "winRate": "0.860000"
 }

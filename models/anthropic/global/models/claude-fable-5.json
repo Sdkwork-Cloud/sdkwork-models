@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "anthropic/claude-fable-5",
+  "codingVisible": true,
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
   "description": "Anthropic's most capable widely released model, for the most demanding reasoning and long-horizon agentic work. Public API access restored globally on 2026-07-01 after the June 12 temporary suspension.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models"
   },
   "strengths": [
@@ -44,13 +45,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "1.000000",
-  "vendorCode": "anthropic",
-  "vendorName": "Anthropic",
-  "winRate": "0.995000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.995000"
 }

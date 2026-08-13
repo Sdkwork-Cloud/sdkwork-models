@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "alibaba/qwen3.7-max",
+  "codingVisible": true,
   "colorToken": "#2563eb",
   "contextTokens": 1000000,
   "description": "Qwen3.7-Max mainland China flagship agent model with 1M context from Alibaba Cloud Model Studio.",
@@ -29,7 +30,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://help.aliyun.com/zh/model-studio/text-generation-model"
   },
   "strengths": [
@@ -42,13 +43,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.990000",
-  "vendorCode": "alibaba",
-  "vendorName": "Alibaba Cloud",
-  "winRate": "0.940000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.940000"
 }

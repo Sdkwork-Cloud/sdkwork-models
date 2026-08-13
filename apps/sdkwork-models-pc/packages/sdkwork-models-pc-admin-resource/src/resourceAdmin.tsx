@@ -441,7 +441,7 @@ export function ResourceAdmin() {
       className="flex min-h-0 h-full w-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm dark:border-white/5 dark:bg-[#121212]"
     >
       <div className="flex min-h-0 flex-1 overflow-hidden">
-        <aside data-admin-model-resource-sidebar className="flex w-72 min-w-72 flex-col border-r border-slate-200 dark:border-white/10">
+        <aside data-admin-model-resource-sidebar className="flex w-[27rem] min-w-[27rem] flex-col border-r border-slate-200 dark:border-white/10">
           <div
             data-admin-model-resource-sidebar-header
             className="flex shrink-0 flex-col gap-3 border-b border-slate-200 px-4 py-4 dark:border-white/10"
@@ -529,6 +529,7 @@ export function ResourceAdmin() {
             pageSizeLabel={t('admin.model.resources.pagination.groupsPageSize')}
             pageSizeOptions={[10, 20, 50]}
             disabled={loadingGroups || saving}
+            nowrap
             onPreviousPage={() => setGroupPage((current) => Math.max(1, current - 1))}
             onNextPage={() => setGroupPage((current) => current + 1)}
             onPageSizeChange={(nextPageSize) => {
@@ -667,6 +668,7 @@ export function ResourceAdmin() {
                   pageLabel={t('admin.model.resources.pagination.page', { page: resourcePage })}
                   pageSizeLabel={t('admin.model.resources.pagination.pageSize')}
                   disabled={loadingResources || saving}
+                  nowrap
                   onPreviousPage={() => setResourcePage((current) => Math.max(1, current - 1))}
                   onNextPage={() => setResourcePage((current) => current + 1)}
                   onPageSizeChange={(nextPageSize) => {

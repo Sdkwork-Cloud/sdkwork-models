@@ -4,6 +4,7 @@
     "image"
   ],
   "catalogKey": "openai/gpt-image-1.5",
+  "codingVisible": false,
   "colorToken": "#0f766e",
   "description": "Previous GPT Image generation kept for historical pricing and migration reference.",
   "displayName": "GPT Image 1.5",
@@ -28,7 +29,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/models"
   },
   "strengths": [
@@ -40,9 +41,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.960000",
+  "usageScopes": [],
   "vendorCode": "openai",
   "vendorName": "OpenAI",
-  "winRate": "0.940000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.940000"
 }

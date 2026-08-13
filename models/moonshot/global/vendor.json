@@ -60,6 +60,16 @@
   "operatingRegions": [
     "GLOBAL"
   ],
+  "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "api.moonshot.ai",
+      "pathPrefix": "/anthropic"
+    },
+    "openai_compatible": {
+      "host": "api.moonshot.ai",
+      "pathPrefix": "/v1"
+    }
+  },
   "regionCode": "global",
   "schemaVersion": "1.0.0",
   "sortOrder": 70,
@@ -68,9 +78,14 @@
     "sourceUrl": "https://platform.kimi.ai/"
   },
   "supportedProtocols": [
+    "anthropic_messages",
     "openai_compatible"
   ],
   "apiEndpoints": {
+    "anthropic": {
+      "host": "api.moonshot.ai",
+      "pathPrefix": "/anthropic"
+    },
     "openai": {
       "host": "api.moonshot.ai",
       "pathPrefix": "/v1"

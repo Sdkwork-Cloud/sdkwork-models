@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "anthropic/claude-opus-4-8",
+  "codingVisible": true,
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
   "description": "Current Claude Opus frontier model for complex reasoning, coding, and agentic work.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://www.anthropic.com/news/claude-opus-4-8"
   },
   "strengths": [
@@ -43,13 +44,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.995000",
-  "vendorCode": "anthropic",
-  "vendorName": "Anthropic",
-  "winRate": "0.990000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.990000"
 }

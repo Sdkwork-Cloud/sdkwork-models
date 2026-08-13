@@ -4,6 +4,7 @@
     "image"
   ],
   "catalogKey": "alibaba/wan2.6-t2i",
+  "codingVisible": false,
   "colorToken": "#ff6a00",
   "description": "Tongyi Wanxiang 2.6 text-to-image model with flexible resolution and high-quality Chinese and English generation.",
   "displayName": "Wan 2.6 Text to Image",
@@ -26,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://help.aliyun.com/zh/model-studio/text-to-image-api-reference"
   },
   "strengths": [
@@ -38,9 +39,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.910000",
+  "usageScopes": [],
   "vendorCode": "alibaba",
   "vendorName": "Alibaba Cloud",
-  "winRate": "0.880000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.880000"
 }

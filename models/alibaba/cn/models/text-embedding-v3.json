@@ -4,6 +4,7 @@
     "embedding"
   ],
   "catalogKey": "alibaba/text-embedding-v3",
+  "codingVisible": false,
   "colorToken": "#64748b",
   "description": "Qwen text embedding model for retrieval, semantic search, and RAG pipelines on Alibaba Model Studio.",
   "displayName": "Text Embedding V3",
@@ -26,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://help.aliyun.com/zh/model-studio/embedding"
   },
   "strengths": [
@@ -38,9 +39,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.820000",
+  "usageScopes": [],
   "vendorCode": "alibaba",
   "vendorName": "Alibaba Cloud",
-  "winRate": "0.850000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.850000"
 }

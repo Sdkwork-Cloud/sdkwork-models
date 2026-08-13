@@ -61,6 +61,16 @@
   "operatingRegions": [
     "GLOBAL"
   ],
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "ark.cn-beijing.volces.com",
+      "pathPrefix": "/api/v3"
+    },
+    "openai_responses": {
+      "host": "ark.cn-beijing.volces.com",
+      "pathPrefix": "/api/v3"
+    }
+  },
   "regionCode": "global",
   "schemaVersion": "1.0.0",
   "sortOrder": 111,
@@ -70,6 +80,7 @@
   },
   "supportedProtocols": [
     "openai_compatible",
+    "openai_responses",
     "vendor_native"
   ],
   "apiEndpoints": {

@@ -146,6 +146,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -153,7 +154,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -228,6 +228,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -235,7 +236,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -458,6 +458,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -465,7 +466,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-models/src/modelService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -595,6 +595,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -602,7 +603,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -696,6 +696,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -703,7 +704,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -842,6 +842,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -849,7 +850,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -943,6 +943,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -950,7 +951,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "apps/sdkwork-cloudrouter-pc/packages/sdkwork-cloudrouter-pc-rankings/src/rankingService.ts",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -1098,6 +1098,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -1105,7 +1106,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -1216,6 +1216,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "dual-token",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -1239,7 +1240,6 @@
             }
           }
         },
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     },
@@ -1314,6 +1314,7 @@
         "x-route-scope": "public",
         "x-sdk-domain": "intelligence",
         "x-sdkwork-api-authority": "sdkwork-models-app-api",
+        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-auth-mode": "anonymous",
         "x-sdkwork-domain": "intelligence",
         "x-sdkwork-owner": "sdkwork-models",
@@ -1321,7 +1322,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-models-catalog-app-api",
         "x-source-file": "../sdkwork-models/crates/sdkwork-models-catalog-service/src/api/app_models.rs",
         "x-write-tables": [],
-        "x-sdkwork-api-surface": "app-api",
         "x-sdkwork-request-context": "WebRequestContext"
       }
     }

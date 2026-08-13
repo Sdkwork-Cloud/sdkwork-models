@@ -93,19 +93,23 @@ SELECT
     COALESCE(r.currency, 'USD') AS currency,
     CAST(r.trend_score AS TEXT) AS trend_score,
     CAST(COALESCE(r.metadata, '{}'::jsonb) AS TEXT) AS metadata
-FROM ai_model_rank_snapshot r
-JOIN selected_snapshot s
-  ON r.tenant_id = s.tenant_id
- AND r.organization_id = s.organization_id
- AND r.snapshot_date = s.snapshot_date
- AND r.snapshot_period = s.snapshot_period
- AND COALESCE(r.rank_scope, 'commercial-default') = s.rank_scope
-JOIN public_model_catalog visible_model
-  ON visible_model.catalog_key = NULLIF(r.catalog_key, '')
-WHERE r.status = 1
-  AND ($4::text IS NULL OR lower(COALESCE(r.vendor_code, '')) = $4)
-  AND ($5::int8 IS NULL OR r.modality = $5)
-  AND ($6::text IS NULL OR lower(COALESCE(r.model, '') || ' ' || COALESCE(r.vendor_name_snapshot, '') || ' ' || COALESCE(r.vendor_code, '')) LIKE $6)
+FROM (
+    SELECT DISTINCT ON (r.catalog_key) r.*
+    FROM ai_model_rank_snapshot r
+    JOIN selected_snapshot s
+      ON r.tenant_id = s.tenant_id
+     AND r.organization_id = s.organization_id
+     AND r.snapshot_date = s.snapshot_date
+     AND r.snapshot_period = s.snapshot_period
+     AND COALESCE(r.rank_scope, 'commercial-default') = s.rank_scope
+    JOIN public_model_catalog visible_model
+      ON visible_model.catalog_key = NULLIF(r.catalog_key, '')
+    WHERE r.status = 1
+      AND ($4::text IS NULL OR lower(COALESCE(r.vendor_code, '')) = $4)
+      AND ($5::int8 IS NULL OR r.modality = $5)
+      AND ($6::text IS NULL OR lower(COALESCE(r.model, '') || ' ' || COALESCE(r.vendor_name_snapshot, '') || ' ' || COALESCE(r.vendor_code, '')) LIKE $6)
+    ORDER BY r.catalog_key, r.rank_no ASC NULLS LAST, r.id DESC
+) r
 ORDER BY r.rank_no ASC NULLS LAST, r.id DESC
 LIMIT $7
 "#;
@@ -894,6 +898,14 @@ fn optional_integer_cell(row: &sqlx::postgres::PgRow, column: &str) -> Option<i6
     row.try_get::<Option<i64>, _>(column)
         .ok()
         .flatten()
+        .or_else(|| {
+            // Snapshot tables declare INTEGER (int4) columns; decode them before
+            // falling back to the text cast.
+            row.try_get::<Option<i32>, _>(column)
+                .ok()
+                .flatten()
+                .map(i64::from)
+        })
         .or_else(|| {
             string_cell(row, column)
                 .parse::<f64>()

@@ -5,6 +5,7 @@
     "audio"
   ],
   "catalogKey": "openai/gpt-realtime-2",
+  "codingVisible": true,
   "colorToken": "#6366f1",
   "contextTokens": 128000,
   "description": "OpenAI reasoning model for realtime voice and multimodal interactions.",
@@ -33,7 +34,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-realtime-2"
   },
   "strengths": [
@@ -46,12 +47,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.990000",
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
-  "winRate": "0.940000",
   "usageScopes": [
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.940000"
 }

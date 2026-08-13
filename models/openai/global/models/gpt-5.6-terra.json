@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "openai/gpt-5.6-terra",
+  "codingVisible": true,
   "colorToken": "#111827",
   "contextTokens": 1050000,
   "description": "GPT-5.6 Terra balanced model for everyday work at roughly half the cost of GPT-5.5. Generally available as of July 2026.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://openai.com/index/previewing-gpt-5-6-sol/"
   },
   "strengths": [
@@ -42,13 +43,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.970000",
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
-  "winRate": "0.960000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.960000"
 }

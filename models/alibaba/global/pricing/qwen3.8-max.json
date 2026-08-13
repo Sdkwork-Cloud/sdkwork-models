@@ -1,0 +1,58 @@
+{
+  "catalogKey": "alibaba/qwen3.8-max",
+  "currency": "USD",
+  "modelId": "qwen3.8-max",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-03T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-global-qwen3.8-max-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://www.qwencloud.com/models/qwen3.8-max"
+      },
+      "unitPrice": "0.250000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-03T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-global-qwen3.8-max-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://www.qwencloud.com/models/qwen3.8-max"
+      },
+      "unitPrice": "2.000000",
+      "unitSize": "1000000"
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-03T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "alibaba-global-qwen3.8-max-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://www.qwencloud.com/models/qwen3.8-max"
+      },
+      "unitPrice": "6.000000",
+      "unitSize": "1000000"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "1.0.0",
+  "vendorCode": "alibaba"
+}

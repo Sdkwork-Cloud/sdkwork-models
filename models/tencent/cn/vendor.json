@@ -59,6 +59,16 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "api.hunyuan.cloud.tencent.com",
+      "pathPrefix": "/anthropic"
+    },
+    "openai_compatible": {
+      "host": "api.hunyuan.cloud.tencent.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 100,
@@ -67,9 +77,14 @@
     "sourceUrl": "https://cloud.tencent.com/document/product/1729"
   },
   "supportedProtocols": [
+    "anthropic_messages",
     "openai_compatible"
   ],
   "apiEndpoints": {
+    "anthropic": {
+      "host": "api.hunyuan.cloud.tencent.com",
+      "pathPrefix": "/anthropic"
+    },
     "openai": {
       "host": "api.hunyuan.cloud.tencent.com",
       "pathPrefix": "/v1"

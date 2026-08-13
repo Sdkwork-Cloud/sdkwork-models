@@ -5,6 +5,7 @@
     "reasoning"
   ],
   "catalogKey": "xai/grok-4.5",
+  "codingVisible": true,
   "colorToken": "#111827",
   "contextTokens": 500000,
   "description": "Grok 4.5 flagship model for code, agentic tool calling, and configurable reasoning with minimal hallucinations.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/docs/models"
   },
   "strengths": [
@@ -43,13 +44,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.950000",
-  "vendorCode": "xai",
-  "vendorName": "xAI",
-  "winRate": "0.930000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "xai",
+  "vendorName": "xAI",
+  "winRate": "0.930000"
 }

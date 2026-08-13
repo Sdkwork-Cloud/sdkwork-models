@@ -84,15 +84,26 @@
   },
   "supportedProtocols": [
     "google_gemini",
+    "openai_compatible",
     "vendor_native"
   ],
   "apiEndpoints": {
     "google": {
       "host": "generativelanguage.googleapis.com",
       "pathPrefix": "/v1beta"
+    },
+    "openai": {
+      "host": "generativelanguage.googleapis.com",
+      "pathPrefix": "/v1beta/openai"
     }
   },
   "vendorCode": "google",
   "vendorType": "commercial",
-  "websiteUrl": "https://ai.google.dev"
+  "websiteUrl": "https://ai.google.dev",
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "generativelanguage.googleapis.com",
+      "pathPrefix": "/v1beta/openai"
+    }
+  }
 }

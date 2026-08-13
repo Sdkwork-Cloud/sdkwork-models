@@ -8,61 +8,67 @@
           "catalogKey": "xai/grok-imagine-image-quality",
           "modelId": "grok-imagine-image-quality",
           "pricingText": "$0.05 / image",
-          "rankNo": 5
+          "rankNo": 1
         },
         {
           "catalogKey": "xai/grok-imagine-image",
           "modelId": "grok-imagine-image",
           "pricingText": "$0.02 / image",
-          "rankNo": 6
+          "rankNo": 2
         },
         {
           "catalogKey": "xai/grok-imagine-video-1.5",
           "modelId": "grok-imagine-video-1.5",
           "pricingText": "$0.08 / output second",
-          "rankNo": 7
+          "rankNo": 3
         },
         {
           "catalogKey": "xai/grok-imagine-video",
           "modelId": "grok-imagine-video",
           "pricingText": "$0.05 / output second",
-          "rankNo": 8
+          "rankNo": 4
+        },
+        {
+          "catalogKey": "xai/grok-4.6",
+          "modelId": "grok-4.6",
+          "pricingText": "$2.00 / 1M input; $6.00 / 1M output",
+          "rankNo": 5
         },
         {
           "catalogKey": "xai/grok-4.5",
           "modelId": "grok-4.5",
           "pricingText": "$2.00 / 1M input; $6.00 / 1M output",
-          "rankNo": 9
+          "rankNo": 6
         },
         {
           "catalogKey": "xai/grok-4.20-0309-reasoning",
           "modelId": "grok-4.20-0309-reasoning",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 10
+          "rankNo": 7
         },
         {
           "catalogKey": "xai/grok-4.20-multi-agent-0309",
           "modelId": "grok-4.20-multi-agent-0309",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 11
+          "rankNo": 8
         },
         {
           "catalogKey": "xai/grok-4.20-0309-non-reasoning",
           "modelId": "grok-4.20-0309-non-reasoning",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 12
+          "rankNo": 9
         },
         {
           "catalogKey": "xai/grok-4.3",
           "modelId": "grok-4.3",
           "pricingText": "$1.25 / 1M input; $2.50 / 1M output",
-          "rankNo": 13
+          "rankNo": 10
         },
         {
           "catalogKey": "xai/grok-build-0.1",
           "modelId": "grok-build-0.1",
           "pricingText": "$1.00 / 1M input; $2.00 / 1M output",
-          "rankNo": 20
+          "rankNo": 11
         }
       ],
       "rankScope": "commercial-default",

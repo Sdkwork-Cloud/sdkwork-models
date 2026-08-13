@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "anthropic/claude-sonnet-4-6",
+  "codingVisible": true,
   "colorToken": "#d97706",
   "contextTokens": 1000000,
   "description": "Claude Sonnet model for reasoning, coding, and agent workflows.",
@@ -30,7 +31,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
   },
   "strengths": [
@@ -43,13 +44,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.950000",
-  "vendorCode": "anthropic",
-  "vendorName": "Anthropic",
-  "winRate": "0.960000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.960000"
 }

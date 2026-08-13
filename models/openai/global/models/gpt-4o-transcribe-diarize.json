@@ -4,6 +4,7 @@
     "audio"
   ],
   "catalogKey": "openai/gpt-4o-transcribe-diarize",
+  "codingVisible": false,
   "colorToken": "#6366f1",
   "description": "Speech-to-text model with speaker diarization for multi-speaker transcription.",
   "displayName": "GPT-4o transcribe diarize",
@@ -26,7 +27,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize"
   },
   "strengths": [
@@ -38,9 +39,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.880000",
+  "usageScopes": [],
   "vendorCode": "openai",
   "vendorName": "OpenAI",
-  "winRate": "0.870000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.870000"
 }

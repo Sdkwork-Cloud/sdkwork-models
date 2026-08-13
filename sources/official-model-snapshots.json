@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.08.03.1",
-  "observedAt": "2026-08-03T00:00:00Z",
+  "catalogVersion": "2026.08.13.1",
+  "observedAt": "2026-08-13T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -12,12 +12,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-08-03T00:00:00Z",
+      "observedAt": "2026-08-13T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "9ee7ab3bd715ebea0c25425fb329321152c6d8c76ba9b6092de76e868b07c83c",
+      "sourceSnapshotHash": "499ee4249775e74f51fff8023e00cea078865c8dc69273cb5828d0038c895022",
       "vendorCode": "deepseek"
     },
     {
@@ -29,12 +29,12 @@
           "modelId": "deepseek-v4-pro"
         }
       ],
-      "observedAt": "2026-08-03T00:00:00Z",
+      "observedAt": "2026-08-13T00:00:00Z",
       "officialUrls": [
         "https://api-docs.deepseek.com/quick_start/pricing"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "59bf5733dfe4a89bb35f4a96e296591bf7ac2e0786ea15bd2db6ab4d891f8444",
+      "sourceSnapshotHash": "352750da14fc75c92043e4b7689ea14d490b16402664885f70c624a8a668425d",
       "vendorCode": "deepseek"
     },
     {

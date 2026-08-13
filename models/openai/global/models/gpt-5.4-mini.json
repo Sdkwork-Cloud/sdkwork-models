@@ -4,9 +4,10 @@
     "chat"
   ],
   "catalogKey": "openai/gpt-5.4-mini",
+  "codingVisible": true,
   "colorToken": "#334155",
   "contextTokens": 400000,
-  "description": "Compact GPT-5.4 model for cost-sensitive chat, coding, and agent workloads.",
+  "description": "GPT-5.4 Mini kept for historical pricing and migration reference; superseded by GPT-5.6 Luna.",
   "displayName": "GPT-5.4 Mini",
   "familyCode": "gpt-5",
   "inputModalities": [
@@ -15,7 +16,7 @@
   ],
   "latencyP50Ms": 520,
   "latencyP95Ms": 1900,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "maxInputTokens": 400000,
   "maxOutputTokens": 128000,
   "modelId": "gpt-5.4-mini",
@@ -25,12 +26,13 @@
   "primaryCapability": "chat",
   "rankScore": "1030.000000",
   "regionCode": "global",
-  "releaseStage": "active",
-  "routingState": "enabled",
+  "releaseStage": "deprecated",
+  "replacementModel": "gpt-5.6-luna",
+  "routingState": "catalog_only",
   "schemaVersion": "1.0.0",
-  "shelfState": "listed",
+  "shelfState": "hidden",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://platform.openai.com/docs/models"
   },
   "strengths": [
@@ -42,12 +44,11 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.960000",
-  "vendorCode": "openai",
-  "vendorName": "OpenAI",
-  "winRate": "0.930000",
   "usageScopes": [
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.930000"
 }

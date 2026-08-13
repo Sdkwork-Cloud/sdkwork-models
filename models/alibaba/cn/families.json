@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "qwen3.7-max",
+      "defaultModel": "qwen3.8-max",
       "displayName": "Qwen",
       "familyCode": "qwen",
       "familyType": "llm",

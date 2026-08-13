@@ -4,6 +4,7 @@
     "image"
   ],
   "catalogKey": "xai/grok-imagine-image",
+  "codingVisible": false,
   "colorToken": "#111827",
   "description": "Grok Imagine image generation model for fast text-to-image and image editing workflows.",
   "displayName": "Grok Imagine Image",
@@ -27,7 +28,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.x.ai/developers/models/grok-imagine-image"
   },
   "strengths": [
@@ -39,9 +40,8 @@
   "supportsStreaming": false,
   "supportsTools": false,
   "trendScore": "0.920000",
+  "usageScopes": [],
   "vendorCode": "xai",
   "vendorName": "xAI",
-  "winRate": "0.870000",
-  "usageScopes": [],
-  "codingVisible": false
+  "winRate": "0.870000"
 }

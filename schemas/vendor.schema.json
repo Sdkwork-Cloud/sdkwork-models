@@ -128,6 +128,14 @@
     "openSource": {
       "type": "boolean"
     },
+    "protocolBaseUrls": {
+      "description": "Official default Base URL per LLM API protocol code (openai_compatible, openai_responses, anthropic_messages). baseUri is derived as https://{host}{pathPrefix}; pathPrefix must be a member of the protocol's family standardPathPrefixes declared in models/protocols.json. Only protocols with a published official default endpoint in this region are listed; unsupported or unverifiable protocols are omitted.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/apiEndpoint"
+      }
+    },
     "sortOrder": {
       "type": "integer"
     },

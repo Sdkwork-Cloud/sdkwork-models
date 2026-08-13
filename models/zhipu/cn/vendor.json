@@ -65,6 +65,16 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "open.bigmodel.cn",
+      "pathPrefix": "/api/paas/v4"
+    },
+    "anthropic_messages": {
+      "host": "open.bigmodel.cn",
+      "pathPrefix": "/api/anthropic"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 80,

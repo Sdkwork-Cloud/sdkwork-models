@@ -50,6 +50,7 @@ struct ModelRankingsHttpQuery {
     vendor_code: Option<String>,
     modality: Option<String>,
     q: Option<String>,
+    page: Option<i64>,
     page_size: Option<i64>,
 }
 
@@ -263,6 +264,10 @@ async fn fetch_model_ranking_jobs(
             ),
         );
     }
+    let page = match validate_rankings_page(query.page, limit) {
+        Ok(page) => page,
+        Err(message) => return problem_for(&ctx, SdkWorkResultCode::ValidationError, message),
+    };
 
     let query = ModelRankingRefreshJobHistoryQuery {
         rank_scope: Some(normalize_rank_scope(query.rank_scope.as_deref())),
@@ -274,7 +279,9 @@ async fn fetch_model_ranking_jobs(
         .load_model_ranking_refresh_jobs(query, subject)
         .await
     {
-        Ok(page) => finish_success(&ctx, to_job_history_page_response(page.items, limit)),
+        Ok(page_result) => {
+            finish_success(&ctx, to_job_history_page_response(page_result.items, page, limit))
+        }
         Err(error) => problem_for(
             &ctx,
             SdkWorkResultCode::ServiceUnavailable,
@@ -323,8 +330,8 @@ async fn fetch_model_rankings(
         Err(response) => return response,
     };
 
-    let query = match validate_query(query) {
-        Ok(query) => query,
+    let (page, query) = match validate_query(query) {
+        Ok(value) => value,
         Err(message) => {
             return problem_for(&ctx, SdkWorkResultCode::ValidationError, message);
         }
@@ -332,7 +339,7 @@ async fn fetch_model_rankings(
     let page_size = query.limit;
 
     match state.read_store.load_model_rankings(query, subject).await {
-        Ok(snapshot) => finish_success(&ctx, to_rankings_page_response(snapshot, page_size)),
+        Ok(snapshot) => finish_success(&ctx, to_rankings_page_response(snapshot, page, page_size)),
         Err(error) => problem_for(
             &ctx,
             SdkWorkResultCode::ServiceUnavailable,
@@ -351,6 +358,7 @@ struct ModelRankingStatusHttpQuery {
 #[serde(deny_unknown_fields)]
 struct ModelRankingJobsHttpQuery {
     rank_scope: Option<String>,
+    page: Option<i64>,
     page_size: Option<i64>,
 }
 
@@ -416,24 +424,40 @@ fn optional_rankings_subject(
     map_optional_app_user_subject(ctx, subject, require_subject, map_rankings_subject)
 }
 
-fn validate_query(query: ModelRankingsHttpQuery) -> Result<ModelRankingsQuery, String> {
+fn validate_query(query: ModelRankingsHttpQuery) -> Result<(i64, ModelRankingsQuery), String> {
     let limit = query.page_size.unwrap_or(DEFAULT_RANKING_PAGE_SIZE);
     if !(1..=MAX_RANKING_LIMIT).contains(&limit) {
         return Err(format!(
             "model rankings page_size must be between 1 and {MAX_RANKING_LIMIT}"
         ));
     }
-    Ok(ModelRankingsQuery {
-        rank_scope: Some(normalize_rank_scope(query.rank_scope.as_deref())),
-        vendor_code: normalize_model_ranking_filter_value(query.vendor_code.as_deref()),
-        modality: normalize_model_ranking_filter_value(query.modality.as_deref()),
-        search_query: normalize_model_ranking_filter_value(query.q.as_deref()),
-        limit,
-    })
+    let page = validate_rankings_page(query.page, limit)?;
+    Ok((
+        page,
+        ModelRankingsQuery {
+            rank_scope: Some(normalize_rank_scope(query.rank_scope.as_deref())),
+            vendor_code: normalize_model_ranking_filter_value(query.vendor_code.as_deref()),
+            modality: normalize_model_ranking_filter_value(query.modality.as_deref()),
+            search_query: normalize_model_ranking_filter_value(query.q.as_deref()),
+            limit,
+        },
+    ))
+}
+
+fn validate_rankings_page(page: Option<i64>, page_size: i64) -> Result<i64, String> {
+    let page = page.unwrap_or(1);
+    if page < 1 {
+        return Err("model rankings page must be greater than or equal to 1".to_owned());
+    }
+    page.checked_sub(1)
+        .and_then(|offset| offset.checked_mul(page_size))
+        .ok_or_else(|| "model rankings page is too large".to_owned())?;
+    Ok(page)
 }
 
 fn to_rankings_page_response(
     snapshot: ModelRankingsSnapshot,
+    page: i64,
     page_size: i64,
 ) -> ModelRankingsPageResponse {
     let total_items = snapshot.items.len() as i64;
@@ -441,18 +465,19 @@ fn to_rankings_page_response(
         source: snapshot.source,
         items: snapshot.items,
         history: snapshot.history,
-        page_info: offset_page_info(1, page_size, total_items),
+        page_info: offset_page_info(page, page_size, total_items),
     }
 }
 
 fn to_job_history_page_response(
     items: Vec<ModelRankingRefreshJobItem>,
+    page: i64,
     page_size: i64,
 ) -> ModelRankingRefreshJobHistoryPageResponse {
     let total_items = items.len() as i64;
     ModelRankingRefreshJobHistoryPageResponse {
         items,
-        page_info: offset_page_info(1, page_size, total_items),
+        page_info: offset_page_info(page, page_size, total_items),
     }
 }
 

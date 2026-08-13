@@ -4,6 +4,7 @@
     "chat"
   ],
   "catalogKey": "anthropic/claude-mythos-5",
+  "codingVisible": true,
   "colorToken": "#7c2d12",
   "contextTokens": 1000000,
   "description": "Project Glasswing limited-availability Mythos-class model. Active on the official catalog but restricted to approved organizations; not generally available on the public Claude API.",
@@ -28,7 +29,7 @@
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-03T00:00:00Z",
+    "observedAt": "2026-08-13T00:00:00Z",
     "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview"
   },
   "strengths": [
@@ -41,13 +42,12 @@
   "supportsStreaming": true,
   "supportsTools": true,
   "trendScore": "0.980000",
-  "vendorCode": "anthropic",
-  "vendorName": "Anthropic",
-  "winRate": "0.990000",
   "usageScopes": [
     "coding",
     "chat",
     "agent"
   ],
-  "codingVisible": true
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.990000"
 }

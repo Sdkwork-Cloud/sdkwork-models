@@ -189,6 +189,10 @@ pub struct UpstreamAccountGroup {
     pub organization_id: i64,
     pub name: String,
     pub code: String,
+    /// Whether the group is the tenant's seeded default account group
+    /// (`ai_upstream_account_group.is_default`); auth-token sessions fall
+    /// back to it when no `code = "default"` group exists.
+    pub is_default: bool,
     pub pricing_plan_code: String,
     pub routing_strategy: UpstreamAccountRoutingStrategy,
     pub fallback_mode: UpstreamAccountFallbackMode,
@@ -423,6 +427,7 @@ impl UpstreamAccountGroup {
             organization_id,
             name: code.to_owned(),
             code: code.to_owned(),
+            is_default: false,
             pricing_plan_code: pricing_plan_code.to_owned(),
             routing_strategy: UpstreamAccountRoutingStrategy::Weighted,
             fallback_mode: UpstreamAccountFallbackMode::Sequential,
