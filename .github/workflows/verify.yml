@@ -15,37 +15,37 @@ jobs:
           path: sdkwork-models
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-appbase
+          repository: sdkwork-ai/sdkwork-appbase
           path: sdkwork-appbase
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-cloudrouter
+          repository: sdkwork-ai/sdkwork-cloudrouter
           path: sdkwork-cloudrouter
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-database
+          repository: sdkwork-ai/sdkwork-database
           path: sdkwork-database
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-id
+          repository: sdkwork-ai/sdkwork-id
           path: sdkwork-id
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-utils
+          repository: sdkwork-ai/sdkwork-utils
           path: sdkwork-utils
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-web-framework
+          repository: sdkwork-ai/sdkwork-web-framework
           path: sdkwork-web-framework
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
-          repository: Sdkwork-Cloud/sdkwork-iam
+          repository: sdkwork-ai/sdkwork-iam
           path: sdkwork-iam
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: pnpm/action-setup@v4

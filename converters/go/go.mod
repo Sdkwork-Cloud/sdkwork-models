@@ -1,4 +1,4 @@
-module github.com/Sdkwork-Cloud/sdkwork-models/converters/go
+module github.com/sdkwork-ai/sdkwork-models/converters/go
 
 go 1.22
 

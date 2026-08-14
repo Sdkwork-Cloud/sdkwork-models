@@ -33,7 +33,7 @@ data/sdkwork-models
 Upstream repository:
 
 ```text
-https://github.com/Sdkwork-Cloud/sdkwork-models.git
+https://github.com/sdkwork-ai/sdkwork-models.git
 ```
 
 ## Standard

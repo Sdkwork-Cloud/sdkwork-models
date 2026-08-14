@@ -77,7 +77,7 @@
     },
     {
       "displayName": "Vendor Native API",
-      "docsUrl": "https://github.com/Sdkwork-Cloud/sdkwork-models",
+      "docsUrl": "https://github.com/sdkwork-ai/sdkwork-models",
       "family": "vendor_native",
       "maturity": "stable",
       "protocolCode": "vendor_native",

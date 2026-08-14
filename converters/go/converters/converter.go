@@ -3,7 +3,7 @@ package converters
 import (
 	"context"
 
-	"github.com/Sdkwork-Cloud/sdkwork-models/converters/go/types"
+	"github.com/sdkwork-ai/sdkwork-models/converters/go/types"
 )
 
 // Converter 转换器接口
