@@ -819,6 +819,7 @@
           "regionCode": "cn",
           "sortOrder": 50,
           "supportedProtocols": [
+            "anthropic_messages",
             "openai_compatible",
             "openai_responses",
             "vendor_native"
@@ -2075,12 +2076,14 @@
           "regionCode": "cn",
           "sortOrder": 90,
           "supportedProtocols": [
+            "openai_compatible",
             "vendor_native"
           ]
         }
       ],
       "sortOrder": 90,
       "supportedProtocols": [
+        "openai_compatible",
         "vendor_native"
       ],
       "vendorCode": "baidu",
@@ -4427,6 +4430,7 @@
           "regionCode": "cn",
           "sortOrder": 180,
           "supportedProtocols": [
+            "anthropic_messages",
             "openai_compatible"
           ]
         },
@@ -4632,12 +4636,14 @@
           "regionCode": "global",
           "sortOrder": 180,
           "supportedProtocols": [
+            "anthropic_messages",
             "openai_compatible"
           ]
         }
       ],
       "sortOrder": 180,
       "supportedProtocols": [
+        "anthropic_messages",
         "openai_compatible"
       ],
       "vendorCode": "xiaomi",

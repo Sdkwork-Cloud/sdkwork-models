@@ -1,4 +1,10 @@
 {
+  "apiEndpoints": {
+    "openai": {
+      "host": "qianfan.baidubce.com",
+      "pathPrefix": "/v2"
+    }
+  },
   "billingCurrency": "CNY",
   "billingJurisdiction": "CN",
   "capabilities": [
@@ -59,6 +65,12 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "openai_compatible": {
+      "host": "qianfan.baidubce.com",
+      "pathPrefix": "/v2"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 90,
@@ -67,6 +79,7 @@
     "sourceUrl": "https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html"
   },
   "supportedProtocols": [
+    "openai_compatible",
     "vendor_native"
   ],
   "vendorCode": "baidu",

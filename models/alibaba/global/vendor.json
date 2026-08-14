@@ -1,5 +1,9 @@
 {
   "apiEndpoints": {
+    "anthropic": {
+      "host": "dashscope.aliyuncs.com",
+      "pathPrefix": "/apps/anthropic"
+    },
     "openai": {
       "host": "dashscope.aliyuncs.com",
       "pathPrefix": "/compatible-mode/v1"
@@ -210,6 +214,10 @@
     "GLOBAL"
   ],
   "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "dashscope.aliyuncs.com",
+      "pathPrefix": "/apps/anthropic"
+    },
     "openai_compatible": {
       "host": "dashscope.aliyuncs.com",
       "pathPrefix": "/compatible-mode/v1"

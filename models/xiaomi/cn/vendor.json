@@ -1,4 +1,14 @@
 {
+  "apiEndpoints": {
+    "anthropic": {
+      "host": "api.xiaomimimo.com",
+      "pathPrefix": "/anthropic"
+    },
+    "openai": {
+      "host": "api.xiaomimimo.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "billingCurrency": "CNY",
   "billingJurisdiction": "CN",
   "capabilities": [
@@ -62,6 +72,16 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "api.xiaomimimo.com",
+      "pathPrefix": "/anthropic"
+    },
+    "openai_compatible": {
+      "host": "api.xiaomimimo.com",
+      "pathPrefix": "/v1"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 180,
@@ -70,6 +90,7 @@
     "sourceUrl": "https://platform.xiaomimimo.com"
   },
   "supportedProtocols": [
+    "anthropic_messages",
     "openai_compatible"
   ],
   "vendorCode": "xiaomi",

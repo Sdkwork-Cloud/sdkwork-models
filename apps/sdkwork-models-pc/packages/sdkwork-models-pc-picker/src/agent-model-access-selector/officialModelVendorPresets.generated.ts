@@ -10,42 +10,6 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
     "providerDisplayName": "OpenAI direct",
     "models": [
       {
-        "catalogKey": "openai/gpt-5.4-mini",
-        "model": "gpt-5.4-mini",
-        "displayName": "GPT-5.4 Mini",
-        "sortOrder": 5
-      },
-      {
-        "catalogKey": "openai/gpt-5.4-nano",
-        "model": "gpt-5.4-nano",
-        "displayName": "GPT-5.4 Nano",
-        "sortOrder": 6
-      },
-      {
-        "catalogKey": "openai/gpt-5.4-pro",
-        "model": "gpt-5.4-pro",
-        "displayName": "GPT-5.4 Pro",
-        "sortOrder": 7
-      },
-      {
-        "catalogKey": "openai/gpt-5.4",
-        "model": "gpt-5.4",
-        "displayName": "GPT-5.4",
-        "sortOrder": 8
-      },
-      {
-        "catalogKey": "openai/gpt-5.5-pro",
-        "model": "gpt-5.5-pro",
-        "displayName": "GPT-5.5 Pro",
-        "sortOrder": 9
-      },
-      {
-        "catalogKey": "openai/gpt-5.5",
-        "model": "gpt-5.5",
-        "displayName": "GPT-5.5",
-        "sortOrder": 10
-      },
-      {
         "catalogKey": "openai/gpt-5.6-luna",
         "model": "gpt-5.6-luna",
         "displayName": "GPT-5.6 Luna",
@@ -200,6 +164,12 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
         "model": "qwen3.7-max",
         "displayName": "Qwen3.7 Max",
         "sortOrder": 0
+      },
+      {
+        "catalogKey": "alibaba/qwen3.8-max",
+        "model": "qwen3.8-max",
+        "displayName": "Qwen3.8 Max",
+        "sortOrder": 1
       }
     ],
     "sortOrder": 3,
@@ -472,10 +442,16 @@ export const SDKWORK_OFFICIAL_MODEL_VENDOR_PRESETS = [
         "sortOrder": 4
       },
       {
+        "catalogKey": "xai/grok-4.6",
+        "model": "grok-4.6",
+        "displayName": "Grok 4.6",
+        "sortOrder": 5
+      },
+      {
         "catalogKey": "xai/grok-build-0.1",
         "model": "grok-build-0.1",
         "displayName": "Grok Build 0.1",
-        "sortOrder": 5
+        "sortOrder": 6
       }
     ],
     "sortOrder": 15,

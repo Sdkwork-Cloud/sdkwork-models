@@ -1,4 +1,14 @@
 {
+  "apiEndpoints": {
+    "anthropic": {
+      "host": "api.longcat.chat",
+      "pathPrefix": "/anthropic"
+    },
+    "openai": {
+      "host": "api.longcat.chat",
+      "pathPrefix": "/openai/v1"
+    }
+  },
   "billingCurrency": "CNY",
   "billingJurisdiction": "CN",
   "capabilities": [
@@ -59,6 +69,16 @@
   "operatingRegions": [
     "CN"
   ],
+  "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "api.longcat.chat",
+      "pathPrefix": "/anthropic"
+    },
+    "openai_compatible": {
+      "host": "api.longcat.chat",
+      "pathPrefix": "/openai/v1"
+    }
+  },
   "regionCode": "cn",
   "schemaVersion": "1.0.0",
   "sortOrder": 130,

@@ -1,5 +1,9 @@
 {
   "apiEndpoints": {
+    "anthropic": {
+      "host": "dashscope.aliyuncs.com",
+      "pathPrefix": "/apps/anthropic"
+    },
     "openai": {
       "host": "dashscope.aliyuncs.com",
       "pathPrefix": "/compatible-mode/v1"
@@ -71,6 +75,10 @@
     "CN"
   ],
   "protocolBaseUrls": {
+    "anthropic_messages": {
+      "host": "dashscope.aliyuncs.com",
+      "pathPrefix": "/apps/anthropic"
+    },
     "openai_compatible": {
       "host": "dashscope.aliyuncs.com",
       "pathPrefix": "/compatible-mode/v1"
@@ -88,6 +96,7 @@
     "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
   },
   "supportedProtocols": [
+    "anthropic_messages",
     "openai_compatible",
     "openai_responses",
     "vendor_native"

@@ -6,11 +6,13 @@
       "standardPathPrefixes": [
         "",
         "/v1",
+        "/v2",
         "/api/v1",
         "/api/v3",
         "/compatible-mode/v1",
         "/api/paas/v4",
-        "/v1beta/openai"
+        "/v1beta/openai",
+        "/openai/v1"
       ]
     },
     {
@@ -20,7 +22,9 @@
         "",
         "/v1",
         "/anthropic",
-        "/api/anthropic"
+        "/api/anthropic",
+        "/apps/anthropic",
+        "/step_plan"
       ]
     },
     {
