@@ -1268,6 +1268,9 @@ pub struct UpstreamAccountRoute {
     pub credential_weight: i32,
     pub contract_cost_multiplier: DecimalValue,
     pub last_latency_ms: Option<u64>,
+    /// Consecutive upstream errors recorded in `ai_upstream_account_health_state`
+    /// (quality-first routing); `None` when no health record exists.
+    pub account_consecutive_error_count: Option<u64>,
     pub account_code: Option<String>,
     pub region_code: String,
     pub supplier_id: Option<i64>,
@@ -1297,6 +1300,7 @@ impl UpstreamAccountRoute {
             credential_weight: 100,
             contract_cost_multiplier: DecimalValue::ONE,
             last_latency_ms: None,
+            account_consecutive_error_count: None,
             account_code: None,
             region_code: "global".to_owned(),
             supplier_id: None,

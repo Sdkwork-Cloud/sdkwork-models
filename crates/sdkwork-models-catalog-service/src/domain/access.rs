@@ -207,6 +207,9 @@ pub enum UpstreamAccountRoutingStrategy {
     RoundRobin,
     LeastLatency,
     LeastCost,
+    /// Quality-first routing: healthy accounts first, then lowest latency,
+    /// then fewest consecutive errors.
+    QualityFirst,
     Failover,
 }
 
@@ -216,7 +219,8 @@ impl UpstreamAccountRoutingStrategy {
             "weighted" => Ok(Self::Weighted),
             "round_robin" => Ok(Self::RoundRobin),
             "least_latency" => Ok(Self::LeastLatency),
-            "least_cost" => Ok(Self::LeastCost),
+            "least_cost" | "price_first" => Ok(Self::LeastCost),
+            "quality_first" => Ok(Self::QualityFirst),
             "failover" => Ok(Self::Failover),
             value => Err(DomainError::new(format!(
                 "ai_upstream_account_group.routing_strategy contains unsupported value: {value}"
@@ -230,6 +234,7 @@ impl UpstreamAccountRoutingStrategy {
             Self::RoundRobin => "round_robin",
             Self::LeastLatency => "least_latency",
             Self::LeastCost => "least_cost",
+            Self::QualityFirst => "quality_first",
             Self::Failover => "failover",
         }
     }
