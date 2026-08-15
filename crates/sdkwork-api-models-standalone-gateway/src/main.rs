@@ -17,10 +17,15 @@ async fn main() {
         .await
         .expect("models gateway assembly failed");
 
+    // Gateway-owned process infrastructure (readiness probe pool); the
+    // assembly contribution carries the same role-resolved PostgreSQL config.
+    let database_pool = sdkwork_database_sqlx::create_pool_from_env("MODELS")
+        .await
+        .expect("resolve models database pool failed")
+        .expect("models gateway requires SDKWORK_DATABASE_* environment configuration");
+
     let app = Router::new()
-        .merge(models_health_router_with_database_pool(
-            &assembly.database_pool,
-        ))
+        .merge(models_health_router_with_database_pool(&database_pool))
         .merge(assembly.router)
         .layer(application_cors_layer());
 

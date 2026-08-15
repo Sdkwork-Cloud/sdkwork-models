@@ -7,7 +7,7 @@ mod contribution;
 mod entity_uuid_generator;
 mod generated;
 
-pub use bootstrap::{assemble_api_router, assemble_business_routes, ApiAssembly};
+pub use bootstrap::{assemble_api_router, assemble_business_routes, ApiAssembly, ApiAssemblyContribution};
 pub use contribution::assemble_app_api_contribution;
 /// App-api surface route manifest owned by the dependency assembly.
 pub fn app_api_route_manifest() -> sdkwork_web_core::HttpRouteManifest {

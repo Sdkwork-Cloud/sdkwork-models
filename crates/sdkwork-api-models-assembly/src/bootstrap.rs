@@ -11,14 +11,15 @@ use sdkwork_models_contract_service::{
     ModelRankingsReadModelStore,
 };
 use sdkwork_models_service_host::ModelsServiceHost;
+pub use sdkwork_web_bootstrap::ApiAssemblyContribution;
+use sdkwork_web_core::HttpRouteManifest;
 use std::sync::Arc;
 
 use crate::entity_uuid_generator::CatalogEntityUuidGenerator;
 
-pub struct ApiAssembly {
-    pub router: Router,
-    pub database_pool: DatabasePool,
-}
+/// Indivisible host-neutral API assembly contribution (web-bootstrap contract,
+/// API_ASSEMBLY_SPEC.md section 4).
+pub type ApiAssembly = ApiAssemblyContribution;
 
 pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
     let host = Arc::new(ModelsServiceHost::new().await?);
@@ -71,10 +72,24 @@ pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
             backend_business,
         )
         .await;
-    Ok(ApiAssembly {
-        router: Router::new().merge(app).merge(backend),
-        database_pool: host.database_pool().clone(),
-    })
+    let router = Router::new().merge(app).merge(backend);
+
+    let routes = [
+        sdkwork_routes_models_catalog_app_api::gateway_route_manifest(),
+        sdkwork_routes_models_catalog_backend_api::gateway_route_manifest(),
+    ]
+    .into_iter()
+    .flat_map(|manifest| manifest.routes().to_vec())
+    .collect();
+
+    ApiAssemblyContribution::from_manifest(
+        "sdkwork-models",
+        "SDKWork Models API",
+        router,
+        HttpRouteManifest::from_owned_routes(routes),
+        Vec::new(),
+        Arc::new(crate::contribution::ModelsDatabaseReadinessCheck::new(host)),
+    )
 }
 
 pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
