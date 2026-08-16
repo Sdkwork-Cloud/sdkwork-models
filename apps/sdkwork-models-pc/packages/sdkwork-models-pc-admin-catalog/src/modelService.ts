@@ -604,7 +604,12 @@ export class ModelMappingService {
   }
 
   static async deleteModelMapping(id: string): Promise<boolean> {
-    await getModelsBackendSdkClient().ai.modelMappings.delete(requiredSafePathSegment(id, 'mappingId'));
+    const result = await getModelsBackendSdkClient().ai.modelMappings.delete(
+      requiredSafePathSegment(id, 'mappingId'),
+    );
+    if (result?.deleted !== true) {
+      throw new Error('Model mapping delete confirmation is required');
+    }
     return true;
   }
 
