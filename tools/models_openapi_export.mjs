@@ -1678,11 +1678,47 @@ function standardizeDeleteOperation(operation) {
   if (!operation) {
     return;
   }
+  if (operation["x-sdkwork-delete-confirmation"] === true) {
+    // Fail-closed delete confirmation: the 200 body affirms the deletion so
+    // SDK consumers can reject silent success.
+    operation.responses = {
+      "200": operationSuccessResponse(
+        "#/components/schemas/DeleteConfirmationResponse",
+        "OK",
+      ),
+      ...keepProblemResponses(operation.responses),
+    };
+    return;
+  }
   operation.responses = {
     "204": {
       description: "No Content",
     },
     ...keepProblemResponses(operation.responses),
+  };
+}
+
+function deleteConfirmationResponseSchema() {
+  return {
+    allOf: [
+      { $ref: "#/components/schemas/SdkWorkApiResponse" },
+      {
+        type: "object",
+        additionalProperties: false,
+        required: ["data"],
+        properties: {
+          data: {
+            type: "object",
+            additionalProperties: false,
+            required: ["deleted"],
+            properties: {
+              deleted: { type: "boolean", description: "Whether the catalog row was removed." },
+            },
+          },
+        },
+      },
+    ],
+    description: "Fail-closed delete confirmation response.",
   };
 }
 
@@ -2129,6 +2165,26 @@ function standardizeModelMappingsResolveOperation(document) {
 }
 
 function standardizeBackendOperationPatterns(document) {
+  if (!document.components) {
+    document.components = {};
+  }
+  if (!document.components.schemas) {
+    document.components.schemas = {};
+  }
+  document.components.schemas.DeleteConfirmationResponse = deleteConfirmationResponseSchema();
+
+  const modelDelete = operationAt(document, "/backend/v3/api/ai/models/{modelId}", "delete");
+  if (modelDelete) {
+    modelDelete["x-sdkwork-delete-confirmation"] = true;
+  }
+  const mappingDelete = operationAt(
+    document,
+    "/backend/v3/api/ai/model_mappings/{mappingId}",
+    "delete",
+  );
+  if (mappingDelete) {
+    mappingDelete["x-sdkwork-delete-confirmation"] = true;
+  }
   delete document.paths?.["/backend/v3/api/ai/model_mappings"]?.put;
 
   for (const [pathKey, pathItem] of Object.entries(document.paths || {})) {

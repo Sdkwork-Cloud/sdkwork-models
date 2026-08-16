@@ -535,7 +535,12 @@ export class ModelService {
   }
 
   static async deleteModel(id: string): Promise<boolean> {
-    await getModelsBackendSdkClient().ai.models.delete(requiredSafePathSegment(id, 'modelId'));
+    const result = await getModelsBackendSdkClient().ai.models.delete(
+      requiredSafePathSegment(id, 'modelId'),
+    );
+    if (result?.deleted !== true) {
+      throw new Error('Model delete confirmation is required');
+    }
     return true;
   }
 }

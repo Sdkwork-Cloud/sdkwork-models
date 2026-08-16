@@ -553,7 +553,7 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
     fn delete_model<'a>(
         &'a self,
         command: DeleteAdminAiModelCommand,
-    ) -> AdminModelCommandFuture<'a, ()> {
+    ) -> AdminModelCommandFuture<'a, bool> {
         Box::pin(async move {
             let mut tx = self.pool.begin().await.map_err(|error| {
                 store_error("failed to begin ai model delete transaction", error)
@@ -584,14 +584,14 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
             tx.commit().await.map_err(|error| {
                 store_error("failed to commit ai model delete transaction", error)
             })?;
-            Ok(())
+            Ok(true)
         })
     }
 
     fn delete_model_mapping<'a>(
         &'a self,
         command: DeleteAdminModelMappingCommand,
-    ) -> AdminModelCommandFuture<'a, ()> {
+    ) -> AdminModelCommandFuture<'a, bool> {
         Box::pin(async move {
             let mut tx = self.pool.begin().await.map_err(|error| {
                 store_error("failed to begin model mapping delete transaction", error)
@@ -622,7 +622,7 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
             tx.commit().await.map_err(|error| {
                 store_error("failed to commit model mapping delete transaction", error)
             })?;
-            Ok(())
+            Ok(true)
         })
     }
 

@@ -18,7 +18,7 @@ use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
 use crate::api::response::{
-    finish_no_content, finish_success, finish_success_with_status, problem_for,
+    finish_success, finish_success_with_status, problem_for,
 };
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
@@ -850,7 +850,9 @@ async fn delete_model(
         Err(error) => return command_build_error_response(&ctx, error),
     };
     match state.store.delete_model(command).await {
-        Ok(()) => finish_no_content(&ctx),
+        // Fail-closed delete confirmation: the response affirms the deletion so
+        // SDK consumers can reject silent success when no row was removed.
+        Ok(deleted) => finish_success(&ctx, serde_json::json!({ "deleted": deleted })),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
             admin_model_system_response(&ctx, "ai model delete store is unavailable", error)
@@ -872,7 +874,7 @@ async fn delete_model_mapping(
             Err(error) => return command_build_error_response(&ctx, error),
         };
     match state.store.delete_model_mapping(command).await {
-        Ok(()) => finish_no_content(&ctx),
+        Ok(deleted) => finish_success(&ctx, serde_json::json!({ "deleted": deleted })),
         Err(error) if error.is_not_found() => not_found_response(&ctx, error.to_string()),
         Err(error) => {
             admin_model_system_response(&ctx, "model mapping delete store is unavailable", error)

@@ -261,8 +261,8 @@ export class AiModelsApi {
   }
 
 /** Delete model */
-  async delete(modelId: string, requestOptions?: ApiRequestOptions): Promise<void> {
-    return this.client.request<void>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
+  async delete(modelId: string, requestOptions?: ApiRequestOptions): Promise<{ deleted: boolean; }> {
+    return this.client.request<{ deleted: boolean; }>(backendApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any, sdkworkUnwrapKind: 'data' });
   }
 
 /** Update model */
@@ -429,8 +429,8 @@ export class AiModelMappingsApi {
   }
 
 /** Delete model mapping */
-  async delete(mappingId: string, requestOptions?: ApiRequestOptions): Promise<void> {
-    return this.client.request<void>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any });
+  async delete(mappingId: string, requestOptions?: ApiRequestOptions): Promise<{ deleted: boolean; }> {
+    return this.client.request<{ deleted: boolean; }>(backendApiPath(`/ai/model_mappings/${serializePathParameter(mappingId, { name: 'mappingId', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any, sdkworkUnwrapKind: 'data' });
   }
 
 /** Update model mapping */

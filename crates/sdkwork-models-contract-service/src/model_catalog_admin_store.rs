@@ -506,12 +506,12 @@ pub trait ModelCatalogAdminStore {
     fn delete_model<'a>(
         &'a self,
         command: DeleteAdminAiModelCommand,
-    ) -> AdminModelCommandFuture<'a, ()>;
+    ) -> AdminModelCommandFuture<'a, bool>;
 
     fn delete_model_mapping<'a>(
         &'a self,
         command: DeleteAdminModelMappingCommand,
-    ) -> AdminModelCommandFuture<'a, ()>;
+    ) -> AdminModelCommandFuture<'a, bool>;
 
     fn resolve_model_mapping<'a>(
         &'a self,

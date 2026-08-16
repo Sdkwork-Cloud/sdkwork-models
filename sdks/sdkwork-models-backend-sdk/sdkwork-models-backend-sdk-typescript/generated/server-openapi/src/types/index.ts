@@ -28,6 +28,7 @@ export type { AdminModelVendorListResponse } from './admin-model-vendor-list-res
 export type { AiResourceGroupResourcesPage } from './ai-resource-group-resources-page';
 export type { AiResourceGroupsPage } from './ai-resource-groups-page';
 export type { AiResourcesPage } from './ai-resources-page';
+export type { DeleteConfirmationResponse } from './delete-confirmation-response';
 export type { FieldError } from './field-error';
 export type { JsonNull } from './json-null';
 export type { JsonObject } from './json-object';

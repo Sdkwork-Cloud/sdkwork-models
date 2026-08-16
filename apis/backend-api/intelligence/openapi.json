@@ -444,8 +444,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteConfirmationResponse"
+                }
+              }
+            }
           },
           "400": {
             "content": {
@@ -521,6 +528,7 @@
           "ai_model_mapping_rule_item",
           "ops_audit_log"
         ],
+        "x-sdkwork-delete-confirmation": true,
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-permission": "intelligence.models.manage"
       },
@@ -1708,8 +1716,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteConfirmationResponse"
+                }
+              }
+            }
           },
           "400": {
             "content": {
@@ -1780,6 +1795,7 @@
         "x-write-tables": [
           "ops_audit_log"
         ],
+        "x-sdkwork-delete-confirmation": true,
         "x-sdkwork-request-context": "WebRequestContext",
         "x-sdkwork-permission": "intelligence.models.manage"
       },
@@ -6215,6 +6231,36 @@
           "items",
           "pageInfo"
         ]
+      },
+      "DeleteConfirmationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SdkWorkApiResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "data"
+            ],
+            "properties": {
+              "data": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "deleted"
+                ],
+                "properties": {
+                  "deleted": {
+                    "type": "boolean",
+                    "description": "Whether the catalog row was removed."
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Fail-closed delete confirmation response."
       },
       "FieldError": {
         "type": "object",

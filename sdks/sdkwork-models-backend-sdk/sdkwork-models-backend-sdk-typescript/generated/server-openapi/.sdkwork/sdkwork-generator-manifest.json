@@ -52,7 +52,7 @@
     },
     {
       "path": "src/api/ai.ts",
-      "sha256": "a564dbbf0eb41795c0018d50a7cfdb9e2cc53805e1965c026e368d2305df9432"
+      "sha256": "a2fddd508428e72de6765c28cec7271ad618d7f0ed7984b8d838adb2645fae0b"
     },
     {
       "path": "src/api/base.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "8232d087b029fcd6897617116ca4f8609a728915cc0ca2f1796c66c00c8d89d9"
+      "sha256": "959c2a1f20f3029fe15077f2c8f67dc913cd6a397740bc599b6b96fd81022a71"
     },
     {
       "path": "src/http/index.ts",
@@ -207,12 +207,16 @@
       "sha256": "351d721c3c6f48f4453f92276856105120d72eb8d2fa9cd28de8e3854bf10f6c"
     },
     {
+      "path": "src/types/delete-confirmation-response.ts",
+      "sha256": "b912bbf018e0689f9b1cefa4af94da46687c24c7ec4bdae409e3c0d0b753c583"
+    },
+    {
       "path": "src/types/field-error.ts",
       "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "f577333452ccfa70be190d1495bb59b8b9eb01b9a5be7767c7d5b7b820f7c52a"
+      "sha256": "df49e21e94bb3afcfe9c6074fb719658a4c423ef965f25f3e53a0dff83a10f9e"
     },
     {
       "path": "src/types/json-null.ts",
