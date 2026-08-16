@@ -41,6 +41,31 @@ const DURATION_TIER_CODES = new Set([
 
 const USAGE_SCOPES = new Set(["coding", "chat", "agent"]);
 
+function compareDecimalStrings(left, right) {
+  if (!isDecimalString(left) || !isDecimalString(right)) {
+    throw new TypeError("decimal comparison requires canonical non-negative decimal strings");
+  }
+  const [leftWhole, leftFraction = ""] = left.split(".");
+  const [rightWhole, rightFraction = ""] = right.split(".");
+  if (leftWhole.length !== rightWhole.length) {
+    return leftWhole.length < rightWhole.length ? -1 : 1;
+  }
+  const wholeOrder = leftWhole.localeCompare(rightWhole);
+  if (wholeOrder !== 0) {
+    return wholeOrder;
+  }
+  const width = Math.max(leftFraction.length, rightFraction.length);
+  return leftFraction.padEnd(width, "0").localeCompare(rightFraction.padEnd(width, "0"));
+}
+
+function isZeroDecimal(value) {
+  return isDecimalString(value) && compareDecimalStrings(value, "0") === 0;
+}
+
+function isPositiveDecimal(value) {
+  return isDecimalString(value) && compareDecimalStrings(value, "0") > 0;
+}
+
 export function validateCatalog(root) {
   const issues = [];
 
@@ -342,6 +367,9 @@ export function validateCatalog(root) {
         seenPriceIds.add(price.priceId);
 
         const priceKey = [
+          price.priceBookCode,
+          price.productCode,
+          price.operationCode,
           price.priceSide,
           price.pricingScope ?? "model",
           price.meterCode,
@@ -353,6 +381,7 @@ export function validateCatalog(root) {
           price.currency ?? pricing.currency,
           price.minimumQuantity ?? "0",
           price.effectiveFrom,
+          stableJson(price.conditions ?? []),
         ].join("|");
         if (seenPriceKeys.has(priceKey)) {
           issues.push(issue("price.key.duplicate", `${pricingPath}#/prices/${index}`, `${pricing.modelId} has duplicate effective pricing key ${priceKey}`));
@@ -364,6 +393,15 @@ export function validateCatalog(root) {
             issues.push(issue("price.decimal.invalid", `${pricingPath}#/prices/${index}/${field}`, `${field} must be a decimal string`));
           }
         }
+        if (isDecimalString(price.unitSize) && !isPositiveDecimal(price.unitSize)) {
+          issues.push(issue("price.unit_size.invalid", `${pricingPath}#/prices/${index}/unitSize`, "unitSize must be positive"));
+        }
+        if (price.quantityStep !== undefined && (!isDecimalString(price.quantityStep) || !isPositiveDecimal(price.quantityStep))) {
+          issues.push(issue("price.quantity_step.invalid", `${pricingPath}#/prices/${index}/quantityStep`, "quantityStep must be a positive decimal string"));
+        }
+        if (price.calculationMode === "flat" && isDecimalString(price.unitSize) && compareDecimalStrings(price.unitSize, "1") !== 0) {
+          issues.push(issue("price.flat.unit_size.invalid", `${pricingPath}#/prices/${index}/unitSize`, "flat pricing unitSize must equal one"));
+        }
         if (bundle.vendor.billingCurrency && (price.currency ?? pricing.currency) !== bundle.vendor.billingCurrency) {
           issues.push(issue("price.currency.vendor_mismatch", `${pricingPath}#/prices/${index}/currency`, `${price.priceId} currency must match vendor billingCurrency ${bundle.vendor.billingCurrency}`));
         }
@@ -372,6 +410,121 @@ export function validateCatalog(root) {
         }
         if (!price.source?.sourceUrl || !price.source?.observedAt || !price.effectiveFrom) {
           issues.push(issue("price.source.missing", `${pricingPath}#/prices/${index}`, "sourceUrl, observedAt, and effectiveFrom are required"));
+        }
+        for (const field of ["priceBookCode", "productCode", "operationCode", "rateHash"]) {
+          if (typeof price[field] !== "string" || price[field].trim().length === 0) {
+            issues.push(issue("price.identity.missing", `${pricingPath}#/prices/${index}/${field}`, `${field} must be a non-empty string`));
+          }
+        }
+        if (!["chargeable", "free", "not_applicable", "unknown"].includes(price.billability)) {
+          issues.push(issue("price.billability.invalid", `${pricingPath}#/prices/${index}/billability`, "billability must be explicit"));
+        }
+        const tieredCalculation = ["graduated", "volume"].includes(price.calculationMode);
+        if (price.billability === "chargeable" && !tieredCalculation && isZeroDecimal(price.unitPrice)) {
+          issues.push(issue("price.chargeable.zero_price", `${pricingPath}#/prices/${index}/unitPrice`, "zero price cannot be inferred as chargeable"));
+        }
+        if (["free", "not_applicable"].includes(price.billability) && isPositiveDecimal(price.unitPrice)) {
+          issues.push(issue("price.non_chargeable.positive_price", `${pricingPath}#/prices/${index}/unitPrice`, "free or not-applicable rates cannot have a positive price"));
+        }
+        if (!["request_accepted", "successful_result", "usage_reported"].includes(price.chargeTiming)) {
+          issues.push(issue("price.charge_timing.invalid", `${pricingPath}#/prices/${index}/chargeTiming`, "chargeTiming is invalid"));
+        }
+        if (!["per_unit", "flat", "graduated", "volume", "formula"].includes(price.calculationMode)) {
+          issues.push(issue("price.calculation_mode.invalid", `${pricingPath}#/prices/${index}/calculationMode`, "calculationMode is invalid"));
+        }
+        const tiers = price.tiers ?? [];
+        if (tieredCalculation && tiers.length === 0) {
+          issues.push(issue("price.tiers.missing", `${pricingPath}#/prices/${index}/tiers`, "graduated and volume rates require at least one tier"));
+        }
+        if (!tieredCalculation && tiers.length > 0) {
+          issues.push(issue("price.tiers.unexpected", `${pricingPath}#/prices/${index}/tiers`, "tiers are allowed only for graduated and volume rates"));
+        }
+        let expectedLowerBound = "0";
+        const tierCodes = new Set();
+        for (const [tierIndex, tier] of tiers.entries()) {
+          const tierPath = `${pricingPath}#/prices/${index}/tiers/${tierIndex}`;
+          for (const field of ["lowerBound", "unitSize", "unitPrice", "flatAmount"]) {
+            if (tier[field] !== undefined && !isDecimalString(tier[field])) {
+              issues.push(issue("price.tier.decimal.invalid", `${tierPath}/${field}`, `${field} must be a decimal string`));
+            }
+          }
+          if (tier.upperBound !== undefined && tier.upperBound !== null && !isDecimalString(tier.upperBound)) {
+            issues.push(issue("price.tier.decimal.invalid", `${tierPath}/upperBound`, "upperBound must be a decimal string or null"));
+          }
+          if (!tier.tierCode || tierCodes.has(tier.tierCode)) {
+            issues.push(issue("price.tier.code.invalid", `${tierPath}/tierCode`, "tierCode must be non-empty and unique within the rate"));
+          }
+          tierCodes.add(tier.tierCode);
+          const lowerBound = tier.lowerBound;
+          const upperBound = tier.upperBound == null ? null : tier.upperBound;
+          if (expectedLowerBound === null || (isDecimalString(lowerBound) && compareDecimalStrings(lowerBound, expectedLowerBound) !== 0)) {
+            issues.push(issue("price.tier.range.gap", `${tierPath}/lowerBound`, "tier ranges must start at zero and remain contiguous"));
+          }
+          if (upperBound !== null && isDecimalString(lowerBound) && isDecimalString(upperBound) && compareDecimalStrings(upperBound, lowerBound) <= 0) {
+            issues.push(issue("price.tier.range.invalid", `${tierPath}/upperBound`, "upperBound must be greater than lowerBound"));
+          }
+          if (upperBound === null && tierIndex !== tiers.length - 1) {
+            issues.push(issue("price.tier.range.open", `${tierPath}/upperBound`, "only the final tier may have an open upper bound"));
+          }
+          if (isDecimalString(tier.unitSize) && !isPositiveDecimal(tier.unitSize)) {
+            issues.push(issue("price.tier.unit_size.invalid", `${tierPath}/unitSize`, "tier unitSize must be positive"));
+          }
+          if (price.billability === "chargeable" && isZeroDecimal(tier.unitPrice ?? "0") && isZeroDecimal(tier.flatAmount ?? "0")) {
+            issues.push(issue("price.tier.chargeable.zero_price", tierPath, "each chargeable tier must have a positive unitPrice or flatAmount"));
+          }
+          if (["free", "not_applicable"].includes(price.billability) && (isPositiveDecimal(tier.unitPrice ?? "0") || isPositiveDecimal(tier.flatAmount ?? "0"))) {
+            issues.push(issue("price.tier.non_chargeable.positive_price", tierPath, "non-chargeable tiers cannot contain positive amounts"));
+          }
+          expectedLowerBound = upperBound;
+        }
+        if (tieredCalculation && tiers.length > 0 && tiers.at(-1)?.upperBound != null) {
+          issues.push(issue("price.tier.range.unbounded", `${pricingPath}#/prices/${index}/tiers`, "the final tier must have a null upperBound"));
+        }
+        if (price.calculationMode === "formula" && !price.formula) {
+          issues.push(issue("price.formula.missing", `${pricingPath}#/prices/${index}/formula`, "formula rates require a formula definition"));
+        }
+        if (price.calculationMode !== "formula" && price.formula) {
+          issues.push(issue("price.formula.unexpected", `${pricingPath}#/prices/${index}/formula`, "formula is allowed only for formula rates"));
+        }
+        if (price.formula) {
+          const formula = price.formula;
+          for (const field of ["constantUnits", "quantityCoefficient", "minimumUnits", "maximumUnits"]) {
+            if (formula[field] !== undefined && formula[field] !== null && !isDecimalString(formula[field])) {
+              issues.push(issue("price.formula.decimal.invalid", `${pricingPath}#/prices/${index}/formula/${field}`, `${field} must be a decimal string`));
+            }
+          }
+          if (formula.minimumUnits != null && formula.maximumUnits != null && isDecimalString(formula.minimumUnits) && isDecimalString(formula.maximumUnits) && compareDecimalStrings(formula.maximumUnits, formula.minimumUnits) < 0) {
+            issues.push(issue("price.formula.bounds.invalid", `${pricingPath}#/prices/${index}/formula`, "maximumUnits must be greater than or equal to minimumUnits"));
+          }
+          const termCodes = new Set();
+          const termDimensions = new Set();
+          for (const [termIndex, term] of (formula.terms ?? []).entries()) {
+            const termPath = `${pricingPath}#/prices/${index}/formula/terms/${termIndex}`;
+            if (!term.termCode || termCodes.has(term.termCode) || !term.dimensionCode || termDimensions.has(term.dimensionCode)) {
+              issues.push(issue("price.formula.term.invalid", termPath, "formula term codes and dimensions must be non-empty and unique"));
+            }
+            if (!isDecimalString(term.coefficient)) {
+              issues.push(issue("price.formula.term.coefficient.invalid", `${termPath}/coefficient`, "formula coefficient must be a decimal string"));
+            }
+            termCodes.add(term.termCode);
+            termDimensions.add(term.dimensionCode);
+          }
+        }
+        if (!["sum", "maximum", "minimum", "last", "distinct_invocation"].includes(price.quantityAggregation)) {
+          issues.push(issue("price.quantity_aggregation.invalid", `${pricingPath}#/prices/${index}/quantityAggregation`, "quantityAggregation is invalid"));
+        }
+        const dimensions = new Set();
+        for (const [conditionIndex, condition] of (price.conditions ?? []).entries()) {
+          const conditionPath = `${pricingPath}#/prices/${index}/conditions/${conditionIndex}`;
+          if (typeof condition.dimensionCode !== "string" || condition.dimensionCode.trim().length === 0) {
+            issues.push(issue("price.condition.dimension.invalid", `${conditionPath}/dimensionCode`, "condition dimensionCode is required"));
+          } else if (dimensions.has(condition.dimensionCode)) {
+            issues.push(issue("price.condition.dimension.duplicate", `${conditionPath}/dimensionCode`, `${condition.dimensionCode} is duplicated`));
+          }
+          dimensions.add(condition.dimensionCode);
+          if (!["eq", "neq", "gt", "gte", "lt", "lte", "in", "not_in", "exists"].includes(condition.operator)) {
+            issues.push(issue("price.condition.operator.invalid", `${conditionPath}/operator`, "condition operator is invalid"));
+          }
         }
       }
     }

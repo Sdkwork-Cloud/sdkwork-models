@@ -17,7 +17,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.200000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a9f16959c623b8a04cf5d4c5335187a927a90e0fd74c48485d3fe777abeb8af7"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "1.200000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "6bdaa73c2f60c37c603c0a201c31e188531dfc872f2785c7ff67a4fb4099ebb8"
     },
     {
       "currency": "USD",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.020000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "e88e80bb95d57500068e68312c1d36e610e799f6e81a619dfde1187d2ed9fd75"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

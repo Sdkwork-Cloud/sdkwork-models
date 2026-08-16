@@ -17,10 +17,19 @@
         "sourceUrl": "https://www.volcengine.com/docs/6561/1359370"
       },
       "unitPrice": "0.280000",
-      "unitSize": "1000"
+      "unitSize": "1000",
+      "priceBookCode": "models.bytedance.cn.official",
+      "productCode": "models.bytedance.audio",
+      "operationCode": "speech.synthesize",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "891ac41dfae7fdf37c3aae96fe4afc70fd2b931cb7b01ade377737ffc3f08dec"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "bytedance"
 }

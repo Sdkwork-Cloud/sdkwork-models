@@ -17,10 +17,19 @@
         "sourceUrl": "https://app.klingai.com/cn/dev/document-api/"
       },
       "unitPrice": "0.600000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.kuaishou.cn.official",
+      "productCode": "models.kuaishou.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "faf4694ea68e83019ae0925824c3763dec0035716da54864bb24a8200254e73c"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "kuaishou"
 }

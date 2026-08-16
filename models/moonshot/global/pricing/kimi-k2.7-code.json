@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "0.190000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.moonshot.global.official",
+      "productCode": "models.moonshot.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "24ba45e88e7dfa44d18922c5af3ea56a63b09a6abdf76d962ebcac1909eb3589"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "0.950000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.moonshot.global.official",
+      "productCode": "models.moonshot.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "3305fb615779f281436743a9a2568c3e4193ad5b8f25e546b82ec8e4529ec142"
     },
     {
       "currency": "USD",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://platform.kimi.ai/"
       },
       "unitPrice": "4.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.moonshot.global.official",
+      "productCode": "models.moonshot.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a7fe1735a537337cf9a0ef1e89cb87d31c71b73392a4d0fe891587da4d556593"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "moonshot"
 }

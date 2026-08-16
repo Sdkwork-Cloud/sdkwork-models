@@ -17,10 +17,19 @@
         "sourceUrl": "https://elevenlabs.io/pricing/api"
       },
       "unitPrice": "0.120000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.elevenlabs.global.official",
+      "productCode": "models.elevenlabs.sfx",
+      "operationCode": "sound.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "6f01a876b5e58450450d53941f70d897d9cdedabd9de7e27de96977755881ed0"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "elevenlabs"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "4.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "9adcc81925c6fcfd3b5effb4cff6aa717e15dfec3ea07efc67e4a87227e15e1b"
     },
     {
       "currency": "USD",
@@ -34,7 +43,22 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.400000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "text"
+        }
+      ],
+      "rateHash": "601842c9cb6b28eef3972896fc1a9fdac9be83681d3ae6e9cdb73d2c3e42154b"
     },
     {
       "currency": "USD",
@@ -50,7 +74,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "24.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "02c7696490d9f9126f0b3177d580b657736d3f9f7ecd37c36a361167fee391e8"
     },
     {
       "currency": "USD",
@@ -66,7 +99,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "32.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "0955d38325d328f59071c2a65a460b71a870441c91e1f979908e3e35ef15f29a"
     },
     {
       "currency": "USD",
@@ -83,7 +125,22 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.400000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "audio"
+        }
+      ],
+      "rateHash": "29439325c24d14915e46b6349da7a7e4187a18b903400a34aa388190bb726173"
     },
     {
       "currency": "USD",
@@ -99,7 +156,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "64.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "e83f77fe7eb19372f52c17e4779532c9d48abe1c38d82eafb6a4ef499a10ea87"
     },
     {
       "currency": "USD",
@@ -115,7 +181,16 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "5.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "f56255e95700625113746c724f61b8e39b73123207abef6c9a92f88f3cf45d60"
     },
     {
       "currency": "USD",
@@ -132,10 +207,25 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.500000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "image"
+        }
+      ],
+      "rateHash": "4354064bdec52cb6d4e7229cdb75cdef023ffd3777f321b1675eb05f076a1837"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

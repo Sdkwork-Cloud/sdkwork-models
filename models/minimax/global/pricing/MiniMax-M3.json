@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.300000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "31f56f2472be2df8820eb55bc8cdfba26cb1f7e95efe6bd750584c1aacc33ba9"
     },
     {
       "currency": "USD",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "1.200000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "cda5bef07666d61fb4600927fa357521c4e003e218304cfeb66b6beefb8d6b6a"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "minimax"
 }

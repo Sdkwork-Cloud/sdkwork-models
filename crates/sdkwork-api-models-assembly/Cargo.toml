@@ -15,6 +15,7 @@ tokio.workspace = true
 sdkwork-web-bootstrap.workspace = true
 sdkwork-web-core.workspace = true
 sdkwork_models_service_host.workspace = true
+sdkwork_models_database_host.workspace = true
 sdkwork_models_catalog_repository_sqlx.workspace = true
 sdkwork_models_contract_service.workspace = true
 sdkwork-database-id.workspace = true

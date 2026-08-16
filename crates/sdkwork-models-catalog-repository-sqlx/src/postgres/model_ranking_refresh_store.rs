@@ -301,6 +301,63 @@ async fn load_ranking_aggregates(
             ) previous_rows
             WHERE previous_row_no = 1
         ),
+        billable_usage AS (
+            SELECT
+                c.id,
+                c.tenant_id,
+                c.organization_id,
+                m.catalog_key,
+                COALESCE(
+                    NULLIF(d.pricing_snapshot #>> '{resource,requestedModel}', ''),
+                    NULLIF(d.pricing_snapshot #>> '{model,model}', ''),
+                    NULLIF(m.catalog_key, '')
+                ) AS model,
+                COALESCE((m.dimensions_json ->> 'modality')::integer, 0) AS modality,
+                COALESCE((m.dimensions_json ->> 'requestCount')::bigint, 0) AS request_count,
+                COALESCE((m.dimensions_json ->> 'totalTokens')::bigint, 0) AS total_tokens,
+                c.amount AS customer_charge_amount,
+                c.currency_code AS currency,
+                c.charged_at AS occurred_at
+            FROM cloudrouter_charge_line c
+            JOIN cloudrouter_rating_decision d
+              ON d.tenant_id = c.tenant_id
+             AND d.organization_id = c.organization_id
+             AND d.id = c.rating_decision_id
+            JOIN cloudrouter_usage_measurement m
+              ON m.tenant_id = d.tenant_id
+             AND m.organization_id = d.organization_id
+             AND m.id = d.measurement_id
+            WHERE c.status = 1
+              AND c.charge_status IN ('rated', 'settled')
+              AND c.amount > 0
+              AND d.status = 1
+              AND d.decision_status = 'rated'
+              AND d.billability = 'chargeable'
+            UNION ALL
+            SELECT
+                legacy.id,
+                legacy.tenant_id,
+                legacy.organization_id,
+                legacy.catalog_key,
+                legacy.model,
+                COALESCE(legacy.modality, 0),
+                COALESCE(legacy.request_count, 1),
+                COALESCE(legacy.total_tokens, 0),
+                legacy.customer_charge_amount,
+                legacy.currency,
+                legacy.occurred_at
+            FROM ai_metering_usage legacy
+            WHERE legacy.status = 1
+              AND COALESCE(legacy.customer_charge_amount, 0) > 0
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM cloudrouter_rating_decision current_decision
+                  WHERE current_decision.tenant_id = legacy.tenant_id
+                    AND current_decision.organization_id = legacy.organization_id
+                    AND current_decision.invocation_id = legacy.request_id
+                    AND current_decision.status = 1
+              )
+        ),
         usage_aggregate AS (
             SELECT
                 COUNT(u.id) AS source_rows,
@@ -318,12 +375,11 @@ async fn load_ranking_aggregates(
                 SUM(COALESCE(u.total_tokens, 0)) AS token_count,
                 SUM(COALESCE(u.customer_charge_amount, 0)) AS cost_amount,
                 COALESCE(NULLIF(MAX(u.currency), ''), 'USD') AS currency
-            FROM ai_metering_usage u
+            FROM billable_usage u
             JOIN model_scope m
               ON m.catalog_key = u.catalog_key
              AND m.model_row_no = 1
-            WHERE u.status = 1
-              AND ($1 <= 0 OR u.tenant_id = $1)
+            WHERE ($1 <= 0 OR u.tenant_id = $1)
               AND ($2 <= 0 OR u.organization_id = $2)
               AND COALESCE(NULLIF(u.catalog_key, ''), '') <> ''
               AND u.occurred_at >= $6::timestamp AT TIME ZONE 'UTC'
@@ -568,7 +624,7 @@ fn ranking_metadata(
         "refreshIntervalSeconds": command.refresh_interval_seconds,
         "nextRefreshAt": next_refresh_at,
         "cacheMaxAgeSeconds": command.cache_max_age_seconds,
-        "sourceTables": ["ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["cloudrouter_charge_line", "cloudrouter_rating_decision", "cloudrouter_usage_measurement", "ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }
@@ -591,7 +647,7 @@ fn audit_payload(command: &ModelRankingRefreshAuditCommand) -> Result<String, Do
         "consecutiveFailureCount": command.consecutive_failure_count.max(0),
         "alertRecommended": command.alert_recommended,
         "alertSeverity": command.alert_severity,
-        "sourceTables": ["ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
+        "sourceTables": ["cloudrouter_charge_line", "cloudrouter_rating_decision", "cloudrouter_usage_measurement", "ai_metering_usage", "ai_model", "ai_model_rank_snapshot"]
     }))
     .map_err(|error| DomainError::new(error.to_string()))
 }
@@ -778,6 +834,9 @@ mod tests {
             .next()
             .expect("production source before test module");
 
+        assert!(production_source.contains("FROM cloudrouter_charge_line c"));
+        assert!(production_source.contains("d.decision_status = 'rated'"));
+        assert!(production_source.contains("d.billability = 'chargeable'"));
         assert!(
             production_source.contains("SUM(COALESCE(u.customer_charge_amount, 0)) AS cost_amount")
         );

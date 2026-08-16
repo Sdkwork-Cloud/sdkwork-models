@@ -17,7 +17,16 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
       },
       "unitPrice": "8.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "baf2dc11666584da0b296dcc93b8ffa09b45f8e703ed2bf8d977a33f2e84ca21"
     },
     {
       "currency": "CNY",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
       },
       "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "dfa9d8968bbadb99fd9a0b484839a267eab386f057f64240a4a35ff5babfe20d"
     },
     {
       "currency": "CNY",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
       },
       "unitPrice": "28.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "434e1fabb12bc7201a8ffaecbd7055eee862ea3d9fc7ea506dd4a4083b3d92c8"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "zhipu"
 }

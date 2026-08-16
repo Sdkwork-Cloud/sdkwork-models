@@ -17,10 +17,19 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.050000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "d83b2416f358b4ffd9d915be91de4a171f22ad649b8d31b47f157a9f138fa6c4"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "google"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "1.500000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.reference",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "08fe60db0f1b1043b624654ded69403df63dc4cb02603569502effa1833e2404"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "9.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.reference",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a41e77816020e62ec35e9a962a3bacbf85583d4a09e61ba74560e1378fe9586b"
     },
     {
       "currency": "USD",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.150000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.reference",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "4793caf1f5ebfddec8274a0b35d761f7c5a59b3ade14d7b0e931dba324368d01"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "google"
 }

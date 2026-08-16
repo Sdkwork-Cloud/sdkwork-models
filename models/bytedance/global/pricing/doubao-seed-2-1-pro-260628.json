@@ -17,7 +17,16 @@
         "sourceUrl": "https://www.volcengine.com/docs/82379"
       },
       "unitPrice": "0.830000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "373b358ee1d80d91fb00e844cbf8a37dc5929a00b513422e1c9d46f3588297ad"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://www.volcengine.com/docs/82379"
       },
       "unitPrice": "0.166000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "854af4998b948a9dc22dbe5d40a21e3d95fe20fd7e6848b8f619aa67d11f41b8"
     },
     {
       "currency": "USD",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://www.volcengine.com/docs/82379"
       },
       "unitPrice": "4.140000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "9c743a8e8c4ae05e4a836d94550b95bc2bb73ec797fd60734f89537a8fe72060"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "bytedance"
 }

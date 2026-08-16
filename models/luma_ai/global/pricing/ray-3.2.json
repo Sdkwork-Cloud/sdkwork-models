@@ -18,7 +18,22 @@
       },
       "tierCode": "dur_5s",
       "unitPrice": "0.060000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.luma_ai.global.official",
+      "productCode": "models.luma_ai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_5s"
+        }
+      ],
+      "rateHash": "5d29f579791f20e73afd139c824cb701b5efdcba0a3c33e227d711ff715ab9f6"
     },
     {
       "currency": "USD",
@@ -35,10 +50,25 @@
       },
       "tierCode": "dur_10s",
       "unitPrice": "0.090000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.luma_ai.global.official",
+      "productCode": "models.luma_ai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_10s"
+        }
+      ],
+      "rateHash": "a8abeba48eb0ea5ea1ffdd5fbc8d5e732bff0eecbdaeb8ca1aba7fb45bd150b1"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "luma_ai"
 }

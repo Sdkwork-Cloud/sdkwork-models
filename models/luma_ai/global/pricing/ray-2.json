@@ -17,10 +17,19 @@
         "sourceUrl": "https://lumalabs.ai/api"
       },
       "unitPrice": "0.090000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.luma_ai.global.official",
+      "productCode": "models.luma_ai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "f068cee5b2c316cc625b5f54b11c14980f87d4c38088730e9800d6661a45a3d3"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "luma_ai"
 }

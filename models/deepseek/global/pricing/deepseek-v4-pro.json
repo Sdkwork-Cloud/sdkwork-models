@@ -17,7 +17,16 @@
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
       "unitPrice": "0.003625",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a49b57b7545bdb769991aef9b7b93679c79b031e27a6bca815178aef667a5ea6"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
       "unitPrice": "0.435000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "8ca795a3c5c515787f53cfcb115f0fc1eaff95efbff71ad7894118c3344ed42c"
     },
     {
       "currency": "USD",
@@ -49,7 +67,16 @@
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
       "unitPrice": "0.870000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "18639efb0378a9516b5ef1eddbbe9370c0419e0f0edaae827a3ceb4ac986523c"
     },
     {
       "currency": "USD",
@@ -66,7 +93,22 @@
       },
       "tierCode": "off_peak",
       "unitPrice": "0.022000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "off_peak"
+        }
+      ],
+      "rateHash": "342cc16c46f8ef16b55dcdbe100df41a8461dc8298d86bb45e994aa68054818f"
     },
     {
       "currency": "USD",
@@ -83,7 +125,22 @@
       },
       "tierCode": "off_peak",
       "unitPrice": "0.660000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "off_peak"
+        }
+      ],
+      "rateHash": "79fd1222e82d2f9e8b06ed9c86b76bd70f19de2aa3f1f6aaecad9c9d29963e24"
     },
     {
       "currency": "USD",
@@ -100,7 +157,22 @@
       },
       "tierCode": "off_peak",
       "unitPrice": "1.980000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "off_peak"
+        }
+      ],
+      "rateHash": "574effb7665820141f4b989a6c13c6e0be091d7b988a9ce28bc42876021e1c57"
     },
     {
       "currency": "USD",
@@ -117,7 +189,22 @@
       },
       "tierCode": "peak",
       "unitPrice": "0.044000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "peak"
+        }
+      ],
+      "rateHash": "b1b903b6b83e9a0045639077b9c4301406393614c5a4f9a50f433846728d4792"
     },
     {
       "currency": "USD",
@@ -134,7 +221,22 @@
       },
       "tierCode": "peak",
       "unitPrice": "1.320000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "peak"
+        }
+      ],
+      "rateHash": "bb113a47228dd8daa123d0ddfe48ac530182fabb47d2556c86a599cfbf9f47cb"
     },
     {
       "currency": "USD",
@@ -151,10 +253,25 @@
       },
       "tierCode": "peak",
       "unitPrice": "3.960000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.deepseek.global.official",
+      "productCode": "models.deepseek.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "peak"
+        }
+      ],
+      "rateHash": "e49288060915785efaeee1b35c11b266eba094cf0b1090f704ac132966e9abdc"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "deepseek"
 }

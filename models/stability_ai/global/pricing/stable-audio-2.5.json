@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.stability.ai/docs"
       },
       "unitPrice": "0.200000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.stability_ai.global.official",
+      "productCode": "models.stability_ai.music",
+      "operationCode": "music.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "696f82fdd85958f84f15ead9b16f06657230986c9a32fa24e5c07036843aba04"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "stability_ai"
 }

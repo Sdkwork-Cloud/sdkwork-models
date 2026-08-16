@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
       "unitPrice": "0.000000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.black_forest_labs.global.official",
+      "productCode": "models.black_forest_labs.video",
+      "operationCode": "video.generate",
+      "billability": "unknown",
+      "chargeTiming": "request_accepted",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "distinct_invocation",
+      "conditions": [],
+      "rateHash": "a085b0e842b4c720b5f3ed20a3c3f4e5612dceba95a4bae3ddcfb4c27b62f115"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "black_forest_labs"
 }

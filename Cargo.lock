@@ -2366,6 +2366,7 @@ dependencies = [
  "sdkwork-database-sqlx",
  "sdkwork-models-catalog-repository-sqlx",
  "sdkwork-models-contract-service",
+ "sdkwork-models-database-host",
  "sdkwork-models-service-host",
  "sdkwork-routes-models-catalog-app-api",
  "sdkwork-routes-models-catalog-backend-api",

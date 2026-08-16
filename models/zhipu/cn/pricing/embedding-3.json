@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-3"
       },
       "unitPrice": "0.500000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.embedding",
+      "operationCode": "embedding.create",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "8d2232969e4691165cce49203f3110d7b0c430b6a215e9c9e2d74ed1ae273d1b"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "zhipu"
 }

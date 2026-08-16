@@ -18,10 +18,19 @@
         "sourceUrl": "https://app.klingai.com/global/dev/document-api/productBilling/consumptionTable"
       },
       "unitPrice": "0.070000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.kuaishou.global.official",
+      "productCode": "models.kuaishou.sfx",
+      "operationCode": "sound.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "07b271c5fa26b22a53bf8411ed97b5af23bf531b382c665b71a958a5e6b27af5"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "kuaishou"
 }

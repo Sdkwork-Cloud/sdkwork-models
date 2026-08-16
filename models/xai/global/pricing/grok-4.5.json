@@ -18,7 +18,22 @@
       },
       "tierCode": "up_to_200k",
       "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "up_to_200k"
+        }
+      ],
+      "rateHash": "3be887d6027ce93c7cb7ebe1b8319de0711488d89544d80e6706402b55a84fad"
     },
     {
       "currency": "USD",
@@ -35,7 +50,22 @@
       },
       "tierCode": "up_to_200k",
       "unitPrice": "6.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "up_to_200k"
+        }
+      ],
+      "rateHash": "24a7bb10b9bc0f8c52136e9b84332a973d21fd514ebd91072c161dd3f64c706a"
     },
     {
       "currency": "USD",
@@ -52,7 +82,22 @@
       },
       "tierCode": "up_to_200k",
       "unitPrice": "0.500000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "up_to_200k"
+        }
+      ],
+      "rateHash": "ddfa5ff60001f78ea0fcf4b6b17e0196fb3133c0c2dac3756532fd1d786f7231"
     },
     {
       "currency": "USD",
@@ -69,7 +114,22 @@
       },
       "tierCode": "over_200k",
       "unitPrice": "4.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_200k"
+        }
+      ],
+      "rateHash": "2903f36ae028da67e926547b3ca32facafabe0b5f58c2ec6a6e131b50310773f"
     },
     {
       "currency": "USD",
@@ -86,7 +146,22 @@
       },
       "tierCode": "over_200k",
       "unitPrice": "12.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_200k"
+        }
+      ],
+      "rateHash": "a3db6161f56e1f99b2b5346122223da6037941a1cca18576b4d8c996ee951c68"
     },
     {
       "currency": "USD",
@@ -103,10 +178,25 @@
       },
       "tierCode": "over_200k",
       "unitPrice": "1.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_200k"
+        }
+      ],
+      "rateHash": "2380ef9970674ec23fa341fc95f58cc504bd8a5fcc4f30ff6201e308af84ce4b"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "xai"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "unitPrice": "1.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "6b3292ac6c1983628ac83d9f0843d774d54b04db6db0897f332f465f99d97ed5"
     },
     {
       "currency": "USD",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
       "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "053c5f7deb9524b113b9a036d9d127b8f51201a05572a7537de386abc4cf0639"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "xai"
 }

@@ -17,10 +17,19 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/pixverse-text-to-video-api-reference"
       },
       "unitPrice": "0.270000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.pixverse.cn.official",
+      "productCode": "models.pixverse.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "2fa61b698a6e1ba4e3be59b0e2a9fe335310f8b98ed6902b4b7d954db657585e"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "pixverse"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "2.100000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "cd6a1b8e95dbd6382c721adbbcc47de99930623126e4382ed2dd94464c2a92d2"
     },
     {
       "currency": "CNY",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.420000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "83c2915d171523b8a4333bbdd71b5c82e3fca38603452d29290d7d695a58b485"
     },
     {
       "currency": "CNY",
@@ -49,7 +67,16 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "2.625000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "8167bfc3c724a6fb1e00cb98824bdea216e06c530f78db65d0be3e16f0c48542"
     },
     {
       "currency": "CNY",
@@ -65,10 +92,19 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "8.400000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "1a91f3fd69c3f3e461d781983a559e06a04baa4d4486f440b34958e7b9ab999e"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "minimax"
 }

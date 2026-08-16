@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.stability.ai/pricing"
       },
       "unitPrice": "0.030000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.stability_ai.global.official",
+      "productCode": "models.stability_ai.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c95129648c15e172d113a53bfcfbe641d3d67ca2b77151a7e5417a3ee6887801"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "stability_ai"
 }

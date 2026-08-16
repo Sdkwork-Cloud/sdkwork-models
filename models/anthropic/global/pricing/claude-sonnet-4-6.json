@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "3.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.anthropic.global.official",
+      "productCode": "models.anthropic.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "6d5463f4652be552d46010c9913b8e8c3f93e877631cbe6d5b051c6673960505"
     },
     {
       "currency": "USD",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "15.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.anthropic.global.official",
+      "productCode": "models.anthropic.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "f0b6abfb1d2dde9c1cabf3e4b8b174e4d1dee208e822368ff63831430804208f"
     },
     {
       "currency": "USD",
@@ -50,7 +68,22 @@
       },
       "tierCode": "cache_write_5m",
       "unitPrice": "3.750000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.anthropic.global.official",
+      "productCode": "models.anthropic.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "cache_write_5m"
+        }
+      ],
+      "rateHash": "b0b0acf8c3fa9b2dfac3a845bbef867a98048ee5ab49a08724212d5a91abd097"
     },
     {
       "currency": "USD",
@@ -67,7 +100,22 @@
       },
       "tierCode": "cache_write_1h",
       "unitPrice": "6.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.anthropic.global.official",
+      "productCode": "models.anthropic.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "cache_write_1h"
+        }
+      ],
+      "rateHash": "5c28f1d5a96165c5d2547d7ae6d547a13892a43c1d14743fc045b05c24632c48"
     },
     {
       "currency": "USD",
@@ -83,10 +131,19 @@
         "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing"
       },
       "unitPrice": "0.300000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.anthropic.global.official",
+      "productCode": "models.anthropic.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "7d8c3f4c0c9ff3bd37a171cca10f1581be664b170c62af70d3ade2f31030556c"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "anthropic"
 }

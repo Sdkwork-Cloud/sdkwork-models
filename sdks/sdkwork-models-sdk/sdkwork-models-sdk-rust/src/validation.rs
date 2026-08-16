@@ -51,6 +51,105 @@ pub fn validate_catalog(catalog: &ModelCatalog) -> Vec<CatalogIssue> {
                         });
                     }
                 }
+                for (field, value) in [
+                    ("rateHash", price.rate_hash.as_str()),
+                    ("priceBookCode", price.price_book_code.as_str()),
+                    ("productCode", price.product_code.as_str()),
+                    ("operationCode", price.operation_code.as_str()),
+                ] {
+                    if value.trim().is_empty() {
+                        issues.push(CatalogIssue {
+                            code: "pricing.identity.missing".to_owned(),
+                            path: format!("{}/{}", pricing.catalog_key, field),
+                            message: "pricing identity fields must not be empty".to_owned(),
+                        });
+                    }
+                }
+                if price.rate_hash.len() != 64
+                    || !price
+                        .rate_hash
+                        .chars()
+                        .all(|character| character.is_ascii_hexdigit())
+                {
+                    issues.push(CatalogIssue {
+                        code: "pricing.rate_hash.invalid".to_owned(),
+                        path: format!("{}/rateHash", pricing.catalog_key),
+                        message: "rateHash must be a SHA-256 hex digest".to_owned(),
+                    });
+                }
+                if !matches!(
+                    price.billability.as_str(),
+                    "chargeable" | "free" | "not_applicable" | "unknown"
+                ) {
+                    issues.push(CatalogIssue {
+                        code: "pricing.billability.invalid".to_owned(),
+                        path: format!("{}/billability", pricing.catalog_key),
+                        message: "billability must be explicit".to_owned(),
+                    });
+                }
+                let tiered_calculation =
+                    matches!(price.calculation_mode.as_str(), "graduated" | "volume");
+                if price.billability == "chargeable"
+                    && !tiered_calculation
+                    && is_zero_decimal(&price.unit_price)
+                {
+                    issues.push(CatalogIssue {
+                        code: "pricing.chargeable.zero_price".to_owned(),
+                        path: format!("{}/unitPrice", pricing.catalog_key),
+                        message: "zero price cannot be inferred as chargeable".to_owned(),
+                    });
+                }
+                if matches!(price.billability.as_str(), "free" | "not_applicable")
+                    && !is_zero_decimal(&price.unit_price)
+                {
+                    issues.push(CatalogIssue {
+                        code: "pricing.non_chargeable.positive_price".to_owned(),
+                        path: format!("{}/unitPrice", pricing.catalog_key),
+                        message: "free or not-applicable rates cannot have a positive price"
+                            .to_owned(),
+                    });
+                }
+                if !matches!(
+                    price.calculation_mode.as_str(),
+                    "per_unit" | "flat" | "graduated" | "volume" | "formula"
+                ) {
+                    issues.push(CatalogIssue {
+                        code: "pricing.calculation_mode.invalid".to_owned(),
+                        path: format!("{}/calculationMode", pricing.catalog_key),
+                        message: "calculationMode is invalid".to_owned(),
+                    });
+                }
+                if price.calculation_mode == "flat"
+                    && compare_decimal_strings(&price.unit_size, "1")
+                        != Some(std::cmp::Ordering::Equal)
+                {
+                    issues.push(CatalogIssue {
+                        code: "pricing.flat.unit_size.invalid".to_owned(),
+                        path: format!("{}/unitSize", pricing.catalog_key),
+                        message: "flat pricing unitSize must equal one".to_owned(),
+                    });
+                }
+                validate_tiers(pricing.catalog_key.as_str(), price, &mut issues);
+                validate_formula(pricing.catalog_key.as_str(), price, &mut issues);
+                let mut dimensions = BTreeSet::new();
+                for condition in &price.conditions {
+                    if condition.dimension_code.trim().is_empty()
+                        || condition.operator.trim().is_empty()
+                    {
+                        issues.push(CatalogIssue {
+                            code: "pricing.condition.invalid".to_owned(),
+                            path: format!("{}/conditions", pricing.catalog_key),
+                            message: "rate conditions require a dimension and operator".to_owned(),
+                        });
+                    }
+                    if !dimensions.insert(condition.dimension_code.as_str()) {
+                        issues.push(CatalogIssue {
+                            code: "pricing.condition.duplicate".to_owned(),
+                            path: format!("{}/conditions", pricing.catalog_key),
+                            message: "a rate cannot repeat the same condition dimension".to_owned(),
+                        });
+                    }
+                }
             }
         }
     }
@@ -75,4 +174,257 @@ pub fn is_decimal_string(value: &str) -> bool {
     fraction
         .map(|value| value.chars().all(|ch| ch.is_ascii_digit()))
         .unwrap_or(true)
+}
+
+fn is_zero_decimal(value: &str) -> bool {
+    compare_decimal_strings(value, "0") == Some(std::cmp::Ordering::Equal)
+}
+
+fn validate_tiers(
+    catalog_key: &str,
+    price: &crate::types::ModelPrice,
+    issues: &mut Vec<CatalogIssue>,
+) {
+    let tiered = matches!(price.calculation_mode.as_str(), "graduated" | "volume");
+    if tiered && price.tiers.is_empty() {
+        issues.push(CatalogIssue {
+            code: "pricing.tiers.missing".to_owned(),
+            path: format!("{catalog_key}/tiers"),
+            message: "graduated and volume rates require at least one tier".to_owned(),
+        });
+    }
+    if !tiered && !price.tiers.is_empty() {
+        issues.push(CatalogIssue {
+            code: "pricing.tiers.unexpected".to_owned(),
+            path: format!("{catalog_key}/tiers"),
+            message: "tiers are allowed only for graduated and volume rates".to_owned(),
+        });
+    }
+
+    let mut expected_lower = Some("0");
+    let mut tier_codes = BTreeSet::new();
+    for (index, tier) in price.tiers.iter().enumerate() {
+        let path = format!("{catalog_key}/tiers/{index}");
+        for (field, value) in [
+            ("lowerBound", tier.lower_bound.as_str()),
+            ("unitSize", tier.unit_size.as_str()),
+            ("unitPrice", tier.unit_price.as_str()),
+            ("flatAmount", tier.flat_amount.as_str()),
+        ] {
+            if !is_decimal_string(value) {
+                issues.push(CatalogIssue {
+                    code: "pricing.tier.decimal.invalid".to_owned(),
+                    path: format!("{path}/{field}"),
+                    message: format!("{field} must be a decimal string"),
+                });
+            }
+        }
+        if tier
+            .upper_bound
+            .as_deref()
+            .is_some_and(|value| !is_decimal_string(value))
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.decimal.invalid".to_owned(),
+                path: format!("{path}/upperBound"),
+                message: "upperBound must be a decimal string or null".to_owned(),
+            });
+        }
+        if tier.tier_code.trim().is_empty() || !tier_codes.insert(tier.tier_code.as_str()) {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.code.invalid".to_owned(),
+                path: format!("{path}/tierCode"),
+                message: "tierCode must be non-empty and unique within the rate".to_owned(),
+            });
+        }
+        if expected_lower.is_none()
+            || expected_lower.is_some_and(|expected| {
+                compare_decimal_strings(&tier.lower_bound, expected)
+                    != Some(std::cmp::Ordering::Equal)
+            })
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.range.gap".to_owned(),
+                path: format!("{path}/lowerBound"),
+                message: "tier ranges must start at zero and remain contiguous".to_owned(),
+            });
+        }
+        if tier.upper_bound.as_deref().is_some_and(|upper| {
+            compare_decimal_strings(upper, &tier.lower_bound)
+                .is_some_and(|ordering| !ordering.is_gt())
+        }) {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.range.invalid".to_owned(),
+                path: format!("{path}/upperBound"),
+                message: "upperBound must be greater than lowerBound".to_owned(),
+            });
+        }
+        if tier.upper_bound.is_none() && index + 1 != price.tiers.len() {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.range.open".to_owned(),
+                path: format!("{path}/upperBound"),
+                message: "only the final tier may have an open upper bound".to_owned(),
+            });
+        }
+        if !is_positive_decimal(&tier.unit_size) {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.unit_size.invalid".to_owned(),
+                path: format!("{path}/unitSize"),
+                message: "tier unitSize must be positive".to_owned(),
+            });
+        }
+        let tier_has_amount =
+            is_positive_decimal(&tier.unit_price) || is_positive_decimal(&tier.flat_amount);
+        if price.billability == "chargeable" && !tier_has_amount {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.chargeable.zero_price".to_owned(),
+                path: path.clone(),
+                message: "each chargeable tier must have a positive unitPrice or flatAmount"
+                    .to_owned(),
+            });
+        }
+        if matches!(price.billability.as_str(), "free" | "not_applicable") && tier_has_amount {
+            issues.push(CatalogIssue {
+                code: "pricing.tier.non_chargeable.positive_price".to_owned(),
+                path,
+                message: "non-chargeable tiers cannot contain positive amounts".to_owned(),
+            });
+        }
+        expected_lower = tier.upper_bound.as_deref();
+    }
+    if tiered
+        && price
+            .tiers
+            .last()
+            .is_some_and(|tier| tier.upper_bound.is_some())
+    {
+        issues.push(CatalogIssue {
+            code: "pricing.tier.range.unbounded".to_owned(),
+            path: format!("{catalog_key}/tiers"),
+            message: "the final tier must have a null upperBound".to_owned(),
+        });
+    }
+}
+
+fn validate_formula(
+    catalog_key: &str,
+    price: &crate::types::ModelPrice,
+    issues: &mut Vec<CatalogIssue>,
+) {
+    if price.calculation_mode == "formula" && price.formula.is_none() {
+        issues.push(CatalogIssue {
+            code: "pricing.formula.missing".to_owned(),
+            path: format!("{catalog_key}/formula"),
+            message: "formula rates require a formula definition".to_owned(),
+        });
+    }
+    if price.calculation_mode != "formula" && price.formula.is_some() {
+        issues.push(CatalogIssue {
+            code: "pricing.formula.unexpected".to_owned(),
+            path: format!("{catalog_key}/formula"),
+            message: "formula is allowed only for formula rates".to_owned(),
+        });
+    }
+    let Some(formula) = price.formula.as_ref() else {
+        return;
+    };
+    if formula.formula_code.trim().is_empty() || formula.formula_version.trim().is_empty() {
+        issues.push(CatalogIssue {
+            code: "pricing.formula.identity.invalid".to_owned(),
+            path: format!("{catalog_key}/formula"),
+            message: "formulaCode and formulaVersion must not be empty".to_owned(),
+        });
+    }
+    for (field, value) in [
+        ("constantUnits", Some(formula.constant_units.as_str())),
+        (
+            "quantityCoefficient",
+            Some(formula.quantity_coefficient.as_str()),
+        ),
+        ("minimumUnits", formula.minimum_units.as_deref()),
+        ("maximumUnits", formula.maximum_units.as_deref()),
+    ] {
+        if value.is_some_and(|value| !is_decimal_string(value)) {
+            issues.push(CatalogIssue {
+                code: "pricing.formula.decimal.invalid".to_owned(),
+                path: format!("{catalog_key}/formula/{field}"),
+                message: format!("{field} must be a decimal string"),
+            });
+        }
+    }
+    if formula
+        .minimum_units
+        .as_deref()
+        .zip(formula.maximum_units.as_deref())
+        .is_some_and(|(minimum, maximum)| {
+            compare_decimal_strings(maximum, minimum) == Some(std::cmp::Ordering::Less)
+        })
+    {
+        issues.push(CatalogIssue {
+            code: "pricing.formula.bounds.invalid".to_owned(),
+            path: format!("{catalog_key}/formula"),
+            message: "maximumUnits must be greater than or equal to minimumUnits".to_owned(),
+        });
+    }
+    let mut term_codes = BTreeSet::new();
+    let mut term_dimensions = BTreeSet::new();
+    for (index, term) in formula.terms.iter().enumerate() {
+        let path = format!("{catalog_key}/formula/terms/{index}");
+        if term.term_code.trim().is_empty()
+            || term.dimension_code.trim().is_empty()
+            || !term_codes.insert(term.term_code.as_str())
+            || !term_dimensions.insert(term.dimension_code.as_str())
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.formula.term.invalid".to_owned(),
+                path: path.clone(),
+                message: "formula term codes and dimensions must be non-empty and unique"
+                    .to_owned(),
+            });
+        }
+        if !is_decimal_string(&term.coefficient) {
+            issues.push(CatalogIssue {
+                code: "pricing.formula.term.coefficient.invalid".to_owned(),
+                path: format!("{path}/coefficient"),
+                message: "formula coefficient must be a decimal string".to_owned(),
+            });
+        }
+    }
+}
+
+fn is_positive_decimal(value: &str) -> bool {
+    compare_decimal_strings(value, "0") == Some(std::cmp::Ordering::Greater)
+}
+
+fn compare_decimal_strings(left: &str, right: &str) -> Option<std::cmp::Ordering> {
+    if !is_decimal_string(left) || !is_decimal_string(right) {
+        return None;
+    }
+    let (left_whole, left_fraction) = decimal_parts(left);
+    let (right_whole, right_fraction) = decimal_parts(right);
+    let whole_order = left_whole
+        .len()
+        .cmp(&right_whole.len())
+        .then_with(|| left_whole.cmp(right_whole));
+    if !whole_order.is_eq() {
+        return Some(whole_order);
+    }
+    let width = left_fraction.len().max(right_fraction.len());
+    for index in 0..width {
+        let left_digit = left_fraction.as_bytes().get(index).copied().unwrap_or(b'0');
+        let right_digit = right_fraction
+            .as_bytes()
+            .get(index)
+            .copied()
+            .unwrap_or(b'0');
+        let order = left_digit.cmp(&right_digit);
+        if !order.is_eq() {
+            return Some(order);
+        }
+    }
+    Some(std::cmp::Ordering::Equal)
+}
+
+fn decimal_parts(value: &str) -> (&str, &str) {
+    value.split_once('.').unwrap_or((value, ""))
 }

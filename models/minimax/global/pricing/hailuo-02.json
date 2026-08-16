@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-video"
       },
       "unitPrice": "0.045000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "065d95d36d7d3ab1551e0a55936cf445afe6427e9d3a39304e572690dd770d24"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "minimax"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
       },
       "unitPrice": "4.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.tencent.cn.official",
+      "productCode": "models.tencent.reasoning",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "25f103ca46d3d388b1e1f09a4ae23f56d2350e149a6826cdd2a4ce86b774d7bf"
     },
     {
       "currency": "CNY",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://cloud.tencent.com/document/product/1729/104753"
       },
       "unitPrice": "16.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.tencent.cn.official",
+      "productCode": "models.tencent.reasoning",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "acf6bec7100b03cf752244c1b813231074d15b3d9c687641372582bcaa9b3d29"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "tencent"
 }

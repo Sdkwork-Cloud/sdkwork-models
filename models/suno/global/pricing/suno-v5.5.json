@@ -17,10 +17,19 @@
         "sourceUrl": "https://suno.com/blog/v5-5"
       },
       "unitPrice": "0.025000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.suno.global.official",
+      "productCode": "models.suno.music",
+      "operationCode": "music.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "0da923eb5bb2e0d9fe5b9e4b9fe7f0d4c0459811b17c6e2537a483199eb109de"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "suno"
 }

@@ -17,10 +17,19 @@
         "sourceUrl": "https://www.volcengine.com/docs/82379"
       },
       "unitPrice": "0.120000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "8bb2421d6b99c29e96d7395e7966a3c796111653d9fc973bd3936709207f11ce"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "bytedance"
 }

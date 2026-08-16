@@ -37,11 +37,20 @@
         "type": "object",
         "required": [
           "priceId",
+          "rateHash",
+          "priceBookCode",
+          "productCode",
+          "operationCode",
           "priceSide",
+          "billability",
+          "chargeTiming",
+          "calculationMode",
           "meterCode",
+          "quantityAggregation",
           "unitSize",
           "unitPrice",
           "minimumQuantity",
+          "conditions",
           "source",
           "effectiveFrom"
         ],
@@ -49,12 +58,52 @@
           "priceId": {
             "type": "string"
           },
+          "rateHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "priceBookCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "productCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operationCode": {
+            "type": "string",
+            "minLength": 1
+          },
           "priceSide": {
             "enum": [
               "official",
               "reference",
               "upstream",
               "customer"
+            ]
+          },
+          "billability": {
+            "enum": [
+              "chargeable",
+              "free",
+              "not_applicable",
+              "unknown"
+            ]
+          },
+          "chargeTiming": {
+            "enum": [
+              "request_accepted",
+              "successful_result",
+              "usage_reported"
+            ]
+          },
+          "calculationMode": {
+            "enum": [
+              "per_unit",
+              "flat",
+              "graduated",
+              "volume",
+              "formula"
             ]
           },
           "pricingScope": {
@@ -67,6 +116,15 @@
           },
           "meterCode": {
             "type": "string"
+          },
+          "quantityAggregation": {
+            "enum": [
+              "sum",
+              "maximum",
+              "minimum",
+              "last",
+              "distinct_invocation"
+            ]
           },
           "unitSize": {
             "$ref": "#/$defs/decimalString"
@@ -92,10 +150,118 @@
               "null"
             ]
           },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/rateCondition"
+            }
+          },
+          "tiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/rateTier"
+            }
+          },
+          "formula": {
+            "$ref": "#/$defs/priceFormula"
+          },
           "source": {
             "$ref": "#/$defs/sourceEvidence"
           }
         },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "calculationMode": {
+                  "const": "flat"
+                }
+              },
+              "required": [
+                "calculationMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "unitSize": {
+                  "type": "string",
+                  "pattern": "^1(?:\\.0+)?$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "calculationMode": {
+                  "enum": [
+                    "graduated",
+                    "volume"
+                  ]
+                }
+              },
+              "required": [
+                "calculationMode"
+              ]
+            },
+            "then": {
+              "required": [
+                "tiers"
+              ],
+              "properties": {
+                "tiers": {
+                  "minItems": 1
+                },
+                "formula": false
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "calculationMode": {
+                  "const": "formula"
+                }
+              },
+              "required": [
+                "calculationMode"
+              ]
+            },
+            "then": {
+              "required": [
+                "formula"
+              ],
+              "properties": {
+                "tiers": {
+                  "maxItems": 0
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "calculationMode": {
+                  "enum": [
+                    "per_unit",
+                    "flat"
+                  ]
+                }
+              },
+              "required": [
+                "calculationMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "tiers": {
+                  "maxItems": 0
+                },
+                "formula": false
+              }
+            }
+          }
+        ],
         "additionalProperties": true
       }
     }
@@ -122,6 +288,142 @@
           "type": "string"
         }
       }
+    },
+    "rateCondition": {
+      "type": "object",
+      "required": [
+        "dimensionCode",
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "dimensionCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operator": {
+          "enum": [
+            "eq",
+            "neq",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "in",
+            "not_in",
+            "exists"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "array",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "rateTier": {
+      "type": "object",
+      "required": [
+        "tierCode",
+        "lowerBound",
+        "unitSize",
+        "unitPrice"
+      ],
+      "properties": {
+        "tierCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lowerBound": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "upperBound": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/decimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unitSize": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "unitPrice": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "flatAmount": {
+          "$ref": "#/$defs/decimalString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "priceFormula": {
+      "type": "object",
+      "required": [
+        "formulaCode",
+        "formulaVersion",
+        "constantUnits",
+        "quantityCoefficient",
+        "terms"
+      ],
+      "properties": {
+        "formulaCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formulaVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constantUnits": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "quantityCoefficient": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "minimumUnits": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "maximumUnits": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/priceFormulaTerm"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "priceFormulaTerm": {
+      "type": "object",
+      "required": [
+        "termCode",
+        "dimensionCode",
+        "coefficient"
+      ],
+      "properties": {
+        "termCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dimensionCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coefficient": {
+          "$ref": "#/$defs/decimalString"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

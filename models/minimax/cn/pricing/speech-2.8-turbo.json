@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.200000",
-      "unitSize": "1000"
+      "unitSize": "1000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.audio",
+      "operationCode": "speech.synthesize",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "ac93f2a89ce0b56c986513dd4200b9c677614719da0448c426cf616c4ebb59ad"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "minimax"
 }

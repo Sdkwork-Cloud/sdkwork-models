@@ -17,7 +17,16 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "1.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.reasoning",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "add181c2d0367e53c13883cd45e319a7cd301193f8c845a6d25c9514f30e8d41"
     },
     {
       "currency": "CNY",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "4.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.reasoning",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "16947841d51829697fea84fef3ca0884c4db39e7aeaf4f4b2923fcfc9b4ade18"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "baidu"
 }

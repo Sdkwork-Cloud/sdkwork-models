@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
       "unitPrice": "0.700000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xiaomi.cn.official",
+      "productCode": "models.xiaomi.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a69646aedf69467c7521cb41fc1b14b1974e4c62cf2bbb2b183572055836a186"
     },
     {
       "currency": "CNY",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://platform.xiaomimimo.com"
       },
       "unitPrice": "2.100000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.xiaomi.cn.official",
+      "productCode": "models.xiaomi.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "40ee56ba6d0e874631a68a58a9103e0b8a887dc766ee23661c7782cfd5b17abe"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "xiaomi"
 }

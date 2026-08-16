@@ -17,10 +17,19 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "0.130000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.embedding",
+      "operationCode": "embedding.create",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "615e0f17fa7e99a58b1be130375226d992a7913a4dcd78dc2070c7e40581d62c"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       "unitPrice": "1.350000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.stepfun.cn.official",
+      "productCode": "models.stepfun.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "dab2c50d48b453465f5fd87c2dea489089d08b2a62b1734d42beb8b1061b71ed"
     },
     {
       "currency": "CNY",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       "unitPrice": "0.270000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.stepfun.cn.official",
+      "productCode": "models.stepfun.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "3e1f682a223fb7e8c6c5d0e22a1dbea9601d18c90f7956fd78a372aeac8141ae"
     },
     {
       "currency": "CNY",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       "unitPrice": "8.100000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.stepfun.cn.official",
+      "productCode": "models.stepfun.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "375c654778a46bca506f93c520bad3251217809f71cc13c193b0e22d84172edd"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "stepfun"
 }

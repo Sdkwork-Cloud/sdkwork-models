@@ -38,9 +38,17 @@
   ],
   "contracts": {
     "publicExports": [
-      "."
+      "sdkwork_api_models_assembly::assemble_api_router",
+      "sdkwork_api_models_assembly::assemble_business_routes",
+      "sdkwork_api_models_assembly::assemble_app_api_contribution",
+      "sdkwork_api_models_assembly::bootstrap_database_from_env",
+      "sdkwork_api_models_assembly::ApiAssembly"
     ],
-    "runtimeEntrypoints": [],
+    "runtimeEntrypoints": [
+      "sdkwork_api_models_assembly::assemble_api_router",
+      "sdkwork_api_models_assembly::assemble_app_api_contribution",
+      "sdkwork_api_models_assembly::bootstrap_database_from_env"
+    ],
     "routeManifest": "assembly-manifest.json",
     "sdkClients": [],
     "sdkDependencies": [],

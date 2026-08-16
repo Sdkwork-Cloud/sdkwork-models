@@ -18,10 +18,19 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/choose-a-model"
       },
       "unitPrice": "1.200000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.alibaba.cn.official",
+      "productCode": "models.alibaba.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c73e7fe3f559b743886e7ba40a77042b06fe0ca67f74442b90c8dad9eeba0172"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "alibaba"
 }

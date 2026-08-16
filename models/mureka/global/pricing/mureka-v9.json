@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.mureka.ai/docs/en/faq.html"
       },
       "unitPrice": "0.045000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.mureka.global.official",
+      "productCode": "models.mureka.music",
+      "operationCode": "music.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c66b1a9c0c2ce84fd790e35076a28a97a190b50552ba3a7366ac042ad723b2e8"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "mureka"
 }

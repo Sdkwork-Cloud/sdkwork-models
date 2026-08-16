@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.platform.pixverse.ai/model-pricing-796039m0"
       },
       "unitPrice": "0.100000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.pixverse.global.official",
+      "productCode": "models.pixverse.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a8b71bafe1282aa642d61fe22aa1ddec4edec82bba0d136e29cf77b85f035d26"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "pixverse"
 }

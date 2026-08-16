@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.openai.com/docs/guides/text-to-speech"
       },
       "unitPrice": "0.030000",
-      "unitSize": "1000"
+      "unitSize": "1000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "speech.synthesize",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "e2b36973765214ffe098c95d70f33fb4216cb3505a3db4ea0199bf9da698f7f6"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

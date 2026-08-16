@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/image-generation/cogview-4"
       },
       "unitPrice": "0.060000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "8ccfecb6cae9644e581c86b8230ab9b46df9ba4bbe26e9d5e24ce9d6d7ae5121"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "zhipu"
 }

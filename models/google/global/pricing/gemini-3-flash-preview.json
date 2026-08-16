@@ -17,7 +17,16 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.500000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "102b7361f10fbbdc3e15e4c253980ade45f6e5133db07af0471928eea6f88c0a"
     },
     {
       "currency": "USD",
@@ -34,7 +43,22 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "1.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "audio"
+        }
+      ],
+      "rateHash": "71a10b981c1ab55664ceabd4f59ba09cf1e7f172b6d18292fc80101adb608092"
     },
     {
       "currency": "USD",
@@ -50,7 +74,16 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "0.050000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "47bad79829271a59eb53427c328c4b7fd034adadde22458deeaf751d4de155a8"
     },
     {
       "currency": "USD",
@@ -66,10 +99,19 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "unitPrice": "3.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "a213a13a53eefcb4803d63e5ea43195feabeaab51e81af2e43cd7a5ba6972e83"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "google"
 }

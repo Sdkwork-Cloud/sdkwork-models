@@ -4,6 +4,7 @@ mod catalog_enums;
 mod error;
 mod money;
 mod pricing;
+mod resource_definition;
 mod routing;
 
 pub use access::{
@@ -25,7 +26,11 @@ pub use catalog::{
 pub use catalog_enums::{BillingMeter, IntegrationProviderType, ModelVendor};
 pub use error::{DomainError, DomainResult};
 pub use money::{DecimalValue, Money};
-pub use pricing::{ModelPrice, PriceSide, PricingPlan};
+pub use pricing::{
+    ModelPrice, PriceSide, PricingDimensionContext, PricingFormula, PricingFormulaTerm,
+    PricingPlan, PricingRateCondition, PricingRateMetadata, PricingRateTier,
+};
+pub use resource_definition::ResourceDefinition;
 pub use routing::{
     AiRouteFailureStrategy, AiRouteModelRequirement, AiRouteStrategy, RouteCandidate,
     RoutingCapability, RoutingFallbackMode, RoutingPolicy, RoutingPolicyScope, RoutingRule,

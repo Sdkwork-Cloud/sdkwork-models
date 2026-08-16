@@ -115,6 +115,38 @@ impl DecimalValue {
         decimal_from_scaled(scaled, "decimal subtraction overflow")
     }
 
+    pub fn max(self, other: Self) -> Self {
+        if self >= other {
+            self
+        } else {
+            other
+        }
+    }
+
+    pub fn checked_round_up_to_step(self, step: Self) -> DomainResult<Self> {
+        if self < Self::ZERO {
+            return Err(DomainError::new(
+                "decimal value must not be negative when rounding to a step",
+            ));
+        }
+        if step <= Self::ZERO {
+            return Err(DomainError::new("decimal step must be positive"));
+        }
+        let remainder = self.scaled % step.scaled;
+        if remainder == 0 {
+            return Ok(self);
+        }
+        let increment = step
+            .scaled
+            .checked_sub(remainder)
+            .ok_or_else(|| DomainError::new("decimal step rounding overflow"))?;
+        let scaled = self
+            .scaled
+            .checked_add(increment)
+            .ok_or_else(|| DomainError::new("decimal step rounding overflow"))?;
+        decimal_from_scaled(scaled, "decimal step rounding overflow")
+    }
+
     pub fn is_zero(self) -> bool {
         self.scaled == 0
     }
@@ -180,6 +212,28 @@ mod tests {
         assert_eq!(
             left.checked_add(right).unwrap().to_fixed_string(12),
             "9007199254740992.000000000010"
+        );
+    }
+
+    #[test]
+    fn round_up_to_step_preserves_exact_decimal_quantities() {
+        let quantity = DecimalValue::parse("5.1").unwrap();
+        let step = DecimalValue::parse("0.5").unwrap();
+
+        assert_eq!(
+            quantity
+                .checked_round_up_to_step(step)
+                .unwrap()
+                .to_fixed_string(12),
+            "5.500000000000"
+        );
+        assert_eq!(
+            DecimalValue::parse("5.0")
+                .unwrap()
+                .checked_round_up_to_step(step)
+                .unwrap()
+                .to_fixed_string(12),
+            "5.000000000000"
         );
     }
 }

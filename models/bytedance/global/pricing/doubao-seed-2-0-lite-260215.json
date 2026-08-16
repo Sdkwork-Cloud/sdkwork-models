@@ -17,7 +17,16 @@
         "sourceUrl": "https://seed.bytedance.com/en/seed2"
       },
       "unitPrice": "0.230000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "1337b37900b64368a8c989bb5c4ff73efdeb24917cd49e7582c900b6f5c2b721"
     },
     {
       "currency": "USD",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://seed.bytedance.com/en/seed2"
       },
       "unitPrice": "1.150000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.bytedance.global.official",
+      "productCode": "models.bytedance.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "48402f6212ca408a1ee103fd85261dbfd07a544d5931924207d71c6121468642"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "bytedance"
 }

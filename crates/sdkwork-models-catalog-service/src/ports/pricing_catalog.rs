@@ -69,6 +69,20 @@ pub trait PricingCatalog {
         let _ = (tenant_id, organization_id);
         self.find_pricing_plan(plan_code)
     }
+
+    /// Resolves the exact immutable plan selected by an external rate-card
+    /// authority. Persisted catalogs override this method so a global plan is
+    /// never replaced by a same-code tenant plan during rating.
+    fn find_pricing_plan_by_identity(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        pricing_plan_id: i64,
+        plan_code: &str,
+    ) -> Option<PricingPlan> {
+        let _ = pricing_plan_id;
+        self.find_pricing_plan_for_scope(tenant_id, organization_id, plan_code)
+    }
     fn find_model(&self, model: &str) -> Option<AiModel>;
     fn find_vendor(&self, vendor_code: &str) -> Option<ModelVendorDefinition>;
     fn resolve_model_mapping(

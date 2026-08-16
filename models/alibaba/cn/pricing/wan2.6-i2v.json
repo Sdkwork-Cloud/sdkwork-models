@@ -17,10 +17,19 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/wan-image-to-video-guide"
       },
       "unitPrice": "0.600000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.alibaba.cn.official",
+      "productCode": "models.alibaba.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "b802311bc81e26b7096c442f21457315484406ecbda36f8e7d0889525fe4bf78"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "alibaba"
 }

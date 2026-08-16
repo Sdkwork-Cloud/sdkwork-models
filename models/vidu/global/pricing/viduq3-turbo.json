@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.vidu.com/docs/pricing"
       },
       "unitPrice": "0.055000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "51c9c16242fcf1aecdd1fb4ea1a0e3d32f90b37970f5e5e3ffe70a3d3e218a82"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "vidu"
 }

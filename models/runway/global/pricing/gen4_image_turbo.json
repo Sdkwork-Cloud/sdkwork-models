@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.dev.runwayml.com/guides/pricing/"
       },
       "unitPrice": "0.020000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.runway.global.official",
+      "productCode": "models.runway.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "df439e8c42bf120eb3ade2fe5a53439568d8ce3fbaab2ec2e30e66de696748cb"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "runway"
 }

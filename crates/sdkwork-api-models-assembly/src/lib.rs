@@ -9,6 +9,15 @@ mod generated;
 
 pub use bootstrap::{assemble_api_router, assemble_business_routes, ApiAssembly, ApiAssemblyContribution};
 pub use contribution::assemble_app_api_contribution;
+
+/// Runs Models-owned database lifecycle before dependent assemblies load the
+/// shared model catalog.
+pub async fn bootstrap_database_from_env() -> Result<(), String> {
+    sdkwork_models_database_host::bootstrap_models_database_from_env()
+        .await
+        .map(|_| ())
+}
+
 /// App-api surface route manifest owned by the dependency assembly.
 pub fn app_api_route_manifest() -> sdkwork_web_core::HttpRouteManifest {
     sdkwork_routes_models_catalog_app_api::app_route_manifest()

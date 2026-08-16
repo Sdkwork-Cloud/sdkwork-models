@@ -17,7 +17,16 @@
         "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.5-pro"
       },
       "unitPrice": "30.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "bad76e177d9f2cf3f67eba3edf5e01f2e0d490e519425e6b0840d61c9d36b93d"
     },
     {
       "currency": "USD",
@@ -33,10 +42,19 @@
         "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.5-pro"
       },
       "unitPrice": "180.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "f15c336ebbad56c0d29d39ad469c53493c7c5ff4977d809bc2fa1374d2af68a7"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

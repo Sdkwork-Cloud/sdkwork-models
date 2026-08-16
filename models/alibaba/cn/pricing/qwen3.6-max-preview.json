@@ -17,7 +17,16 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "9.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.alibaba.cn.reference",
+      "productCode": "models.alibaba.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c06556d65af16187fa689dcf51f5c243cfcced621d410ec7fce1cdc9709792ee"
     },
     {
       "currency": "CNY",
@@ -35,7 +44,27 @@
       "thresholdTokens": 128000,
       "tierCode": "above_128k_tokens",
       "unitPrice": "15.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.alibaba.cn.reference",
+      "productCode": "models.alibaba.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "128000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_128k_tokens"
+        }
+      ],
+      "rateHash": "da576002deab75456dc31a22218e0b10685b044b1722b0d38ccb008db4e5f808"
     },
     {
       "currency": "CNY",
@@ -51,7 +80,16 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "54.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.alibaba.cn.reference",
+      "productCode": "models.alibaba.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "bcd4e33f6848a3faa817bd84a6191ee0d3e157389dc10c9eb60d7dd7cc8b4b40"
     },
     {
       "currency": "CNY",
@@ -69,10 +107,30 @@
       "thresholdTokens": 128000,
       "tierCode": "above_128k_tokens",
       "unitPrice": "90.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.alibaba.cn.reference",
+      "productCode": "models.alibaba.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "128000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_128k_tokens"
+        }
+      ],
+      "rateHash": "f41547a355cfc4159f8e0f1edcbd14d66d9720690846d03e8dcfd109927ead89"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "alibaba"
 }

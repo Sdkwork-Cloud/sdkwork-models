@@ -279,9 +279,10 @@ async fn fetch_model_ranking_jobs(
         .load_model_ranking_refresh_jobs(query, subject)
         .await
     {
-        Ok(page_result) => {
-            finish_success(&ctx, to_job_history_page_response(page_result.items, page, limit))
-        }
+        Ok(page_result) => finish_success(
+            &ctx,
+            to_job_history_page_response(page_result.items, page, limit),
+        ),
         Err(error) => problem_for(
             &ctx,
             SdkWorkResultCode::ServiceUnavailable,

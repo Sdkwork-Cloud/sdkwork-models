@@ -17,7 +17,16 @@
         "sourceUrl": "https://longcat.chat/platform/docs/zh/"
       },
       "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.meituan.cn.official",
+      "productCode": "models.meituan.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "9abdcff23ebc0f25ffb40262d48278613b20cfe9dc8192547ba62247b6aeaaa9"
     },
     {
       "currency": "CNY",
@@ -33,7 +42,16 @@
         "sourceUrl": "https://longcat.chat/platform/docs/zh/"
       },
       "unitPrice": "0.040000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.meituan.cn.official",
+      "productCode": "models.meituan.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "6e2956983b4ee6765b794958742452ebaa9e9e65d3d1336d3428d0bbf713262f"
     },
     {
       "currency": "CNY",
@@ -49,10 +67,19 @@
         "sourceUrl": "https://longcat.chat/platform/docs/zh/"
       },
       "unitPrice": "8.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.meituan.cn.official",
+      "productCode": "models.meituan.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c5c94928f6e9ed5916af7f97bd0b1ea261e930ed4b46a739bc9c22189452f08f"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "meituan"
 }

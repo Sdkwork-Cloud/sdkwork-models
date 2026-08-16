@@ -18,7 +18,22 @@
       },
       "tierCode": "4k_native",
       "unitPrice": "1.500000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.bytedance.cn.official",
+      "productCode": "models.bytedance.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "4k_native"
+        }
+      ],
+      "rateHash": "d1dbe192beefe39359457a02a2d125e30ecef0f632bc7b333e74a9c5cc6cd6c7"
     },
     {
       "currency": "CNY",
@@ -35,7 +50,22 @@
       },
       "tierCode": "1080p",
       "unitPrice": "1.000000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.bytedance.cn.official",
+      "productCode": "models.bytedance.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "1080p"
+        }
+      ],
+      "rateHash": "d82dcfa6d22e0e719ce0a0e61441f9560950143f62999ec92bddbf8463474b30"
     },
     {
       "currency": "CNY",
@@ -52,10 +82,25 @@
       },
       "tierCode": "720p",
       "unitPrice": "0.600000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.bytedance.cn.official",
+      "productCode": "models.bytedance.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "720p"
+        }
+      ],
+      "rateHash": "6cea9b605aa8f3abc22dd4d4d598671e24b04805124eaa3f1803e636d43b2041"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "bytedance"
 }

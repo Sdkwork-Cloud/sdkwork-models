@@ -178,9 +178,25 @@ pub struct ModelPricing {
 #[serde(rename_all = "camelCase")]
 pub struct ModelPrice {
     pub price_id: String,
+    #[serde(default)]
+    pub rate_hash: String,
+    #[serde(default)]
+    pub price_book_code: String,
+    #[serde(default)]
+    pub product_code: String,
+    #[serde(default)]
+    pub operation_code: String,
     pub price_side: String,
+    #[serde(default = "default_billability")]
+    pub billability: String,
+    #[serde(default = "default_charge_timing")]
+    pub charge_timing: String,
+    #[serde(default = "default_calculation_mode")]
+    pub calculation_mode: String,
     pub pricing_scope: Option<String>,
     pub meter_code: String,
+    #[serde(default = "default_quantity_aggregation")]
+    pub quantity_aggregation: String,
     pub unit_size: String,
     pub unit_price: String,
     pub minimum_quantity: String,
@@ -188,7 +204,79 @@ pub struct ModelPrice {
     pub currency: Option<String>,
     pub effective_from: String,
     pub effective_to: Option<String>,
+    #[serde(default)]
+    pub conditions: Vec<PriceRateCondition>,
+    #[serde(default)]
+    pub tiers: Vec<PriceRateTier>,
+    pub formula: Option<PriceFormula>,
     pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PriceRateCondition {
+    pub dimension_code: String,
+    pub operator: String,
+    pub value: serde_json::Value,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PriceRateTier {
+    pub tier_code: String,
+    pub lower_bound: String,
+    pub upper_bound: Option<String>,
+    pub unit_size: String,
+    pub unit_price: String,
+    #[serde(default = "default_zero_decimal")]
+    pub flat_amount: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PriceFormula {
+    pub formula_code: String,
+    pub formula_version: String,
+    #[serde(default = "default_zero_decimal")]
+    pub constant_units: String,
+    #[serde(default = "default_one_decimal")]
+    pub quantity_coefficient: String,
+    pub minimum_units: Option<String>,
+    pub maximum_units: Option<String>,
+    #[serde(default)]
+    pub terms: Vec<PriceFormulaTerm>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PriceFormulaTerm {
+    pub term_code: String,
+    pub dimension_code: String,
+    pub coefficient: String,
+}
+
+fn default_billability() -> String {
+    "unknown".to_owned()
+}
+
+fn default_charge_timing() -> String {
+    "usage_reported".to_owned()
+}
+
+fn default_calculation_mode() -> String {
+    "per_unit".to_owned()
+}
+
+fn default_quantity_aggregation() -> String {
+    "sum".to_owned()
+}
+
+fn default_zero_decimal() -> String {
+    "0".to_owned()
+}
+
+fn default_one_decimal() -> String {
+    "1".to_owned()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

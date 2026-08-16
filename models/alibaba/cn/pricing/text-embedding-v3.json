@@ -17,10 +17,19 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/embedding"
       },
       "unitPrice": "0.000500",
-      "unitSize": "1000"
+      "unitSize": "1000",
+      "priceBookCode": "models.alibaba.cn.official",
+      "productCode": "models.alibaba.embedding",
+      "operationCode": "embedding.create",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "4463c17250d98048a15380f876c0acbe5a02b6d2cf924a9d0bf4ea208eb8395c"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "alibaba"
 }

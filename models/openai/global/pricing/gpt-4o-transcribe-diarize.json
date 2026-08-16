@@ -17,10 +17,19 @@
         "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize"
       },
       "unitPrice": "0.006000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.transcribe",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "f870d495f097d1f2bad1f23eaa4f1272677180addc6e0c556839262386cccdfc"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

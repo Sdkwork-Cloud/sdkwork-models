@@ -17,10 +17,19 @@
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "0.025000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "2f8bb646a4766c79ada8bcf3ddf91744bb3472cdf8642de5902a408bf1b2f0ad"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "minimax"
 }

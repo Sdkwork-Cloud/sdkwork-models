@@ -17,10 +17,19 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing"
       },
       "unitPrice": "0.200000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.alibaba.cn.official",
+      "productCode": "models.alibaba.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "bd73cb1e0237e6cf2fb4b118713d54f46f0a4a88a8a3fe233070c0321e02fc48"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "alibaba"
 }

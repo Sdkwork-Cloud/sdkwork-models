@@ -17,7 +17,16 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "6.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "4f456ff0605c82e37fa31714e06d53dc86e87dee2ca45034a365598551eec7a7"
     },
     {
       "currency": "CNY",
@@ -35,7 +44,27 @@
       "thresholdTokens": 32000,
       "tierCode": "above_32k_tokens",
       "unitPrice": "10.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "32000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_32k_tokens"
+        }
+      ],
+      "rateHash": "438e14127605cd0e2433eb445fb7028f8fd7e66067c1f134e6fff1357d5b3e53"
     },
     {
       "currency": "CNY",
@@ -51,7 +80,16 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "unitPrice": "24.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "7113aeeb6a37280547cd9036c71bfd6de49c8993241893333551c2e1a66c9f91"
     },
     {
       "currency": "CNY",
@@ -69,10 +107,30 @@
       "thresholdTokens": 32000,
       "tierCode": "above_32k_tokens",
       "unitPrice": "40.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.baidu.cn.official",
+      "productCode": "models.baidu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "32000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_32k_tokens"
+        }
+      ],
+      "rateHash": "a43f62ed2e54e6654f2e1b1be5ae52d3a5e748fb8e182c0559cfdc59967bcac6"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "baidu"
 }

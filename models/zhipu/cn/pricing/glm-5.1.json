@@ -17,7 +17,16 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "6.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "c85c69453f395d86f4b3913464f2a84a25b7846d1633dbbe7b5d651a93edb681"
     },
     {
       "currency": "CNY",
@@ -35,7 +44,27 @@
       "thresholdTokens": 32000,
       "tierCode": "above_32k_tokens",
       "unitPrice": "8.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "32000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_32k_tokens"
+        }
+      ],
+      "rateHash": "34c7959fc0cb6573186641c415143febef59fc9835e454ab4afb2cd808195a4b"
     },
     {
       "currency": "CNY",
@@ -51,7 +80,16 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "1.300000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "cbc50c75f446651e20d39a7d221b1a42a1cd9201b54da54e398221b48e6334b9"
     },
     {
       "currency": "CNY",
@@ -69,7 +107,27 @@
       "thresholdTokens": 32000,
       "tierCode": "above_32k_tokens",
       "unitPrice": "2.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "32000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_32k_tokens"
+        }
+      ],
+      "rateHash": "991d61b38d1681138a6b174d2c852d6483c89634d6414349593a4776943b9a20"
     },
     {
       "currency": "CNY",
@@ -85,7 +143,16 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "unitPrice": "24.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "19aeade69cfdd1c7b330a9ebe5b63affa58e71de7c4b9fa0ee5edf32e6f45a7d"
     },
     {
       "currency": "CNY",
@@ -103,10 +170,30 @@
       "thresholdTokens": 32000,
       "tierCode": "above_32k_tokens",
       "unitPrice": "28.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.chat",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "32000"
+        },
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "above_32k_tokens"
+        }
+      ],
+      "rateHash": "62998b6311f789c4f32ea62ab4e6018c1b70d568d8e54536539802595c4a99b6"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "zhipu"
 }

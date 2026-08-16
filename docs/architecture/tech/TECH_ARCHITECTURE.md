@@ -49,6 +49,15 @@ apps/sdkwork-models-pc/        → Catalog browser + composed admin libraries
   SQLite is an explicit client-local/development adapter and is not a production
   cluster authority or a second server database contract.
 - Catalog sync from JSON via admin `models.sync` (imports models, pricing, voices, voice bindings, and video generation profiles)
+- `sdkwork-models-catalog-service::PriceService` is the reusable runtime price
+  entry point. `ResourceDefinition` supplies vendor/provider/account, region,
+  catalog/API/product/operation, meter, quantity, dimensions, and event time;
+  `PriceResolution` returns explicit billability, rate identity, failure/audit
+  evidence, and strategy-produced `BillingStructure` amounts.
+- Token, API-call, generated-image quantity, duration, flat-fee, and general
+  unit-quantity calculations are independent `BillingStrategy` components.
+  Consumers may register additional strategies without adding formulas to
+  routing, transport, settlement, or persistence modules.
 - App catalog read uses in-memory `ModelCatalog` JSON snapshot in standalone mode
 - TTS voice catalog: `voices.json` + `model-voices/` per vendor region; persisted to `ai_model_voice` / `ai_model_voice_binding`
 - Video generation profiles: `model-video-profiles/{modelId}.json` per video model; persisted to `ai_model_video_profile`

@@ -5,11 +5,12 @@ use std::sync::Arc;
 use sdkwork_models::{load_catalog, ModelCatalog, ModelInfo, ModelPricing, VendorCatalog};
 use sdkwork_models_catalog_repository_sqlx::model_catalog_import::public_catalog_identity_models;
 use sdkwork_models_catalog_service::domain::{
-    AiModel, AiModelPublicMetadata, BillingMeter, GatewayAccessPolicy, GatewayApiKey,
+    AiModel, AiModelPublicMetadata, BillingMeter, DecimalValue, GatewayAccessPolicy, GatewayApiKey,
     GatewayRiskRule, ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor,
-    ModelVendorDefinition, Money, PriceSide, PricingPlan, QuotaPolicy, ResolveModelMappingContext,
-    RoutingPolicy, RoutingRule, UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot,
-    UpstreamAccountRoute,
+    ModelVendorDefinition, Money, PriceSide, PricingFormula, PricingFormulaTerm, PricingPlan,
+    PricingRateCondition, PricingRateMetadata, PricingRateTier, QuotaPolicy,
+    ResolveModelMappingContext, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
+    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 use sdkwork_models_catalog_service::ports::PricingCatalog;
 
@@ -268,16 +269,101 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
                 .clone()
                 .unwrap_or_else(|| pricing.currency.clone());
             let unit_price = Money::new(&currency, &price.unit_price).ok()?;
+            let unit_size = DecimalValue::parse(&price.unit_size).ok()?;
+            let minimum_quantity = DecimalValue::parse(&price.minimum_quantity).ok()?;
+            let quantity_step = price
+                .quantity_step
+                .as_deref()
+                .map(DecimalValue::parse)
+                .transpose()
+                .ok()?;
+            let tiers = price
+                .tiers
+                .iter()
+                .map(|tier| {
+                    Some(PricingRateTier {
+                        tier_code: tier.tier_code.clone(),
+                        lower_bound: DecimalValue::parse(&tier.lower_bound).ok()?,
+                        upper_bound: tier
+                            .upper_bound
+                            .as_deref()
+                            .map(DecimalValue::parse)
+                            .transpose()
+                            .ok()?,
+                        unit_size: DecimalValue::parse(&tier.unit_size).ok()?,
+                        unit_price: Money::new(&currency, &tier.unit_price).ok()?,
+                        flat_amount: Money::new(&currency, &tier.flat_amount).ok()?,
+                    })
+                })
+                .collect::<Option<Vec<_>>>()?;
+            let formula = match price.formula.as_ref() {
+                Some(formula) => Some(PricingFormula {
+                    formula_code: formula.formula_code.clone(),
+                    formula_version: formula.formula_version.clone(),
+                    constant_units: DecimalValue::parse(&formula.constant_units).ok()?,
+                    quantity_coefficient: DecimalValue::parse(&formula.quantity_coefficient)
+                        .ok()?,
+                    minimum_units: formula
+                        .minimum_units
+                        .as_deref()
+                        .map(DecimalValue::parse)
+                        .transpose()
+                        .ok()?,
+                    maximum_units: formula
+                        .maximum_units
+                        .as_deref()
+                        .map(DecimalValue::parse)
+                        .transpose()
+                        .ok()?,
+                    terms: formula
+                        .terms
+                        .iter()
+                        .map(|term| {
+                            Some(PricingFormulaTerm {
+                                term_code: term.term_code.clone(),
+                                dimension_code: term.dimension_code.clone(),
+                                coefficient: DecimalValue::parse(&term.coefficient).ok()?,
+                            })
+                        })
+                        .collect::<Option<Vec<_>>>()?,
+                }),
+                None => None,
+            };
             Some(ModelPrice {
                 catalog_key: pricing.catalog_key.clone(),
                 model: pricing.catalog_key.clone(),
                 region_code: pricing.region_code.clone(),
                 price_side,
                 billing_meter,
+                unit_size,
                 supplier_code: None,
                 account_id: None,
                 pricing_plan_code: None,
                 unit_price,
+                rate_metadata: Some(PricingRateMetadata {
+                    price_book_code: price.price_book_code.clone(),
+                    rate_hash: price.rate_hash.clone(),
+                    product_code: price.product_code.clone(),
+                    operation_code: price.operation_code.clone(),
+                    billability: price.billability.clone(),
+                    charge_timing: price.charge_timing.clone(),
+                    calculation_mode: price.calculation_mode.clone(),
+                    quantity_aggregation: price.quantity_aggregation.clone(),
+                    minimum_quantity,
+                    quantity_step,
+                    priority: 100,
+                    conditions: price
+                        .conditions
+                        .iter()
+                        .map(|condition| PricingRateCondition {
+                            dimension_code: condition.dimension_code.clone(),
+                            operator_code: condition.operator.clone(),
+                            value: condition.value.clone(),
+                        })
+                        .collect(),
+                    tiers,
+                    formula,
+                }),
             })
         })
         .collect()
@@ -285,7 +371,7 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
 
 fn map_price_side(value: &str) -> Option<PriceSide> {
     match value {
-        "official" | "official_reference" => Some(PriceSide::OfficialReference),
+        "official" | "official_reference" | "reference" => Some(PriceSide::OfficialReference),
         "upstream" | "upstream_cost" => Some(PriceSide::UpstreamCost),
         "customer" | "customer_charge" => Some(PriceSide::CustomerCharge),
         "internal" | "internal_transfer" => Some(PriceSide::InternalTransfer),

@@ -18,7 +18,22 @@
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
       "unitPrice": "0.014000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.black_forest_labs.global.official",
+      "productCode": "models.black_forest_labs.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_direction",
+          "operator": "eq",
+          "value": "output"
+        }
+      ],
+      "rateHash": "284345e23f75a3cd1794028d5baac6bd534e3f22d718dbc3c97eb8b23cfa264e"
     },
     {
       "currency": "USD",
@@ -35,10 +50,25 @@
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
       "unitPrice": "0.001000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.black_forest_labs.global.official",
+      "productCode": "models.black_forest_labs.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_direction",
+          "operator": "eq",
+          "value": "input"
+        }
+      ],
+      "rateHash": "8dce05fd407f5e69528739f8e81e5decb9438bed7ba3dbf32410c8f5e2fb3987"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "black_forest_labs"
 }

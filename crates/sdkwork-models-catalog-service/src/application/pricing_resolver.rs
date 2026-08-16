@@ -1,6 +1,6 @@
 use crate::domain::{
     BillingMeter, DecimalValue, DomainError, DomainResult, ModelPrice, ModelVendor, Money,
-    PriceSide,
+    PriceSide, PricingDimensionContext,
 };
 use crate::ports::PricingCatalog;
 
@@ -30,6 +30,7 @@ pub enum ResolvedPriceSource {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolvedModelPrice {
     pub model: String,
+    pub vendor_code: String,
     pub vendor: ModelVendor,
     pub group_code: String,
     pub pricing_plan_code: String,
@@ -37,6 +38,7 @@ pub struct ResolvedModelPrice {
     pub billing_meter: BillingMeter,
     pub official_reference: ModelPrice,
     pub raw_upstream_cost: Option<ModelPrice>,
+    pub raw_customer_charge: Option<ModelPrice>,
     pub procurement_cost: Option<Money>,
     pub account_contract_cost_multiplier: Option<DecimalValue>,
     pub account_group_cost_multiplier: Option<DecimalValue>,
@@ -44,6 +46,7 @@ pub struct ResolvedModelPrice {
     pub customer_charge_before_sale_multiplier: Money,
     pub sale_multiplier: DecimalValue,
     pub reference_multiplier: DecimalValue,
+    pub default_markup_amount: Money,
     pub customer_charge: Money,
     pub gross_margin_per_unit: Option<crate::domain::DecimalValue>,
     pub source: ResolvedPriceSource,
@@ -55,31 +58,53 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
     }
 
     pub fn resolve(&self, query: ResolveModelPriceQuery) -> DomainResult<ResolvedModelPrice> {
-        let api_key = self.find_api_key(query.api_key_id)?;
+        self.resolve_with_dimensions(query, &PricingDimensionContext::default())
+    }
+
+    pub fn resolve_with_dimensions(
+        &self,
+        query: ResolveModelPriceQuery,
+        dimensions: &PricingDimensionContext,
+    ) -> DomainResult<ResolvedModelPrice> {
+        // Auth-token sessions (api_key_id == 0) carry no gateway API key
+        // record: the resolved account group is the authoritative
+        // tenant/organization scope, mirroring the billing-subject semantics
+        // of the open-api billing guard.
+        let api_key = (query.api_key_id > 0)
+            .then(|| self.find_api_key(query.api_key_id))
+            .transpose()?;
         let group = self.find_group(
             query
                 .account_group_id
-                .unwrap_or(api_key.default_account_group_id),
+                .or_else(|| api_key.as_ref().map(|key| key.default_account_group_id))
+                .ok_or_else(|| {
+                    DomainError::new(
+                        "account group id is required when no API key backs the pricing session",
+                    )
+                })?,
         )?;
         // Verify the account group belongs to the same tenant/organization as the API key,
-        // or is a global resource (tenant_id == 0)
-        if group.tenant_id != 0 && group.tenant_id != api_key.tenant_id {
-            return Err(DomainError::new(format!(
-                "account group {} does not belong to tenant {}",
-                group.id, api_key.tenant_id
-            )));
+        // or is a global resource (tenant_id == 0); auth-token sessions have no
+        // API key to compare against, so the group itself is authoritative.
+        if let Some(api_key) = api_key.as_ref() {
+            if group.tenant_id != 0 && group.tenant_id != api_key.tenant_id {
+                return Err(DomainError::new(format!(
+                    "account group {} does not belong to tenant {}",
+                    group.id, api_key.tenant_id
+                )));
+            }
+            if group.organization_id != 0 && group.organization_id != api_key.organization_id {
+                return Err(DomainError::new(format!(
+                    "account group {} does not belong to organization {}",
+                    group.id, api_key.organization_id
+                )));
+            }
         }
-        if group.organization_id != 0 && group.organization_id != api_key.organization_id {
-            return Err(DomainError::new(format!(
-                "account group {} does not belong to organization {}",
-                group.id, api_key.organization_id
-            )));
-        }
-        let plan = self.find_plan(
-            api_key.tenant_id,
-            api_key.organization_id,
-            &group.pricing_plan_code,
-        )?;
+        let (tenant_id, organization_id) = match api_key.as_ref() {
+            Some(api_key) => (api_key.tenant_id, api_key.organization_id),
+            None => (group.tenant_id, group.organization_id),
+        };
+        let plan = self.find_plan(tenant_id, organization_id, &group)?;
         let model = self.find_model(&query.model)?;
         let vendor = self.find_vendor(&model.vendor_code)?;
         let explicit_region_code = query
@@ -102,22 +127,31 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     .map(|route| normalize_region_code(&route.region_code))
             })
             .unwrap_or_else(|| DEFAULT_PRICE_REGION_CODE.to_owned());
-        let raw_upstream_cost = self.find_upstream_cost(
-            &query,
-            api_key.tenant_id,
-            api_key.organization_id,
-            &region_code,
-        )?;
+        let mut rate_dimensions = dimensions.clone();
+        rate_dimensions.insert(
+            "vendor_code",
+            serde_json::json!(vendor.vendor_code.as_str()),
+        );
+        rate_dimensions.insert("region_code", serde_json::json!(region_code.as_str()));
+        rate_dimensions.insert("catalog_key", serde_json::json!(model.catalog_key.as_str()));
+        rate_dimensions.insert("model", serde_json::json!(model.model.as_str()));
+        rate_dimensions.insert("meter_code", serde_json::json!(query.billing_meter.code()));
+        if let Some(supplier_code) = query.supplier_code.as_deref() {
+            rate_dimensions.insert("provider_code", serde_json::json!(supplier_code));
+        }
+        let raw_upstream_cost =
+            self.find_upstream_cost(&query, tenant_id, organization_id, &region_code)?;
         let price_scope = raw_upstream_cost
             .as_ref()
             .map(|price| price.catalog_key.as_str())
             .unwrap_or(query.model.as_str());
         let official = self.find_official_reference(
             &query,
-            api_key.tenant_id,
-            api_key.organization_id,
+            tenant_id,
+            organization_id,
             price_scope,
             &region_code,
+            &rate_dimensions,
         )?;
         if query.supplier_code.is_some() && raw_upstream_cost.is_none() {
             return Err(missing_upstream_cost_error(&query, &region_code));
@@ -145,8 +179,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         let explicit_customer = self
             .catalog
             .find_model_price_for_scope(
-                api_key.tenant_id,
-                api_key.organization_id,
+                tenant_id,
+                organization_id,
                 price_scope,
                 PriceSide::CustomerCharge,
                 query.billing_meter.clone(),
@@ -155,9 +189,9 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .filter(|price| same_region(&price.region_code, &region_code));
         let reference_multiplier = plan.default_multiplier;
-        let (customer_charge_before_sale_multiplier, source) = match explicit_customer {
+        let (customer_charge_before_sale_multiplier, source) = match explicit_customer.as_ref() {
             Some(price) => (
-                price.unit_price,
+                price.unit_price.clone(),
                 ResolvedPriceSource::ExplicitCustomerCharge,
             ),
             None => (
@@ -178,6 +212,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
 
         Ok(ResolvedModelPrice {
             model: model.model,
+            vendor_code: model.vendor_code,
             vendor: vendor.vendor,
             group_code: group.code,
             pricing_plan_code: plan.plan_code,
@@ -185,6 +220,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             billing_meter: query.billing_meter,
             official_reference: official,
             raw_upstream_cost,
+            raw_customer_charge: explicit_customer,
             procurement_cost,
             account_contract_cost_multiplier: procurement_multipliers
                 .as_ref()
@@ -198,6 +234,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             customer_charge_before_sale_multiplier,
             sale_multiplier: group.sale_multiplier,
             reference_multiplier,
+            default_markup_amount: plan.default_markup_amount,
             customer_charge,
             gross_margin_per_unit,
             source,
@@ -223,11 +260,28 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         &self,
         tenant_id: i64,
         organization_id: i64,
-        plan_code: &str,
+        group: &crate::domain::UpstreamAccountGroup,
     ) -> DomainResult<crate::domain::PricingPlan> {
-        self.catalog
-            .find_pricing_plan_for_scope(tenant_id, organization_id, plan_code)
-            .ok_or_else(|| DomainError::new(format!("pricing plan not found: {plan_code}")))
+        let plan = if group.pricing_plan_id > 0 {
+            self.catalog.find_pricing_plan_by_identity(
+                group.pricing_plan_tenant_id,
+                group.pricing_plan_organization_id,
+                group.pricing_plan_id,
+                &group.pricing_plan_code,
+            )
+        } else {
+            self.catalog.find_pricing_plan_for_scope(
+                tenant_id,
+                organization_id,
+                &group.pricing_plan_code,
+            )
+        };
+        plan.ok_or_else(|| {
+            DomainError::new(format!(
+                "pricing plan not found: {}",
+                group.pricing_plan_code
+            ))
+        })
     }
 
     fn find_model(&self, model: &str) -> DomainResult<crate::domain::AiModel> {
@@ -249,8 +303,10 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         organization_id: i64,
         price_scope: &str,
         region_code: &str,
+        dimensions: &PricingDimensionContext,
     ) -> DomainResult<ModelPrice> {
-        self.catalog
+        let mut candidates = self
+            .catalog
             .list_model_prices_for_scope(
                 tenant_id,
                 organization_id,
@@ -259,17 +315,44 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 query.billing_meter.clone(),
             )
             .into_iter()
-            .find(|price| {
+            .filter(|price| {
                 price.pricing_plan_code.is_none() && same_region(&price.region_code, region_code)
             })
-            .ok_or_else(|| {
-                DomainError::new(format!(
-                    "official reference price not found for model {} meter {} and region {}",
+            .filter(|price| {
+                price
+                    .rate_metadata
+                    .as_ref()
+                    .is_none_or(|metadata| metadata.matches(dimensions))
+            })
+            .collect::<Vec<_>>();
+        candidates.sort_by(|left, right| {
+            rate_specificity(right)
+                .cmp(&rate_specificity(left))
+                .then_with(|| rate_priority(left).cmp(&rate_priority(right)))
+                .then_with(|| rate_hash(left).cmp(rate_hash(right)))
+        });
+        let selected = candidates.first().cloned().ok_or_else(|| {
+            DomainError::new(format!(
+                "official reference price not found for model {} meter {} and region {}",
+                query.model,
+                query.billing_meter.code(),
+                region_code
+            ))
+        })?;
+        if let Some(next) = candidates.get(1) {
+            let same_rank = rate_specificity(&selected) == rate_specificity(next)
+                && rate_priority(&selected) == rate_priority(next);
+            let distinct_rates = rate_hash(&selected) != rate_hash(next);
+            if same_rank && distinct_rates {
+                return Err(DomainError::new(format!(
+                    "official reference rate ambiguous for model {} meter {} and region {}",
                     query.model,
                     query.billing_meter.code(),
                     region_code
-                ))
-            })
+                )));
+            }
+        }
+        Ok(selected)
     }
 
     fn find_upstream_cost(
@@ -438,6 +521,30 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             ))
         })
     }
+}
+
+fn rate_specificity(price: &ModelPrice) -> usize {
+    price
+        .rate_metadata
+        .as_ref()
+        .map(|metadata| metadata.condition_count())
+        .unwrap_or_default()
+}
+
+fn rate_priority(price: &ModelPrice) -> i32 {
+    price
+        .rate_metadata
+        .as_ref()
+        .map(|metadata| metadata.priority)
+        .unwrap_or(i32::MAX)
+}
+
+fn rate_hash(price: &ModelPrice) -> &str {
+    price
+        .rate_metadata
+        .as_ref()
+        .map(|metadata| metadata.rate_hash.as_str())
+        .unwrap_or("")
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

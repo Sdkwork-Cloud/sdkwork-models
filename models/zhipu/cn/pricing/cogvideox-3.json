@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/video-generation/cogvideox-3"
       },
       "unitPrice": "1.000000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.zhipu.cn.official",
+      "productCode": "models.zhipu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "9d79af5a1ac7e1b67ba8e8e9a4fe39decacab3d46b2a681e01c7be9db78a9597"
     }
   ],
   "regionCode": "cn",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "zhipu"
 }

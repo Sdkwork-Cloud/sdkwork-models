@@ -19,7 +19,27 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "5.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.reference",
+      "productCode": "models.openai.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "text"
+        },
+        {
+          "dimensionCode": "input_type",
+          "operator": "eq",
+          "value": "text"
+        }
+      ],
+      "rateHash": "d54751c3b6c20707f3977f4936bfa1cab6fd0963ece87ed782e76552f17710bd"
     },
     {
       "currency": "USD",
@@ -37,7 +57,27 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "7.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.reference",
+      "productCode": "models.openai.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "media_type",
+          "operator": "eq",
+          "value": "image"
+        },
+        {
+          "dimensionCode": "input_type",
+          "operator": "eq",
+          "value": "image"
+        }
+      ],
+      "rateHash": "8d29f71e3d17da218c23af6dc8d34f2e213c9cfa19beb7121751b4acfb3cfbd7"
     },
     {
       "currency": "USD",
@@ -53,10 +93,19 @@
         "sourceUrl": "https://openai.com/api/pricing/"
       },
       "unitPrice": "30.000000",
-      "unitSize": "1000000"
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.reference",
+      "productCode": "models.openai.image",
+      "operationCode": "image.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "d458323995417c210330cc1e2f1d18a72ed291febe1368cb72d0aa2c7c8c3394"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "openai"
 }

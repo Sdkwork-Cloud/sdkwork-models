@@ -19,7 +19,22 @@
       },
       "tierCode": "under_5s",
       "unitPrice": "0.050000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.sfx",
+      "operationCode": "sound.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "under_5s"
+        }
+      ],
+      "rateHash": "e9115ee4d0cdf19b3a7a1631c9f9bb694a4d646f7b7265d26923298ff4378b6c"
     },
     {
       "currency": "USD",
@@ -37,10 +52,25 @@
       },
       "tierCode": "under_10s",
       "unitPrice": "0.100000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.sfx",
+      "operationCode": "sound.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "under_10s"
+        }
+      ],
+      "rateHash": "6fbcb95476316f0b8a4b3847de0fc0abffd2d4a98d47bcac490d5664a7eeb69e"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "vidu"
 }

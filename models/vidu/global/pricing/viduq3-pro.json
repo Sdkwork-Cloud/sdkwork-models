@@ -17,7 +17,16 @@
         "sourceUrl": "https://platform.vidu.com/docs/pricing"
       },
       "unitPrice": "0.100000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "2452fe6aa8c9e4b53872826ca0843e7762328ba6746d3eba879597e1e7bcadf3"
     },
     {
       "currency": "USD",
@@ -35,7 +44,22 @@
       },
       "tierCode": "dur_5s",
       "unitPrice": "0.500000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_5s"
+        }
+      ],
+      "rateHash": "b80437c276036cab8f57604fb9333276c9554c02ee334e844a71afdefa2876e7"
     },
     {
       "currency": "USD",
@@ -53,10 +77,25 @@
       },
       "tierCode": "dur_10s",
       "unitPrice": "1.000000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_10s"
+        }
+      ],
+      "rateHash": "1c8816038663eb58e4f8456ce4c2e3e740b98970b6052fb72a3af3e94aa84858"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "vidu"
 }

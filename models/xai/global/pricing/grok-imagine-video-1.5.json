@@ -17,10 +17,19 @@
         "sourceUrl": "https://docs.x.ai/developers/pricing"
       },
       "unitPrice": "0.080000",
-      "unitSize": "1"
+      "unitSize": "1",
+      "priceBookCode": "models.xai.global.official",
+      "productCode": "models.xai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "cefd802c5c4a0788cae032c9629cfcac6b95e96ba69fc07318ca9710c6744bb3"
     }
   ],
   "regionCode": "global",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "vendorCode": "xai"
 }

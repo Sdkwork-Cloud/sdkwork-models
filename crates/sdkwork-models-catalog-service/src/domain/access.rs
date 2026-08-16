@@ -193,6 +193,12 @@ pub struct UpstreamAccountGroup {
     /// (`ai_upstream_account_group.is_default`); auth-token sessions fall
     /// back to it when no `code = "default"` group exists.
     pub is_default: bool,
+    /// Immutable identity of the pricing plan selected through the external
+    /// account-rate-card authority. Zero values are accepted only by
+    /// in-memory/test catalogs that do not persist pricing plans.
+    pub pricing_plan_tenant_id: i64,
+    pub pricing_plan_organization_id: i64,
+    pub pricing_plan_id: i64,
     pub pricing_plan_code: String,
     pub routing_strategy: UpstreamAccountRoutingStrategy,
     pub fallback_mode: UpstreamAccountFallbackMode,
@@ -433,6 +439,9 @@ impl UpstreamAccountGroup {
             name: code.to_owned(),
             code: code.to_owned(),
             is_default: false,
+            pricing_plan_tenant_id: 0,
+            pricing_plan_organization_id: 0,
+            pricing_plan_id: 0,
             pricing_plan_code: pricing_plan_code.to_owned(),
             routing_strategy: UpstreamAccountRoutingStrategy::Weighted,
             fallback_mode: UpstreamAccountFallbackMode::Sequential,
@@ -440,6 +449,18 @@ impl UpstreamAccountGroup {
             cost_multiplier,
             sale_multiplier,
         }
+    }
+
+    pub fn with_pricing_plan_identity(
+        mut self,
+        tenant_id: i64,
+        organization_id: i64,
+        pricing_plan_id: i64,
+    ) -> Self {
+        self.pricing_plan_tenant_id = tenant_id;
+        self.pricing_plan_organization_id = organization_id;
+        self.pricing_plan_id = pricing_plan_id;
+        self
     }
 
     pub fn with_routing_strategy(
