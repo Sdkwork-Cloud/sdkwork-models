@@ -2,15 +2,16 @@ use std::collections::BTreeMap;
 use std::path::Path;
 use std::sync::Arc;
 
+use chrono::{DateTime, NaiveDate, NaiveTime, Utc};
 use sdkwork_models::{load_catalog, ModelCatalog, ModelInfo, ModelPricing, VendorCatalog};
 use sdkwork_models_catalog_repository_sqlx::model_catalog_import::public_catalog_identity_models;
 use sdkwork_models_catalog_service::domain::{
     AiModel, AiModelPublicMetadata, BillingMeter, DecimalValue, GatewayAccessPolicy, GatewayApiKey,
     GatewayRiskRule, ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor,
     ModelVendorDefinition, Money, PriceSide, PricingFormula, PricingFormulaTerm, PricingPlan,
-    PricingRateCondition, PricingRateMetadata, PricingRateTier, QuotaPolicy,
-    ResolveModelMappingContext, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
-    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
+    PricingRateCondition, PricingRateMetadata, PricingRateTier, PricingRateVariant,
+    PricingSchedule, PricingWeeklyWindow, QuotaPolicy, ResolveModelMappingContext, RoutingPolicy,
+    RoutingRule, UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 use sdkwork_models_catalog_service::ports::PricingCatalog;
 
@@ -277,6 +278,16 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
                 .map(DecimalValue::parse)
                 .transpose()
                 .ok()?;
+            let effective_from = parse_effective_instant(&price.effective_from)?;
+            let effective_to = match price.effective_to.as_deref() {
+                Some(value) => Some(parse_effective_instant(value)?),
+                None => None,
+            };
+            let rate_variant = PricingRateVariant::from_code(&price.rate_variant)?;
+            let schedule = match price.schedule.as_ref() {
+                Some(schedule) => Some(map_schedule(schedule)?),
+                None => None,
+            };
             let tiers = price
                 .tiers
                 .iter()
@@ -341,6 +352,7 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
                 pricing_plan_code: None,
                 unit_price,
                 rate_metadata: Some(PricingRateMetadata {
+                    record_identity: None,
                     price_book_code: price.price_book_code.clone(),
                     rate_hash: price.rate_hash.clone(),
                     product_code: price.product_code.clone(),
@@ -351,7 +363,11 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
                     quantity_aggregation: price.quantity_aggregation.clone(),
                     minimum_quantity,
                     quantity_step,
-                    priority: 100,
+                    priority: price.priority,
+                    effective_from,
+                    effective_to,
+                    rate_variant,
+                    schedule,
                     conditions: price
                         .conditions
                         .iter()
@@ -367,6 +383,47 @@ fn map_vendor_pricing(_vendor: &VendorCatalog, pricing: &ModelPricing) -> Vec<Mo
             })
         })
         .collect()
+}
+
+fn parse_effective_instant(value: &str) -> Option<DateTime<Utc>> {
+    DateTime::parse_from_rfc3339(value.trim())
+        .map(|value| value.with_timezone(&Utc))
+        .ok()
+        .or_else(|| {
+            NaiveDate::parse_from_str(value.trim(), "%Y-%m-%d")
+                .ok()
+                .and_then(|date| date.and_hms_opt(0, 0, 0))
+                .map(|value| value.and_utc())
+        })
+}
+
+fn map_schedule(schedule: &sdkwork_models::PriceSchedule) -> Option<PricingSchedule> {
+    Some(PricingSchedule {
+        time_zone: schedule.time_zone.parse::<chrono_tz::Tz>().ok()?,
+        weekly_windows: schedule
+            .weekly_windows
+            .iter()
+            .map(|window| {
+                Some(PricingWeeklyWindow {
+                    window_code: window.window_code.clone(),
+                    days_of_week: window.days_of_week.clone(),
+                    start_time: NaiveTime::parse_from_str(&window.start_time, "%H:%M:%S").ok()?,
+                    end_time: NaiveTime::parse_from_str(&window.end_time, "%H:%M:%S").ok()?,
+                    end_day_offset: window.end_day_offset,
+                })
+            })
+            .collect::<Option<Vec<_>>>()?,
+        include_dates: schedule
+            .include_dates
+            .iter()
+            .map(|value| NaiveDate::parse_from_str(value, "%Y-%m-%d").ok())
+            .collect::<Option<Vec<_>>>()?,
+        exclude_dates: schedule
+            .exclude_dates
+            .iter()
+            .map(|value| NaiveDate::parse_from_str(value, "%Y-%m-%d").ok())
+            .collect::<Option<Vec<_>>>()?,
+    })
 }
 
 fn map_price_side(value: &str) -> Option<PriceSide> {

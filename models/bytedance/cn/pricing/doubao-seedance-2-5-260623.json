@@ -33,7 +33,10 @@
           "value": "4k_native"
         }
       ],
-      "rateHash": "d1dbe192beefe39359457a02a2d125e30ecef0f632bc7b333e74a9c5cc6cd6c7"
+      "rateHash": "27ed48312428fe9f620a8daf213654efbf8640532387f88b2665317aa34f8a5d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -65,7 +68,10 @@
           "value": "1080p"
         }
       ],
-      "rateHash": "d82dcfa6d22e0e719ce0a0e61441f9560950143f62999ec92bddbf8463474b30"
+      "rateHash": "b913105d72824cca48d0eb3f3bb04f97ae0cdf7cac70049836bbd1563b99b11d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -97,7 +103,10 @@
           "value": "720p"
         }
       ],
-      "rateHash": "6cea9b605aa8f3abc22dd4d4d598671e24b04805124eaa3f1803e636d43b2041"
+      "rateHash": "dc915415b511ca007e1ad9863832e47d06757c3eb9dfbe8a876fdd69f15e5cb8",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

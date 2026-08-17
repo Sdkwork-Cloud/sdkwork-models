@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "120a2c10a3a4379721dfe154a62af708894efe5437a853faf8e6001cf7b592cc"
+      "rateHash": "02cf9880537e296f167a322284f46dfb43843cacad521187e6ecd07cc1196aa9",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -38,7 +41,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
       "unitPrice": "8.400000",
@@ -51,7 +54,143 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "e7bb8a3a4041ac2dcc7294d1cce85983a21783265a0a88fb43a69d94e31e2318"
+      "rateHash": "511748c893176d8e79fea03729685b04bbdf64eebaf52e1c1edecd89047970e6",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-cn-MiniMax-M3-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+      },
+      "unitPrice": "0.420000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "69f925a050d8ef5edb5d4e72b529d30cbbe53d5361619caae1ad9a154b75dcc8",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-cn-MiniMax-M3-input-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "4.200000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "5df2db00ea875a49a90a987debb96a6b99e47d86092ddab96f8440efe04b3b7c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-cn-MiniMax-M3-output-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "16.800000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "0eef8ee67c35e887fabb25d14110ea37b6996652e6c01a99d23768682952870f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "CNY",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-cn-MiniMax-M3-cache-read-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "0.840000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.cn.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "5d052f60140ff057742c74366d3707554e47fe65fdfd04e796e40de9a4658656",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

@@ -16,6 +16,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "0.020000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -26,7 +27,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "ca5bd69a8c55081f6eff397d2fafc8f6367dab9b50d796007489a2781ac9bd78"
+      "rateHash": "ee4815443f1e6ae63fb7d86e4e300154a997bb8d85c93bcb2a75f1257ed3fa8f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -41,6 +45,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "1.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -51,7 +56,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "b228d75c6d513e706bcb38731003c35f80a1f11513bb30ac35100df3eb221520"
+      "rateHash": "a21fefb96ddd39590a3ae4732fae738a61398d2b650f219854a9e0987b36f3c8",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -66,6 +74,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "2.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -76,7 +85,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "9b30aa8149ff2b4944aed2f603e4876baed3ade102e764246f2c838e7d915b61"
+      "rateHash": "1013a1393b6ba2a20324f05fe422c424437977b5dc0560925a1b07027df2828f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -108,7 +120,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "9d42e4dac1ae8d769c67dc495e2442888f49042cec7fc66a12a3f070582d7d68"
+      "rateHash": "17c7098746e6f629205f4e07670b711cd57b0ea38151082cbdf064dc4f50cd77",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -140,7 +155,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "a9e01c52e7e5ca3115b149eac3c822abd2506a5f0f31967608e988e6f3f7636d"
+      "rateHash": "0350e178ed4659c49fd78f4834e0f555cb42c9cdc64b99570eef0e85917dc47f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -172,7 +190,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "8eb3883a4a62d8b9873bcea1bd18ddf537ec9ae66db2bd1faaf2364b0df69ca7"
+      "rateHash": "8061d1e2f3105f87d24b241aa098b1a1ec12212219bb577ba98a661f22f333d2",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -204,7 +225,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "6b0f81425d5e268812f1a1209591e9b689d30224431c18797720b2cd70b46387"
+      "rateHash": "99d7de65a5edcbdb3158bcfa58ceeef98872711a802e9a912c7a7d81298151a9",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -236,7 +260,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "e5496f7f77b22d965e28bc2523001af4696128d8f531b965bf3a14f79a28eb84"
+      "rateHash": "bc63101be8b1d23fe8b08544558f83b888add1f87ebe33fcbad78568b2abd24b",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -268,7 +295,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "10b5b40e83bf2128200b9c76445e27dca97bf6501f81a811884177ea734f4004"
+      "rateHash": "5b25d434d52d67747c679da080a7adedb5dac976623f9900e03db2c808642fcf",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

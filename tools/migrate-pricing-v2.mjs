@@ -74,12 +74,24 @@ function rateHash(pricing, price) {
     catalogKey: pricing.catalogKey,
     priceId: price.priceId,
     priceSide: price.priceSide,
+    billability: price.billability,
+    chargeTiming: price.chargeTiming,
+    calculationMode: price.calculationMode,
+    quantityAggregation: price.quantityAggregation,
     meterCode: price.meterCode,
     unitSize: price.unitSize,
     unitPrice: price.unitPrice,
+    minimumQuantity: price.minimumQuantity,
+    quantityStep: price.quantityStep ?? null,
     currency: price.currency ?? pricing.currency,
     effectiveFrom: price.effectiveFrom,
+    effectiveTo: price.effectiveTo ?? null,
+    priority: price.priority,
+    rateVariant: price.rateVariant,
+    schedule: price.schedule ?? null,
     conditions: price.conditions,
+    tiers: price.tiers ?? [],
+    formula: price.formula ?? null,
   });
   return createHash("sha256").update(payload).digest("hex");
 }
@@ -117,6 +129,9 @@ for (const vendorCode of directories(join(root, "models"))) {
         price.calculationMode = "per_unit";
         price.quantityAggregation = price.meterCode === "api_request" ? "distinct_invocation" : "sum";
         price.conditions = conditions(price);
+        price.priority = Number.isInteger(price.priority) && price.priority >= 0 ? price.priority : 100;
+        price.rateVariant = price.rateVariant ?? "standard";
+        price.schedule = price.rateVariant === "time_window" ? (price.schedule ?? null) : null;
         price.rateHash = rateHash(pricing, price);
         if (JSON.stringify(price) !== before) {
           changedRates += 1;

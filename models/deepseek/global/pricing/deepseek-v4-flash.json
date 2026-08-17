@@ -16,6 +16,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "0.002800",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.global.official",
@@ -26,7 +27,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "f0e9fab3a8e56abd9ee5ec89703c7be7d0c4d0f97ab37c860cbf1388c182b87c"
+      "rateHash": "b3af3a8b28c6f83e257cb411f6a486c99d0c1704dbe9049e4197f1e0b0b44494",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -41,6 +45,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "0.140000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.global.official",
@@ -51,7 +56,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "28a2732a12dc984ef439b862a8eb487283a5c646cb5d23506841ac2c9f6b0e63"
+      "rateHash": "b9970328b3fcbcf694a92e1df4cc46b820489609964c9b6d63a8ad381ad8fea2",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -66,6 +74,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
       },
+      "effectiveTo": "2026-08-16T16:00:00Z",
       "unitPrice": "0.280000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.global.official",
@@ -76,7 +85,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "445e0f73f7b4ee3fbc8d371bce107fdfe1d4604b8c1a582c412c529ec584b302"
+      "rateHash": "bb2af10432e824d6a44f95c3a4369706cc2b444f5d53a1074e4407d89d673310",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -108,7 +120,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "fb32ac8a515313b9c40c9d862fdf657c39d84fecc9f43fb22be20e5b13ddf2e4"
+      "rateHash": "5f437fb24db66f7d64db60f9d0c1fbd8b73e7fc665e90e0b24b5342d3a225865",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -140,7 +155,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "4f18bc81f962b4dd609b37711712c54a98830e3d4f500456aaab3dcf208d1d52"
+      "rateHash": "0e90f2c58a8842c782f083c3af746965541299944f9d49d125b31e98fc332e74",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -172,7 +190,10 @@
           "value": "off_peak"
         }
       ],
-      "rateHash": "1dfbda97cca9bb4c8c29d6792fe707c4dd8850799b66cd23db5ae1fa3a754bed"
+      "rateHash": "e1ce723946c86766befe12a9e0e6a1e192ee489d9e584b0193a9f34d085e5f09",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -204,7 +225,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "f673bb66719beb64e3cdff5a658be0c2d8e66c09da340bf969c40244e9902653"
+      "rateHash": "eb8b9adbbd39de2b61084385d5e7a133e12627be54a2a78e9825b5e172ff695d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -236,7 +260,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "e39e097adf7bb94cc66a561b17bc49349423b51d7560454aad6dce80e8ab54ef"
+      "rateHash": "c907487424487f66a056df7b908f0017fdb5c35a4e594d99179dec069285290f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -268,7 +295,10 @@
           "value": "peak"
         }
       ],
-      "rateHash": "c24b8e44b6764d354643c56db663b51c5954b5aa6633bd6678f720b49f102a64"
+      "rateHash": "dc6a38890bd4ce5c01bf037187ecb0fd798d076af664ac65b6e2598111875b03",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

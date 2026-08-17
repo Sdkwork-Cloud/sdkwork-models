@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "af1717864250017237b5b890ec974951afb38bf9e48143bf0896085cdd055408"
+      "rateHash": "144210f10d10a17a281f545591697b1d3bc0cb1956b545e4973048f385a6a291",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -51,7 +54,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "627222ea2b84c2ba545804d4278cdadb227e10e97c2ab42295f50361f998585b"
+      "rateHash": "501f3265484538bdb06f644aab71382de36d30d55971df0a648a55aeaf1a9b1c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

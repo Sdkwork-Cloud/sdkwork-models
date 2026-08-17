@@ -1,6 +1,6 @@
 {
-  "name": "@sdkwork/models",
-  "version": "0.1.1",
+  "name": "@sdkwork/models-sdk",
+  "version": "0.1.2",
   "description": "Sdkwork vendor-scoped AI model catalog loader and query SDK.",
   "type": "module",
   "main": "dist/index.js",
@@ -33,5 +33,8 @@
     "@types/node": "^22.0.0",
     "typescript": "^5.9.0"
   },
-  "module": "./dist/index.js"
+  "module": "./dist/index.js",
+  "dependencies": {
+    "@sdkwork/sdk-common": "^1.0.5"
+  }
 }

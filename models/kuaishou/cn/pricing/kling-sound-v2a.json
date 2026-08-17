@@ -27,7 +27,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "ea943a3b744ee972e79e0de1b8d236b53084d5beb6bd24173f0ad39ed4763e1a"
+      "rateHash": "9cc1c2d482c7e7b8e80ec772553b2ad7da05024194f1021b4258199271d52ad7",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

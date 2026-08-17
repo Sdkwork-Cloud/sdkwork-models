@@ -1,4 +1,4 @@
-use chrono::{TimeZone, Utc};
+use chrono::{NaiveDate, NaiveTime, TimeZone, Utc};
 use serde_json::json;
 
 use super::{
@@ -6,12 +6,13 @@ use super::{
     ResourceBillability,
 };
 use crate::domain::{
-    AiModel, BillingMeter, DecimalValue, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule,
-    ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor, ModelVendorDefinition, Money,
-    PriceSide, PricingDimensionContext, PricingFormula, PricingFormulaTerm, PricingPlan,
-    PricingRateCondition, PricingRateMetadata, PricingRateTier, QuotaPolicy,
-    ResolveModelMappingContext, ResourceDefinition, RoutingPolicy, RoutingRule,
-    UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
+    AccountRateCard, AiModel, BillingMeter, DecimalValue, GatewayAccessPolicy, GatewayApiKey,
+    GatewayRiskRule, ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor,
+    ModelVendorDefinition, Money, PriceSide, PricingDimensionContext, PricingFormula,
+    PricingFormulaTerm, PricingPlan, PricingRateCondition, PricingRateMetadata, PricingRateTier,
+    PricingRateVariant, PricingRule, PricingSchedule, PricingWeeklyWindow, QuotaPolicy,
+    ResolveModelMappingContext, ResourceDefinition, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
+    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 use crate::ports::PricingCatalog;
 
@@ -28,6 +29,8 @@ struct TestPricingCatalog {
     models: Vec<AiModel>,
     groups: Vec<UpstreamAccountGroup>,
     plans: Vec<PricingPlan>,
+    rules: Vec<PricingRule>,
+    rate_cards: Vec<AccountRateCard>,
     prices: Vec<ModelPrice>,
 }
 
@@ -56,6 +59,8 @@ impl TestPricingCatalog {
                 DecimalValue::ONE,
                 Money::usd("0").expect("valid zero price"),
             )],
+            rules: Vec::new(),
+            rate_cards: Vec::new(),
             prices,
         }
     }
@@ -168,6 +173,66 @@ impl PricingCatalog for TestPricingCatalog {
             .cloned()
     }
 
+    fn list_pricing_rules(&self, plan_code: &str) -> Vec<PricingRule> {
+        self.rules
+            .iter()
+            .filter(|rule| rule.plan_code == plan_code)
+            .cloned()
+            .collect()
+    }
+
+    fn list_account_rate_cards(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+    ) -> Vec<AccountRateCard> {
+        self.rate_cards
+            .iter()
+            .filter(|card| {
+                (card.tenant_id == tenant_id && card.organization_id == organization_id)
+                    || (card.tenant_id == 0 && card.organization_id == 0)
+            })
+            .cloned()
+            .collect()
+    }
+
+    fn list_pricing_rules_for_plan(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        pricing_plan_id: i64,
+        plan_code: &str,
+    ) -> Vec<PricingRule> {
+        self.rules
+            .iter()
+            .filter(|rule| {
+                rule.tenant_id == tenant_id
+                    && rule.organization_id == organization_id
+                    && rule.pricing_plan_id == pricing_plan_id
+                    && rule.plan_code == plan_code
+            })
+            .cloned()
+            .collect()
+    }
+
+    fn find_pricing_plan_by_identity(
+        &self,
+        tenant_id: i64,
+        organization_id: i64,
+        pricing_plan_id: i64,
+        plan_code: &str,
+    ) -> Option<PricingPlan> {
+        self.plans
+            .iter()
+            .find(|plan| {
+                plan.id == pricing_plan_id
+                    && plan.tenant_id == tenant_id
+                    && plan.organization_id == organization_id
+                    && plan.plan_code == plan_code
+            })
+            .cloned()
+    }
+
     fn find_model(&self, model: &str) -> Option<AiModel> {
         self.models
             .iter()
@@ -233,6 +298,7 @@ fn metadata(
     conditions: Vec<PricingRateCondition>,
 ) -> PricingRateMetadata {
     PricingRateMetadata {
+        record_identity: None,
         price_book_code: "openai-cn-usd".to_owned(),
         rate_hash: rate_hash.to_owned(),
         product_code: PRODUCT_CODE.to_owned(),
@@ -244,6 +310,13 @@ fn metadata(
         minimum_quantity: decimal(minimum_quantity),
         quantity_step: quantity_step.map(decimal),
         priority,
+        effective_from: Utc
+            .with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+            .single()
+            .expect("valid timestamp"),
+        effective_to: None,
+        rate_variant: PricingRateVariant::Standard,
+        schedule: None,
         conditions,
         tiers: Vec::new(),
         formula: None,
@@ -774,4 +847,319 @@ fn resolved_rate_rejects_resource_identity_mismatches() {
         );
         assert!(resolution.billing.is_none());
     }
+}
+
+#[test]
+fn time_window_rate_overrides_standard_rate_only_inside_local_window() {
+    let mut time_window = metadata(
+        "time-window-rate",
+        "chargeable",
+        "per_unit",
+        "0",
+        None,
+        100,
+        vec![],
+    );
+    time_window.rate_variant = PricingRateVariant::TimeWindow;
+    time_window.schedule = Some(PricingSchedule {
+        time_zone: "Asia/Shanghai".parse().expect("valid IANA timezone"),
+        weekly_windows: vec![PricingWeeklyWindow {
+            window_code: "weekday-morning".to_owned(),
+            days_of_week: vec![1, 2, 3, 4, 5],
+            start_time: NaiveTime::from_hms_opt(9, 0, 0).expect("valid time"),
+            end_time: NaiveTime::from_hms_opt(12, 0, 0).expect("valid time"),
+            end_day_offset: 0,
+        }],
+        include_dates: vec![NaiveDate::from_ymd_opt(2026, 8, 17).expect("valid date")],
+        exclude_dates: Vec::new(),
+    });
+    let standard = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "5",
+        metadata(
+            "standard-rate",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
+    );
+    let scheduled = official_price(BillingMeter::ApiRequest, "1", "3", time_window);
+    let catalog = TestPricingCatalog::with_prices(vec![standard, scheduled]);
+
+    let inside = resource(BillingMeter::ApiRequest);
+    let mut inside = inside;
+    inside.occurred_at = Utc
+        .with_ymd_and_hms(2026, 8, 17, 2, 30, 0)
+        .single()
+        .expect("valid timestamp");
+    let inside_resolution = PriceService::new()
+        .resolve(&catalog, inside)
+        .expect("scheduled rate resolves");
+    assert_eq!(
+        decimal("3"),
+        inside_resolution
+            .resolved_price
+            .expect("resolved price")
+            .official_reference
+            .unit_price
+            .unit_price
+    );
+    assert_eq!(
+        Some("weekday-morning".to_owned()),
+        inside_resolution
+            .rate_identity
+            .expect("rate identity")
+            .matched_window_code
+    );
+
+    let outside = resource(BillingMeter::ApiRequest);
+    let outside_resolution = PriceService::new()
+        .resolve(&catalog, outside)
+        .expect("standard rate resolves");
+    assert_eq!(
+        decimal("5"),
+        outside_resolution
+            .resolved_price
+            .expect("resolved price")
+            .official_reference
+            .unit_price
+            .unit_price
+    );
+}
+
+#[test]
+fn historical_occurrence_selects_the_rate_effective_at_that_instant() {
+    let mut historical = metadata(
+        "historical-rate",
+        "chargeable",
+        "per_unit",
+        "0",
+        None,
+        100,
+        vec![],
+    );
+    historical.effective_to = Some(
+        Utc.with_ymd_and_hms(2026, 7, 1, 0, 0, 0)
+            .single()
+            .expect("valid timestamp"),
+    );
+    let mut current = metadata(
+        "current-rate",
+        "chargeable",
+        "per_unit",
+        "0",
+        None,
+        100,
+        vec![],
+    );
+    current.effective_from = Utc
+        .with_ymd_and_hms(2026, 7, 1, 0, 0, 0)
+        .single()
+        .expect("valid timestamp");
+    let catalog = TestPricingCatalog::with_prices(vec![
+        official_price(BillingMeter::ApiRequest, "1", "2", historical),
+        official_price(BillingMeter::ApiRequest, "1", "4", current),
+    ]);
+    let mut resource = resource(BillingMeter::ApiRequest);
+    resource.occurred_at = Utc
+        .with_ymd_and_hms(2026, 6, 30, 23, 59, 59)
+        .single()
+        .expect("valid timestamp");
+
+    let historical = PriceService::new()
+        .resolve(&catalog, resource.clone())
+        .expect("historical rate resolves");
+    assert_eq!(
+        Some("historical-rate"),
+        historical
+            .rate_identity
+            .as_ref()
+            .and_then(|identity| identity.rate_hash.as_deref())
+    );
+
+    resource.occurred_at = Utc
+        .with_ymd_and_hms(2026, 7, 1, 0, 0, 0)
+        .single()
+        .expect("valid timestamp");
+    let current = PriceService::new()
+        .resolve(&catalog, resource)
+        .expect("current rate resolves");
+    assert_eq!(
+        Some("current-rate"),
+        current
+            .rate_identity
+            .as_ref()
+            .and_then(|identity| identity.rate_hash.as_deref())
+    );
+}
+
+fn scoped_plan(id: i64, plan_code: &str, multiplier: &str) -> PricingPlan {
+    let mut plan = PricingPlan::new(
+        plan_code,
+        PriceSide::OfficialReference,
+        decimal(multiplier),
+        Money::usd("0").expect("valid money"),
+    );
+    plan.id = id;
+    plan.tenant_id = 10;
+    plan.organization_id = 20;
+    plan
+}
+
+fn default_rule(id: i64, plan: &PricingPlan, effective_from: chrono::DateTime<Utc>) -> PricingRule {
+    PricingRule {
+        id,
+        pricing_plan_id: plan.id,
+        tenant_id: plan.tenant_id,
+        organization_id: plan.organization_id,
+        rule_code: format!("{}-{id}", plan.plan_code),
+        plan_code: plan.plan_code.clone(),
+        product_code: None,
+        operation_code: None,
+        meter_code: None,
+        provider_code: None,
+        region_code: None,
+        catalog_key: None,
+        formula_mode: "multiplier_markup".to_owned(),
+        multiplier: DecimalValue::ONE,
+        markup_amount: Money::usd("0").expect("valid money"),
+        unit_price_override: None,
+        priority: 100,
+        effective_from,
+        effective_to: None,
+        conditions: Vec::new(),
+        schedule: None,
+    }
+}
+
+#[test]
+fn account_group_rate_card_overrides_the_default_subject_and_preserves_identity() {
+    let price = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "2",
+        metadata(
+            "subject-rate",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![price]);
+    let standard = scoped_plan(11, "standard", "1");
+    let premium = scoped_plan(12, "premium", "2");
+    let effective_from = Utc
+        .with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+        .single()
+        .expect("valid timestamp");
+    catalog.plans = vec![standard.clone(), premium.clone()];
+    catalog.rules = vec![
+        default_rule(31, &standard, effective_from),
+        default_rule(32, &premium, effective_from),
+    ];
+    catalog.rate_cards = vec![
+        AccountRateCard {
+            id: 21,
+            rate_card_code: "default".to_owned(),
+            tenant_id: 10,
+            organization_id: 20,
+            subject_type: "default".to_owned(),
+            subject_id: None,
+            subject_code: None,
+            pricing_plan_tenant_id: 10,
+            pricing_plan_organization_id: 20,
+            pricing_plan_id: standard.id,
+            pricing_plan_code: standard.plan_code.clone(),
+            priority: 100,
+            effective_from,
+            effective_to: None,
+        },
+        AccountRateCard {
+            id: 22,
+            rate_card_code: "group".to_owned(),
+            tenant_id: 10,
+            organization_id: 20,
+            subject_type: "account_group".to_owned(),
+            subject_id: Some(GROUP_ID),
+            subject_code: None,
+            pricing_plan_tenant_id: 10,
+            pricing_plan_organization_id: 20,
+            pricing_plan_id: premium.id,
+            pricing_plan_code: premium.plan_code.clone(),
+            priority: 100,
+            effective_from,
+            effective_to: None,
+        },
+    ];
+
+    let resolution = PriceService::new()
+        .resolve(&catalog, resource(BillingMeter::ApiRequest))
+        .expect("group rate card resolves");
+    let resolved = resolution.resolved_price.expect("resolved price");
+    assert_eq!("premium", resolved.pricing_plan_code);
+    assert_eq!(
+        Some(22),
+        resolved
+            .pricing_record_identity
+            .account_rate_card
+            .map(|identity| identity.id)
+    );
+    assert_eq!(
+        Some(12),
+        resolved
+            .pricing_record_identity
+            .pricing_plan
+            .map(|identity| identity.id)
+    );
+    assert_eq!(
+        Some(32),
+        resolved
+            .pricing_record_identity
+            .pricing_rule
+            .map(|identity| identity.id)
+    );
+}
+
+#[test]
+fn equally_ranked_pricing_rules_fail_closed() {
+    let price = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "2",
+        metadata(
+            "rule-conflict-rate",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![price]);
+    let plan = scoped_plan(11, "standard", "1");
+    let effective_from = Utc
+        .with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+        .single()
+        .expect("valid timestamp");
+    catalog.plans = vec![plan.clone()];
+    catalog.groups[0].pricing_plan_id = plan.id;
+    catalog.groups[0].pricing_plan_tenant_id = plan.tenant_id;
+    catalog.groups[0].pricing_plan_organization_id = plan.organization_id;
+    catalog.rules = vec![
+        default_rule(31, &plan, effective_from),
+        default_rule(32, &plan, effective_from),
+    ];
+
+    let error = PriceService::new()
+        .resolve(&catalog, resource(BillingMeter::ApiRequest))
+        .expect_err("ambiguous pricing rules must fail closed");
+    assert!(error.to_string().contains("pricing rule ambiguous"));
 }

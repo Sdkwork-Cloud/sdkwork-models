@@ -33,7 +33,10 @@
           "value": "dur_5s"
         }
       ],
-      "rateHash": "5d29f579791f20e73afd139c824cb701b5efdcba0a3c33e227d711ff715ab9f6"
+      "rateHash": "8b815a08e120756ec6205501e20249a3c4116e3f293c241afc6b01939fa039e1",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -65,7 +68,10 @@
           "value": "dur_10s"
         }
       ],
-      "rateHash": "a8abeba48eb0ea5ea1ffdd5fbc8d5e732bff0eecbdaeb8ca1aba7fb45bd150b1"
+      "rateHash": "7b221042a936abf5275e6beba147d991ea5babc507c4bdf21e9982d29d93eb69",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

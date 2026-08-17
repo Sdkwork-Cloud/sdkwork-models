@@ -6,6 +6,8 @@ license = "MIT"
 description = "Sdkwork vendor-scoped AI model catalog loader and query SDK"
 
 [dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+chrono-tz = "0.10.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 

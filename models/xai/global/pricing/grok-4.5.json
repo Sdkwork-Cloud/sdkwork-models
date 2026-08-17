@@ -33,7 +33,10 @@
           "value": "up_to_200k"
         }
       ],
-      "rateHash": "3be887d6027ce93c7cb7ebe1b8319de0711488d89544d80e6706402b55a84fad"
+      "rateHash": "86b13dc5cb97b67456b9a3966fecaf2bf48d9c20a134beffb328d1365d67f54c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -65,7 +68,10 @@
           "value": "up_to_200k"
         }
       ],
-      "rateHash": "24a7bb10b9bc0f8c52136e9b84332a973d21fd514ebd91072c161dd3f64c706a"
+      "rateHash": "d592e3976a1b7a2774a90075b8a7241ce27632f988d510faa4ade4b6f7e96630",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -97,7 +103,10 @@
           "value": "up_to_200k"
         }
       ],
-      "rateHash": "ddfa5ff60001f78ea0fcf4b6b17e0196fb3133c0c2dac3756532fd1d786f7231"
+      "rateHash": "ace025cadbe4b2b458e9b819bd11e012f97fd09542424b9535a9da6785eb97c4",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -129,7 +138,10 @@
           "value": "over_200k"
         }
       ],
-      "rateHash": "2903f36ae028da67e926547b3ca32facafabe0b5f58c2ec6a6e131b50310773f"
+      "rateHash": "4d263aa0709a7d181d31015fa7bf4ea16d62b32dbdee9d2547ae8b700a54ad16",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -161,7 +173,10 @@
           "value": "over_200k"
         }
       ],
-      "rateHash": "a3db6161f56e1f99b2b5346122223da6037941a1cca18576b4d8c996ee951c68"
+      "rateHash": "36444a062b964013ada707e7793624ec0763bd627376814a9b687ceb62d12ed2",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -193,7 +208,10 @@
           "value": "over_200k"
         }
       ],
-      "rateHash": "2380ef9970674ec23fa341fc95f58cc504bd8a5fcc4f30ff6201e308af84ce4b"
+      "rateHash": "1d937e082f58f17f1fc07817b0268f3fa4b1f279aa50c939c3e1b207e4cf2586",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

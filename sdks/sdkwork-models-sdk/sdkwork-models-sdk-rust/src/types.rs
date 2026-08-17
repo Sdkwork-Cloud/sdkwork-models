@@ -204,12 +204,40 @@ pub struct ModelPrice {
     pub currency: Option<String>,
     pub effective_from: String,
     pub effective_to: Option<String>,
+    #[serde(default = "default_pricing_priority")]
+    pub priority: i32,
+    #[serde(default = "default_rate_variant")]
+    pub rate_variant: String,
+    pub schedule: Option<PriceSchedule>,
     #[serde(default)]
     pub conditions: Vec<PriceRateCondition>,
     #[serde(default)]
     pub tiers: Vec<PriceRateTier>,
     pub formula: Option<PriceFormula>,
     pub source: SourceEvidence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PriceSchedule {
+    pub time_zone: String,
+    #[serde(default)]
+    pub weekly_windows: Vec<WeeklyPriceWindow>,
+    #[serde(default)]
+    pub include_dates: Vec<String>,
+    #[serde(default)]
+    pub exclude_dates: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct WeeklyPriceWindow {
+    pub window_code: String,
+    #[serde(default)]
+    pub days_of_week: Vec<u8>,
+    pub start_time: String,
+    pub end_time: String,
+    pub end_day_offset: u8,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -269,6 +297,14 @@ fn default_calculation_mode() -> String {
 
 fn default_quantity_aggregation() -> String {
     "sum".to_owned()
+}
+
+fn default_pricing_priority() -> i32 {
+    100
+}
+
+fn default_rate_variant() -> String {
+    "standard".to_owned()
 }
 
 fn default_zero_decimal() -> String {

@@ -6,6 +6,8 @@ license.workspace = true
 description = "In-process Models database and catalog service container."
 
 [dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+chrono-tz = "0.10.4"
 dotenvy = "0.15"
 sdkwork-database-sqlx.workspace = true
 sdkwork_models_catalog_repository_sqlx.workspace = true

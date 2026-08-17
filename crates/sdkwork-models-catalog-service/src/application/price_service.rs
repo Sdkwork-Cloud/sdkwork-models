@@ -83,6 +83,11 @@ pub struct ResolvedRateIdentity {
     pub region_code: String,
     pub catalog_key: String,
     pub meter_code: String,
+    pub rate_variant: Option<String>,
+    pub schedule: Option<serde_json::Value>,
+    pub matched_window_code: Option<String>,
+    pub evaluated_at: String,
+    pub local_evaluated_at: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -136,6 +141,11 @@ impl PricingAuditSnapshot {
                 "regionCode": rate.region_code.as_str(),
                 "catalogKey": rate.catalog_key.as_str(),
                 "meterCode": rate.meter_code.as_str(),
+                "rateVariant": rate.rate_variant.as_deref(),
+                "schedule": rate.schedule.as_ref(),
+                "matchedWindowCode": rate.matched_window_code.as_deref(),
+                "evaluatedAt": rate.evaluated_at.as_str(),
+                "localEvaluatedAt": rate.local_evaluated_at.as_deref(),
             })),
         })
     }
@@ -184,6 +194,7 @@ impl PriceService {
                 supplier_code: resource.provider_code.clone(),
                 account_id: resource.account_id,
                 region_code: resource.region_code.clone(),
+                occurred_at: resource.occurred_at,
             },
             &dimensions,
         ) {
@@ -329,7 +340,7 @@ fn resolution_dimensions(resource: &ResourceDefinition) -> PricingDimensionConte
 
 fn classify_resolution_error(error: &DomainError) -> Option<PriceResolutionFailureCode> {
     let message = error.to_string();
-    if message.contains("official reference rate ambiguous") {
+    if message.contains("rate ambiguous") {
         Some(PriceResolutionFailureCode::AmbiguousRate)
     } else if message.contains("official reference price not found")
         || message.contains("model not found")
@@ -425,6 +436,7 @@ fn rate_identity(
     resolved: &ResolvedModelPrice,
 ) -> ResolvedRateIdentity {
     let metadata = resolved.official_reference.rate_metadata.as_ref();
+    let schedule = metadata.and_then(|metadata| metadata.schedule.as_ref());
     ResolvedRateIdentity {
         price_book_code: metadata.map(|metadata| metadata.price_book_code.clone()),
         rate_hash: metadata.map(|metadata| metadata.rate_hash.clone()),
@@ -439,7 +451,36 @@ fn rate_identity(
         region_code: resolved.official_reference.region_code.clone(),
         catalog_key: resolved.official_reference.catalog_key.clone(),
         meter_code: resolved.billing_meter.code().to_owned(),
+        rate_variant: metadata.map(|metadata| metadata.rate_variant.code().to_owned()),
+        schedule: schedule.map(schedule_snapshot),
+        matched_window_code: metadata.and_then(|metadata| {
+            metadata
+                .matched_window_code(resource.occurred_at)
+                .map(str::to_owned)
+        }),
+        evaluated_at: resource.occurred_at.to_rfc3339(),
+        local_evaluated_at: schedule.map(|schedule| {
+            resource
+                .occurred_at
+                .with_timezone(&schedule.time_zone)
+                .to_rfc3339()
+        }),
     }
+}
+
+fn schedule_snapshot(schedule: &crate::domain::PricingSchedule) -> serde_json::Value {
+    json!({
+        "timeZone": schedule.time_zone.name(),
+        "weeklyWindows": schedule.weekly_windows.iter().map(|window| json!({
+            "windowCode": window.window_code.as_str(),
+            "daysOfWeek": window.days_of_week.as_slice(),
+            "startTime": window.start_time.format("%H:%M:%S").to_string(),
+            "endTime": window.end_time.format("%H:%M:%S").to_string(),
+            "endDayOffset": window.end_day_offset,
+        })).collect::<Vec<_>>(),
+        "includeDates": schedule.include_dates.iter().map(ToString::to_string).collect::<Vec<_>>(),
+        "excludeDates": schedule.exclude_dates.iter().map(ToString::to_string).collect::<Vec<_>>(),
+    })
 }
 
 fn unrated(

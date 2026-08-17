@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 
+use chrono::{DateTime, Datelike, Duration, NaiveDate, NaiveTime, Utc};
+use chrono_tz::Tz;
 use serde_json::Value;
 
 use crate::domain::{BillingMeter, DecimalValue, Money};
@@ -14,10 +16,48 @@ pub enum PriceSide {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PricingPlan {
+    pub id: i64,
+    pub tenant_id: i64,
+    pub organization_id: i64,
     pub plan_code: String,
     pub base_price_side: PriceSide,
     pub default_multiplier: DecimalValue,
     pub default_markup_amount: Money,
+    pub rounding_mode: String,
+    pub minimum_charge_amount: Money,
+    pub fail_closed: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ScopedPricingRecordIdentity {
+    pub tenant_id: i64,
+    pub organization_id: i64,
+    pub id: i64,
+}
+
+impl ScopedPricingRecordIdentity {
+    pub fn persisted(tenant_id: i64, organization_id: i64, id: i64) -> Option<Self> {
+        (id > 0).then_some(Self {
+            tenant_id,
+            organization_id,
+            id,
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PricingRateRecordIdentity {
+    pub price_book_tenant_id: i64,
+    pub price_book_organization_id: i64,
+    pub price_book_id: i64,
+    pub rate_id: i64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct PricingPolicyRecordIdentity {
+    pub account_rate_card: Option<ScopedPricingRecordIdentity>,
+    pub pricing_plan: Option<ScopedPricingRecordIdentity>,
+    pub pricing_rule: Option<ScopedPricingRecordIdentity>,
 }
 
 impl PricingPlan {
@@ -28,10 +68,19 @@ impl PricingPlan {
         default_markup_amount: Money,
     ) -> Self {
         Self {
+            id: 0,
+            tenant_id: 0,
+            organization_id: 0,
             plan_code: plan_code.to_owned(),
             base_price_side,
             default_multiplier,
-            default_markup_amount,
+            default_markup_amount: default_markup_amount.clone(),
+            minimum_charge_amount: Money {
+                currency: default_markup_amount.currency.clone(),
+                unit_price: DecimalValue::ZERO,
+            },
+            rounding_mode: "half_up".to_owned(),
+            fail_closed: true,
         }
     }
 }
@@ -53,6 +102,7 @@ pub struct ModelPrice {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PricingRateMetadata {
+    pub record_identity: Option<PricingRateRecordIdentity>,
     pub price_book_code: String,
     pub rate_hash: String,
     pub product_code: String,
@@ -64,9 +114,143 @@ pub struct PricingRateMetadata {
     pub minimum_quantity: DecimalValue,
     pub quantity_step: Option<DecimalValue>,
     pub priority: i32,
+    pub effective_from: DateTime<Utc>,
+    pub effective_to: Option<DateTime<Utc>>,
+    pub rate_variant: PricingRateVariant,
+    pub schedule: Option<PricingSchedule>,
     pub conditions: Vec<PricingRateCondition>,
     pub tiers: Vec<PricingRateTier>,
     pub formula: Option<PricingFormula>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum PricingRateVariant {
+    Standard,
+    TimeWindow,
+}
+
+impl PricingRateVariant {
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::Standard => "standard",
+            Self::TimeWindow => "time_window",
+        }
+    }
+
+    pub fn from_code(value: &str) -> Option<Self> {
+        match value.trim() {
+            "standard" => Some(Self::Standard),
+            "time_window" => Some(Self::TimeWindow),
+            _ => None,
+        }
+    }
+
+    pub fn selection_rank(self) -> u8 {
+        match self {
+            Self::Standard => 0,
+            Self::TimeWindow => 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PricingSchedule {
+    pub time_zone: Tz,
+    pub weekly_windows: Vec<PricingWeeklyWindow>,
+    pub include_dates: Vec<NaiveDate>,
+    pub exclude_dates: Vec<NaiveDate>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PricingWeeklyWindow {
+    pub window_code: String,
+    pub days_of_week: Vec<u8>,
+    pub start_time: NaiveTime,
+    pub end_time: NaiveTime,
+    pub end_day_offset: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PricingRule {
+    pub id: i64,
+    pub pricing_plan_id: i64,
+    pub tenant_id: i64,
+    pub organization_id: i64,
+    pub rule_code: String,
+    pub plan_code: String,
+    pub product_code: Option<String>,
+    pub operation_code: Option<String>,
+    pub meter_code: Option<String>,
+    pub provider_code: Option<String>,
+    pub region_code: Option<String>,
+    pub catalog_key: Option<String>,
+    pub formula_mode: String,
+    pub multiplier: DecimalValue,
+    pub markup_amount: Money,
+    pub unit_price_override: Option<Money>,
+    pub priority: i32,
+    pub effective_from: DateTime<Utc>,
+    pub effective_to: Option<DateTime<Utc>>,
+    pub conditions: Vec<PricingRateCondition>,
+    pub schedule: Option<PricingSchedule>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AccountRateCard {
+    pub id: i64,
+    pub rate_card_code: String,
+    pub tenant_id: i64,
+    pub organization_id: i64,
+    pub subject_type: String,
+    pub subject_id: Option<i64>,
+    pub subject_code: Option<String>,
+    pub pricing_plan_tenant_id: i64,
+    pub pricing_plan_organization_id: i64,
+    pub pricing_plan_id: i64,
+    pub pricing_plan_code: String,
+    pub priority: i32,
+    pub effective_from: DateTime<Utc>,
+    pub effective_to: Option<DateTime<Utc>>,
+}
+
+impl AccountRateCard {
+    pub fn is_effective_at(&self, occurred_at: DateTime<Utc>) -> bool {
+        self.effective_from <= occurred_at && self.effective_to.is_none_or(|end| occurred_at < end)
+    }
+}
+
+impl PricingRule {
+    pub fn matches_at(
+        &self,
+        dimensions: &PricingDimensionContext,
+        occurred_at: DateTime<Utc>,
+    ) -> bool {
+        self.effective_from <= occurred_at
+            && self.effective_to.is_none_or(|end| occurred_at < end)
+            && self
+                .conditions
+                .iter()
+                .all(|condition| condition.matches(dimensions))
+            && self
+                .schedule
+                .as_ref()
+                .is_none_or(|schedule| schedule.matched_window_code(occurred_at).is_some())
+    }
+
+    pub fn specificity(&self) -> usize {
+        [
+            self.product_code.as_ref(),
+            self.operation_code.as_ref(),
+            self.meter_code.as_ref(),
+            self.provider_code.as_ref(),
+            self.region_code.as_ref(),
+            self.catalog_key.as_ref(),
+        ]
+        .into_iter()
+        .flatten()
+        .count()
+            + self.conditions.len()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -154,6 +338,73 @@ impl PricingRateMetadata {
 
     pub fn condition_count(&self) -> usize {
         self.conditions.len()
+    }
+
+    pub fn is_effective_at(&self, occurred_at: DateTime<Utc>) -> bool {
+        self.effective_from <= occurred_at
+            && self
+                .effective_to
+                .is_none_or(|effective_to| occurred_at < effective_to)
+    }
+
+    pub fn matched_window_code(&self, occurred_at: DateTime<Utc>) -> Option<&str> {
+        match self.rate_variant {
+            PricingRateVariant::Standard => None,
+            PricingRateVariant::TimeWindow => self
+                .schedule
+                .as_ref()
+                .and_then(|schedule| schedule.matched_window_code(occurred_at)),
+        }
+    }
+
+    pub fn matches_at(
+        &self,
+        dimensions: &PricingDimensionContext,
+        occurred_at: DateTime<Utc>,
+    ) -> bool {
+        self.is_effective_at(occurred_at)
+            && self.matches(dimensions)
+            && match self.rate_variant {
+                PricingRateVariant::Standard => self.schedule.is_none(),
+                PricingRateVariant::TimeWindow => self
+                    .schedule
+                    .as_ref()
+                    .and_then(|schedule| schedule.matched_window_code(occurred_at))
+                    .is_some(),
+            }
+    }
+}
+
+impl PricingSchedule {
+    pub fn matched_window_code(&self, occurred_at: DateTime<Utc>) -> Option<&str> {
+        let local = occurred_at.with_timezone(&self.time_zone);
+        let local_date = local.date_naive();
+        if self.exclude_dates.contains(&local_date) {
+            return None;
+        }
+        let local_time = local.time();
+        self.weekly_windows.iter().find_map(|window| {
+            let start_date = if window.end_day_offset == 1 && local_time < window.end_time {
+                local_date.checked_sub_signed(Duration::days(1))?
+            } else {
+                local_date
+            };
+            if self.exclude_dates.contains(&start_date) {
+                return None;
+            }
+            let scheduled_day = window
+                .days_of_week
+                .contains(&(start_date.weekday().number_from_monday() as u8));
+            if !scheduled_day && !self.include_dates.contains(&start_date) {
+                return None;
+            }
+            let time_matches = if window.end_day_offset == 0 {
+                local_time >= window.start_time && local_time < window.end_time
+            } else {
+                local_time >= window.start_time || local_time < window.end_time
+            };
+            time_matches.then_some(window.window_code.as_str())
+        })
     }
 }
 
@@ -290,9 +541,12 @@ impl ModelPrice {
 
 #[cfg(test)]
 mod tests {
+    use chrono::{NaiveDate, NaiveTime, TimeZone, Utc};
     use serde_json::json;
 
-    use super::{PricingDimensionContext, PricingRateCondition};
+    use super::{
+        PricingDimensionContext, PricingRateCondition, PricingSchedule, PricingWeeklyWindow,
+    };
 
     #[test]
     fn pricing_conditions_match_string_numeric_membership_and_existence() {
@@ -338,6 +592,83 @@ mod tests {
             };
             assert!(!condition.matches(&dimensions));
         }
+    }
+
+    fn schedule(window: PricingWeeklyWindow) -> PricingSchedule {
+        PricingSchedule {
+            time_zone: "Asia/Shanghai".parse().expect("valid timezone"),
+            weekly_windows: vec![window],
+            include_dates: Vec::new(),
+            exclude_dates: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn schedule_evaluates_the_occurrence_in_its_iana_timezone() {
+        let schedule = schedule(PricingWeeklyWindow {
+            window_code: "weekday-morning".to_owned(),
+            days_of_week: vec![1],
+            start_time: NaiveTime::from_hms_opt(9, 0, 0).expect("valid time"),
+            end_time: NaiveTime::from_hms_opt(12, 0, 0).expect("valid time"),
+            end_day_offset: 0,
+        });
+        let occurred_at = Utc
+            .with_ymd_and_hms(2026, 8, 17, 2, 0, 0)
+            .single()
+            .expect("valid instant");
+
+        assert_eq!(
+            Some("weekday-morning"),
+            schedule.matched_window_code(occurred_at)
+        );
+    }
+
+    #[test]
+    fn cross_midnight_window_uses_the_start_day_and_excludes_the_end_boundary() {
+        let schedule = schedule(PricingWeeklyWindow {
+            window_code: "friday-night".to_owned(),
+            days_of_week: vec![5],
+            start_time: NaiveTime::from_hms_opt(22, 0, 0).expect("valid time"),
+            end_time: NaiveTime::from_hms_opt(2, 0, 0).expect("valid time"),
+            end_day_offset: 1,
+        });
+        let friday_2330 = Utc
+            .with_ymd_and_hms(2026, 8, 21, 15, 30, 0)
+            .single()
+            .expect("valid instant");
+        let saturday_0130 = Utc
+            .with_ymd_and_hms(2026, 8, 21, 17, 30, 0)
+            .single()
+            .expect("valid instant");
+        let saturday_0200 = Utc
+            .with_ymd_and_hms(2026, 8, 21, 18, 0, 0)
+            .single()
+            .expect("valid instant");
+
+        assert_eq!(Some("friday-night"), schedule.matched_window_code(friday_2330));
+        assert_eq!(Some("friday-night"), schedule.matched_window_code(saturday_0130));
+        assert_eq!(None, schedule.matched_window_code(saturday_0200));
+    }
+
+    #[test]
+    fn include_dates_enable_exception_days_and_exclude_dates_take_precedence() {
+        let mut schedule = schedule(PricingWeeklyWindow {
+            window_code: "morning".to_owned(),
+            days_of_week: vec![1],
+            start_time: NaiveTime::from_hms_opt(9, 0, 0).expect("valid time"),
+            end_time: NaiveTime::from_hms_opt(12, 0, 0).expect("valid time"),
+            end_day_offset: 0,
+        });
+        let sunday = NaiveDate::from_ymd_opt(2026, 8, 23).expect("valid date");
+        let occurred_at = Utc
+            .with_ymd_and_hms(2026, 8, 23, 2, 0, 0)
+            .single()
+            .expect("valid instant");
+
+        schedule.include_dates.push(sunday);
+        assert_eq!(Some("morning"), schedule.matched_window_code(occurred_at));
+        schedule.exclude_dates.push(sunday);
+        assert_eq!(None, schedule.matched_window_code(occurred_at));
     }
 }
 

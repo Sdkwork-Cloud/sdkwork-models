@@ -1,5 +1,7 @@
 use std::collections::BTreeSet;
 
+use chrono::{DateTime, NaiveDate, NaiveTime};
+
 use crate::types::ModelCatalog;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -129,12 +131,36 @@ pub fn validate_catalog(catalog: &ModelCatalog) -> Vec<CatalogIssue> {
                         message: "flat pricing unitSize must equal one".to_owned(),
                     });
                 }
+                if price.priority < 0 {
+                    issues.push(CatalogIssue {
+                        code: "pricing.priority.invalid".to_owned(),
+                        path: format!("{}/priority", pricing.catalog_key),
+                        message: "priority must be zero or greater".to_owned(),
+                    });
+                }
+                let currency = price.currency.as_deref().unwrap_or(&pricing.currency);
+                if currency.len() != 3
+                    || !currency
+                        .chars()
+                        .all(|character| character.is_ascii_uppercase())
+                {
+                    issues.push(CatalogIssue {
+                        code: "pricing.currency.invalid".to_owned(),
+                        path: format!("{}/currency", pricing.catalog_key),
+                        message: "currency must be a three-letter uppercase ISO code".to_owned(),
+                    });
+                }
+                validate_effective_window(pricing.catalog_key.as_str(), price, &mut issues);
+                validate_schedule(pricing.catalog_key.as_str(), price, &mut issues);
                 validate_tiers(pricing.catalog_key.as_str(), price, &mut issues);
                 validate_formula(pricing.catalog_key.as_str(), price, &mut issues);
                 let mut dimensions = BTreeSet::new();
                 for condition in &price.conditions {
                     if condition.dimension_code.trim().is_empty()
-                        || condition.operator.trim().is_empty()
+                        || !matches!(
+                            condition.operator.as_str(),
+                            "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "in" | "not_in" | "exists"
+                        )
                     {
                         issues.push(CatalogIssue {
                             code: "pricing.condition.invalid".to_owned(),
@@ -154,6 +180,182 @@ pub fn validate_catalog(catalog: &ModelCatalog) -> Vec<CatalogIssue> {
         }
     }
     issues
+}
+
+fn validate_effective_window(
+    catalog_key: &str,
+    price: &crate::types::ModelPrice,
+    issues: &mut Vec<CatalogIssue>,
+) {
+    let effective_from = parse_effective_instant(&price.effective_from);
+    if effective_from.is_none() {
+        issues.push(CatalogIssue {
+            code: "pricing.effective_from.invalid".to_owned(),
+            path: format!("{catalog_key}/effectiveFrom"),
+            message: "effectiveFrom must be an RFC 3339 timestamp or ISO date".to_owned(),
+        });
+    }
+    let effective_to = price
+        .effective_to
+        .as_deref()
+        .and_then(parse_effective_instant);
+    if price.effective_to.is_some() && effective_to.is_none() {
+        issues.push(CatalogIssue {
+            code: "pricing.effective_to.invalid".to_owned(),
+            path: format!("{catalog_key}/effectiveTo"),
+            message: "effectiveTo must be an RFC 3339 timestamp or ISO date".to_owned(),
+        });
+    }
+    if effective_from
+        .zip(effective_to)
+        .is_some_and(|(start, end)| end <= start)
+    {
+        issues.push(CatalogIssue {
+            code: "pricing.effective_window.invalid".to_owned(),
+            path: format!("{catalog_key}/effectiveTo"),
+            message: "effectiveTo must be later than effectiveFrom".to_owned(),
+        });
+    }
+}
+
+fn parse_effective_instant(value: &str) -> Option<i64> {
+    DateTime::parse_from_rfc3339(value.trim())
+        .map(|value| value.timestamp())
+        .ok()
+        .or_else(|| {
+            NaiveDate::parse_from_str(value.trim(), "%Y-%m-%d")
+                .ok()
+                .and_then(|date| date.and_hms_opt(0, 0, 0))
+                .map(|value| value.and_utc().timestamp())
+        })
+}
+
+fn validate_schedule(
+    catalog_key: &str,
+    price: &crate::types::ModelPrice,
+    issues: &mut Vec<CatalogIssue>,
+) {
+    match (price.rate_variant.as_str(), price.schedule.as_ref()) {
+        ("standard", None) => return,
+        ("standard", Some(_)) => {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.unexpected".to_owned(),
+                path: format!("{catalog_key}/schedule"),
+                message: "standard rates must not define a schedule".to_owned(),
+            });
+            return;
+        }
+        ("time_window", None) => {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.missing".to_owned(),
+                path: format!("{catalog_key}/schedule"),
+                message: "time-window rates require a schedule".to_owned(),
+            });
+            return;
+        }
+        ("time_window", Some(_)) => {}
+        _ => {
+            issues.push(CatalogIssue {
+                code: "pricing.rate_variant.invalid".to_owned(),
+                path: format!("{catalog_key}/rateVariant"),
+                message: "rateVariant must be standard or time_window".to_owned(),
+            });
+            return;
+        }
+    }
+
+    let schedule = price.schedule.as_ref().expect("schedule checked above");
+    if schedule.time_zone.parse::<chrono_tz::Tz>().is_err() {
+        issues.push(CatalogIssue {
+            code: "pricing.schedule.time_zone.invalid".to_owned(),
+            path: format!("{catalog_key}/schedule/timeZone"),
+            message: "schedule timeZone must be an IANA time-zone identifier".to_owned(),
+        });
+    }
+    if schedule.weekly_windows.is_empty() {
+        issues.push(CatalogIssue {
+            code: "pricing.schedule.windows.missing".to_owned(),
+            path: format!("{catalog_key}/schedule/weeklyWindows"),
+            message: "a time-window schedule requires at least one weekly window".to_owned(),
+        });
+    }
+
+    let mut window_codes = BTreeSet::new();
+    for (index, window) in schedule.weekly_windows.iter().enumerate() {
+        let path = format!("{catalog_key}/schedule/weeklyWindows/{index}");
+        if window.window_code.trim().is_empty() || !window_codes.insert(window.window_code.as_str())
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.window_code.invalid".to_owned(),
+                path: format!("{path}/windowCode"),
+                message: "windowCode must be non-empty and unique within the schedule".to_owned(),
+            });
+        }
+        let unique_days = window.days_of_week.iter().copied().collect::<BTreeSet<_>>();
+        if window.days_of_week.is_empty()
+            || unique_days.len() != window.days_of_week.len()
+            || unique_days.iter().any(|day| !(1..=7).contains(day))
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.days.invalid".to_owned(),
+                path: format!("{path}/daysOfWeek"),
+                message: "daysOfWeek must contain unique ISO weekdays from 1 through 7".to_owned(),
+            });
+        }
+        let start = NaiveTime::parse_from_str(&window.start_time, "%H:%M:%S").ok();
+        let end = NaiveTime::parse_from_str(&window.end_time, "%H:%M:%S").ok();
+        if start.is_none() || end.is_none() {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.time.invalid".to_owned(),
+                path: path.clone(),
+                message: "startTime and endTime must use HH:mm:ss".to_owned(),
+            });
+        }
+        if !matches!(window.end_day_offset, 0 | 1)
+            || start.zip(end).is_some_and(|(start, end)| {
+                (window.end_day_offset == 0 && end <= start)
+                    || (window.end_day_offset == 1 && end >= start)
+            })
+        {
+            issues.push(CatalogIssue {
+                code: "pricing.schedule.range.invalid".to_owned(),
+                path,
+                message: "same-day windows require endTime after startTime; cross-midnight windows require endDayOffset 1 and endTime before startTime".to_owned(),
+            });
+        }
+    }
+
+    let include_dates =
+        validate_schedule_dates(catalog_key, "includeDates", &schedule.include_dates, issues);
+    let exclude_dates =
+        validate_schedule_dates(catalog_key, "excludeDates", &schedule.exclude_dates, issues);
+    if include_dates.intersection(&exclude_dates).next().is_some() {
+        issues.push(CatalogIssue {
+            code: "pricing.schedule.date_conflict".to_owned(),
+            path: format!("{catalog_key}/schedule"),
+            message: "a date cannot be both included and excluded".to_owned(),
+        });
+    }
+}
+
+fn validate_schedule_dates(
+    catalog_key: &str,
+    field: &str,
+    values: &[String],
+    issues: &mut Vec<CatalogIssue>,
+) -> BTreeSet<NaiveDate> {
+    let mut dates = BTreeSet::new();
+    for (index, value) in values.iter().enumerate() {
+        match NaiveDate::parse_from_str(value, "%Y-%m-%d") {
+            Ok(date) if dates.insert(date) => {}
+            _ => issues.push(CatalogIssue {
+                code: "pricing.schedule.date.invalid".to_owned(),
+                path: format!("{catalog_key}/schedule/{field}/{index}"),
+                message: "schedule dates must be unique ISO dates".to_owned(),
+            }),
+        }
+    }
+    dates
 }
 
 pub fn is_decimal_string(value: &str) -> bool {

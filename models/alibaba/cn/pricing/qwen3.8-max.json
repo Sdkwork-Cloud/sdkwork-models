@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "ddf87fcbee0f55aede09fdf1d49fe7af4ddf2c91de3e152c3717e9b65ad8498b"
+      "rateHash": "ab1112c712857c9259c6827ec3c369e49a5dfbd0143c2e2e6eb45494e45a201e",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -51,7 +54,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "079776afbba5f8b16ebcf84297e404e2cd380c3e7b6db33077460ecbe49384cc"
+      "rateHash": "37d0b1bf25dfaa46cdfcde33048ef309161cd916c2e59d2fbe640db15f0088fe",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -76,7 +82,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "060576f9166454ecb0c2c89e593ae010f9fe1364c802ef8e9b51084ac3adfbf2"
+      "rateHash": "754b444a0e8c861cbd3dfe72932e91db808f9b2a701a4dd576dcb4767a32187b",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "c85c69453f395d86f4b3913464f2a84a25b7846d1633dbbe7b5d651a93edb681"
+      "rateHash": "c7fc44ece1ac51b221a8c8c90302ee1d0ceafa9663ae8a30ba8b11613715c6c9",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -64,7 +67,10 @@
           "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "34c7959fc0cb6573186641c415143febef59fc9835e454ab4afb2cd808195a4b"
+      "rateHash": "63d5a8beca832790dfe86a4271496d43586db2172e9b638b68f45f7e6ccf2f1b",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -89,7 +95,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "cbc50c75f446651e20d39a7d221b1a42a1cd9201b54da54e398221b48e6334b9"
+      "rateHash": "7762aff8e831c781fa3480f42bd2ef71bd5a82b17585efce5dc0a8b8b55f8b0e",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -127,7 +136,10 @@
           "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "991d61b38d1681138a6b174d2c852d6483c89634d6414349593a4776943b9a20"
+      "rateHash": "5801c48c97a255468a36fb4465d899ea15ec8e3719e8537d5fc75268b69f0133",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -152,7 +164,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "19aeade69cfdd1c7b330a9ebe5b63affa58e71de7c4b9fa0ee5edf32e6f45a7d"
+      "rateHash": "60b5ed75ec3468c1991bd75c4eef77be6eaef18eb43a1317c8796d4fcf0b86c0",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -190,7 +205,10 @@
           "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "62998b6311f789c4f32ea62ab4e6018c1b70d568d8e54536539802595c4a99b6"
+      "rateHash": "1debd1e7a0ed90144734eb21a4a78c10eac02573225b33fd62d472282def8b3a",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

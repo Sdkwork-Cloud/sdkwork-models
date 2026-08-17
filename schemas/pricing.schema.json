@@ -150,6 +150,26 @@
               "null"
             ]
           },
+          "priority": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rateVariant": {
+            "enum": [
+              "standard",
+              "time_window"
+            ]
+          },
+          "schedule": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/priceSchedule"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "conditions": {
             "type": "array",
             "items": {
@@ -170,6 +190,35 @@
           }
         },
         "allOf": [
+          {
+            "if": {
+              "properties": {
+                "rateVariant": {
+                  "const": "time_window"
+                }
+              },
+              "required": [
+                "rateVariant"
+              ]
+            },
+            "then": {
+              "required": [
+                "schedule"
+              ],
+              "properties": {
+                "schedule": {
+                  "$ref": "#/$defs/priceSchedule"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "schedule": {
+                  "type": "null"
+                }
+              }
+            }
+          },
           {
             "if": {
               "properties": {
@@ -322,6 +371,81 @@
             "array",
             "null"
           ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "priceSchedule": {
+      "type": "object",
+      "required": [
+        "timeZone",
+        "weeklyWindows"
+      ],
+      "properties": {
+        "timeZone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weeklyWindows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/weeklyPriceWindow"
+          }
+        },
+        "includeDates": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "excludeDates": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "weeklyPriceWindow": {
+      "type": "object",
+      "required": [
+        "windowCode",
+        "daysOfWeek",
+        "startTime",
+        "endTime",
+        "endDayOffset"
+      ],
+      "properties": {
+        "windowCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "daysOfWeek": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+        },
+        "endTime": {
+          "type": "string",
+          "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+        },
+        "endDayOffset": {
+          "enum": [0, 1]
         }
       },
       "additionalProperties": false

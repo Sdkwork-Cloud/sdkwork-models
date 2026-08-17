@@ -472,15 +472,8 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
             let scoped_vendor_codes = catalog_scope_vendor_codes(&catalog);
             filter_sync_catalog_items(&mut vendors, &mut models, &scoped_vendor_codes);
             let counts = catalog_scope_counts(&catalog);
-            let snapshot_id = insert_pricing_import_snapshot(
-                &mut tx,
-                &command,
-                counts.accepted_count(),
-                &catalog_version,
-                &source_hash,
-                dry_run,
-            )
-            .await?;
+            // Catalog sync evidence lives in ai_model_catalog_sync_run.
+            // The retired ai_pricing_import_snapshot table must not be written.
             let sync_run_id = upsert_model_catalog_sync_run(
                 &mut tx,
                 &command,
@@ -503,7 +496,7 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
                 sync_run_id,
                 serde_json::json!({
                     "action": "sync_model_catalog",
-                    "snapshotId": snapshot_id,
+                    "snapshotId": &command.snapshot_uuid,
                     "syncRunId": sync_run_id,
                     "source": &command.source,
                     "mode": &command.mode,
@@ -542,7 +535,7 @@ impl ModelCatalogAdminStore for PostgresModelCatalogAdminStore {
                 voice_binding_count: counts.voice_binding_count,
                 video_profile_count: counts.video_profile_count,
                 accepted_count: counts.accepted_count(),
-                snapshot_id: Some(snapshot_id.to_string()),
+                snapshot_id: Some(command.snapshot_uuid.clone()),
                 sync_run_id: Some(sync_run_id.to_string()),
                 vendors,
                 models,
@@ -1894,57 +1887,6 @@ async fn insert_region_model_pricing(
     .await
     .map_err(|error| store_error("failed to create regional model pricing", error))?;
     Ok(())
-}
-
-async fn insert_pricing_import_snapshot(
-    tx: &mut Transaction<'_, Postgres>,
-    command: &SyncAdminModelCatalogCommand,
-    row_count: i64,
-    catalog_version: &str,
-    source_hash: &str,
-    dry_run: bool,
-) -> DomainResult<i64> {
-    let snapshot_source_hash = pricing_import_snapshot_hash(command, source_hash);
-    let metadata = serde_json::json!({
-        "source": command.source,
-        "mode": command.mode,
-        "vendorCodes": command.vendor_codes,
-        "force": command.force,
-        "catalogVersion": catalog_version,
-        "catalogRoot": &command.catalog_root,
-        "requestedCatalogVersion": &command.catalog_version,
-        "sourceHash": source_hash,
-        "catalogSourceHash": source_hash,
-        "snapshotSourceHash": snapshot_source_hash,
-        "dryRun": dry_run,
-        "refreshKind": "admin_fast_catalog_refresh",
-    })
-    .to_string();
-    let id = next_cloud_runtime_id("ai_pricing_import_snapshot")?;
-    sqlx::query_scalar(
-        r#"
-        INSERT INTO ai_pricing_import_snapshot
-            (uuid, tenant_id, organization_id, user_id, request_id, status, metadata, import_source, source_name, source_hash, data_format, row_count, accepted_count, rejected_count, currency, observed_at, id)
-        VALUES
-            ($1, $2, $3, $4, $5, 1, $6::jsonb, 1, $7, $8, 'database', $9, $10, 0, 'USD', $11::timestamptz, $12)
-        RETURNING id
-        "#,
-    )
-    .bind(&command.snapshot_uuid)
-    .bind(command.subject.tenant_id)
-    .bind(command.subject.organization_id)
-    .bind(command.subject.operator_id)
-    .bind(&command.request_id)
-    .bind(metadata)
-    .bind(&command.source)
-    .bind(snapshot_source_hash)
-    .bind(row_count)
-    .bind(row_count)
-    .bind(&command.requested_at)
-    .bind(id)
-    .fetch_one(&mut **tx)
-    .await
-    .map_err(|error| store_error("failed to write pricing import snapshot", error))
 }
 
 fn filter_sync_catalog_items(
@@ -4144,22 +4086,6 @@ fn catalog_source_uuid(tenant_id: i64, organization_id: i64, source_code: &str) 
             &tenant_id.to_string(),
             &organization_id.to_string(),
             source_code,
-        ],
-    )
-}
-
-fn pricing_import_snapshot_hash(
-    command: &SyncAdminModelCatalogCommand,
-    catalog_source_hash: &str,
-) -> String {
-    crate::model_catalog_import::stable_uuid(
-        "pricing-import",
-        &[
-            &command.source,
-            catalog_source_hash,
-            &command.snapshot_uuid,
-            &command.request_id,
-            &command.requested_at,
         ],
     )
 }

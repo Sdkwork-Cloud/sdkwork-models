@@ -1,6 +1,6 @@
 {
   "name": "@sdkwork/models-backend-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Composed TypeScript consumer SDK for sdkwork-models backend catalog API.",
   "type": "module",
@@ -19,8 +19,8 @@
     "typecheck": "tsc --noEmit -p generated/server-openapi/tsconfig.json"
   },
   "dependencies": {
-    "@sdkwork/sdk-common": "^1.0.2",
-    "@sdkwork/utils": "workspace:*"
+    "@sdkwork/sdk-common": "^1.0.5",
+    "@sdkwork/utils": "^0.11.0"
   },
   "sdkwork": {
     "workspace": "sdkwork-models-backend-sdk",

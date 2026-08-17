@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "2026.08.13.1",
+  "catalogVersion": "2026.08.17.1",
   "observedAt": "2026-08-13T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
@@ -236,7 +236,7 @@
           "modelId": "mimo-v2.5-pro-fp4-dflash"
         }
       ],
-      "sourceSnapshotHash": "2f505576a8a5c85eb08e77f25cb177c0bce1d689a4fbd2f82b2aa68b13851618"
+      "sourceSnapshotHash": "dc1c80097c07ebf5b9f2b9f0e53582fb2304e37e1336a14b9a7bd53cfcc6e6d9"
     },
     {
       "vendorCode": "xiaomi",
@@ -256,7 +256,7 @@
           "modelId": "mimo-v2.5-pro-fp4-dflash"
         }
       ],
-      "sourceSnapshotHash": "8164ae56344e64f0cb1403948e44f34d254fbbadda82711cb0bd09ad0c3b0881"
+      "sourceSnapshotHash": "49c880228c95e0d0a4717ae35b919476a3d5ee298edf49dd8dd58ffcbbc2aace"
     },
     {
       "vendorCode": "zhipu",
@@ -282,7 +282,7 @@
           "modelId": "embedding-3"
         }
       ],
-      "sourceSnapshotHash": "d1057749cdc6312f22ce307d3599eb5b5c0c1340e92c3ba2f153eb9bc99d0723"
+      "sourceSnapshotHash": "2d63b44b74c68a8d6f2439d71580e561f5469bd80e69ab0f5a124661033cc9db"
     }
   ]
 }

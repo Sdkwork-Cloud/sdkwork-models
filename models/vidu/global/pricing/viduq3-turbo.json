@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "51c9c16242fcf1aecdd1fb4ea1a0e3d32f90b37970f5e5e3ffe70a3d3e218a82"
+      "rateHash": "c24498fb1d449f6b595d9f4580f2d1376480d30840709917966c7f0c4fa17809",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

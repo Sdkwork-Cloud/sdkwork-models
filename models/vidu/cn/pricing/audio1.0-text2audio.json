@@ -34,7 +34,10 @@
           "value": "under_5s"
         }
       ],
-      "rateHash": "a2437034bbe60e0804ba80f8093dac48b70b72103749994179a4882a4df0159e"
+      "rateHash": "0722bcdbf42f485c09d417a653c9e00c145f046bf1715a5b1b00965e438e7543",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "CNY",
@@ -67,7 +70,10 @@
           "value": "under_10s"
         }
       ],
-      "rateHash": "48ddb50b5ab24315374d8e4e7f9f441f3eb96af1a14ac538f15667e92c0b2bc8"
+      "rateHash": "2e4dc470f5c4f0c39150c7cc1375ba81b0921e524d0f03bc16d570ce152422a6",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "cn",

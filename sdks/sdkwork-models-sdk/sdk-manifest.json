@@ -50,5 +50,11 @@
       "defaultBundledCatalogRoot": "data/sdkwork-models",
       "publicTypeScriptPackage": "@sdkwork/models"
     }
+  },
+  "typescript": {
+    "composedRoot": "sdkwork-models-sdk-typescript",
+    "composedEntry": "sdkwork-models-sdk-typescript/src/index.ts",
+    "transportRoot": "sdkwork-models-sdk-typescript/generated/server-openapi",
+    "transportEntry": "sdkwork-models-sdk-typescript/generated/server-openapi/src/index.ts"
   }
 }

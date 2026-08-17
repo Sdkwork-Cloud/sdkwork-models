@@ -236,6 +236,7 @@ impl<'a, C: PricingCatalog> ModelCatalogQueryService<'a, C> {
                         region_code: lowest_upstream_cost
                             .as_ref()
                             .map(|price| price.region_code.clone()),
+                        occurred_at: chrono::Utc::now(),
                     })
                 })
                 .map(to_price_availability)

@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "0ff59464884d1fd402bc021eca6d5eddc81b02eecf9c292b1bcc9a9924af8766"
+      "rateHash": "481bb03b457990ec224130b346a8f293773b19bb0552a997ba11c7c5f5710b7d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -51,7 +54,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "5d6bee3d604c202896223dadcb2ad1c170c3f8a89ed6de5c36fa986a465bbb24"
+      "rateHash": "23e276ed2ce7276b05448604093d6b88b8f079d0eb2751e43857a5b9a66cd3c0",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -76,7 +82,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "bf19017049b54ebc548d9d278901e497e547fee95846354a8d3b6ca6e210e939"
+      "rateHash": "da741594325c44f3277715b226c16aac0d4e257e9b4794892f00eff7ecddd21c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -101,7 +110,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "a08573738c66c676a1a8222a520cb7411ca23a2490d9230bfb72f73ad08b8ede"
+      "rateHash": "2f0c128a41dc8515fd0f6166186f3c0ee6f84672f0d7bc92c49055354d3e68f1",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -126,7 +138,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "8fb60188c332881ee8c6145bd481f59fdb92296f06f3064054bcc07ad1e6a867"
+      "rateHash": "98c3eaa68edc103a2fe0032ac0a6e27962f84f7cc4e94803fd121ffad55d0327",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

@@ -1,8 +1,8 @@
 use crate::domain::{
-    AiModel, BillingMeter, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule, ModelMappingRule,
-    ModelPrice, ModelUpstreamRoute, ModelVendorDefinition, PriceSide, PricingPlan, QuotaPolicy,
-    ResolveModelMappingContext, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
-    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
+    AccountRateCard, AiModel, BillingMeter, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule,
+    ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendorDefinition, PriceSide,
+    PricingPlan, PricingRule, QuotaPolicy, ResolveModelMappingContext, RoutingPolicy, RoutingRule,
+    UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 
 pub trait PricingCatalog {
@@ -59,6 +59,28 @@ pub trait PricingCatalog {
         account_group_id: i64,
     ) -> Option<UpstreamAccountGroupMetricSnapshot>;
     fn find_pricing_plan(&self, plan_code: &str) -> Option<PricingPlan>;
+
+    fn list_pricing_rules(&self, _plan_code: &str) -> Vec<PricingRule> {
+        Vec::new()
+    }
+
+    fn list_account_rate_cards(
+        &self,
+        _tenant_id: i64,
+        _organization_id: i64,
+    ) -> Vec<AccountRateCard> {
+        Vec::new()
+    }
+
+    fn list_pricing_rules_for_plan(
+        &self,
+        _tenant_id: i64,
+        _organization_id: i64,
+        _pricing_plan_id: i64,
+        plan_code: &str,
+    ) -> Vec<PricingRule> {
+        self.list_pricing_rules(plan_code)
+    }
 
     fn find_pricing_plan_for_scope(
         &self,

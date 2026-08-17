@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "5dd11633e5f3b94095f7e3eb1a7e4956fbdea61da792d8fe5bd3ffa4d3b5ede6"
+      "rateHash": "f2569efa3d1aadfa19e94fb1ded05b50e2eed4294db4d61c6b093ed06bb657ec",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -51,7 +54,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "82037a5eb195b8d15ec44ca8466a92fea9b45dd54048d260a49dcc217dcf0f3c"
+      "rateHash": "b9a293a45da454dd020282dc7117c5fac296f235b19d0139c48a458a5729c3fc",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -76,7 +82,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "066cce45f98e0cddb36d4070e264c21c28834670857691c2092dc3fd138b2d2f"
+      "rateHash": "61121735872562e2e926fc604113a139fe67c9151ae5f10d1f717c59117d576c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

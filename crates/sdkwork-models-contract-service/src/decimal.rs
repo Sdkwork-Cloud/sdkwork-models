@@ -147,6 +147,42 @@ impl DecimalValue {
         decimal_from_scaled(scaled, "decimal step rounding overflow")
     }
 
+    pub fn checked_round_to_places(self, places: u32, mode: &str) -> DomainResult<Self> {
+        if places > SCALE {
+            return Err(DomainError::new(
+                "decimal rounding places exceed fixed scale",
+            ));
+        }
+        if !matches!(mode, "half_up" | "half_even" | "up" | "down") {
+            return Err(DomainError::new(format!(
+                "unsupported decimal rounding mode: {mode}"
+            )));
+        }
+        let factor = 10_i128.pow(SCALE - places);
+        let negative = self.scaled < 0;
+        let absolute = self.scaled.abs();
+        let quotient = absolute / factor;
+        let remainder = absolute % factor;
+        let increment = match mode {
+            "up" => remainder > 0,
+            "down" => false,
+            "half_up" => remainder.saturating_mul(2) >= factor,
+            "half_even" => {
+                remainder.saturating_mul(2) > factor
+                    || (remainder.saturating_mul(2) == factor && quotient % 2 == 1)
+            }
+            _ => unreachable!(),
+        };
+        let rounded = quotient
+            .checked_add(i128::from(increment))
+            .and_then(|value| value.checked_mul(factor))
+            .ok_or_else(|| DomainError::new("decimal rounding overflow"))?;
+        decimal_from_scaled(
+            if negative { -rounded } else { rounded },
+            "decimal rounding overflow",
+        )
+    }
+
     pub fn is_zero(self) -> bool {
         self.scaled == 0
     }

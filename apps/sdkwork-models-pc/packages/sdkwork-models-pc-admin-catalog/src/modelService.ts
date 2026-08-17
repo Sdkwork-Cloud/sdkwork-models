@@ -342,6 +342,10 @@ export type ModelListPage = {
   hasMore: boolean;
 };
 
+export type FetchModelsPageOptions = {
+  enrichRankingCalls?: boolean;
+};
+
 async function listModelsRaw(query: ModelListQuery = {}): Promise<unknown> {
   const params: {
     page?: number;
@@ -391,10 +395,29 @@ async function enrichModelsWithRankingCalls(models: Model[]): Promise<Model[]> {
   }));
 }
 
+let rankingCallStatsCache: Promise<ModelRankingMetricItem[]> | null = null;
+
+function fetchModelRankingCallStats(): Promise<ModelRankingMetricItem[]> {
+  if (!rankingCallStatsCache) {
+    rankingCallStatsCache = ModelService.fetchModelRankings().catch(() => []);
+  }
+  return rankingCallStatsCache;
+}
+
 export class ModelService {
-  static async fetchModelsPage(query: ModelListQuery = {}): Promise<ModelListPage> {
+  static resetRankingCallStatsCache(): void {
+    rankingCallStatsCache = null;
+  }
+
+  static async fetchModelsPage(
+    query: ModelListQuery = {},
+    options: FetchModelsPageOptions = {},
+  ): Promise<ModelListPage> {
     const result = await listModelsRaw(query);
     const page = readModelListPage(result, 'Failed to fetch models');
+    if (options.enrichRankingCalls === false || page.items.length === 0) {
+      return page;
+    }
     return {
       items: await enrichModelsWithRankingCalls(page.items),
       totalCount: page.totalCount,
@@ -410,15 +433,12 @@ export class ModelService {
   }
 
   static async fetchInitializedCatalog(): Promise<InitializedModelCatalog> {
-    const [vendors, probe] = await Promise.all([
-      ModelService.fetchVendors(),
-      ModelService.fetchModelsPage({ page: 1, pageSize: 1 }),
-    ]);
-    if (vendors.length > 0 && probe.totalCount > 0) {
+    const vendors = await ModelService.fetchVendors();
+    if (vendors.length > 0) {
       return {
         initialized: true,
         vendors,
-        models: probe.items,
+        models: [],
       };
     }
     const synced = await ModelService.syncVendorsAndModels();
@@ -453,6 +473,7 @@ export class ModelService {
   }
 
   static async triggerModelRankingRefresh(): Promise<ModelRankingRefreshTriggerView> {
+    ModelService.resetRankingCallStatsCache();
     const result = await getModelsBackendSdkClient().ai.modelRankings.refresh(
       toModelRankingRefreshTriggerRequest(),
       createIdempotencyParams('model-ranking-refresh'),
@@ -462,6 +483,7 @@ export class ModelService {
   }
 
   static async syncVendorsAndModels(): Promise<ModelCatalogSyncReport> {
+    ModelService.resetRankingCallStatsCache();
     const result = await getModelsBackendSdkClient().ai.models.sync(
       toSyncCatalogRequest(),
     );
@@ -550,7 +572,7 @@ export class ModelMappingService {
   static async fetchModelOptionsPage(
     query: ModelListQuery = {},
   ): Promise<ModelMappingModelOptionsPage> {
-    const page = await ModelService.fetchModelsPage(query);
+    const page = await ModelService.fetchModelsPage(query, { enrichRankingCalls: false });
     return {
       items: page.items.map(normalizeModelMappingModelOption),
       totalCount: page.totalCount,
@@ -716,10 +738,6 @@ function normalizeModelRankingRefreshTrigger(value: ApiRecord): ModelRankingRefr
     cacheMaxAgeSeconds: readRequiredPositiveInteger(value, 'cacheMaxAgeSeconds', 'Model ranking refresh trigger cache max age seconds'),
     nextRefreshAt: readRequiredString(value, 'nextRefreshAt', 'Model ranking refresh trigger response is missing nextRefreshAt'),
   };
-}
-
-function fetchModelRankingCallStats(): Promise<ModelRankingMetricItem[]> {
-  return ModelService.fetchModelRankings().catch(() => []);
 }
 
 function toModelRankingRefreshTriggerRequest(): ModelRankingRefreshTriggerRequest {

@@ -12,6 +12,8 @@ use crate::domain::{
     ResourceDefinition,
 };
 
+const RATING_AMOUNT_DECIMAL_PLACES: u32 = 12;
+
 pub use evaluation::{BillingRateComponent, RateEvaluation};
 pub use flat_fee::FlatFeeBillingStrategy;
 pub use formula::FormulaBillingStrategy;
@@ -123,10 +125,25 @@ impl BillingStrategyRegistry {
         resource: &ResourceDefinition,
         price: &ResolvedModelPrice,
     ) -> DomainResult<BillingStructure> {
-        let official = self.evaluate(resource, &price.official_reference)?;
+        let official = apply_plan_policy(
+            self.evaluate(resource, &price.official_reference)?,
+            price,
+            false,
+        )?;
         let customer = match price.raw_customer_charge.as_ref() {
-            Some(rate) => scale_evaluation(self.evaluate(resource, rate)?, price.sale_multiplier)?,
-            None => derive_customer_evaluation(&official, price)?,
+            Some(rate) => apply_plan_policy(
+                apply_pricing_rule(
+                    scale_evaluation(self.evaluate(resource, rate)?, price.sale_multiplier)?,
+                    price,
+                )?,
+                price,
+                true,
+            )?,
+            None => apply_plan_policy(
+                apply_pricing_rule(derive_customer_evaluation(&official, price)?, price)?,
+                price,
+                true,
+            )?,
         };
         let procurement = price
             .raw_upstream_cost
@@ -137,7 +154,11 @@ impl BillingStrategyRegistry {
                         "procurement multiplier is required when an upstream rate is present",
                     )
                 })?;
-                scale_evaluation(self.evaluate(resource, rate)?, multiplier)
+                apply_plan_policy(
+                    scale_evaluation(self.evaluate(resource, rate)?, multiplier)?,
+                    price,
+                    false,
+                )
             })
             .transpose()?;
 
@@ -204,6 +225,80 @@ impl BillingStrategyRegistry {
             })?
             .calculate(&context)
     }
+}
+
+fn apply_plan_policy(
+    mut evaluation: RateEvaluation,
+    price: &ResolvedModelPrice,
+    apply_minimum: bool,
+) -> DomainResult<RateEvaluation> {
+    evaluation.amount.unit_price = evaluation
+        .amount
+        .unit_price
+        .checked_round_to_places(RATING_AMOUNT_DECIMAL_PLACES, &price.rounding_mode)?;
+    for component in &mut evaluation.components {
+        component.amount.unit_price = component
+            .amount
+            .unit_price
+            .checked_round_to_places(RATING_AMOUNT_DECIMAL_PLACES, &price.rounding_mode)?;
+    }
+    if apply_minimum {
+        if evaluation.amount.currency != price.minimum_charge_amount.currency {
+            return Err(DomainError::new("minimum charge currency mismatch"));
+        }
+        evaluation.amount.unit_price = evaluation
+            .amount
+            .unit_price
+            .max(price.minimum_charge_amount.unit_price);
+    }
+    Ok(evaluation)
+}
+
+fn apply_pricing_rule(
+    mut evaluation: RateEvaluation,
+    price: &ResolvedModelPrice,
+) -> DomainResult<RateEvaluation> {
+    let markup = &price.pricing_rule_markup_amount;
+    for component in &mut evaluation.components {
+        if let Some(unit_price) = price.pricing_rule_unit_price_override.as_ref() {
+            component.unit_price = unit_price.clone();
+        } else {
+            component.unit_price = component
+                .unit_price
+                .checked_multiply(price.pricing_rule_multiplier)?
+                .add(markup)?;
+            component.flat_amount = component
+                .flat_amount
+                .checked_multiply(price.pricing_rule_multiplier)?;
+        }
+        component.amount = component
+            .unit_price
+            .unit_price
+            .checked_multiply(component.rated_quantity)?
+            .checked_divide(component.unit_size)?
+            .checked_add(component.flat_amount.unit_price)
+            .map(|unit_price| Money {
+                currency: component.unit_price.currency.clone(),
+                unit_price,
+            })?;
+    }
+    if let Some(unit_price) = price.pricing_rule_unit_price_override.as_ref() {
+        evaluation.unit_price = unit_price.clone();
+    } else {
+        evaluation.unit_price = evaluation
+            .unit_price
+            .checked_multiply(price.pricing_rule_multiplier)?
+            .add(markup)?;
+    }
+    let mut amount = Money {
+        currency: evaluation.amount.currency.clone(),
+        unit_price: DecimalValue::ZERO,
+    };
+    for component in &evaluation.components {
+        amount = amount.add(&component.amount)?;
+    }
+    evaluation.amount = amount;
+    Ok(evaluation)
 }
 
 impl Default for BillingStrategyRegistry {

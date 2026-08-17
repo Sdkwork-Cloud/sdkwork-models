@@ -26,7 +26,10 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "31f56f2472be2df8820eb55bc8cdfba26cb1f7e95efe6bd750584c1aacc33ba9"
+      "rateHash": "2d245fd0cae12ea4315194d6d770bb44e40e5bd618eecd7287c2bf0fd34c1402",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     },
     {
       "currency": "USD",
@@ -38,7 +41,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
       "unitPrice": "1.200000",
@@ -51,7 +54,143 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "cda5bef07666d61fb4600927fa357521c4e003e218304cfeb66b6beefb8d6b6a"
+      "rateHash": "1311f60daa51d8cb8d0d10433b9cf266a4bf91e7c19130713caab7862babfd2d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-MiniMax-M3-cache-read",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "unitPrice": "0.060000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "772bd458e0fb6f4abe98719ee249b88154ce0a92a9e5cbc8e6fd8e4df329871f",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-MiniMax-M3-input-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "0.600000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "ab04ed03e99c574afeb4ed2b333e17bbadaf13a993a9427dcb0d1f8dd53cee02",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-MiniMax-M3-output-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "2.400000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "15a62ba1622815d52d15ad0364760332e5dc092d6ab88b039cdb8f0cc0ddf285",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_cache_read_token",
+      "minimumQuantity": "0",
+      "priceId": "minimax-global-MiniMax-M3-cache-read-over_512k",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-08-13T00:00:00Z",
+        "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
+      },
+      "tierCode": "over_512k",
+      "unitPrice": "0.120000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.minimax.global.official",
+      "productCode": "models.minimax.code",
+      "operationCode": "inference.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "over_512k"
+        }
+      ],
+      "rateHash": "d9690bdbf46e12de9e7ae8dc576b0665d252331fe2a1dcee16fec99f8b8ddb81",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
     }
   ],
   "regionCode": "global",

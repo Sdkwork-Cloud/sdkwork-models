@@ -8,7 +8,7 @@ import { readMediaResourceUrl } from '@sdkwork/cloudroutes-pc-commons/media-reso
 import { Search, Plus, Cpu, X, Layers, Image as ImageIcon, MessageSquare, Headphones, ChevronRight, ChevronDown, Activity, Trash2, Edit, Music, Loader2, RefreshCw, Video, Volume2, Power, PowerOff, Globe2, ArrowRightLeft, Upload, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatMoney } from '@sdkwork/utils/money';
-import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS, selectPreferredModelVendorId } from './modelService';
+import { ModelMappingService, ModelService, Vendor, Model, ModelMappingModelOption, ModelMappingRule, ModelMappingCreateInput, ModelMappingUpdateInput, ModelMappingBindingInput, ModelMappingRuleItemInput, KNOWN_VENDORS } from './modelService';
 import { MODEL_PRICING_REGIONS, createModelInputFromForm, createVendorInputFromForm, updateModelInputFromForm } from './modelForm';
 import { VendorPickerModal } from './vendorPickerModal';
 import './adminCatalog.css';
@@ -147,7 +147,7 @@ export function ModelAdmin() {
   const [models, setModels] = useState<Model[]>([]);
   const [vendorModelCounts, setVendorModelCounts] = useState<Record<string, number>>({});
   const [vendorModelTotal, setVendorModelTotal] = useState(0);
-  const [selectedVendorId, setSelectedVendorId] = useState<string>('v_openai');
+  const [selectedVendorId, setSelectedVendorId] = useState<string>('');
   const [search, setSearch] = useState('');
   const [modalityFilters, setModalityFilters] = useState<ModelModalityFilter[]>([]);
   const [isModalityFilterOpen, setIsModalityFilterOpen] = useState(false);
@@ -200,6 +200,10 @@ export function ModelAdmin() {
       });
       setModels(pageResult.items);
       setVendorModelTotal(pageResult.totalCount);
+      setVendorModelCounts((current) => ({
+        ...current,
+        [vendor.id]: pageResult.totalCount,
+      }));
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to load model catalog');
     } finally {
@@ -213,15 +217,7 @@ export function ModelAdmin() {
     try {
       const initialized = await ModelService.fetchInitializedCatalog();
       setVendors(initialized.vendors);
-      const counts = await Promise.all(initialized.vendors.map(async (vendor) => {
-        const probe = await ModelService.fetchModelsPage({ vendorCode: vendor.vendorCode, page: 1, pageSize: 1 });
-        return [vendor.id, probe.totalCount] as const;
-      }));
-      setVendorModelCounts(Object.fromEntries(counts));
-      const nextSelectedVendorId = selectPreferredModelVendorId(initialized.vendors, selectedVendorId);
-      if (nextSelectedVendorId && nextSelectedVendorId !== selectedVendorId) {
-        setSelectedVendorId(nextSelectedVendorId);
-      }
+      setVendorModelCounts({});
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to load model catalog');
     } finally {
@@ -234,7 +230,7 @@ export function ModelAdmin() {
   }, []);
 
   useEffect(() => {
-    if (vendors.length === 0) {
+    if (!selectedVendorId || vendors.length === 0) {
       return;
     }
     void loadVendorModels();
@@ -312,7 +308,6 @@ export function ModelAdmin() {
     try {
       await ModelService.syncVendorsAndModels();
       await loadInitialCatalog();
-      await loadVendorModels();
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to sync model catalog');
     } finally {
@@ -614,7 +609,7 @@ export function ModelAdmin() {
           <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
             {vendors.map(v => {
               const isActive = selectedVendorId === v.id;
-              const count = vendorModelCounts[v.id] ?? 0;
+              const count = vendorModelCounts[v.id];
               const vendorAvatarAppearance = resolveVendorAvatarAppearance(v.color);
               return (
                 <button
@@ -638,9 +633,11 @@ export function ModelAdmin() {
                     </span>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300' : 'bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-400'}`}>
-                      {count}
-                    </span>
+                    {typeof count === 'number' ? (
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300' : 'bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-400'}`}>
+                        {count}
+                      </span>
+                    ) : null}
                   </div>
                 </button>
               );

@@ -66,6 +66,68 @@ function isPositiveDecimal(value) {
   return isDecimalString(value) && compareDecimalStrings(value, "0") > 0;
 }
 
+function validatePriceSchedule(price, pricingPath, index, issues) {
+  const path = `${pricingPath}#/prices/${index}`;
+  const variant = price.rateVariant ?? "standard";
+  if (!Number.isInteger(price.priority) || price.priority < 0) {
+    issues.push(issue("price.priority.invalid", `${path}/priority`, "priority must be a non-negative integer"));
+  }
+  if (!["standard", "time_window"].includes(variant)) {
+    issues.push(issue("price.rate_variant.invalid", `${path}/rateVariant`, "rateVariant must be standard or time_window"));
+  }
+  if (variant === "standard" && price.schedule != null) {
+    issues.push(issue("price.schedule.unexpected", `${path}/schedule`, "standard rates must not define a schedule"));
+    return;
+  }
+  if (variant === "time_window" && (!price.schedule || typeof price.schedule !== "object")) {
+    issues.push(issue("price.schedule.missing", `${path}/schedule`, "time_window rates require a schedule"));
+    return;
+  }
+  if (variant !== "time_window") return;
+  const schedule = price.schedule;
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: schedule.timeZone }).format();
+  } catch {
+    issues.push(issue("price.schedule.time_zone.invalid", `${path}/schedule/timeZone`, "timeZone must be an IANA time-zone identifier"));
+  }
+  const windows = schedule.weeklyWindows;
+  if (!Array.isArray(windows) || windows.length === 0) {
+    issues.push(issue("price.schedule.windows.missing", `${path}/schedule/weeklyWindows`, "weeklyWindows must contain at least one window"));
+    return;
+  }
+  const codes = new Set();
+  for (const [windowIndex, window] of windows.entries()) {
+    const windowPath = `${path}/schedule/weeklyWindows/${windowIndex}`;
+    if (typeof window.windowCode !== "string" || !window.windowCode.trim() || codes.has(window.windowCode)) {
+      issues.push(issue("price.schedule.window_code.invalid", `${windowPath}/windowCode`, "windowCode must be non-empty and unique"));
+    }
+    codes.add(window.windowCode);
+    const days = window.daysOfWeek;
+    if (!Array.isArray(days) || days.length === 0 || new Set(days).size !== days.length || days.some((day) => !Number.isInteger(day) || day < 1 || day > 7)) {
+      issues.push(issue("price.schedule.days.invalid", `${windowPath}/daysOfWeek`, "daysOfWeek must contain unique ISO weekdays from 1 through 7"));
+    }
+    const timePattern = /^(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+    if (!timePattern.test(window.startTime) || !timePattern.test(window.endTime)) {
+      issues.push(issue("price.schedule.time.invalid", windowPath, "startTime and endTime must use HH:mm:ss"));
+    } else {
+      const start = window.startTime;
+      const end = window.endTime;
+      if (![0, 1].includes(window.endDayOffset) || (window.endDayOffset === 0 && end <= start) || (window.endDayOffset === 1 && end >= start)) {
+        issues.push(issue("price.schedule.range.invalid", windowPath, "same-day windows require endTime after startTime; cross-midnight windows require endDayOffset 1 and endTime before startTime"));
+      }
+    }
+  }
+  for (const field of ["includeDates", "excludeDates"]) {
+    if (schedule[field] === undefined) continue;
+    if (!Array.isArray(schedule[field]) || new Set(schedule[field]).size !== schedule[field].length || schedule[field].some((value) => !/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`)))) {
+      issues.push(issue("price.schedule.date.invalid", `${path}/schedule/${field}`, `${field} must contain unique ISO dates`));
+    }
+  }
+  if (Array.isArray(schedule.includeDates) && Array.isArray(schedule.excludeDates) && schedule.includeDates.some((value) => schedule.excludeDates.includes(value))) {
+    issues.push(issue("price.schedule.date_conflict", `${path}/schedule`, "a date cannot be both included and excluded"));
+  }
+}
+
 export function validateCatalog(root) {
   const issues = [];
 
@@ -396,6 +458,7 @@ export function validateCatalog(root) {
         if (isDecimalString(price.unitSize) && !isPositiveDecimal(price.unitSize)) {
           issues.push(issue("price.unit_size.invalid", `${pricingPath}#/prices/${index}/unitSize`, "unitSize must be positive"));
         }
+        validatePriceSchedule(price, pricingPath, index, issues);
         if (price.quantityStep !== undefined && (!isDecimalString(price.quantityStep) || !isPositiveDecimal(price.quantityStep))) {
           issues.push(issue("price.quantity_step.invalid", `${pricingPath}#/prices/${index}/quantityStep`, "quantityStep must be a positive decimal string"));
         }
