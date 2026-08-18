@@ -175,6 +175,14 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             &region_code,
             &rate_dimensions,
         )?;
+        // Product and operation codes are authoritative on the selected
+        // official rate. ResolveModelPriceQuery intentionally stays small and
+        // does not duplicate those catalog fields, so add them before sales
+        // rule scope matching.
+        if let Some(metadata) = official.rate_metadata.as_ref() {
+            rate_dimensions.insert("product_code", serde_json::json!(metadata.product_code.as_str()));
+            rate_dimensions.insert("operation_code", serde_json::json!(metadata.operation_code.as_str()));
+        }
         let official_currency = official.unit_price.currency.clone();
         if query.supplier_code.is_some() && raw_upstream_cost.is_none() {
             return Err(missing_upstream_cost_error(&query, &region_code));
@@ -221,6 +229,13 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             query.occurred_at,
             "customer charge",
         )?;
+        if let Some(price) = explicit_customer.as_ref() {
+            ensure_pricing_currency(
+                &official_currency,
+                &price.unit_price.currency,
+                "customer charge",
+            )?;
+        }
         let reference_multiplier = plan.default_multiplier;
         let (mut customer_charge_before_sale_multiplier, source) = match explicit_customer.as_ref()
         {
@@ -240,6 +255,11 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         if let Some(rule) = pricing_rule.as_ref() {
             if rule.formula_mode == "unit_price_override" {
                 if let Some(unit_price) = rule.unit_price_override.as_ref() {
+                    ensure_pricing_currency(
+                        &official_currency,
+                        &unit_price.currency,
+                        "pricing rule unit price override",
+                    )?;
                     customer_charge_before_sale_multiplier = unit_price.clone();
                 }
             } else {
@@ -534,7 +554,10 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .into_iter()
             .filter(|rule| {
-                rule.plan_code == plan.plan_code && rule.matches_at(dimensions, occurred_at)
+                rule.pricing_plan_id == plan.id
+                    && rule.plan_code == plan.plan_code
+                    && rule.scope_matches(dimensions)
+                    && rule.matches_at(dimensions, occurred_at)
             })
             .collect::<Vec<_>>();
         rules.sort_by(|left, right| {
@@ -814,6 +837,20 @@ fn add_default_markup(base: Money, markup: &Money) -> DomainResult<Money> {
         return Ok(base);
     }
     base.add(markup)
+}
+
+fn ensure_pricing_currency(
+    expected: &str,
+    actual: &str,
+    label: &str,
+) -> DomainResult<()> {
+    if expected == actual {
+        Ok(())
+    } else {
+        Err(DomainError::new(format!(
+            "{label} currency mismatch: official reference uses {expected}, received {actual}"
+        )))
+    }
 }
 
 fn require_positive_multiplier(field: &str, value: DecimalValue) -> DomainResult<()> {

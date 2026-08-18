@@ -220,6 +220,30 @@ impl AccountRateCard {
 }
 
 impl PricingRule {
+    /// Returns whether the rule's product scope matches the resolved runtime
+    /// dimensions. Scope fields are part of the rule identity and must be
+    /// enforced before conditions and priority are evaluated; otherwise a
+    /// sales rule for one model can leak into every resource in the plan.
+    pub fn scope_matches(&self, dimensions: &PricingDimensionContext) -> bool {
+        [
+            (self.product_code.as_deref(), "product_code"),
+            (self.operation_code.as_deref(), "operation_code"),
+            (self.meter_code.as_deref(), "meter_code"),
+            (self.provider_code.as_deref(), "provider_code"),
+            (self.region_code.as_deref(), "region_code"),
+            (self.catalog_key.as_deref(), "catalog_key"),
+        ]
+        .into_iter()
+        .all(|(expected, dimension_code)| {
+            expected.is_none_or(|expected| {
+                dimensions
+                    .get(dimension_code)
+                    .and_then(Value::as_str)
+                    .is_some_and(|actual| actual.trim() == expected.trim())
+            })
+        })
+    }
+
     pub fn matches_at(
         &self,
         dimensions: &PricingDimensionContext,

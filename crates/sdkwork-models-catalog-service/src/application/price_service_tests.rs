@@ -3,7 +3,7 @@ use serde_json::json;
 
 use super::{
     BillingStrategyKind, PriceResolutionFailureCode, PriceResolutionStatus, PriceService,
-    ResourceBillability,
+    PricingResolver, ResolveModelPriceQuery, ResourceBillability,
 };
 use crate::domain::{
     AccountRateCard, AiModel, BillingMeter, DecimalValue, GatewayAccessPolicy, GatewayApiKey,
@@ -396,6 +396,193 @@ fn resolves_condition_specific_rate_by_vendor_region_api_and_model() {
     assert_eq!("openai", identity.vendor_code);
     assert_eq!("cn", identity.region_code);
     assert_eq!(CATALOG_KEY, identity.catalog_key);
+}
+
+#[test]
+fn active_sales_rule_overrides_the_official_reference_price() {
+    let official = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "0.010000000000",
+        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![official]);
+    let plan = catalog.plans[0].clone();
+    let mut sales_rule = default_rule(
+        42,
+        &plan,
+        Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+            .single()
+            .expect("valid rule timestamp"),
+    );
+    sales_rule.rule_code = "sales-api-request".to_owned();
+    sales_rule.product_code = Some(PRODUCT_CODE.to_owned());
+    sales_rule.operation_code = Some(OPERATION_CODE.to_owned());
+    sales_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
+    sales_rule.catalog_key = Some(CATALOG_KEY.to_owned());
+    sales_rule.formula_mode = "unit_price_override".to_owned();
+    sales_rule.unit_price_override = Some(Money::usd("0.025000000000").expect("valid sales price"));
+    catalog.rules.push(sales_rule);
+
+    let resolved = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::ApiRequest,
+            supplier_code: None,
+            account_id: None,
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
+                .single()
+                .expect("valid occurrence"),
+        })
+        .expect("sales price resolves");
+
+    assert_eq!(decimal("0.010000000000"), resolved.official_reference.unit_price.unit_price);
+    assert_eq!(decimal("0.025000000000"), resolved.customer_charge.unit_price);
+    assert_eq!(Some(42), resolved.pricing_record_identity.pricing_rule.map(|identity| identity.id));
+}
+
+#[test]
+fn expired_sales_rule_falls_back_to_the_official_reference_price() {
+    let official = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "0.010000000000",
+        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![official]);
+    let plan = catalog.plans[0].clone();
+    let mut expired_rule = default_rule(
+        43,
+        &plan,
+        Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+            .single()
+            .expect("valid rule timestamp"),
+    );
+    expired_rule.rule_code = "expired-sales-api-request".to_owned();
+    expired_rule.product_code = Some(PRODUCT_CODE.to_owned());
+    expired_rule.operation_code = Some(OPERATION_CODE.to_owned());
+    expired_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
+    expired_rule.catalog_key = Some(CATALOG_KEY.to_owned());
+    expired_rule.formula_mode = "unit_price_override".to_owned();
+    expired_rule.unit_price_override = Some(Money::usd("0.025000000000").expect("valid sales price"));
+    expired_rule.effective_to = Some(
+        Utc.with_ymd_and_hms(2026, 8, 17, 0, 0, 0)
+            .single()
+            .expect("valid expiry"),
+    );
+    catalog.rules.push(expired_rule);
+
+    let resolved = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::ApiRequest,
+            supplier_code: None,
+            account_id: None,
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
+                .single()
+                .expect("valid occurrence"),
+        })
+        .expect("official fallback resolves");
+
+    assert_eq!(decimal("0.010000000000"), resolved.customer_charge.unit_price);
+    assert!(resolved.pricing_record_identity.pricing_rule.is_none());
+}
+
+#[test]
+fn product_scoped_sales_rule_does_not_leak_to_another_model() {
+    let official = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "0.010000000000",
+        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![official]);
+    let plan = catalog.plans[0].clone();
+    let mut other_model_rule = default_rule(
+        44,
+        &plan,
+        Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+            .single()
+            .expect("valid rule timestamp"),
+    );
+    other_model_rule.rule_code = "other-model-sales-price".to_owned();
+    other_model_rule.product_code = Some("another-model".to_owned());
+    other_model_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
+    other_model_rule.catalog_key = Some("openai/cn/another-model".to_owned());
+    other_model_rule.formula_mode = "unit_price_override".to_owned();
+    other_model_rule.unit_price_override = Some(Money::usd("0.025000000000").expect("valid sales price"));
+    catalog.rules.push(other_model_rule);
+
+    let resolved = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::ApiRequest,
+            supplier_code: None,
+            account_id: None,
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
+                .single()
+                .expect("valid occurrence"),
+        })
+        .expect("official fallback resolves");
+
+    assert_eq!(decimal("0.010000000000"), resolved.customer_charge.unit_price);
+    assert!(resolved.pricing_record_identity.pricing_rule.is_none());
+}
+
+#[test]
+fn sales_price_with_a_different_currency_fails_before_billing() {
+    let official = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "0.010000000000",
+        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let mut catalog = TestPricingCatalog::with_prices(vec![official]);
+    let plan = catalog.plans[0].clone();
+    let mut sales_rule = default_rule(
+        45,
+        &plan,
+        Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+            .single()
+            .expect("valid rule timestamp"),
+    );
+    sales_rule.product_code = Some(PRODUCT_CODE.to_owned());
+    sales_rule.operation_code = Some(OPERATION_CODE.to_owned());
+    sales_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
+    sales_rule.catalog_key = Some(CATALOG_KEY.to_owned());
+    sales_rule.formula_mode = "unit_price_override".to_owned();
+    sales_rule.unit_price_override = Some(Money::new("CNY", "0.025000000000").expect("valid sales price"));
+    catalog.rules.push(sales_rule);
+
+    let error = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::ApiRequest,
+            supplier_code: None,
+            account_id: None,
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
+                .single()
+                .expect("valid occurrence"),
+        })
+        .expect_err("currency mismatch must fail closed");
+
+    assert!(error.to_string().contains("pricing rule unit price override currency mismatch"));
 }
 
 #[test]
