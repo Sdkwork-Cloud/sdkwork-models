@@ -7,7 +7,7 @@ const packageJson = JSON.parse(
 );
 
 test("package manifest is configured for public npm publishing", () => {
-  assert.equal(packageJson.name, "@sdkwork/models");
+  assert.equal(packageJson.name, "@sdkwork/models-sdk");
   assert.notEqual(packageJson.private, true);
   assert.equal(packageJson.publishConfig?.access, "public");
   assert.equal(packageJson.publishConfig?.registry, "https://registry.npmjs.org/");
