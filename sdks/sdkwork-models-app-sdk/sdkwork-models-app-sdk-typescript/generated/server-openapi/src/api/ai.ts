@@ -14,7 +14,7 @@ export class AiModelAccessChannelPresetsApi {
 
 /** List official model access channel presets */
   async list(requestOptions?: ApiRequestOptions): Promise<AppModelAccessChannelPresetsPage> {
-    return this.client.request<AppModelAccessChannelPresetsPage>(appApiPath(`/ai/model_access_channel_presets`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'data' });
+    return this.client.request<AppModelAccessChannelPresetsPage>(appApiPath(`/ai/model_access_channel_presets`), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'data' });
   }
 }
 
@@ -45,12 +45,12 @@ export class AiModelAccessChannelsApi {
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
       { name: 'agent_provider_id', value: params?.agentProviderId, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<AppModelAccessChannelsPage>(appendQueryString(appApiPath(`/ai/model_access_channels`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<AppModelAccessChannelsPage>(appendQueryString(appApiPath(`/ai/model_access_channels`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 
 /** Create or update a model access channel */
   async upsert(channelCode: string, body: AppModelAccessChannelUpsertRequest, requestOptions?: ApiRequestOptions): Promise<AppModelAccessChannelItem> {
-    return this.client.request<AppModelAccessChannelItem>(appApiPath(`/ai/model_access_channels/${serializePathParameter(channelCode, { name: 'channelCode', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
+    return this.client.request<AppModelAccessChannelItem>(appApiPath(`/ai/model_access_channels/${serializePathParameter(channelCode, { name: 'channelCode', style: 'simple', explode: false })}`), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 
@@ -71,7 +71,7 @@ export class AiModelVideoProfilesApi {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/video_profiles`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -104,7 +104,7 @@ export class AiVideoProfilesApi {
       { name: 'duration_tier_code', value: params?.durationTierCode, style: 'form', explode: true, allowReserved: false },
       { name: 'resolution', value: params?.resolution, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/video_profiles`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/video_profiles`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -125,7 +125,7 @@ export class AiModelVoicesApi {
     const query = buildQueryString([
       { name: 'vendor_code', value: params?.vendorCode, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/models/${serializePathParameter(modelId, { name: 'modelId', style: 'simple', explode: false })}/voices`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -156,7 +156,7 @@ export class AiVoicesApi {
       { name: 'model_id', value: params?.modelId, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/voices`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/voices`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -195,7 +195,7 @@ export class AiModelsApi {
       { name: 'categories', value: params?.categories, style: 'form', explode: false, allowReserved: false },
       { name: 'groups', value: params?.groups, style: 'form', explode: false, allowReserved: false },
     ]);
-    return this.client.request<AppModelCatalogPage>(appendQueryString(appApiPath(`/ai/models`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<AppModelCatalogPage>(appendQueryString(appApiPath(`/ai/models`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -209,7 +209,7 @@ export class AiModelVendorsApi {
 
 /** List model vendors */
   async list(requestOptions?: ApiRequestOptions): Promise<{ items: AppModelVendorCatalogResponse[]; pageInfo: PageInfo; }> {
-    return this.client.request<{ items: AppModelVendorCatalogResponse[]; pageInfo: PageInfo; }>(appApiPath(`/ai/model_vendors`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<{ items: AppModelVendorCatalogResponse[]; pageInfo: PageInfo; }>(appApiPath(`/ai/model_vendors`), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
@@ -240,12 +240,11 @@ export class AiModelRankingsApi {
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/model_rankings`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
+    return this.client.request<ModelRankingsPage>(appendQueryString(appApiPath(`/ai/model_rankings`), query), { ...(requestOptions?.signal !== undefined ? { signal: requestOptions.signal } : {}), ...(requestOptions?.timeout !== undefined ? { timeout: requestOptions.timeout } : {}), method: 'GET' as any, skipAuth: true, sdkworkUnwrapKind: 'page' });
   }
 }
 
 export class AiApi {
-  private client: HttpClient;
   public readonly modelRankings: AiModelRankingsApi;
   public readonly modelVendors: AiModelVendorsApi;
   public readonly models: AiModelsApi;
@@ -257,7 +256,6 @@ export class AiApi {
   public readonly modelAccessChannelPresets: AiModelAccessChannelPresetsApi;
 
   constructor(client: HttpClient) {
-    this.client = client;
     this.modelRankings = new AiModelRankingsApi(client);
     this.modelVendors = new AiModelVendorsApi(client);
     this.models = new AiModelsApi(client);

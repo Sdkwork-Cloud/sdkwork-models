@@ -12,30 +12,45 @@
   "mode": "apply",
   "hasChanges": true,
   "hasDestructiveChanges": false,
-  "changeFingerprint": "f753c55f54f12482602c20123a6520770f59d4e7474dab950f00e7019022e9c3",
+  "changeFingerprint": "a55326787aa407f22a9e9fd5ff6323781cc79997af11c0d010b96329b8c432b5",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
       "api-surface",
-      "models"
+      "runtime",
+      "publish-workflow",
+      "documentation"
     ],
     "details": [
       {
         "area": "api-surface",
         "paths": [
-          "src/api/ai.ts"
+          "src/api/ai.ts",
+          "src/api/base.ts",
+          "src/http/client.ts"
         ]
       },
       {
-        "area": "models",
+        "area": "runtime",
         "paths": [
-          "src/types/delete-confirmation-response.ts",
-          "src/types/index.ts"
+          "src/http/client.ts"
+        ]
+      },
+      {
+        "area": "publish-workflow",
+        "paths": [
+          "bin/publish-core.mjs"
+        ]
+      },
+      {
+        "area": "documentation",
+        "paths": [
+          "README.md"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: api-surface, models. Verification is required."
+    "summary": "Detected impact areas: api-surface, runtime, publish-workflow, documentation. Verification is required."
   },
   "executionDecision": {
     "schemaVersion": 1,
@@ -56,7 +71,7 @@
         "id": "verify-check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, runtime, publish-workflow, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -74,7 +89,7 @@
         "id": "verify-build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, runtime, publish-workflow, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -93,13 +108,13 @@
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: api-surface, runtime, publish-workflow, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, runtime, publish-workflow, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -117,7 +132,7 @@
         "id": "build",
         "title": "Unified package build",
         "required": true,
-        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, runtime, publish-workflow, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -156,22 +171,22 @@
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 3,
+    "writtenFiles": 5,
     "skippedScaffoldFiles": 2,
-    "skippedUnchangedGeneratedFiles": 89,
+    "skippedUnchangedGeneratedFiles": 87,
     "deletedGeneratedFiles": 0,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "f753c55f54f12482602c20123a6520770f59d4e7474dab950f00e7019022e9c3",
+    "changeFingerprint": "a55326787aa407f22a9e9fd5ff6323781cc79997af11c0d010b96329b8c432b5",
     "changes": {
-      "createdGeneratedFiles": [
-        "src/types/delete-confirmation-response.ts"
-      ],
+      "createdGeneratedFiles": [],
       "updatedGeneratedFiles": [
+        "bin/publish-core.mjs",
+        "README.md",
         "src/api/ai.ts",
-        "src/types/index.ts"
+        "src/api/base.ts",
+        "src/http/client.ts"
       ],
       "unchangedGeneratedFiles": [
-        "bin/publish-core.mjs",
         "bin/publish.ps1",
         "bin/publish.sh",
         "bin/sdk-gen.bat",
@@ -179,13 +194,10 @@
         "CHANGELOG.md",
         "LICENSE",
         "package.json",
-        "README.md",
         "sdkwork-sdk.json",
-        "src/api/base.ts",
         "src/api/index.ts",
         "src/api/paths.ts",
         "src/auth/index.ts",
-        "src/http/client.ts",
         "src/http/index.ts",
         "src/index.ts",
         "src/sdk.ts",
@@ -219,7 +231,9 @@
         "src/types/ai-resource-groups-page.ts",
         "src/types/ai-resources-page.ts",
         "src/types/common.ts",
+        "src/types/delete-confirmation-response.ts",
         "src/types/field-error.ts",
+        "src/types/index.ts",
         "src/types/json-null.ts",
         "src/types/json-object.ts",
         "src/types/json-value.ts",
@@ -273,36 +287,51 @@
       "schemaVersion": 1,
       "areas": [
         "api-surface",
-        "models"
+        "runtime",
+        "publish-workflow",
+        "documentation"
       ],
       "details": [
         {
           "area": "api-surface",
           "paths": [
-            "src/api/ai.ts"
+            "src/api/ai.ts",
+            "src/api/base.ts",
+            "src/http/client.ts"
           ]
         },
         {
-          "area": "models",
+          "area": "runtime",
           "paths": [
-            "src/types/delete-confirmation-response.ts",
-            "src/types/index.ts"
+            "src/http/client.ts"
+          ]
+        },
+        {
+          "area": "publish-workflow",
+          "paths": [
+            "bin/publish-core.mjs"
+          ]
+        },
+        {
+          "area": "documentation",
+          "paths": [
+            "README.md"
           ]
         }
       ],
       "requiresVerification": true,
-      "summary": "Detected impact areas: api-surface, models. Verification is required."
+      "summary": "Detected impact areas: api-surface, runtime, publish-workflow, documentation. Verification is required."
     },
     "verificationPlan": {
       "shouldRun": true,
       "runPhase": "now",
-      "summary": "Detected impact areas: api-surface, models. Verification is required. Run the required verification commands now against the generated SDK output.",
+      "summary": "Detected impact areas: api-surface, runtime, publish-workflow, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
       "steps": [
         {
           "id": "check",
           "title": "Unified package check",
           "required": true,
-          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models.",
+          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, runtime, publish-workflow, documentation.",
           "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [
@@ -320,7 +349,7 @@
           "id": "build",
           "title": "Unified package build",
           "required": true,
-          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models.",
+          "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, runtime, publish-workflow, documentation.",
           "workingDirectory": "E:\\sdkwork-space\\sdkwork-models\\sdks\\sdkwork-models-backend-sdk\\sdkwork-models-backend-sdk-typescript\\generated\\server-openapi",
           "command": "node",
           "args": [
