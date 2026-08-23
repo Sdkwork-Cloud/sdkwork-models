@@ -250,6 +250,7 @@ CREATE TABLE IF NOT EXISTS ai_resource (
     metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
     resource_code VARCHAR(192) NOT NULL,
     resource_type VARCHAR(64) NOT NULL,
+    route_kind VARCHAR(16) NOT NULL DEFAULT 'api',
     display_name VARCHAR(128),
     display_name_i18n JSONB NOT NULL DEFAULT '{}'::jsonb,
     vendor_id BIGINT,
@@ -266,13 +267,15 @@ CREATE TABLE IF NOT EXISTS ai_resource (
     resource_schema JSONB,
     metadata_schema JSONB,
     description VARCHAR(512),
-    sort_order INTEGER
+    sort_order INTEGER,
+    CONSTRAINT ck_ai_resource_route_kind CHECK (route_kind IN ('model', 'api'))
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_uuid ON ai_resource (uuid);
 CREATE UNIQUE INDEX IF NOT EXISTS uk_ai_resource_tenant_code ON ai_resource (tenant_id, organization_id, resource_code);
 CREATE INDEX IF NOT EXISTS idx_ai_resource_status_sort ON ai_resource (tenant_id, organization_id, status, sort_order, id);
 CREATE INDEX IF NOT EXISTS idx_ai_resource_type_status ON ai_resource (tenant_id, organization_id, resource_type, status, id);
+CREATE INDEX IF NOT EXISTS idx_ai_resource_route_kind_status ON ai_resource (tenant_id, organization_id, route_kind, status, id);
 CREATE INDEX IF NOT EXISTS idx_ai_resource_vendor_model ON ai_resource (tenant_id, organization_id, vendor_code, catalog_key, status, id);
 
 CREATE TABLE IF NOT EXISTS ai_resource_group (

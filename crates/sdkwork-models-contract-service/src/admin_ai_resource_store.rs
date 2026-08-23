@@ -28,6 +28,9 @@ pub struct AdminAiResourceItem {
     pub id: i64,
     pub resource_code: String,
     pub resource_type: String,
+    /// 路由类型：`model`（模型类路由）或 `api`（API 资源类路由）。
+    /// 对应资源表 `ai_resource.route_kind`。
+    pub route_kind: Option<String>,
     pub display_name: String,
     pub vendor_code: Option<String>,
     pub modality_code: Option<String>,
@@ -274,6 +277,9 @@ pub struct CreateAdminAiResourceCommand {
     pub audit_log_uuid: String,
     pub resource_code: String,
     pub resource_type: String,
+    /// 路由类型：`model`（模型类路由）或 `api`（API 资源类路由）。
+    /// 写入 `ai_resource.route_kind`，作为路由决策的权威标记。
+    pub route_kind: Option<String>,
     pub display_name: String,
     pub vendor_code: Option<String>,
     pub modality_code: Option<String>,
@@ -303,6 +309,8 @@ pub struct UpdateAdminAiResourceCommand {
     pub audit_log_uuid: String,
     pub resource_code: Option<String>,
     pub resource_type: Option<String>,
+    /// 路由类型更新；外层 None = 字段未提交（保持当前），Some(None) = 清除为默认 `api`。
+    pub route_kind: Option<Option<String>>,
     pub display_name: Option<String>,
     pub vendor_code: Option<Option<String>>,
     pub modality_code: Option<Option<String>>,
@@ -330,6 +338,8 @@ pub struct AdminAiResourceHierarchyNodeCommand {
     pub member_uuids: Vec<String>,
     pub resource_code: String,
     pub resource_type: String,
+    /// 路由类型：`model` 或 `api`；缺省由 DB 默认 `api`。
+    pub route_kind: Option<String>,
     pub display_name: String,
     pub vendor_code: Option<String>,
     pub modality_code: Option<String>,

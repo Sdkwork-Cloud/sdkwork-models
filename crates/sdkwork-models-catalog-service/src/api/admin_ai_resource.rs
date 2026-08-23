@@ -80,6 +80,8 @@ struct AdminAiResourceItemResponse {
     id: String,
     resource_code: String,
     resource_type: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    route_kind: Option<String>,
     display_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     vendor_code: Option<String>,
@@ -242,6 +244,8 @@ struct AiResourceMemberRequest {
 struct AiResourceCreateRequest {
     resource_code: Option<String>,
     resource_type: Option<String>,
+    /// 路由类型：`model`（模型类路由）或 `api`（API 资源类路由）；缺省 = `api`。
+    route_kind: Option<String>,
     display_name: Option<String>,
     vendor_code: Option<String>,
     modality_code: Option<String>,
@@ -267,6 +271,8 @@ struct AiResourceCreateRequest {
 struct AiResourceUpdateRequest {
     resource_code: Option<String>,
     resource_type: Option<String>,
+    /// 路由类型更新；外层 None = 未提交（保持当前），null = 清除为默认 `api`。
+    route_kind: Option<Option<String>>,
     display_name: Option<String>,
     vendor_code: Option<Option<String>>,
     modality_code: Option<Option<String>>,
@@ -805,6 +811,7 @@ fn to_item_response(item: AdminAiResourceItem) -> AdminAiResourceItemResponse {
         id: item.id.to_string(),
         resource_code: item.resource_code,
         resource_type: item.resource_type,
+        route_kind: item.route_kind,
         display_name: item.display_name,
         vendor_code: item.vendor_code,
         modality_code: item.modality_code,
@@ -1077,6 +1084,7 @@ fn build_create_command(
             MAX_RESOURCE_CODE_LEN,
         )?,
         resource_type,
+        route_kind: normalize_route_kind(request.route_kind)?,
         display_name: required_text(
             request.display_name,
             "displayName",
@@ -1224,6 +1232,10 @@ fn build_update_command(
             .map(|value| resource_code_value(value, "resourceCode", MAX_RESOURCE_CODE_LEN))
             .transpose()?,
         resource_type,
+        route_kind: match request.route_kind {
+            Some(value) => Some(normalize_route_kind(value)?),
+            None => None,
+        },
         display_name: request
             .display_name
             .map(|value| {
@@ -1645,6 +1657,16 @@ fn normalize_status(value: String) -> Result<String, AiResourceCommandBuildError
             "status must be one of active, disabled, inactive".to_owned(),
         )),
     }
+}
+
+fn normalize_route_kind(value: Option<String>) -> Result<Option<String>, AiResourceCommandBuildError> {
+    value.map(|value| match value.trim().to_ascii_lowercase().as_str() {
+        "model" => Ok("model".to_owned()),
+        "api" => Ok("api".to_owned()),
+        _ => Err(AiResourceCommandBuildError::BadRequest(
+            "routeKind must be one of model, api".to_owned(),
+        )),
+    }).transpose()
 }
 
 fn normalize_member_role(value: String) -> Result<String, AiResourceCommandBuildError> {

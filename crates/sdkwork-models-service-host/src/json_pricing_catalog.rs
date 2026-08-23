@@ -10,8 +10,8 @@ use sdkwork_models_catalog_service::domain::{
     GatewayRiskRule, ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendor,
     ModelVendorDefinition, Money, PriceSide, PricingFormula, PricingFormulaTerm, PricingPlan,
     PricingRateCondition, PricingRateMetadata, PricingRateTier, PricingRateVariant,
-    PricingSchedule, PricingWeeklyWindow, QuotaPolicy, ResolveModelMappingContext, RoutingPolicy,
-    RoutingRule, UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
+    PricingSchedule, PricingWeeklyWindow, QuotaPolicy, ResolveModelMappingContext,
+    UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 use sdkwork_models_catalog_service::ports::PricingCatalog;
 
@@ -77,14 +77,6 @@ impl PricingCatalog for JsonPricingCatalog {
     }
 
     fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute> {
-        Vec::new()
-    }
-
-    fn list_routing_policies(&self) -> Vec<RoutingPolicy> {
-        Vec::new()
-    }
-
-    fn list_routing_rules(&self, _profile_id: i64) -> Vec<RoutingRule> {
         Vec::new()
     }
 

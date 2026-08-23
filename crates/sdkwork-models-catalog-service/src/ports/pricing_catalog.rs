@@ -1,7 +1,7 @@
 use crate::domain::{
     AccountRateCard, AiModel, BillingMeter, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule,
     ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendorDefinition, PriceSide,
-    PricingPlan, PricingRule, QuotaPolicy, ResolveModelMappingContext, RoutingPolicy, RoutingRule,
+    PricingPlan, PricingRule, QuotaPolicy, ResolveModelMappingContext,
     UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 
@@ -11,8 +11,6 @@ pub trait PricingCatalog {
     fn visit_models(&self, vendor_code: Option<&str>, visitor: &mut dyn FnMut(&AiModel) -> bool);
     fn list_model_upstream_routes(&self, model: &str) -> Vec<ModelUpstreamRoute>;
     fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute>;
-    fn list_routing_policies(&self) -> Vec<RoutingPolicy>;
-    fn list_routing_rules(&self, profile_id: i64) -> Vec<RoutingRule>;
     fn list_model_mappings(&self) -> Vec<ModelMappingRule>;
     fn list_api_keys(&self) -> Vec<GatewayApiKey>;
     fn list_upstream_account_groups(&self) -> Vec<UpstreamAccountGroup>;

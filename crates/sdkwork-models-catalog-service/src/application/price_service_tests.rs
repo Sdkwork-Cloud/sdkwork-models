@@ -11,7 +11,7 @@ use crate::domain::{
     ModelVendorDefinition, Money, PriceSide, PricingDimensionContext, PricingFormula,
     PricingFormulaTerm, PricingPlan, PricingRateCondition, PricingRateMetadata, PricingRateTier,
     PricingRateVariant, PricingRule, PricingSchedule, PricingWeeklyWindow, QuotaPolicy,
-    ResolveModelMappingContext, ResourceDefinition, RoutingPolicy, RoutingRule, UpstreamAccountGroup,
+    ResolveModelMappingContext, ResourceDefinition, UpstreamAccountGroup,
     UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 use crate::ports::PricingCatalog;
@@ -84,14 +84,6 @@ impl PricingCatalog for TestPricingCatalog {
     }
 
     fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute> {
-        Vec::new()
-    }
-
-    fn list_routing_policies(&self) -> Vec<RoutingPolicy> {
-        Vec::new()
-    }
-
-    fn list_routing_rules(&self, _profile_id: i64) -> Vec<RoutingRule> {
         Vec::new()
     }
 

@@ -491,6 +491,7 @@ async fn list_ai_resources(
             ai_resource.id,
             ai_resource.resource_code,
             ai_resource.resource_type AS resource_type,
+            ai_resource.route_kind AS route_kind,
             COALESCE(NULLIF(ai_resource.display_name, ''), ai_resource.resource_code) AS display_name,
             ai_resource.vendor_code,
             ai_resource.modality_code,
@@ -1761,9 +1762,9 @@ async fn upsert_hierarchy_resource(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, route_kind, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
         VALUES
-            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18, $19)
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20)
         ON CONFLICT(tenant_id, organization_id, resource_code) DO UPDATE SET
             status = excluded.status,
             updated_at = excluded.updated_at,
@@ -1771,6 +1772,7 @@ async fn upsert_hierarchy_resource(
             deleted_at = NULL,
             deleted_by = NULL,
             resource_type = excluded.resource_type,
+            route_kind = excluded.route_kind,
             display_name = excluded.display_name,
             vendor_code = excluded.vendor_code,
             modality_code = excluded.modality_code,
@@ -1792,6 +1794,7 @@ async fn upsert_hierarchy_resource(
     .bind(&command.requested_at)
     .bind(&node.resource_code)
     .bind(&node.resource_type)
+    .bind(node.route_kind.as_deref().unwrap_or("api"))
     .bind(&node.display_name)
     .bind(node.vendor_code.as_deref())
     .bind(node.modality_code.as_deref())
@@ -2007,9 +2010,9 @@ async fn insert_ai_resource(
     sqlx::query_scalar(
         r#"
         INSERT INTO ai_resource
-            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
+            (uuid, tenant_id, organization_id, data_scope, status, created_at, updated_at, version, metadata, resource_code, resource_type, route_kind, display_name, vendor_code, modality_code, api_code, catalog_key, model, provider_native_model, resource_schema, description, sort_order, id)
         VALUES
-            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16::jsonb, $17, $18, $19)
+            ($1, $2, $3, 1, $4, $5, $6, 0, '{}'::jsonb, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20)
         RETURNING id
         "#,
     )
@@ -2021,6 +2024,7 @@ async fn insert_ai_resource(
     .bind(&command.requested_at)
     .bind(&command.resource_code)
     .bind(&command.resource_type)
+    .bind(command.route_kind.as_deref().unwrap_or("api"))
     .bind(&command.display_name)
     .bind(command.vendor_code.as_deref())
     .bind(command.modality_code.as_deref())
@@ -2078,30 +2082,39 @@ async fn update_ai_resource_core(
         UPDATE ai_resource
         SET resource_code = COALESCE($1, resource_code),
             resource_type = COALESCE($2, resource_type),
-            display_name = COALESCE($3, display_name),
-            vendor_code = CASE WHEN $4 THEN $5 ELSE vendor_code END,
-            modality_code = CASE WHEN $6 THEN $7 ELSE modality_code END,
-            api_code = CASE WHEN $8 THEN $9 ELSE api_code END,
-            catalog_key = CASE WHEN $10 THEN $11 ELSE catalog_key END,
-            model = CASE WHEN $12 THEN $13 ELSE model END,
-            provider_native_model = CASE WHEN $14 THEN $15 ELSE provider_native_model END,
+            route_kind = CASE WHEN $3 THEN $4 ELSE route_kind END,
+            display_name = COALESCE($5, display_name),
+            vendor_code = CASE WHEN $6 THEN $7 ELSE vendor_code END,
+            modality_code = CASE WHEN $8 THEN $9 ELSE modality_code END,
+            api_code = CASE WHEN $10 THEN $11 ELSE api_code END,
+            catalog_key = CASE WHEN $12 THEN $13 ELSE catalog_key END,
+            model = CASE WHEN $14 THEN $15 ELSE model END,
+            provider_native_model = CASE WHEN $16 THEN $17 ELSE provider_native_model END,
             resource_schema = CASE
-                WHEN $16 IS NULL THEN resource_schema
-                ELSE COALESCE(resource_schema, '{}'::jsonb) || $16::jsonb
+                WHEN $18 IS NULL THEN resource_schema
+                ELSE COALESCE(resource_schema, '{}'::jsonb) || $18::jsonb
             END,
-            description = CASE WHEN $17 THEN $18 ELSE description END,
-            status = COALESCE($19, status),
-            sort_order = CASE WHEN $20 THEN $21 ELSE sort_order END,
-            updated_at = $22,
+            description = CASE WHEN $19 THEN $20 ELSE description END,
+            status = COALESCE($21, status),
+            sort_order = CASE WHEN $22 THEN $23 ELSE sort_order END,
+            updated_at = $24,
             version = COALESCE(version, 0) + 1
-        WHERE id = $23
-          AND tenant_id = $24
-          AND organization_id = $25
+        WHERE id = $25
+          AND tenant_id = $26
+          AND organization_id = $27
           AND deleted_at IS NULL
         "#,
     )
     .bind(command.resource_code.as_deref())
     .bind(command.resource_type.as_deref())
+    .bind(command.route_kind.is_some())
+    .bind(
+        command
+            .route_kind
+            .as_ref()
+            .and_then(|value| value.as_deref())
+            .unwrap_or("api"),
+    )
     .bind(command.display_name.as_deref())
     .bind(command.vendor_code.is_some())
     .bind(optional_optional_str(&command.vendor_code))
@@ -3183,6 +3196,7 @@ fn item_from_row(
         id: row.try_get("id").map_err(row_error)?,
         resource_code: resource_code.clone(),
         resource_type: row.try_get("resource_type").map_err(row_error)?,
+        route_kind: optional_string_cell(&row, "route_kind"),
         display_name: row.try_get("display_name").map_err(row_error)?,
         vendor_code: optional_string_cell(&row, "vendor_code"),
         modality_code: optional_string_cell(&row, "modality_code"),

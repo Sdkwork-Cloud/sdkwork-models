@@ -4530,6 +4530,18 @@
               "model_access_channel"
             ]
           },
+          "routeKind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "路由类型：`model`（模型类路由，按模型解析 vendor）或 `api`（API 资源类路由）。缺省 = api。",
+            "enum": [
+              "model",
+              "api",
+              null
+            ]
+          },
           "displayName": {
             "type": "string",
             "minLength": 1,
@@ -5185,6 +5197,18 @@
               "model_access_channel"
             ]
           },
+          "routeKind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "路由类型：`model`（模型类路由）或 `api`（API 资源类路由）。",
+            "enum": [
+              "model",
+              "api",
+              null
+            ]
+          },
           "displayName": {
             "type": "string",
             "minLength": 1,
@@ -5478,6 +5502,18 @@
               "model_api",
               "bundle",
               "model_access_channel",
+              null
+            ]
+          },
+          "routeKind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "路由类型更新：`model` / `api`，null = 清除为默认 api。缺省 = 保持当前值。",
+            "enum": [
+              "model",
+              "api",
               null
             ]
           },

@@ -35,5 +35,5 @@ pub use pricing::{
 pub use resource_definition::ResourceDefinition;
 pub use routing::{
     AiRouteFailureStrategy, AiRouteModelRequirement, AiRouteStrategy, RouteCandidate,
-    RoutingCapability, RoutingFallbackMode, RoutingPolicy, RoutingPolicyScope, RoutingRule,
+    RoutingCapability,
 };

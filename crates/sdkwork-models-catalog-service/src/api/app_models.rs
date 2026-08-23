@@ -1289,6 +1289,7 @@ fn hierarchy_node_from_draft(
         member_uuids,
         resource_code: draft.resource_code,
         resource_type: draft.resource_type,
+        route_kind: None,
         display_name: draft.display_name,
         vendor_code: draft.vendor_code,
         modality_code: None,

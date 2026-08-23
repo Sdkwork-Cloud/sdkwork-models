@@ -1287,6 +1287,9 @@
   columns:
     resource_code: string(192)
     resource_type: string(64)
+    route_kind:
+      type: string(16)
+      constraints: NOT NULL DEFAULT 'api'
     display_name: string(128)
     vendor_id: int64
     vendor_code: string(64)
@@ -1303,6 +1306,9 @@
     metadata_schema: json
     description: string(512)
     sort_order: int32
+  check_constraints:
+  - name: ck_ai_resource_route_kind
+    expression: route_kind IN ('model', 'api')
   indexes:
   - name: idx_ai_resource_status_sort
     columns:
@@ -1316,6 +1322,13 @@
     - tenant_id
     - organization_id
     - resource_type
+    - status
+    - id
+  - name: idx_ai_resource_route_kind_status
+    columns:
+    - tenant_id
+    - organization_id
+    - route_kind
     - status
     - id
   - name: idx_ai_resource_vendor_model

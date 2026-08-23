@@ -1168,6 +1168,9 @@ pub struct ModelUpstreamRoute {
 pub struct UpstreamResourceEntitlement {
     pub resource_code: String,
     pub resource_type: String,
+    /// 路由类型：`model`（模型类路由）或 `api`（API 资源类路由）。
+    /// 来自资源管理 `ai_resource.route_kind`，作为路由决策的权威标记。
+    pub route_kind: Option<String>,
     pub vendor_code: Option<String>,
     pub modality_code: Option<String>,
     pub api_code: Option<String>,
@@ -1181,6 +1184,7 @@ impl UpstreamResourceEntitlement {
         Self {
             resource_code: resource_code.into(),
             resource_type: resource_type.into(),
+            route_kind: None,
             vendor_code: None,
             modality_code: None,
             api_code: None,
@@ -1188,6 +1192,12 @@ impl UpstreamResourceEntitlement {
             model: None,
             provider_native_model: None,
         }
+    }
+
+    /// 显式标记资源路由类型（`model`/`api`，对应 `ai_resource.route_kind`）。
+    pub fn with_route_kind(mut self, route_kind: impl Into<String>) -> Self {
+        self.route_kind = Some(route_kind.into());
+        self
     }
 }
 
