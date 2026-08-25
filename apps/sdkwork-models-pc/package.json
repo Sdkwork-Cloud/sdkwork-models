@@ -8,7 +8,15 @@
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "pnpm --filter @sdkwork/models-pc-core run typecheck",
-    "clean": "node -e \"import('node:fs').then(fs=>['dist','node_modules/.vite'].forEach(p=>fs.rmSync(p,{recursive:true,force:true})))\""
+    "clean": "node -e \"import('node:fs').then(fs=>['dist','node_modules/.vite'].forEach(p=>fs.rmSync(p,{recursive:true,force:true})))\"",
+    "build:dev": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev",
+    "build:test": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test",
+    "build:staging": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging",
+    "build:prod": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod",
+    "build:dev:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment dev --deployment-profile cloud",
+    "build:test:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment test --deployment-profile cloud",
+    "build:staging:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment staging --deployment-profile cloud",
+    "build:prod:cloud": "node ../../../sdkwork-specs/tools/build-browser-client.mjs --app-root . --environment prod --deployment-profile cloud"
   },
   "dependencies": {
     "@sdkwork/models": "workspace:*",

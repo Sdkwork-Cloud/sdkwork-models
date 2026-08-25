@@ -40,6 +40,38 @@ profiles:
         tls: dtupay.cn
         mode: web+api
         web: adaptive
+      - domain: models-dev.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.86offer.cn
+        tls: 86offer.cn
+        mode: web+api
+        web: adaptive
     packages: []
     overrides:
       topology:
@@ -83,6 +115,38 @@ profiles:
         web: adaptive
       - domain: models.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: adaptive
+      - domain: models.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: adaptive
+      - domain: models.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: adaptive
+      - domain: models.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: adaptive
+      - domain: models.86offer.cn
+        tls: 86offer.cn
         mode: web+api
         web: adaptive
     packages: []
@@ -130,6 +194,38 @@ profiles:
         tls: dtupay.cn
         mode: web+api
         web: adaptive
+      - domain: models-dev.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: adaptive
+      - domain: models-dev.86offer.cn
+        tls: 86offer.cn
+        mode: web+api
+        web: adaptive
     packages: []
     overrides:
       topology:
@@ -173,6 +269,38 @@ profiles:
         web: adaptive
       - domain: models.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.skubc.com
+        tls: skubc.com
+        mode: web+api
+        web: adaptive
+      - domain: models.skubc.cn
+        tls: skubc.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.zowalk.com
+        tls: zowalk.com
+        mode: web+api
+        web: adaptive
+      - domain: models.zowalk.cn
+        tls: zowalk.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.offer86.com
+        tls: offer86.com
+        mode: web+api
+        web: adaptive
+      - domain: models.offer86.cn
+        tls: offer86.cn
+        mode: web+api
+        web: adaptive
+      - domain: models.86offer.com
+        tls: 86offer.com
+        mode: web+api
+        web: adaptive
+      - domain: models.86offer.cn
+        tls: 86offer.cn
         mode: web+api
         web: adaptive
     packages: []

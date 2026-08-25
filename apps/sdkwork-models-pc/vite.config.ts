@@ -1,3 +1,5 @@
+import { resolveBrowserDistOutDir } from '../../../../sdkwork-specs/tools/browser-dist-layout.mjs';
+
 import { cpSync, createReadStream, existsSync, statSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -76,7 +78,7 @@ export default defineConfig(({ mode }) => {
     },
   },
   build: {
-    outDir: "dist",
+    outDir: resolveBrowserDistOutDir(resolveViteEnvironment(mode, env)),
     emptyOutDir: true,
   },
 };
