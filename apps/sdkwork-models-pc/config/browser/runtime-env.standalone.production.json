@@ -1,0 +1,17 @@
+{
+  "environment": "production",
+  "deploymentProfile": "standalone",
+  "profileId": "standalone.production",
+  "runtimeTarget": "browser",
+  "browserOriginMode": "same-origin",
+  "catalogRoot": "../../..",
+  "publicRuntime": {
+    "appName": "SDKWork Models",
+    "catalogExplorerEnabled": true
+  },
+  "appApiBaseUrl": "/",
+  "backendApiBaseUrl": "/",
+  "driveAppApiBaseUrl": "/",
+  "appbaseAppApiBaseUrl": "/",
+  "deployAppApiBaseUrl": "/"
+}
