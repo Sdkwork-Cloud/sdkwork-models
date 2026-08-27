@@ -13,9 +13,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@sdkwork/models": "workspace:*",
     "@sdkwork/models-pc-core": "workspace:*",
-    "react": "catalog:"
+    "react": "catalog:",
+    "@sdkwork/models-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "catalog:",

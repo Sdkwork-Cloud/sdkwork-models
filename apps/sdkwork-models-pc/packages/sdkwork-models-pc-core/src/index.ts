@@ -1,5 +1,5 @@
 import { isBlank } from "@sdkwork/utils/string";
-import { loadCatalog, listAvailableModels, listVendors, type ModelCatalog } from "@sdkwork/models";
+import { loadCatalog, listAvailableModels, listVendors, type ModelCatalog } from "@sdkwork/models-sdk";
 
 export function resolveBrowserCatalogRoot(): string {
   const configured = process.env.SDKWORK_MODELS_CATALOG_ROOT;

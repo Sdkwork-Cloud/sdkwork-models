@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { listAvailableModels, listVendors, type ModelCatalog, type ModelInfo } from "@sdkwork/models";
+import { listAvailableModels, listVendors, type ModelCatalog, type ModelInfo } from "@sdkwork/models-sdk";
 import { loadRepositoryCatalog, summarizeCatalog } from "@sdkwork/models-pc-core";
 
 type VendorCard = {
@@ -121,7 +121,7 @@ export function ModelsCatalogApp() {
   return (
     <main>
       <h1>SDKWork Models</h1>
-      <p className="muted">Portable model catalog explorer backed by `@sdkwork/models`.</p>
+      <p className="muted">Portable model catalog explorer backed by `@sdkwork/models-sdk`.</p>
       {error ? <p role="alert">{error}</p> : null}
       {loading ? <p className="muted" aria-live="polite">Loading catalog…</p> : null}
       {summary ? (
