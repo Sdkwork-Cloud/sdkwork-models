@@ -16,8 +16,8 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/text-embedding-synchronous-api"
       },
-      "unitPrice": "0.000500",
-      "unitSize": "1000",
+      "unitPrice": "0.500000",
+      "unitSize": "1000000",
       "priceBookCode": "models.alibaba.cn.official",
       "productCode": "models.alibaba.embedding",
       "operationCode": "embedding.create",
@@ -26,7 +26,7 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "6b5394f353d149e1104af13d01e240cd7fd689c0b3d6bdbbddd4cdec1697b517",
+      "rateHash": "8abcf3ea6b2751e2039f16a44937856397529fd38d0fed0c106474828772c2f6",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

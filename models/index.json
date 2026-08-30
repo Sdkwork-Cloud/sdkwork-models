@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.08.17.1",
-  "generatedAt": "2026-08-17T00:00:00Z",
+  "catalogVersion": "2026.08.30.1",
+  "generatedAt": "2026-08-30T00:00:00Z",
   "modelCount": 233,
   "modelVideoProfileFileCount": 39,
   "modelVoiceFileCount": 14,
@@ -59,7 +59,7 @@
       "rankingSnapshotCount": 1,
       "rankingsPath": "alibaba/cn/rankings.json",
       "regionCode": "cn",
-      "sha256": "7affa1536c92d018955e4b4285a769938782263032b7663dbda317c8abbe306c",
+      "sha256": "6224b7d1b039a24420f402c9abfec1fde0ab650288637e5f69c24e5de4f47896",
       "vendorCode": "alibaba",
       "videoProfileCount": 5,
       "voiceCount": 0,

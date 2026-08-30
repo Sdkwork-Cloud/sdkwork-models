@@ -16,8 +16,8 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/embedding"
       },
-      "unitPrice": "0.000500",
-      "unitSize": "1000",
+      "unitPrice": "0.500000",
+      "unitSize": "1000000",
       "priceBookCode": "models.alibaba.cn.official",
       "productCode": "models.alibaba.embedding",
       "operationCode": "embedding.create",
@@ -26,7 +26,7 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "6042670cddf547d0d989d2264130bb0bbfe98ab842384baeeaa4b97bbc3c1c80",
+      "rateHash": "288f2af5fdf58b051d6e995f50a8d8da2fd812557fd5615b658408c046030526",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
