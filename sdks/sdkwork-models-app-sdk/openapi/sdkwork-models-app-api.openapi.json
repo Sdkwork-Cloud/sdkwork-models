@@ -1112,7 +1112,7 @@
     "/app/v3/api/ai/model_access_channels/{channelCode}": {
       "put": {
         "description": "Create or update tenant-owned public metadata for an official endpoint or multi-vendor relay station. API keys are forbidden and must be configured through sdkwork-agents Config SPI.",
-        "operationId": "modelAccessChannels.upsert",
+        "operationId": "modelAccessChannels.update",
         "parameters": [
           {
             "in": "path",
@@ -2609,10 +2609,7 @@
             "minimum": 0
           },
           "sortOrder": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "format": "int64",
             "pattern": "^(0|[1-9][0-9]*)$",
             "x-sdkwork-int64-string": true,
