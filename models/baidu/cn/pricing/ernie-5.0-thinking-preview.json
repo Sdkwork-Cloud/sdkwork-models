@@ -45,7 +45,6 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "thresholdTokens": 32000,
-      "tierCode": "above_32k_tokens",
       "unitPrice": "10.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.baidu.cn.official",
@@ -60,14 +59,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "32000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "f389080b2c48f1ffd26e471216f75710eb42c7d015fc7e458d37032300317819",
+      "rateHash": "3296a3a54d389cfcdf48afec49f0a9960bcd69e481c4fd5f5a98905c306e75e8",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -114,7 +108,6 @@
         "sourceUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/7m95lyy43"
       },
       "thresholdTokens": 32000,
-      "tierCode": "above_32k_tokens",
       "unitPrice": "40.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.baidu.cn.official",
@@ -129,14 +122,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "32000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "461bf712586757585095301ea54b8f2bb9ce197fa8ae0cb4a740b2177c196a4a",
+      "rateHash": "73fd02dbf8a0ffe64b1d59d6a8c55d986d80ff013b0a9899222afcc12c699f62",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

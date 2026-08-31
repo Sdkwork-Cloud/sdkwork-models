@@ -45,7 +45,6 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,
-      "tierCode": "above_32k_tokens",
       "unitPrice": "8.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.zhipu.cn.official",
@@ -60,14 +59,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "32000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "63d5a8beca832790dfe86a4271496d43586db2172e9b638b68f45f7e6ccf2f1b",
+      "rateHash": "5cc2ebcf7a5f708ac25c265af49d26e0280b3c0a8c40c41689c567c1a3c5f747",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -114,7 +108,6 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,
-      "tierCode": "above_32k_tokens",
       "unitPrice": "2.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.zhipu.cn.official",
@@ -129,14 +122,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "32000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "5801c48c97a255468a36fb4465d899ea15ec8e3719e8537d5fc75268b69f0133",
+      "rateHash": "7008f9c109ed25535454cc9d49b11b322771f4ce9630ea1420280d1b1cd323c6",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -183,7 +171,6 @@
         "sourceUrl": "https://docs.bigmodel.cn/cn/guide/models/price"
       },
       "thresholdTokens": 32000,
-      "tierCode": "above_32k_tokens",
       "unitPrice": "28.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.zhipu.cn.official",
@@ -198,14 +185,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "32000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_32k_tokens"
         }
       ],
-      "rateHash": "1debd1e7a0ed90144734eb21a4a78c10eac02573225b33fd62d472282def8b3a",
+      "rateHash": "fd022f531a84018498e9a92d4243a8fc5bca7b2cd78c0c39fec553e9a70fe273",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

@@ -45,7 +45,6 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,
-      "tierCode": "above_128k_tokens",
       "unitPrice": "14.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.alibaba.cn.official",
@@ -60,14 +59,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "128000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_128k_tokens"
         }
       ],
-      "rateHash": "0febd9415f0cd6e77a0a64956e0327ca4a7b8c2b41d55d1acb6f9f1850877fc3",
+      "rateHash": "fb78fc19a0237893435e34886f6937e8fe068c8df4f7bd3df1f6db9242c8db12",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -114,7 +108,6 @@
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,
-      "tierCode": "above_128k_tokens",
       "unitPrice": "60.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.alibaba.cn.official",
@@ -129,14 +122,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "128000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_128k_tokens"
         }
       ],
-      "rateHash": "c50a6b816f81c6ecc6c22cbacf61eed15975668acd76799846f7747fcceddacc",
+      "rateHash": "2091b1081fd06855d75a85c378fc2cdce4aadc5919e1ec82bc5450b60e55b625",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

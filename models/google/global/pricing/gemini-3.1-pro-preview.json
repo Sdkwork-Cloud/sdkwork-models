@@ -45,7 +45,6 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
       "unitPrice": "4.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.google.global.official",
@@ -60,14 +59,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "200000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_200k_tokens"
         }
       ],
-      "rateHash": "d9e0aa45f5be1bbc66e6c1368d4d8213ad321e6e00d8346cfa45af522b5b170e",
+      "rateHash": "f30634ed35ee56af40de7c19e1338de37e61ee051826d73d2932b012cddab38a",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -114,7 +108,6 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
       "unitPrice": "18.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.google.global.official",
@@ -129,14 +122,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "200000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_200k_tokens"
         }
       ],
-      "rateHash": "a326ff063197f7763d93dc9631a30e55a1b4b9bb1ebd600b3e9d90b714c39a31",
+      "rateHash": "353b137a487e196ee5697cb2a9d786ab744bff1ecb40f9b5219e685632d41d06",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -183,7 +171,6 @@
         "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing"
       },
       "thresholdTokens": 200000,
-      "tierCode": "above_200k_tokens",
       "unitPrice": "0.400000",
       "unitSize": "1000000",
       "priceBookCode": "models.google.global.official",
@@ -198,14 +185,9 @@
           "dimensionCode": "context_tokens",
           "operator": "gt",
           "value": "200000"
-        },
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "above_200k_tokens"
         }
       ],
-      "rateHash": "6b4c98230fda7698e6251018ca899875e7c59bc2d696a84151aef8272070ea33",
+      "rateHash": "8d5f7c7c51085da2b6ba243618819fdd52955908d222fe930ada9a5d8c443779",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

@@ -100,7 +100,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "0.600000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.global.official",
@@ -112,15 +111,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "ab04ed03e99c574afeb4ed2b333e17bbadaf13a993a9427dcb0d1f8dd53cee02",
+      "rateHash": "15fec2d7d0f7cd3bc1ddd99ed7463690c2b47201ec688ad7a4f067e3ef51850f",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     },
     {
       "currency": "USD",
@@ -135,7 +135,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "2.400000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.global.official",
@@ -147,15 +146,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "15a62ba1622815d52d15ad0364760332e5dc092d6ab88b039cdb8f0cc0ddf285",
+      "rateHash": "c02457cda973adffbc4fcf4e769806c1dece6bde25ed9986bff3e12c6892eb42",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     },
     {
       "currency": "USD",
@@ -170,7 +170,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimax.io/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "0.120000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.global.official",
@@ -182,15 +181,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "d9690bdbf46e12de9e7ae8dc576b0665d252331fe2a1dcee16fec99f8b8ddb81",
+      "rateHash": "cba3e91a95c84dc3c19e3100ec34d4fee4f58eec96eac521968e0ea83aff2e40",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     }
   ],
   "regionCode": "global",

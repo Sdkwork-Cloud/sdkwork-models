@@ -100,7 +100,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "4.200000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.cn.official",
@@ -112,15 +111,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "5df2db00ea875a49a90a987debb96a6b99e47d86092ddab96f8440efe04b3b7c",
+      "rateHash": "86c97ab6ff93cb88cf224f753bb0e8f3567a73a438c9c2a0c7a49e4351f99f49",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     },
     {
       "currency": "CNY",
@@ -135,7 +135,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "16.800000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.cn.official",
@@ -147,15 +146,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "0eef8ee67c35e887fabb25d14110ea37b6996652e6c01a99d23768682952870f",
+      "rateHash": "fe0ec5d76918bbe8907ee1556333f75c9acfaadfb689ecba1d5b96f9f2f705a4",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     },
     {
       "currency": "CNY",
@@ -170,7 +170,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://platform.minimaxi.com/docs/guides/pricing-paygo"
       },
-      "tierCode": "over_512k",
       "unitPrice": "0.840000",
       "unitSize": "1000000",
       "priceBookCode": "models.minimax.cn.official",
@@ -182,15 +181,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_512k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "512000"
         }
       ],
-      "rateHash": "5d052f60140ff057742c74366d3707554e47fe65fdfd04e796e40de9a4658656",
+      "rateHash": "cb3fbbeb1d8ebe028e8f50cc5b6132fd8be131fc1cd88bbcab3412c4a5c6efd7",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 512000
     }
   ],
   "regionCode": "cn",

@@ -16,7 +16,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "up_to_200k",
       "unitPrice": "2.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -26,14 +25,8 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "up_to_200k"
-        }
-      ],
-      "rateHash": "86b13dc5cb97b67456b9a3966fecaf2bf48d9c20a134beffb328d1365d67f54c",
+      "conditions": [],
+      "rateHash": "da78cedbb4b961c764d61e93b33c37a6b8fe9108d3341588b145d74df079e0a7",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -51,7 +44,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "up_to_200k",
       "unitPrice": "6.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -61,14 +53,8 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "up_to_200k"
-        }
-      ],
-      "rateHash": "d592e3976a1b7a2774a90075b8a7241ce27632f988d510faa4ade4b6f7e96630",
+      "conditions": [],
+      "rateHash": "91aa0cf5e94f0a315a047fdae557241fb2c569bf3f3a38fbd740a5c34fa89c11",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -86,7 +72,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "up_to_200k",
       "unitPrice": "0.500000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -96,14 +81,8 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "up_to_200k"
-        }
-      ],
-      "rateHash": "ace025cadbe4b2b458e9b819bd11e012f97fd09542424b9535a9da6785eb97c4",
+      "conditions": [],
+      "rateHash": "545ec7866f092e47151a38ed81c2d62e20482d06192078224b8e4908e67b7aed",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
@@ -121,7 +100,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "over_200k",
       "unitPrice": "4.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -133,15 +111,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_200k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "200000"
         }
       ],
-      "rateHash": "4d263aa0709a7d181d31015fa7bf4ea16d62b32dbdee9d2547ae8b700a54ad16",
+      "rateHash": "47a88981ea42368c36ae1033ccba8e91f9baee8c54f307cb12c775fbe92bbec5",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 200000
     },
     {
       "currency": "USD",
@@ -156,7 +135,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "over_200k",
       "unitPrice": "12.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -168,15 +146,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_200k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "200000"
         }
       ],
-      "rateHash": "36444a062b964013ada707e7793624ec0763bd627376814a9b687ceb62d12ed2",
+      "rateHash": "3dfd4b36a5b92ee16e11f5021b6862b9cccc91eedef9bb457a5cd07630af0773",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 200000
     },
     {
       "currency": "USD",
@@ -191,7 +170,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://docs.x.ai/docs/models"
       },
-      "tierCode": "over_200k",
       "unitPrice": "1.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.xai.global.official",
@@ -203,15 +181,16 @@
       "quantityAggregation": "sum",
       "conditions": [
         {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "over_200k"
+          "dimensionCode": "context_tokens",
+          "operator": "gt",
+          "value": "200000"
         }
       ],
-      "rateHash": "1d937e082f58f17f1fc07817b0268f3fa4b1f279aa50c939c3e1b207e4cf2586",
+      "rateHash": "d62b81fd67792d2dccd0d16a12a63057213127fdc43326c9e969e8728147291e",
       "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "thresholdTokens": 200000
     }
   ],
   "regionCode": "global",
