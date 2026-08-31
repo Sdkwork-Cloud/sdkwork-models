@@ -342,6 +342,15 @@ impl PricingDimensionContext {
         self.values.get(dimension_code.trim())
     }
 
+    /// Drops a dimension so the rate can be matched without it.
+    ///
+    /// Used by the billing-region fallback: the terminal "any region" probe
+    /// must not impose the originally requested `region_code` on rates that
+    /// legitimately belong to a different region.
+    pub fn remove(&mut self, dimension_code: &str) {
+        self.values.remove(dimension_code.trim());
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = (&str, &Value)> {
         self.values
             .iter()

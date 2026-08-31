@@ -244,14 +244,44 @@ fn apply_plan_policy(
     }
     if apply_minimum {
         if evaluation.amount.currency != price.minimum_charge_amount.currency {
-            return Err(DomainError::new("minimum charge currency mismatch"));
+            // A minimum charge authored in another currency cannot be compared
+            // against the rated amount; skipping it (with a warning) keeps the
+            // request billable instead of failing settlement.
+            if !price.minimum_charge_amount.is_zero() {
+                tracing::warn!(
+                    amount_currency = %evaluation.amount.currency,
+                    minimum_currency = %price.minimum_charge_amount.currency,
+                    "minimum charge is configured in a different currency than the rated amount; the minimum is skipped so billing keeps a usable price"
+                );
+            }
+        } else {
+            evaluation.amount.unit_price = evaluation
+                .amount
+                .unit_price
+                .max(price.minimum_charge_amount.unit_price);
         }
-        evaluation.amount.unit_price = evaluation
-            .amount
-            .unit_price
-            .max(price.minimum_charge_amount.unit_price);
     }
     Ok(evaluation)
+}
+
+/// Adds a pricing-rule markup to a rated amount.
+///
+/// A markup authored in another currency is skipped with a warning: adding
+/// across currencies is meaningless and previously failed settlement with a
+/// bare `money currency mismatch`.
+fn add_rule_markup(base: Money, markup: &Money) -> DomainResult<Money> {
+    if markup.is_zero() {
+        return Ok(base);
+    }
+    if base.currency != markup.currency {
+        tracing::warn!(
+            amount_currency = %base.currency,
+            markup_currency = %markup.currency,
+            "pricing rule markup is configured in a different currency than the rated amount; the markup is skipped so billing keeps a usable price"
+        );
+        return Ok(base);
+    }
+    base.add(markup)
 }
 
 fn apply_pricing_rule(
@@ -263,10 +293,12 @@ fn apply_pricing_rule(
         if let Some(unit_price) = price.pricing_rule_unit_price_override.as_ref() {
             component.unit_price = unit_price.clone();
         } else {
-            component.unit_price = component
-                .unit_price
-                .checked_multiply(price.pricing_rule_multiplier)?
-                .add(markup)?;
+            component.unit_price = add_rule_markup(
+                component
+                    .unit_price
+                    .checked_multiply(price.pricing_rule_multiplier)?,
+                markup,
+            )?;
             component.flat_amount = component
                 .flat_amount
                 .checked_multiply(price.pricing_rule_multiplier)?;
@@ -285,10 +317,12 @@ fn apply_pricing_rule(
     if let Some(unit_price) = price.pricing_rule_unit_price_override.as_ref() {
         evaluation.unit_price = unit_price.clone();
     } else {
-        evaluation.unit_price = evaluation
-            .unit_price
-            .checked_multiply(price.pricing_rule_multiplier)?
-            .add(markup)?;
+        evaluation.unit_price = add_rule_markup(
+            evaluation
+                .unit_price
+                .checked_multiply(price.pricing_rule_multiplier)?,
+            markup,
+        )?;
     }
     let mut amount = Money {
         currency: evaluation.amount.currency.clone(),

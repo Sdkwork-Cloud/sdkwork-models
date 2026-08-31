@@ -22,6 +22,8 @@ const API_CODE: &str = "openai.responses";
 const PRODUCT_CODE: &str = "openai-model-api";
 const OPERATION_CODE: &str = "responses.create";
 const GROUP_ID: i64 = 1;
+const SUPPLIER_CODE: &str = "supplier-test";
+const ACCOUNT_ID: i64 = 9;
 
 #[derive(Default)]
 struct TestPricingCatalog {
@@ -32,6 +34,7 @@ struct TestPricingCatalog {
     rules: Vec<PricingRule>,
     rate_cards: Vec<AccountRateCard>,
     prices: Vec<ModelPrice>,
+    account_routes: Vec<UpstreamAccountRoute>,
 }
 
 impl TestPricingCatalog {
@@ -62,7 +65,13 @@ impl TestPricingCatalog {
             rules: Vec::new(),
             rate_cards: Vec::new(),
             prices,
+            account_routes: Vec::new(),
         }
+    }
+
+    fn with_account_route(mut self, route: UpstreamAccountRoute) -> Self {
+        self.account_routes.push(route);
+        self
     }
 }
 
@@ -84,7 +93,7 @@ impl PricingCatalog for TestPricingCatalog {
     }
 
     fn list_upstream_account_routes(&self) -> Vec<UpstreamAccountRoute> {
-        Vec::new()
+        self.account_routes.clone()
     }
 
     fn list_model_mappings(&self) -> Vec<ModelMappingRule> {
@@ -321,6 +330,16 @@ fn official_price(
     unit_price: &str,
     metadata: PricingRateMetadata,
 ) -> ModelPrice {
+    official_price_in_region(meter, unit_size, unit_price, "cn", metadata)
+}
+
+fn official_price_in_region(
+    meter: BillingMeter,
+    unit_size: &str,
+    unit_price: &str,
+    region_code: &str,
+    metadata: PricingRateMetadata,
+) -> ModelPrice {
     ModelPrice::new_for_catalog_key(
         CATALOG_KEY,
         MODEL_ID,
@@ -328,12 +347,16 @@ fn official_price(
         meter,
         Money::usd(unit_price).expect("valid price"),
     )
-    .with_region_code("cn")
+    .with_region_code(region_code)
     .with_unit_size(decimal(unit_size))
     .with_rate_metadata(metadata)
 }
 
 fn resource(meter: BillingMeter) -> ResourceDefinition {
+    resource_in_region(meter, "cn")
+}
+
+fn resource_in_region(meter: BillingMeter, region_code: &str) -> ResourceDefinition {
     ResourceDefinition::new(
         CATALOG_KEY,
         meter,
@@ -343,10 +366,258 @@ fn resource(meter: BillingMeter) -> ResourceDefinition {
     )
     .with_pricing_subject(0, Some(GROUP_ID))
     .with_vendor_code("openai")
-    .with_region_code("cn")
+    .with_region_code(region_code)
     .with_model(MODEL_ID)
     .with_api_code(API_CODE)
     .with_product_operation(PRODUCT_CODE, OPERATION_CODE)
+}
+
+/// A deployment started with a default region (for example `cn`) must still
+/// rate when the price book only carries `global` rates. The resolver's region
+/// fallback selects the global rate, and the resource guard must accept it
+/// instead of rejecting the resolution as a region mismatch - that rejection
+/// is what made correctly configured catalogs fail with "cost price not
+/// found".
+#[test]
+fn regional_price_missing_falls_back_to_the_global_region() {
+    let global_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.001",
+        "global",
+        metadata(
+            "global-input",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![global_rate]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region(BillingMeter::LlmInputToken, "cn"),
+        )
+        .expect("price resolution succeeds");
+
+    assert_eq!(PriceResolutionStatus::Quoted, resolution.status);
+    assert!(
+        resolution.failure.is_none(),
+        "a region fallback is not a resource mismatch: {:?}",
+        resolution.failure
+    );
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!("global", identity.region_code);
+}
+
+/// Each fallback probe must be matched against its own region dimension.
+/// Probing `global` with the original `cn` dimension silently discarded every
+/// conditional global rate, so the fallback existed but never fired.
+#[test]
+fn conditional_global_rate_matches_its_own_region_during_the_fallback() {
+    let conditional = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.002",
+        "global",
+        metadata(
+            "global-conditional",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            10,
+            vec![PricingRateCondition {
+                dimension_code: "region_code".to_owned(),
+                operator_code: "eq".to_owned(),
+                value: json!("global"),
+            }],
+        ),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![conditional]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region(BillingMeter::LlmInputToken, "cn"),
+        )
+        .expect("price resolution succeeds");
+
+    assert_eq!(PriceResolutionStatus::Quoted, resolution.status);
+    assert!(
+        resolution.failure.is_none(),
+        "conditional global rate must survive the fallback: {:?}",
+        resolution.failure
+    );
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!(Some("global-conditional"), identity.rate_hash.as_deref());
+    assert_eq!("global", identity.region_code);
+}
+
+/// The terminal "any region" probe guarantees the resolved price is never
+/// empty, even when the price book carries neither the requested region nor
+/// `global`.
+#[test]
+fn price_book_with_only_an_unrelated_region_still_rates() {
+    let only_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.003",
+        "us",
+        metadata("us-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![only_rate]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region(BillingMeter::LlmInputToken, "cn"),
+        )
+        .expect("price resolution succeeds");
+
+    assert_eq!(PriceResolutionStatus::Quoted, resolution.status);
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!("us", identity.region_code);
+}
+
+/// The upstream cost anchors the resolution currency. When the two sides of
+/// the margin live in different regions priced in different currencies (a cn
+/// CNY official reference and a global USD upstream cost), the official
+/// reference follows the upstream cost's currency where possible, and a
+/// residual cross-currency margin is simply not reported. The resolution must
+/// keep a usable price instead of failing inside Money arithmetic with a bare
+/// `money currency mismatch` - the failure that broke group-bound routes with
+/// `pricing is not available ... money currency mismatch`.
+#[test]
+fn cross_currency_price_book_rates_without_a_money_mismatch() {
+    let official = ModelPrice::new_for_catalog_key(
+        CATALOG_KEY,
+        MODEL_ID,
+        PriceSide::OfficialReference,
+        BillingMeter::ApiRequest,
+        Money::cny("0.120000").expect("valid cny price"),
+    )
+    .with_region_code("cn")
+    .with_unit_size(decimal("1"))
+    .with_rate_metadata(metadata(
+        "cn-api",
+        "chargeable",
+        "per_unit",
+        "0",
+        None,
+        100,
+        vec![],
+    ));
+    let upstream_cost = ModelPrice::new_for_catalog_key(
+        CATALOG_KEY,
+        MODEL_ID,
+        PriceSide::UpstreamCost,
+        BillingMeter::ApiRequest,
+        Money::usd("0.080000").expect("valid usd price"),
+    )
+    .with_region_code("global")
+    .with_unit_size(decimal("1"))
+    .for_upstream_account(SUPPLIER_CODE, ACCOUNT_ID);
+    let catalog = TestPricingCatalog::with_prices(vec![official, upstream_cost]).with_account_route(
+        UpstreamAccountRoute::new(SUPPLIER_CODE, ACCOUNT_ID)
+            .with_region_code("global")
+            .with_account_group_binding(GROUP_ID, 100, 100),
+    );
+
+    let resolved = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::ApiRequest,
+            supplier_code: Some(SUPPLIER_CODE.to_owned()),
+            account_id: Some(ACCOUNT_ID),
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 15, 0, 0, 0)
+                .single()
+                .expect("valid timestamp"),
+        })
+        .expect("a cross-currency price book must still rate");
+
+    assert_eq!("CNY", resolved.official_reference.unit_price.currency);
+    let procurement_cost = resolved.procurement_cost.expect("procurement cost");
+    assert_eq!("USD", procurement_cost.currency);
+    assert!(
+        resolved.gross_margin_per_unit.is_none(),
+        "a cross-currency margin is not reported, never a failure"
+    );
+    assert_eq!("CNY", resolved.customer_charge.currency);
+}
+
+/// The resource guard and the resolver's probe chain must agree by
+/// construction: whatever the chain can select, the resolution accepts.
+#[test]
+fn region_guard_accepts_every_region_the_fallback_chain_can_select() {
+    use super::pricing_resolver::region_matches_or_fallback;
+
+    assert!(region_matches_or_fallback("cn", "cn"));
+    assert!(region_matches_or_fallback("cn", "global"));
+    assert!(
+        region_matches_or_fallback("cn", "us"),
+        "the terminal fallback keeps the price non-empty"
+    );
+    assert!(region_matches_or_fallback("global", "global"));
+    assert!(region_matches_or_fallback("global", "cn"));
+    assert!(
+        region_matches_or_fallback("", "cn"),
+        "no requested region accepts any rate"
+    );
+    assert!(
+        region_matches_or_fallback("CN", "cn"),
+        "region codes compare case-insensitively"
+    );
+}
+
+/// The upstream route is only a region hint for pricing. A missing hint must
+/// degrade to "no upstream cost configured" rather than failing the whole
+/// resolution with `upstream route not found`, which surfaced as an opaque
+/// 502 for catalogs whose route row carries a region outside the probe chain.
+#[test]
+fn missing_upstream_route_hint_does_not_fail_the_resolution() {
+    let official = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.001",
+        "cn",
+        metadata("cn-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![official]);
+
+    let error = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::LlmInputToken,
+            supplier_code: Some("supplier-test".to_owned()),
+            account_id: Some(9),
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 15, 0, 0, 0)
+                .single()
+                .expect("valid timestamp"),
+        })
+        .expect_err("no upstream cost is configured");
+
+    let message = error.to_string();
+    assert!(
+        message.contains("upstream cost not found"),
+        "unexpected error: {message}"
+    );
+    assert!(
+        !message.contains("upstream route not found"),
+        "a missing route hint must not fail the resolution: {message}"
+    );
 }
 
 #[test]
@@ -1011,9 +1282,6 @@ fn resolved_rate_rejects_resource_identity_mismatches() {
     let mut provider = resource(BillingMeter::ApiRequest);
     provider.provider_code = Some("other-provider".to_owned());
     mismatches.push(provider);
-    let mut region = resource(BillingMeter::ApiRequest);
-    region.region_code = Some("global".to_owned());
-    mismatches.push(region);
 
     for mismatch in mismatches {
         let resolution = PriceService::new()
@@ -1026,6 +1294,43 @@ fn resolved_rate_rejects_resource_identity_mismatches() {
         );
         assert!(resolution.billing.is_none());
     }
+}
+
+/// Region is deliberately not part of the identity guard: the resolver may
+/// legally fall back across regions (`cn` -> `global` -> any) to keep the
+/// resolved price non-empty, so a resource pinned to another region still
+/// rates. Cross-region borrowing is reported by the rate identity and the
+/// resolver's warning, not by failing the billing.
+#[test]
+fn resolved_rate_accepts_a_region_fallback() {
+    let price = official_price(
+        BillingMeter::ApiRequest,
+        "1",
+        "0.01",
+        metadata(
+            "matched-rate",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            10,
+            vec![],
+        ),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![price]);
+    let quoted = PriceService::new()
+        .resolve(&catalog, resource(BillingMeter::ApiRequest))
+        .expect("quote succeeds");
+    let resolved_price = quoted.resolved_price.expect("resolved price");
+
+    let mut fallback = resource(BillingMeter::ApiRequest);
+    fallback.region_code = Some("global".to_owned());
+    let resolution = PriceService::new()
+        .rate_resolved(fallback, resolved_price)
+        .expect("region fallback rates normally");
+
+    assert_eq!(PriceResolutionStatus::Quoted, resolution.status);
+    assert!(resolution.failure.is_none());
 }
 
 #[test]

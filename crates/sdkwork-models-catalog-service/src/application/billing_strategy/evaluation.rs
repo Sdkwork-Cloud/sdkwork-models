@@ -155,10 +155,17 @@ fn normalized_markup(price: &ResolvedModelPrice) -> DomainResult<Money> {
     if price.default_markup_amount.currency == price.official_reference.unit_price.currency {
         return Ok(price.default_markup_amount.clone());
     }
-    if price.default_markup_amount.is_zero() {
-        return Ok(zero_money(&price.official_reference.unit_price.currency));
+    if !price.default_markup_amount.is_zero() {
+        // A plan markup authored in another currency cannot be added to the
+        // official reference; skipping it (with a warning) keeps the derived
+        // customer charge usable instead of failing the strategy.
+        tracing::warn!(
+            charge_currency = %price.official_reference.unit_price.currency,
+            markup_currency = %price.default_markup_amount.currency,
+            "pricing plan default markup is configured in a different currency than the official reference; the markup is skipped so billing keeps a usable price"
+        );
     }
-    Err(DomainError::new("pricing markup currency mismatch"))
+    Ok(zero_money(&price.official_reference.unit_price.currency))
 }
 
 fn sum_amounts(currency: &str, components: &[BillingRateComponent]) -> DomainResult<Money> {

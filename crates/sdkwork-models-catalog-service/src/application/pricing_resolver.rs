@@ -128,13 +128,15 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             .region_code
             .as_deref()
             .and_then(normalized_optional_region_code);
+        // A missing route hint is not fatal: pricing rates against the
+        // requested region and its price-book fallbacks.
         let route = match query.supplier_code.as_deref() {
-            Some(supplier_code) => Some(self.find_upstream_route(
+            Some(supplier_code) => self.find_upstream_route(
                 &query.model,
                 supplier_code,
                 query.account_id,
                 explicit_region_code.as_deref(),
-            )?),
+            )?,
             None => None,
         };
         let region_code = explicit_region_code
@@ -163,6 +165,13 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             &region_code,
             &rate_dimensions,
         )?;
+        // The upstream cost anchors the resolution currency: the official
+        // reference and the explicit customer charge prefer it so a fallback
+        // region priced in another currency cannot split the two sides of the
+        // margin into incompatible currencies.
+        let preferred_currency = raw_upstream_cost
+            .as_ref()
+            .map(|price| price.unit_price.currency.clone());
         let price_scope = raw_upstream_cost
             .as_ref()
             .map(|price| price.catalog_key.as_str())
@@ -173,6 +182,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             organization_id,
             price_scope,
             &region_code,
+            preferred_currency.as_deref(),
             &rate_dimensions,
         )?;
         // Product and operation codes are authoritative on the selected
@@ -220,11 +230,12 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             .filter(|price| {
                 price.supplier_code.is_none()
                     && price.pricing_plan_code.as_deref() == Some(plan.plan_code.as_str())
-                    && same_region(&price.region_code, &region_code)
             })
             .collect::<Vec<_>>();
-        let explicit_customer = select_rate(
+        let explicit_customer = select_rate_with_region_fallback(
             explicit_customer_candidates,
+            &region_code,
+            Some(&official_currency),
             &rate_dimensions,
             query.occurred_at,
             "customer charge",
@@ -263,18 +274,32 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     customer_charge_before_sale_multiplier = unit_price.clone();
                 }
             } else {
-                customer_charge_before_sale_multiplier = customer_charge_before_sale_multiplier
-                    .checked_multiply(rule.multiplier)?
-                    .add(&rule.markup_amount)?;
+                let multiplied = customer_charge_before_sale_multiplier
+                    .checked_multiply(rule.multiplier)?;
+                customer_charge_before_sale_multiplier =
+                    add_rule_markup(&multiplied, &rule.markup_amount, &rule.rule_code)?;
             }
         }
         require_positive_multiplier("account group sale multiplier", group.sale_multiplier)?;
         let customer_charge =
             customer_charge_before_sale_multiplier.checked_multiply(group.sale_multiplier)?;
-        let gross_margin_per_unit = procurement_cost
-            .as_ref()
-            .map(|cost| customer_charge.subtract(cost))
-            .transpose()?;
+        // Gross margin is a reporting-only figure. A price book that configures
+        // the upstream cost in a different currency than the official
+        // reference must not fail billing because the two cannot be subtracted;
+        // it only leaves the margin unreported for the catalog views.
+        let gross_margin_per_unit = match (procurement_cost.as_ref(), &customer_charge) {
+            (Some(cost), charge) if charge.currency != cost.currency => {
+                tracing::warn!(
+                    model = %model.model,
+                    customer_charge_currency = %charge.currency,
+                    procurement_cost_currency = %cost.currency,
+                    "procurement cost currency differs from the customer charge currency; gross margin is not reported"
+                );
+                None
+            }
+            (Some(cost), charge) => Some(charge.subtract(cost)?),
+            (None, _) => None,
+        };
 
         Ok(ResolvedModelPrice {
             model: model.model,
@@ -468,6 +493,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         organization_id: i64,
         price_scope: &str,
         region_code: &str,
+        preferred_currency: Option<&str>,
         dimensions: &PricingDimensionContext,
     ) -> DomainResult<ModelPrice> {
         let candidates = self
@@ -480,12 +506,12 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 query.billing_meter.clone(),
             )
             .into_iter()
-            .filter(|price| {
-                price.pricing_plan_code.is_none() && same_region(&price.region_code, region_code)
-            })
+            .filter(|price| price.pricing_plan_code.is_none())
             .collect::<Vec<_>>();
-        select_rate(
+        select_rate_with_region_fallback(
             candidates,
+            region_code,
+            preferred_currency,
             dimensions,
             query.occurred_at,
             "official reference",
@@ -532,10 +558,16 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 price.supplier_code.as_deref() == Some(supplier_code)
                     && price.account_id == Some(account_id)
                     && price.pricing_plan_code.is_none()
-                    && same_region(&price.region_code, region_code)
             })
             .collect::<Vec<_>>();
-        select_rate(candidates, dimensions, query.occurred_at, "upstream cost")
+        select_rate_with_region_fallback(
+            candidates,
+            region_code,
+            None,
+            dimensions,
+            query.occurred_at,
+            "upstream cost",
+        )
     }
 
     fn find_pricing_rule(
@@ -604,50 +636,74 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         })?;
 
         let mut resolved: Option<ProcurementMultipliers> = None;
-        for route in self
-            .catalog
-            .list_upstream_account_routes()
-            .into_iter()
-            .filter(|route| {
-                route.supplier_code == supplier_code
-                    && route.account_id == account_id
-                    && same_region(&route.region_code, region_code)
-            })
-        {
-            let Some(binding) = route
-                .account_group_bindings
-                .iter()
-                .find(|binding| binding.account_group_id == account_group_id)
-            else {
-                continue;
-            };
-            let account_group_multiplier = binding
-                .cost_multiplier_override
-                .unwrap_or(default_group_multiplier);
-            require_positive_multiplier(
-                "upstream account contract cost multiplier",
-                route.contract_cost_multiplier,
-            )?;
-            require_positive_multiplier(
-                "upstream account group cost multiplier",
-                account_group_multiplier,
-            )?;
-            let multipliers = ProcurementMultipliers {
-                account_contract_multiplier: route.contract_cost_multiplier,
-                account_group_multiplier,
-                combined_multiplier: route
-                    .contract_cost_multiplier
-                    .checked_multiply(account_group_multiplier)?,
-            };
-            if resolved
-                .as_ref()
-                .is_some_and(|current| current != &multipliers)
+        // Walk the billing-region chain (requested region -> `global` -> any)
+        // so an account bound in a different region still yields multipliers
+        // instead of failing the whole resolution. The account-group binding
+        // check below is what authorizes the account; region is only a
+        // dimension of that binding.
+        let excluded_regions = exact_probe_regions(region_code);
+        for probe in billing_region_probes(region_code) {
+            for route in self
+                .catalog
+                .list_upstream_account_routes()
+                .into_iter()
+                .filter(|route| {
+                    route.supplier_code == supplier_code
+                        && route.account_id == account_id
+                        && match &probe {
+                            RegionProbe::Exact(_) => probe.matches_region(&route.region_code),
+                            RegionProbe::Any => !excluded_regions
+                                .iter()
+                                .any(|excluded| same_region(&route.region_code, excluded)),
+                        }
+                })
             {
-                return Err(DomainError::new(format!(
-                    "inconsistent procurement multipliers for supplier {supplier_code}, account {account_id}, and account group {account_group_id}"
-                )));
+                let Some(binding) = route
+                    .account_group_bindings
+                    .iter()
+                    .find(|binding| binding.account_group_id == account_group_id)
+                else {
+                    continue;
+                };
+                let account_group_multiplier = binding
+                    .cost_multiplier_override
+                    .unwrap_or(default_group_multiplier);
+                require_positive_multiplier(
+                    "upstream account contract cost multiplier",
+                    route.contract_cost_multiplier,
+                )?;
+                require_positive_multiplier(
+                    "upstream account group cost multiplier",
+                    account_group_multiplier,
+                )?;
+                let multipliers = ProcurementMultipliers {
+                    account_contract_multiplier: route.contract_cost_multiplier,
+                    account_group_multiplier,
+                    combined_multiplier: route
+                        .contract_cost_multiplier
+                        .checked_multiply(account_group_multiplier)?,
+                };
+                if resolved
+                    .as_ref()
+                    .is_some_and(|current| current != &multipliers)
+                {
+                    return Err(DomainError::new(format!(
+                        "inconsistent procurement multipliers for supplier {supplier_code}, account {account_id}, and account group {account_group_id}"
+                    )));
+                }
+                resolved = Some(multipliers);
             }
-            resolved = Some(multipliers);
+            if resolved.is_some() {
+                if probe == RegionProbe::Any {
+                    tracing::warn!(
+                        supplier_code = %supplier_code,
+                        account_id = %account_id,
+                        requested_region = %region_code,
+                        "upstream account is not bound in the requested region or global; procurement multipliers resolved from the only bound region"
+                    );
+                }
+                break;
+            }
         }
 
         resolved.map(Some).ok_or_else(|| {
@@ -657,65 +713,81 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         })
     }
 
+    /// Resolves the upstream route backing a priced resource.
+    ///
+    /// The route is only a region hint: it supplies the effective region when
+    /// the caller passed none. A missing hint must therefore degrade to
+    /// `Ok(None)` instead of failing the whole price resolution - the request
+    /// is already routed by the time pricing runs, and hard-failing here
+    /// surfaced as an opaque `upstream route not found` 502 for catalogs whose
+    /// route row simply carries a region outside the probe chain (or no model
+    /// route row at all while the account route exists).
+    ///
+    /// Pricing then rates against the requested region and lets the price-book
+    /// fallback chain (`region -> global -> any`) supply the rate.
     fn find_upstream_route(
         &self,
         model: &str,
         supplier_code: &str,
         account_id: Option<i64>,
         region_code: Option<&str>,
-    ) -> DomainResult<crate::domain::ModelUpstreamRoute> {
-        if let Some(route) = self
-            .catalog
-            .list_model_upstream_routes(model)
-            .into_iter()
-            .find(|route| {
-                route.supplier_code == supplier_code
-                    && account_id
-                        .map(|account_id| route.account_id == account_id)
-                        .unwrap_or(true)
-                    && region_code
-                        .map(|region_code| same_region(&route.region_code, region_code))
-                        .unwrap_or(true)
-            })
-        {
-            return Ok(route);
+    ) -> DomainResult<Option<crate::domain::ModelUpstreamRoute>> {
+        let probes = route_region_probes(region_code);
+        for probe in &probes {
+            let region_matches = |candidate: &str| match probe.as_deref() {
+                Some(probe) => same_region(candidate, probe),
+                None => true,
+            };
+            if let Some(route) = self
+                .catalog
+                .list_model_upstream_routes(model)
+                .into_iter()
+                .find(|route| {
+                    route.supplier_code == supplier_code
+                        && account_id
+                            .map(|account_id| route.account_id == account_id)
+                            .unwrap_or(true)
+                        && region_matches(&route.region_code)
+                })
+            {
+                return Ok(Some(route));
+            }
+
+            if let Some(route) = self
+                .catalog
+                .list_upstream_account_routes()
+                .into_iter()
+                .find(|route| {
+                    route.supplier_code == supplier_code
+                        && account_id
+                            .map(|account_id| route.account_id == account_id)
+                            .unwrap_or(true)
+                        && region_matches(&route.region_code)
+                })
+            {
+                return Ok(Some(
+                    crate::domain::ModelUpstreamRoute::new_for_catalog_key(
+                        model,
+                        model,
+                        &route.supplier_code,
+                        route.account_id,
+                        model,
+                    )
+                    .with_region_code(&route.region_code)
+                    .with_upstream_endpoint(route.base_url, route.secret_ref)
+                    .with_auth_profile(route.auth_profile),
+                ));
+            }
         }
 
-        if let Some(route) = self
-            .catalog
-            .list_upstream_account_routes()
-            .into_iter()
-            .find(|route| {
-                route.supplier_code == supplier_code
-                    && account_id
-                        .map(|account_id| route.account_id == account_id)
-                        .unwrap_or(true)
-                    && region_code
-                        .map(|region_code| same_region(&route.region_code, region_code))
-                        .unwrap_or(true)
-            })
-        {
-            return Ok(crate::domain::ModelUpstreamRoute::new_for_catalog_key(
-                model,
-                model,
-                &route.supplier_code,
-                route.account_id,
-                model,
-            )
-            .with_region_code(&route.region_code)
-            .with_upstream_endpoint(route.base_url, route.secret_ref)
-            .with_auth_profile(route.auth_profile));
-        }
-
-        Err(if let Some(account_id) = account_id {
-            DomainError::new(format!(
-                "upstream route not found for model {model}, supplier {supplier_code}, and account {account_id}"
-            ))
-        } else {
-            DomainError::new(format!(
-                "upstream route not found for model {model} and supplier {supplier_code}"
-            ))
-        })
+        tracing::warn!(
+            model = %model,
+            supplier_code = %supplier_code,
+            account_id = ?account_id,
+            region_code = %region_code.unwrap_or(DEFAULT_PRICE_REGION_CODE),
+            "upstream route not found for the priced resource; pricing keeps the requested region and falls back through the price book"
+        );
+        Ok(None)
     }
 }
 
@@ -832,11 +904,239 @@ fn same_region(actual: &str, expected: &str) -> bool {
     normalize_region_code(actual).eq_ignore_ascii_case(&normalize_region_code(expected))
 }
 
+/// One step of the billing-region fallback chain.
+///
+/// The chain is the single authority for "which region may answer this
+/// lookup". `PriceService` reuses it through [`region_matches_or_fallback`] so
+/// a rate that the resolver deliberately fell back to is never rejected
+/// downstream as a region mismatch.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum RegionProbe {
+    /// Rates pinned to one exact region: the requested region first, then the
+    /// generic `global` region.
+    Exact(String),
+    /// Terminal last-resort pass over the regions the exact probes did not
+    /// cover. Guarantees a configured price book can never leave an otherwise
+    /// routable request unpriced.
+    Any,
+}
+
+impl RegionProbe {
+    fn matches_region(&self, candidate_region_code: &str) -> bool {
+        match self {
+            Self::Exact(region_code) => same_region(candidate_region_code, region_code),
+            Self::Any => true,
+        }
+    }
+}
+
+/// Ordered billing-region probe chain for a lookup.
+///
+/// A deployment started with a default region (for example
+/// `SDKWORK_CLOUDROUTER_ROUTER_REGION_CODE=cn`) must still settle when the
+/// price book only carries generic rates:
+///
+/// 1. the requested region,
+/// 2. the generic `global` region - the documented `cn -> global` fallback,
+/// 3. any remaining region, so the resolved price is never empty.
+///
+/// [`RegionProbe::Any`] is terminal and only runs when both exact probes found
+/// nothing, so a regional rate always wins over a borrowed one.
+fn billing_region_probes(region_code: &str) -> Vec<RegionProbe> {
+    let region_code = normalize_region_code(region_code);
+    if region_code == DEFAULT_PRICE_REGION_CODE {
+        vec![RegionProbe::Exact(region_code), RegionProbe::Any]
+    } else {
+        vec![
+            RegionProbe::Exact(region_code),
+            RegionProbe::Exact(DEFAULT_PRICE_REGION_CODE.to_owned()),
+            RegionProbe::Any,
+        ]
+    }
+}
+
+/// Regions already covered by an [`RegionProbe::Exact`] step, so the terminal
+/// `Any` pass cannot re-select a region that already failed.
+fn exact_probe_regions(region_code: &str) -> Vec<String> {
+    billing_region_probes(region_code)
+        .into_iter()
+        .filter_map(|probe| match probe {
+            RegionProbe::Exact(region_code) => Some(region_code),
+            RegionProbe::Any => None,
+        })
+        .collect()
+}
+
+/// Reports whether a rate resolved in `actual_region` may bill a resource
+/// requested in `expected_region`.
+///
+/// Delegates to [`billing_region_probes`] so the resolver and the resource
+/// guard agree by construction: whatever the fallback chain can select, the
+/// resolution accepts.
+pub(crate) fn region_matches_or_fallback(expected_region: &str, actual_region: &str) -> bool {
+    billing_region_probes(expected_region)
+        .iter()
+        .any(|probe| probe.matches_region(actual_region))
+}
+
+/// Route probes. `None` preserves "match any region" semantics.
+///
+/// Account routes stay exact-probe only: a terminal "any region" pass would
+/// let an unrelated region's credentials answer a region-scoped lookup.
+fn route_region_probes(region_code: Option<&str>) -> Vec<Option<String>> {
+    match region_code {
+        Some(region_code) => billing_region_probes(region_code)
+            .into_iter()
+            .filter_map(|probe| match probe {
+                RegionProbe::Exact(region_code) => Some(Some(region_code)),
+                RegionProbe::Any => None,
+            })
+            .collect(),
+        None => vec![None],
+    }
+}
+
+/// Selects a rate through the billing-region fallback chain, preferring rates
+/// in `preferred_currency` when the price book carries the model in several
+/// currencies across regions.
+///
+/// The upstream cost anchors the resolution currency, and the official
+/// reference plus the explicit customer charge follow it. Independent region
+/// fallbacks could otherwise pick the two sides of the margin from different
+/// regions priced in different currencies, and the derived customer charge
+/// and procurement cost would then fail inside Money arithmetic with a bare
+/// `money currency mismatch`. Preferring the anchored currency keeps the
+/// resolution self-consistent; only when no rate in that currency exists does
+/// the lookup fall back to the full candidate set, where the labeled currency
+/// guards report the genuine configuration conflict.
+fn select_rate_with_region_fallback(
+    candidates: Vec<ModelPrice>,
+    region_code: &str,
+    preferred_currency: Option<&str>,
+    dimensions: &PricingDimensionContext,
+    occurred_at: DateTime<Utc>,
+    rate_label: &str,
+) -> DomainResult<Option<ModelPrice>> {
+    if let Some(currency) = preferred_currency {
+        let same_currency = candidates
+            .iter()
+            .filter(|price| price.unit_price.currency == currency)
+            .cloned()
+            .collect::<Vec<_>>();
+        if !same_currency.is_empty() {
+            if let Some(rate) = select_rate_in_region_chain(
+                same_currency,
+                region_code,
+                dimensions,
+                occurred_at,
+                rate_label,
+            )? {
+                return Ok(Some(rate));
+            }
+        }
+    }
+    select_rate_in_region_chain(candidates, region_code, dimensions, occurred_at, rate_label)
+}
+
+/// Selects a rate through the billing-region fallback chain.
+///
+/// Every probe is matched against its own dimension context: the `region_code`
+/// dimension is rewritten to the probed region so conditional rates
+/// (`PricingRateMetadata` conditions) are evaluated against the region actually
+/// being probed instead of the originally requested one. Without that rewrite
+/// the `global` fallback silently rejected every conditional global rate and
+/// reported "price not found" for a price book that did contain the rate.
+fn select_rate_in_region_chain(
+    candidates: Vec<ModelPrice>,
+    region_code: &str,
+    dimensions: &PricingDimensionContext,
+    occurred_at: DateTime<Utc>,
+    rate_label: &str,
+) -> DomainResult<Option<ModelPrice>> {
+    let excluded_regions = exact_probe_regions(region_code);
+    for probe in billing_region_probes(region_code) {
+        let mut probe_dimensions = dimensions.clone();
+        match &probe {
+            RegionProbe::Exact(probe_region) => {
+                probe_dimensions.insert("region_code", serde_json::json!(probe_region.as_str()));
+            }
+            RegionProbe::Any => {
+                // Region-agnostic rates only: a rate pinned to a region
+                // through a condition cannot be borrowed by the last resort.
+                probe_dimensions.remove("region_code");
+            }
+        }
+        let in_probe = select_rate(
+            candidates
+                .iter()
+                .filter(|price| match &probe {
+                    RegionProbe::Exact(_) => probe.matches_region(&price.region_code),
+                    RegionProbe::Any => !excluded_regions
+                        .iter()
+                        .any(|excluded| same_region(&price.region_code, excluded)),
+                })
+                .cloned()
+                .collect(),
+            &probe_dimensions,
+            occurred_at,
+            rate_label,
+        )?;
+        if let Some(rate) = in_probe {
+            if probe == RegionProbe::Any {
+                tracing::warn!(
+                    requested_region = %region_code,
+                    resolved_region = %rate.region_code,
+                    rate = %rate_label,
+                    "no {rate_label} rate exists for the requested region or global; rated with the only available region instead of failing"
+                );
+            }
+            return Ok(Some(rate));
+        }
+    }
+    Ok(None)
+}
+
+/// Adds the plan's default markup to a derived customer charge.
+///
+/// A markup authored in a currency different from the price book is skipped
+/// (with a warning) instead of failing the resolution: the charge keeps the
+/// price-book currency, the skipped adjustment stays visible through the
+/// audit fields, and the request keeps a usable price. Adding across
+/// currencies is meaningless and previously surfaced as a bare `money
+/// currency mismatch` 502.
 fn add_default_markup(base: Money, markup: &Money) -> DomainResult<Money> {
-    if markup.is_zero() && base.currency != markup.currency {
+    if markup.is_zero() {
+        return Ok(base);
+    }
+    if base.currency != markup.currency {
+        tracing::warn!(
+            charge_currency = %base.currency,
+            markup_currency = %markup.currency,
+            "pricing plan default markup is configured in a different currency than the price book; the markup is skipped so billing keeps a usable price"
+        );
         return Ok(base);
     }
     base.add(markup)
+}
+
+/// Adds a pricing-rule markup to a derived customer charge.
+///
+/// Same currency policy as [`add_default_markup`]: a cross-currency rule
+/// markup is skipped with a warning rather than failing the request.
+fn add_rule_markup(charge: &Money, markup: &Money, rule_code: &str) -> DomainResult<Money> {
+    if markup.is_zero() {
+        return Ok(charge.clone());
+    }
+    if charge.currency != markup.currency {
+        tracing::warn!(
+            rule_code = %rule_code,
+            charge_currency = %charge.currency,
+            markup_currency = %markup.currency,
+            "pricing rule markup is configured in a different currency than the customer charge; the markup is skipped so billing keeps a usable price"
+        );
+        return Ok(charge.clone());
+    }
+    charge.add(markup)
 }
 
 fn ensure_pricing_currency(

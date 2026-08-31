@@ -1,8 +1,8 @@
 use serde_json::json;
 
 use crate::application::{
-    BillingStrategyKind, BillingStrategyRegistry, BillingStructure, PricingResolver,
-    ResolveModelPriceQuery, ResolvedModelPrice,
+    pricing_resolver::region_matches_or_fallback, BillingStrategyKind, BillingStrategyRegistry,
+    BillingStructure, PricingResolver, ResolveModelPriceQuery, ResolvedModelPrice,
 };
 use crate::domain::{DomainError, DomainResult, PricingDimensionContext, ResourceDefinition};
 use crate::ports::PricingCatalog;
@@ -345,6 +345,11 @@ fn classify_resolution_error(error: &DomainError) -> Option<PriceResolutionFailu
     } else if message.contains("official reference price not found")
         || message.contains("model not found")
         || message.contains("model is not available")
+        // Upstream cost is the procurement side of a priced route. Reporting it
+        // as `price_not_found` keeps the failure diagnosable through the
+        // resolution suffix instead of surfacing as an opaque 502.
+        || message.contains("upstream cost not found")
+        || message.contains("upstream route not found")
     {
         Some(PriceResolutionFailureCode::PriceNotFound)
     } else {
@@ -402,7 +407,13 @@ fn resource_mismatch(
     }
     if let Some(expected) = resource.region_code.as_deref() {
         let actual = resolved.official_reference.region_code.as_str();
-        if !expected.eq_ignore_ascii_case(actual) {
+        // A rate resolved through the billing-region fallback chain
+        // (`cn` -> `global` -> any) is a legal answer for the requested
+        // region, not a mismatch. Comparing regions for equality here silently
+        // undid the fallback: the resolver found the rate, this guard rejected
+        // it, and the request failed with "cost price not found" even though
+        // the price book contained a usable global rate.
+        if !region_matches_or_fallback(expected, actual) {
             return Some(format!(
                 "pricing resource region mismatch: expected {expected}, resolved {actual}"
             ));
