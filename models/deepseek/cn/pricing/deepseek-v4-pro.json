@@ -103,7 +103,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "off_peak",
       "unitPrice": "0.150000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -113,17 +112,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "off_peak"
-        }
-      ],
-      "rateHash": "66f5c93044bf758d22f9a125e61956f232d6e8c4d846d24caacb8a1d32529cdd",
+      "conditions": [],
+      "rateHash": "33455fe114d661a4bfa3ee46876394498eb768987fc16ef38a72cad39f33088f",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "off_peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "00:00:00",
+            "endTime": "09:00:00",
+            "endDayOffset": 0
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     },
     {
       "currency": "CNY",
@@ -138,7 +152,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "off_peak",
       "unitPrice": "4.500000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -148,17 +161,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "off_peak"
-        }
-      ],
-      "rateHash": "962887d7569173fa46c88fd4efcef3022dab47d943f682eaa0a7d30b0d15b132",
+      "conditions": [],
+      "rateHash": "31bb818c706a49cc6c58ace593273f4baa75a5ac160b02646aa95b3eac3b1d44",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "off_peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "00:00:00",
+            "endTime": "09:00:00",
+            "endDayOffset": 0
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     },
     {
       "currency": "CNY",
@@ -173,7 +201,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "off_peak",
       "unitPrice": "13.500000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -183,17 +210,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "off_peak"
-        }
-      ],
-      "rateHash": "4e471a4f369af4012b197ad1aeedae4593c6cedabec8eef86ddf5dfcd93ed082",
+      "conditions": [],
+      "rateHash": "e061bb44112581a42957be913d8c3ad5d226bc56be08d30844b01b4870bc66c5",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "off_peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "00:00:00",
+            "endTime": "09:00:00",
+            "endDayOffset": 0
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     },
     {
       "currency": "CNY",
@@ -208,7 +250,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "peak",
       "unitPrice": "0.300000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -218,17 +259,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "peak"
-        }
-      ],
-      "rateHash": "bd701ff9ad56c10a59a44e0c12e698a22192777dfca5325df9839a2eb219fa90",
+      "conditions": [],
+      "rateHash": "1d5c41983eac64de94aa0a37cd28064e2c3568371010397ac664f0117fb167fb",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "09:00:00",
+            "endTime": "00:00:00",
+            "endDayOffset": 1
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     },
     {
       "currency": "CNY",
@@ -243,7 +299,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "peak",
       "unitPrice": "9.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -253,17 +308,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "peak"
-        }
-      ],
-      "rateHash": "7e3e1959b1f4bb0ee8629558297a474807a789d30318ae554313f3fdcfa77287",
+      "conditions": [],
+      "rateHash": "f7d9ba20840f27fd3a259139833138fbedf275710831e628ba035475ba99a914",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "09:00:00",
+            "endTime": "00:00:00",
+            "endDayOffset": 1
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     },
     {
       "currency": "CNY",
@@ -278,7 +348,6 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "tierCode": "peak",
       "unitPrice": "27.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -288,17 +357,32 @@
       "chargeTiming": "usage_reported",
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
-      "conditions": [
-        {
-          "dimensionCode": "tier_code",
-          "operator": "eq",
-          "value": "peak"
-        }
-      ],
-      "rateHash": "80d086f23ad9905c831dc679b23d1ea9f63e0228090af4901ce3e594aa971bf7",
+      "conditions": [],
+      "rateHash": "fc23ec9174c8a6ea52036fc8d554a0d2cad23a6e8916ff923e1b69bf4521ec9f",
       "priority": 100,
-      "rateVariant": "standard",
-      "schedule": null
+      "rateVariant": "time_window",
+      "schedule": {
+        "timeZone": "Asia/Shanghai",
+        "weeklyWindows": [
+          {
+            "windowCode": "peak",
+            "daysOfWeek": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "startTime": "09:00:00",
+            "endTime": "00:00:00",
+            "endDayOffset": 1
+          }
+        ],
+        "includeDates": [],
+        "excludeDates": []
+      }
     }
   ],
   "regionCode": "cn",
