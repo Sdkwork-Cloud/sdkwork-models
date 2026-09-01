@@ -21,6 +21,12 @@ pub struct ResolveModelPriceQuery {
     pub supplier_code: Option<String>,
     pub account_id: Option<i64>,
     pub region_code: Option<String>,
+    /// Configured default billing region for the resource (admin "default
+    /// region" setting). The fallback chain probes it after the requested
+    /// region and before the generic `global` bucket, so a multi-region model
+    /// keeps rating against its default regional price even when the caller
+    /// pins a region the price book does not carry.
+    pub default_region_code: Option<String>,
     pub occurred_at: DateTime<Utc>,
 }
 
@@ -146,6 +152,14 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     .map(|route| normalize_region_code(&route.region_code))
             })
             .unwrap_or_else(|| DEFAULT_PRICE_REGION_CODE.to_owned());
+        // The admin default-region setting joins the region fallback chain
+        // between the requested region and the generic `global` bucket: when
+        // the price book has no rate for the requested region, the default
+        // regional price answers before any global/other-region borrow.
+        let default_region_code = query
+            .default_region_code
+            .as_deref()
+            .and_then(normalized_optional_region_code);
         let mut rate_dimensions = dimensions.clone();
         rate_dimensions.insert(
             "vendor_code",
@@ -163,6 +177,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             tenant_id,
             organization_id,
             &region_code,
+            default_region_code.as_deref(),
             &rate_dimensions,
         )?;
         // The upstream cost anchors the resolution currency: the official
@@ -182,6 +197,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             organization_id,
             price_scope,
             &region_code,
+            default_region_code.as_deref(),
             preferred_currency.as_deref(),
             &rate_dimensions,
         )?;
@@ -217,6 +233,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                 group.id,
                 group.cost_multiplier,
                 &region_code,
+                default_region_code.as_deref(),
             )?
         } else {
             None
@@ -256,6 +273,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         let explicit_customer = select_rate_with_region_fallback(
             explicit_customer_candidates,
             &region_code,
+            default_region_code.as_deref(),
             Some(&official_currency),
             &rate_dimensions,
             query.occurred_at,
@@ -514,6 +532,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         organization_id: i64,
         price_scope: &str,
         region_code: &str,
+        default_region_code: Option<&str>,
         preferred_currency: Option<&str>,
         dimensions: &PricingDimensionContext,
     ) -> DomainResult<ModelPrice> {
@@ -532,6 +551,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         select_rate_with_region_fallback(
             candidates,
             region_code,
+            default_region_code,
             preferred_currency,
             dimensions,
             query.occurred_at,
@@ -553,6 +573,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         tenant_id: i64,
         organization_id: i64,
         region_code: &str,
+        default_region_code: Option<&str>,
         dimensions: &PricingDimensionContext,
     ) -> DomainResult<Option<ModelPrice>> {
         let supplier_code = query.supplier_code.as_deref();
@@ -584,6 +605,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         select_rate_with_region_fallback(
             candidates,
             region_code,
+            default_region_code,
             None,
             dimensions,
             query.occurred_at,
@@ -645,6 +667,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         account_group_id: i64,
         default_group_multiplier: DecimalValue,
         region_code: &str,
+        default_region_code: Option<&str>,
     ) -> DomainResult<Option<ProcurementMultipliers>> {
         if query.supplier_code.is_none() && query.account_id.is_none() {
             return Ok(None);
@@ -657,13 +680,13 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         })?;
 
         let mut resolved: Option<ProcurementMultipliers> = None;
-        // Walk the billing-region chain (requested region -> `global` -> any)
-        // so an account bound in a different region still yields multipliers
-        // instead of failing the whole resolution. The account-group binding
-        // check below is what authorizes the account; region is only a
-        // dimension of that binding.
-        let excluded_regions = exact_probe_regions(region_code);
-        for probe in billing_region_probes(region_code) {
+        // Walk the billing-region chain (requested region -> default region ->
+        // `global` -> any) so an account bound in a different region still
+        // yields multipliers instead of failing the whole resolution. The
+        // account-group binding check below is what authorizes the account;
+        // region is only a dimension of that binding.
+        let excluded_regions = exact_probe_regions(region_code, default_region_code);
+        for probe in billing_region_probes(region_code, default_region_code) {
             for route in self
                 .catalog
                 .list_upstream_account_routes()
@@ -955,31 +978,53 @@ impl RegionProbe {
 ///
 /// A deployment started with a default region (for example
 /// `SDKWORK_CLOUDROUTER_ROUTER_REGION_CODE=cn`) must still settle when the
-/// price book only carries generic rates:
+/// price book only carries generic rates, and a resource that configures an
+/// admin default billing region must rate against that regional price before
+/// borrowing the generic bucket:
 ///
 /// 1. the requested region,
-/// 2. the generic `global` region - the documented `cn -> global` fallback,
-/// 3. any remaining region, so the resolved price is never empty.
+/// 2. the configured default billing region (when set and distinct),
+/// 3. the generic `global` region - the documented `cn -> global` fallback,
+/// 4. any remaining region, so the resolved price is never empty.
 ///
-/// [`RegionProbe::Any`] is terminal and only runs when both exact probes found
+/// [`RegionProbe::Any`] is terminal and only runs when all exact probes found
 /// nothing, so a regional rate always wins over a borrowed one.
-fn billing_region_probes(region_code: &str) -> Vec<RegionProbe> {
+fn billing_region_probes(
+    region_code: &str,
+    default_region_code: Option<&str>,
+) -> Vec<RegionProbe> {
+    let mut exact: Vec<String> = Vec::new();
+    push_distinct_exact(&mut exact, region_code);
+    if let Some(default_region_code) = default_region_code {
+        let default_region_code = normalize_region_code(default_region_code);
+        if default_region_code != DEFAULT_PRICE_REGION_CODE {
+            push_distinct_exact(&mut exact, &default_region_code);
+        }
+    }
+    push_distinct_exact(&mut exact, DEFAULT_PRICE_REGION_CODE);
+    exact
+        .into_iter()
+        .map(RegionProbe::Exact)
+        .chain(std::iter::once(RegionProbe::Any))
+        .collect()
+}
+
+/// Pushes a normalized region onto the exact probe list unless a
+/// case-insensitive duplicate is already present.
+fn push_distinct_exact(exact: &mut Vec<String>, region_code: &str) {
     let region_code = normalize_region_code(region_code);
-    if region_code == DEFAULT_PRICE_REGION_CODE {
-        vec![RegionProbe::Exact(region_code), RegionProbe::Any]
-    } else {
-        vec![
-            RegionProbe::Exact(region_code),
-            RegionProbe::Exact(DEFAULT_PRICE_REGION_CODE.to_owned()),
-            RegionProbe::Any,
-        ]
+    if !exact
+        .iter()
+        .any(|existing| existing.eq_ignore_ascii_case(&region_code))
+    {
+        exact.push(region_code);
     }
 }
 
 /// Regions already covered by an [`RegionProbe::Exact`] step, so the terminal
 /// `Any` pass cannot re-select a region that already failed.
-fn exact_probe_regions(region_code: &str) -> Vec<String> {
-    billing_region_probes(region_code)
+fn exact_probe_regions(region_code: &str, default_region_code: Option<&str>) -> Vec<String> {
+    billing_region_probes(region_code, default_region_code)
         .into_iter()
         .filter_map(|probe| match probe {
             RegionProbe::Exact(region_code) => Some(region_code),
@@ -993,9 +1038,15 @@ fn exact_probe_regions(region_code: &str) -> Vec<String> {
 ///
 /// Delegates to [`billing_region_probes`] so the resolver and the resource
 /// guard agree by construction: whatever the fallback chain can select, the
-/// resolution accepts.
-pub(crate) fn region_matches_or_fallback(expected_region: &str, actual_region: &str) -> bool {
-    billing_region_probes(expected_region)
+/// resolution accepts. The configured default billing region joins the chain
+/// exactly as it does for the lookup, so a rate resolved through the default
+/// region is never rejected downstream as a mismatch.
+pub(crate) fn region_matches_or_fallback(
+    expected_region: &str,
+    actual_region: &str,
+    default_region_code: Option<&str>,
+) -> bool {
+    billing_region_probes(expected_region, default_region_code)
         .iter()
         .any(|probe| probe.matches_region(actual_region))
 }
@@ -1003,10 +1054,12 @@ pub(crate) fn region_matches_or_fallback(expected_region: &str, actual_region: &
 /// Route probes. `None` preserves "match any region" semantics.
 ///
 /// Account routes stay exact-probe only: a terminal "any region" pass would
-/// let an unrelated region's credentials answer a region-scoped lookup.
+/// let an unrelated region's credentials answer a region-scoped lookup. The
+/// admin default billing region is intentionally not probed here — it steers
+/// price selection, not credential binding.
 fn route_region_probes(region_code: Option<&str>) -> Vec<Option<String>> {
     match region_code {
-        Some(region_code) => billing_region_probes(region_code)
+        Some(region_code) => billing_region_probes(region_code, None)
             .into_iter()
             .filter_map(|probe| match probe {
                 RegionProbe::Exact(region_code) => Some(Some(region_code)),
@@ -1033,6 +1086,7 @@ fn route_region_probes(region_code: Option<&str>) -> Vec<Option<String>> {
 fn select_rate_with_region_fallback(
     candidates: Vec<ModelPrice>,
     region_code: &str,
+    default_region_code: Option<&str>,
     preferred_currency: Option<&str>,
     dimensions: &PricingDimensionContext,
     occurred_at: DateTime<Utc>,
@@ -1048,6 +1102,7 @@ fn select_rate_with_region_fallback(
             if let Some(rate) = select_rate_in_region_chain(
                 same_currency,
                 region_code,
+                default_region_code,
                 dimensions,
                 occurred_at,
                 rate_label,
@@ -1056,7 +1111,14 @@ fn select_rate_with_region_fallback(
             }
         }
     }
-    select_rate_in_region_chain(candidates, region_code, dimensions, occurred_at, rate_label)
+    select_rate_in_region_chain(
+        candidates,
+        region_code,
+        default_region_code,
+        dimensions,
+        occurred_at,
+        rate_label,
+    )
 }
 
 /// Selects a rate through the billing-region fallback chain.
@@ -1070,12 +1132,13 @@ fn select_rate_with_region_fallback(
 fn select_rate_in_region_chain(
     candidates: Vec<ModelPrice>,
     region_code: &str,
+    default_region_code: Option<&str>,
     dimensions: &PricingDimensionContext,
     occurred_at: DateTime<Utc>,
     rate_label: &str,
 ) -> DomainResult<Option<ModelPrice>> {
-    let excluded_regions = exact_probe_regions(region_code);
-    for probe in billing_region_probes(region_code) {
+    let excluded_regions = exact_probe_regions(region_code, default_region_code);
+    for probe in billing_region_probes(region_code, default_region_code) {
         let mut probe_dimensions = dimensions.clone();
         match &probe {
             RegionProbe::Exact(probe_region) => {
@@ -1106,9 +1169,10 @@ fn select_rate_in_region_chain(
             if probe == RegionProbe::Any {
                 tracing::warn!(
                     requested_region = %region_code,
+                    default_region = ?default_region_code,
                     resolved_region = %rate.region_code,
                     rate = %rate_label,
-                    "no {rate_label} rate exists for the requested region or global; rated with the only available region instead of failing"
+                    "no {rate_label} rate exists for the requested region, the configured default region, or global; rated with the only available region instead of failing"
                 );
             }
             return Ok(Some(rate));

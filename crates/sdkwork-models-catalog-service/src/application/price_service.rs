@@ -194,6 +194,7 @@ impl PriceService {
                 supplier_code: resource.provider_code.clone(),
                 account_id: resource.account_id,
                 region_code: resource.region_code.clone(),
+                default_region_code: resource.default_billing_region_code.clone(),
                 occurred_at: resource.occurred_at,
             },
             &dimensions,
@@ -408,12 +409,16 @@ fn resource_mismatch(
     if let Some(expected) = resource.region_code.as_deref() {
         let actual = resolved.official_reference.region_code.as_str();
         // A rate resolved through the billing-region fallback chain
-        // (`cn` -> `global` -> any) is a legal answer for the requested
-        // region, not a mismatch. Comparing regions for equality here silently
-        // undid the fallback: the resolver found the rate, this guard rejected
-        // it, and the request failed with "cost price not found" even though
-        // the price book contained a usable global rate.
-        if !region_matches_or_fallback(expected, actual) {
+        // (`requested` -> configured default -> `global` -> any) is a legal
+        // answer for the requested region, not a mismatch. Comparing regions
+        // for equality here silently undid the fallback: the resolver found
+        // the rate, this guard rejected it, and the request failed with "cost
+        // price not found" even though the price book contained a usable rate.
+        if !region_matches_or_fallback(
+            expected,
+            actual,
+            resource.default_billing_region_code.as_deref(),
+        ) {
             return Some(format!(
                 "pricing resource region mismatch: expected {expected}, resolved {actual}"
             ));

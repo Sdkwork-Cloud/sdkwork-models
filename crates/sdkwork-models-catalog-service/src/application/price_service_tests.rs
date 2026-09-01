@@ -372,6 +372,17 @@ fn resource_in_region(meter: BillingMeter, region_code: &str) -> ResourceDefinit
     .with_product_operation(PRODUCT_CODE, OPERATION_CODE)
 }
 
+/// A resource carrying the admin default billing region setting. The resolver
+/// falls back to it when the requested region has no price, before `global`.
+fn resource_in_region_with_default(
+    meter: BillingMeter,
+    region_code: &str,
+    default_region_code: &str,
+) -> ResourceDefinition {
+    resource_in_region(meter, region_code)
+        .with_default_billing_region(Some(default_region_code.to_owned()))
+}
+
 /// A deployment started with a default region (for example `cn`) must still
 /// rate when the price book only carries `global` rates. The resolver's region
 /// fallback selects the global rate, and the resource guard must accept it
@@ -484,6 +495,111 @@ fn price_book_with_only_an_unrelated_region_still_rates() {
     assert_eq!("us", identity.region_code);
 }
 
+/// The admin default billing region is the first fallback when the requested
+/// region has no price: a request for `us` must rate against the configured
+/// default `cn` rate before borrowing the generic `global` bucket.
+#[test]
+fn requested_region_without_a_price_falls_back_to_the_default_region() {
+    let cn_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.002",
+        "cn",
+        metadata("cn-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let global_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.001",
+        "global",
+        metadata("global-input", "chargeable", "per_unit", "0", None, 50, vec![]),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![cn_rate, global_rate]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region_with_default(BillingMeter::LlmInputToken, "us", "cn"),
+        )
+        .expect("price resolution succeeds");
+
+    assert_eq!(PriceResolutionStatus::Quoted, resolution.status);
+    assert!(
+        resolution.failure.is_none(),
+        "a default-region fallback is not a resource mismatch: {:?}",
+        resolution.failure
+    );
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!("cn", identity.region_code);
+    assert_eq!(Some("cn-input"), identity.rate_hash.as_deref());
+}
+
+/// A priced requested region always wins over the configured default region:
+/// the default is a fallback, never an override for an explicitly requested
+/// region that the price book carries.
+#[test]
+fn a_priced_requested_region_wins_over_the_default_region() {
+    let us_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.004",
+        "us",
+        metadata("us-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let cn_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.002",
+        "cn",
+        metadata("cn-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![us_rate, cn_rate]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region_with_default(BillingMeter::LlmInputToken, "us", "cn"),
+        )
+        .expect("price resolution succeeds");
+
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!("us", identity.region_code);
+    assert_eq!(Some("us-input"), identity.rate_hash.as_deref());
+}
+
+/// Without a configured default region the chain keeps the legacy behavior:
+/// the requested region falls back to `global` (never to an arbitrary
+/// regional price before the generic bucket).
+#[test]
+fn without_a_default_region_the_chain_falls_back_to_global_only() {
+    let cn_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.002",
+        "cn",
+        metadata("cn-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let global_rate = official_price_in_region(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.001",
+        "global",
+        metadata("global-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![cn_rate, global_rate]);
+
+    let resolution = PriceService::new()
+        .resolve(
+            &catalog,
+            resource_in_region(BillingMeter::LlmInputToken, "us"),
+        )
+        .expect("price resolution succeeds");
+
+    let identity = resolution.rate_identity.expect("resolved rate identity");
+    assert_eq!("global", identity.region_code);
+    assert_eq!(Some("global-input"), identity.rate_hash.as_deref());
+}
+
 /// The upstream cost anchors the resolution currency. When the two sides of
 /// the margin live in different regions priced in different currencies (a cn
 /// CNY official reference and a global USD upstream cost), the official
@@ -537,6 +653,7 @@ fn cross_currency_price_book_rates_without_a_money_mismatch() {
             supplier_code: Some(SUPPLIER_CODE.to_owned()),
             account_id: Some(ACCOUNT_ID),
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 15, 0, 0, 0)
                 .single()
@@ -555,26 +672,43 @@ fn cross_currency_price_book_rates_without_a_money_mismatch() {
 }
 
 /// The resource guard and the resolver's probe chain must agree by
-/// construction: whatever the chain can select, the resolution accepts.
+/// construction: whatever the chain can select, the resolution accepts. The
+/// configured default billing region joins the chain after the requested
+/// region and before `global`, so a rate resolved through it is also accepted.
 #[test]
 fn region_guard_accepts_every_region_the_fallback_chain_can_select() {
     use super::pricing_resolver::region_matches_or_fallback;
 
-    assert!(region_matches_or_fallback("cn", "cn"));
-    assert!(region_matches_or_fallback("cn", "global"));
+    // No default region configured: requested -> global -> any.
+    assert!(region_matches_or_fallback("cn", "cn", None));
+    assert!(region_matches_or_fallback("cn", "global", None));
     assert!(
-        region_matches_or_fallback("cn", "us"),
+        region_matches_or_fallback("cn", "us", None),
         "the terminal fallback keeps the price non-empty"
     );
-    assert!(region_matches_or_fallback("global", "global"));
-    assert!(region_matches_or_fallback("global", "cn"));
+    assert!(region_matches_or_fallback("global", "global", None));
+    assert!(region_matches_or_fallback("global", "cn", None));
     assert!(
-        region_matches_or_fallback("", "cn"),
+        region_matches_or_fallback("", "cn", None),
         "no requested region accepts any rate"
     );
     assert!(
-        region_matches_or_fallback("CN", "cn"),
+        region_matches_or_fallback("CN", "cn", None),
         "region codes compare case-insensitively"
+    );
+
+    // Default region configured: requested -> default -> global -> any.
+    assert!(
+        region_matches_or_fallback("us", "cn", Some("cn")),
+        "a rate resolved through the configured default region is accepted"
+    );
+    assert!(
+        region_matches_or_fallback("us", "global", Some("cn")),
+        "global remains reachable after the default-region probe"
+    );
+    assert!(
+        region_matches_or_fallback("us", "eu", Some("cn")),
+        "the terminal fallback still accepts an unrelated region"
     );
 }
 
@@ -604,6 +738,7 @@ fn missing_upstream_route_hint_does_not_fail_the_resolution() {
             supplier_code: Some("supplier-test".to_owned()),
             account_id: Some(9),
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 15, 0, 0, 0)
                 .single()
@@ -697,6 +832,7 @@ fn active_sales_rule_overrides_the_official_reference_price() {
             supplier_code: None,
             account_id: None,
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
                 .single()
@@ -749,6 +885,7 @@ fn expired_sales_rule_falls_back_to_the_official_reference_price() {
             supplier_code: None,
             account_id: None,
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
                 .single()
@@ -794,6 +931,7 @@ fn product_scoped_sales_rule_does_not_leak_to_another_model() {
             supplier_code: None,
             account_id: None,
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
                 .single()
@@ -839,6 +977,7 @@ fn sales_price_with_a_different_currency_fails_before_billing() {
             supplier_code: None,
             account_id: None,
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 18, 0, 0, 0)
                 .single()
@@ -1681,6 +1820,7 @@ fn expired_rates_are_never_selected() {
             supplier_code: None,
             account_id: None,
             region_code: Some("cn".to_owned()),
+            default_region_code: None,
             occurred_at: Utc
                 .with_ymd_and_hms(2026, 8, 31, 0, 0, 0)
                 .single()

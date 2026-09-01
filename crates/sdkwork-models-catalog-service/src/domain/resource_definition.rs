@@ -15,6 +15,10 @@ pub struct ResourceDefinition {
     pub provider_code: Option<String>,
     pub account_id: Option<i64>,
     pub region_code: Option<String>,
+    /// Configured default billing region for the resource (admin "default
+    /// region" setting). The resolver probes it as the first fallback when the
+    /// requested region has no price, before the generic `global` bucket.
+    pub default_billing_region_code: Option<String>,
     pub catalog_key: String,
     pub model: Option<String>,
     pub api_code: Option<String>,
@@ -39,6 +43,7 @@ impl ResourceDefinition {
             provider_code: None,
             account_id: None,
             region_code: None,
+            default_billing_region_code: None,
             catalog_key: catalog_key.into(),
             model: None,
             api_code: None,
@@ -74,6 +79,15 @@ impl ResourceDefinition {
 
     pub fn with_region_code(mut self, region_code: impl Into<String>) -> Self {
         self.region_code = normalized_optional(region_code.into());
+        self
+    }
+
+    /// Attaches the configured default billing region for the resource. The
+    /// resolver falls back to it when the requested region carries no price,
+    /// before the generic `global` bucket; `None`/blank keeps the legacy
+    /// `requested -> global -> any` behavior.
+    pub fn with_default_billing_region(mut self, region_code: Option<String>) -> Self {
+        self.default_billing_region_code = normalized_optional(region_code.unwrap_or_default());
         self
     }
 
