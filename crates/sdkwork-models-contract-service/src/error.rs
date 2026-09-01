@@ -13,6 +13,7 @@ pub enum DomainErrorKind {
     System,
     Conflict,
     NotFound,
+    BadRequest,
 }
 
 impl DomainError {
@@ -37,12 +38,26 @@ impl DomainError {
         }
     }
 
+    /// A client-side validation failure: the command is well-formed but
+    /// violates a business rule (e.g. references a resource that does not
+    /// exist in the expected state). Surfaced as HTTP 400, not 500.
+    pub fn bad_request(message: impl Into<String>) -> Self {
+        Self {
+            message: message.into(),
+            kind: DomainErrorKind::BadRequest,
+        }
+    }
+
     pub fn is_conflict(&self) -> bool {
         self.kind == DomainErrorKind::Conflict
     }
 
     pub fn is_not_found(&self) -> bool {
         self.kind == DomainErrorKind::NotFound
+    }
+
+    pub fn is_bad_request(&self) -> bool {
+        self.kind == DomainErrorKind::BadRequest
     }
 }
 
