@@ -578,10 +578,12 @@ fn region_guard_accepts_every_region_the_fallback_chain_can_select() {
     );
 }
 
-/// The upstream route is only a region hint for pricing. A missing hint must
-/// degrade to "no upstream cost configured" rather than failing the whole
-/// resolution with `upstream route not found`, which surfaced as an opaque
-/// 502 for catalogs whose route row carries a region outside the probe chain.
+/// The upstream route is only a region hint for pricing. A missing hint (and
+/// a missing upstream cost price) must degrade to "no procurement cost"
+/// rather than failing the whole resolution: the customer charge derives from
+/// the official reference, and a zero-priced record / free ride was the old
+/// failure mode of treating the missing cost as a classified-but-non-fatal
+/// `price_not_found`.
 #[test]
 fn missing_upstream_route_hint_does_not_fail_the_resolution() {
     let official = official_price_in_region(
@@ -593,7 +595,7 @@ fn missing_upstream_route_hint_does_not_fail_the_resolution() {
     );
     let catalog = TestPricingCatalog::with_prices(vec![official]);
 
-    let error = PricingResolver::new(&catalog)
+    let resolved = PricingResolver::new(&catalog)
         .resolve(ResolveModelPriceQuery {
             api_key_id: 0,
             account_group_id: Some(GROUP_ID),
@@ -607,16 +609,15 @@ fn missing_upstream_route_hint_does_not_fail_the_resolution() {
                 .single()
                 .expect("valid timestamp"),
         })
-        .expect_err("no upstream cost is configured");
+        .expect("missing upstream cost must degrade, not fail");
 
-    let message = error.to_string();
+    // Procurement cost is unreported, but the customer charge is derived from
+    // the priced official reference — never a silent zero.
+    assert!(resolved.procurement_cost.is_none());
+    assert!(!resolved.official_reference.unit_price.is_zero());
     assert!(
-        message.contains("upstream cost not found"),
-        "unexpected error: {message}"
-    );
-    assert!(
-        !message.contains("upstream route not found"),
-        "a missing route hint must not fail the resolution: {message}"
+        !resolved.customer_charge.unit_price.is_zero(),
+        "customer charge must stay priced when only the upstream cost is missing"
     );
 }
 
@@ -1646,4 +1647,50 @@ fn equally_ranked_pricing_rules_fail_closed() {
         .resolve(&catalog, resource(BillingMeter::ApiRequest))
         .expect_err("ambiguous pricing rules must fail closed");
     assert!(error.to_string().contains("pricing rule ambiguous"));
+}
+
+/// Expired price rows (effective_to in the past) must never be selected:
+/// a stale price book is equivalent to "no price", and the caller is
+/// responsible for failing the invocation instead of billing nothing.
+#[test]
+fn expired_rates_are_never_selected() {
+    let mut metadata = metadata("expired", "chargeable", "per_unit", "0", None, 100, vec![]);
+    metadata.effective_from = Utc
+        .with_ymd_and_hms(2026, 1, 1, 0, 0, 0)
+        .single()
+        .expect("valid timestamp");
+    metadata.effective_to = Some(
+        Utc.with_ymd_and_hms(2026, 8, 1, 0, 0, 0)
+            .single()
+            .expect("valid timestamp"),
+    );
+    let price = official_price(
+        BillingMeter::LlmInputToken,
+        "1000",
+        "0.001",
+        metadata,
+    );
+    let catalog = TestPricingCatalog::with_prices(vec![price]);
+
+    let error = PricingResolver::new(&catalog)
+        .resolve(ResolveModelPriceQuery {
+            api_key_id: 0,
+            account_group_id: Some(GROUP_ID),
+            model: CATALOG_KEY.to_owned(),
+            billing_meter: BillingMeter::LlmInputToken,
+            supplier_code: None,
+            account_id: None,
+            region_code: Some("cn".to_owned()),
+            occurred_at: Utc
+                .with_ymd_and_hms(2026, 8, 31, 0, 0, 0)
+                .single()
+                .expect("valid timestamp"),
+        })
+        .expect_err("an expired rate must not be selected");
+
+    let message = error.to_string();
+    assert!(
+        message.contains("price not found") || message.contains("official reference price not found"),
+        "unexpected error: {message}"
+    );
 }

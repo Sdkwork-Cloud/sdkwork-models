@@ -194,22 +194,43 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             rate_dimensions.insert("operation_code", serde_json::json!(metadata.operation_code.as_str()));
         }
         let official_currency = official.unit_price.currency.clone();
+        // The upstream cost is the procurement side of a routed account: it
+        // feeds gross-margin reporting and cost accounting only. A missing
+        // cost price must never block customer billing — the customer charge
+        // derives from the official reference, so downgrade to "no procurement
+        // cost" with a diagnostic instead of failing the whole resolution.
+        // Previously this surfaced as `price_not_found` (non-fatal), which
+        // silently produced zero-priced usage records and free rides.
         if query.supplier_code.is_some() && raw_upstream_cost.is_none() {
-            return Err(missing_upstream_cost_error(&query, &region_code));
+            tracing::warn!(
+                model = %query.model,
+                supplier_code = ?query.supplier_code,
+                account_id = ?query.account_id,
+                meter = %query.billing_meter.code(),
+                region_code = %region_code,
+                "upstream cost price is missing for a routed account; procurement cost is not reported, customer billing continues on the official reference",
+            );
         }
-        let procurement_multipliers = self.resolve_procurement_multipliers(
-            &query,
-            group.id,
-            group.cost_multiplier,
-            &region_code,
-        )?;
+        let procurement_multipliers = if raw_upstream_cost.is_some() {
+            self.resolve_procurement_multipliers(
+                &query,
+                group.id,
+                group.cost_multiplier,
+                &region_code,
+            )?
+        } else {
+            None
+        };
         let procurement_cost = match (&raw_upstream_cost, procurement_multipliers.as_ref()) {
             (Some(price), Some(multipliers)) => Some(
                 price
                     .unit_price
                     .checked_multiply(multipliers.combined_multiplier)?,
             ),
-            (None, None) => None,
+            // Missing procurement context (no cost price, or no multiplier
+            // bindings) only leaves gross margin unreported; it never blocks
+            // the customer charge.
+            (None, _) => None,
             _ => {
                 return Err(DomainError::new(
                     "upstream price and procurement multiplier context must be resolved together",
@@ -1158,18 +1179,4 @@ fn require_positive_multiplier(field: &str, value: DecimalValue) -> DomainResult
         return Err(DomainError::new(format!("{field} must be positive")));
     }
     Ok(())
-}
-
-fn missing_upstream_cost_error(query: &ResolveModelPriceQuery, region_code: &str) -> DomainError {
-    DomainError::new(format!(
-        "upstream cost not found for model {}, supplier {}, account {}, meter {}, and region {}",
-        query.model,
-        query.supplier_code.as_deref().unwrap_or("<missing>"),
-        query
-            .account_id
-            .map(|value| value.to_string())
-            .unwrap_or_else(|| "<missing>".to_owned()),
-        query.billing_meter.code(),
-        region_code
-    ))
 }

@@ -16,7 +16,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "effectiveTo": "2026-08-16T16:00:00Z",
+      "effectiveTo": "2026-12-31T23:59:59Z",
       "unitPrice": "0.020000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -45,7 +45,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "effectiveTo": "2026-08-16T16:00:00Z",
+      "effectiveTo": "2026-12-31T23:59:59Z",
       "unitPrice": "1.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
@@ -74,7 +74,7 @@
         "observedAt": "2026-08-13T00:00:00Z",
         "sourceUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
       },
-      "effectiveTo": "2026-08-16T16:00:00Z",
+      "effectiveTo": "2026-12-31T23:59:59Z",
       "unitPrice": "2.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.deepseek.cn.official",
