@@ -77,3 +77,6 @@ Thumbs.db
 
 # Runtime-generated env config (modified by local dev server)
 **/public/runtime-env.json
+
+# Local artifacts and build output (do not commit)
+sdks/*/*/package-lock.json
