@@ -186,4 +186,3 @@ fn normalized_optional_route_region_code(value: &str) -> Option<String> {
     let value = value.trim();
     (!value.is_empty()).then(|| value.to_owned())
 }
-

@@ -1,8 +1,8 @@
 use crate::domain::{
     AccountRateCard, AiModel, BillingMeter, GatewayAccessPolicy, GatewayApiKey, GatewayRiskRule,
     ModelMappingRule, ModelPrice, ModelUpstreamRoute, ModelVendorDefinition, PriceSide,
-    PricingPlan, PricingRule, QuotaPolicy, ResolveModelMappingContext,
-    UpstreamAccountGroup, UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
+    PricingPlan, PricingRule, QuotaPolicy, ResolveModelMappingContext, UpstreamAccountGroup,
+    UpstreamAccountGroupMetricSnapshot, UpstreamAccountRoute,
 };
 
 pub trait PricingCatalog {

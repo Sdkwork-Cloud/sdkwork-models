@@ -512,7 +512,15 @@ fn requested_region_without_a_price_falls_back_to_the_default_region() {
         "1000",
         "0.001",
         "global",
-        metadata("global-input", "chargeable", "per_unit", "0", None, 50, vec![]),
+        metadata(
+            "global-input",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            50,
+            vec![],
+        ),
     );
     let catalog = TestPricingCatalog::with_prices(vec![cn_rate, global_rate]);
 
@@ -584,7 +592,15 @@ fn without_a_default_region_the_chain_falls_back_to_global_only() {
         "1000",
         "0.001",
         "global",
-        metadata("global-input", "chargeable", "per_unit", "0", None, 100, vec![]),
+        metadata(
+            "global-input",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
     );
     let catalog = TestPricingCatalog::with_prices(vec![cn_rate, global_rate]);
 
@@ -638,11 +654,12 @@ fn cross_currency_price_book_rates_without_a_money_mismatch() {
     .with_region_code("global")
     .with_unit_size(decimal("1"))
     .for_upstream_account(SUPPLIER_CODE, ACCOUNT_ID);
-    let catalog = TestPricingCatalog::with_prices(vec![official, upstream_cost]).with_account_route(
-        UpstreamAccountRoute::new(SUPPLIER_CODE, ACCOUNT_ID)
-            .with_region_code("global")
-            .with_account_group_binding(GROUP_ID, 100, 100),
-    );
+    let catalog = TestPricingCatalog::with_prices(vec![official, upstream_cost])
+        .with_account_route(
+            UpstreamAccountRoute::new(SUPPLIER_CODE, ACCOUNT_ID)
+                .with_region_code("global")
+                .with_account_group_binding(GROUP_ID, 100, 100),
+        );
 
     let resolved = PricingResolver::new(&catalog)
         .resolve(ResolveModelPriceQuery {
@@ -803,7 +820,15 @@ fn active_sales_rule_overrides_the_official_reference_price() {
         BillingMeter::ApiRequest,
         "1",
         "0.010000000000",
-        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+        metadata(
+            "official-api",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
     );
     let mut catalog = TestPricingCatalog::with_prices(vec![official]);
     let plan = catalog.plans[0].clone();
@@ -840,9 +865,21 @@ fn active_sales_rule_overrides_the_official_reference_price() {
         })
         .expect("sales price resolves");
 
-    assert_eq!(decimal("0.010000000000"), resolved.official_reference.unit_price.unit_price);
-    assert_eq!(decimal("0.025000000000"), resolved.customer_charge.unit_price);
-    assert_eq!(Some(42), resolved.pricing_record_identity.pricing_rule.map(|identity| identity.id));
+    assert_eq!(
+        decimal("0.010000000000"),
+        resolved.official_reference.unit_price.unit_price
+    );
+    assert_eq!(
+        decimal("0.025000000000"),
+        resolved.customer_charge.unit_price
+    );
+    assert_eq!(
+        Some(42),
+        resolved
+            .pricing_record_identity
+            .pricing_rule
+            .map(|identity| identity.id)
+    );
 }
 
 #[test]
@@ -851,7 +888,15 @@ fn expired_sales_rule_falls_back_to_the_official_reference_price() {
         BillingMeter::ApiRequest,
         "1",
         "0.010000000000",
-        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+        metadata(
+            "official-api",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
     );
     let mut catalog = TestPricingCatalog::with_prices(vec![official]);
     let plan = catalog.plans[0].clone();
@@ -868,7 +913,8 @@ fn expired_sales_rule_falls_back_to_the_official_reference_price() {
     expired_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
     expired_rule.catalog_key = Some(CATALOG_KEY.to_owned());
     expired_rule.formula_mode = "unit_price_override".to_owned();
-    expired_rule.unit_price_override = Some(Money::usd("0.025000000000").expect("valid sales price"));
+    expired_rule.unit_price_override =
+        Some(Money::usd("0.025000000000").expect("valid sales price"));
     expired_rule.effective_to = Some(
         Utc.with_ymd_and_hms(2026, 8, 17, 0, 0, 0)
             .single()
@@ -893,7 +939,10 @@ fn expired_sales_rule_falls_back_to_the_official_reference_price() {
         })
         .expect("official fallback resolves");
 
-    assert_eq!(decimal("0.010000000000"), resolved.customer_charge.unit_price);
+    assert_eq!(
+        decimal("0.010000000000"),
+        resolved.customer_charge.unit_price
+    );
     assert!(resolved.pricing_record_identity.pricing_rule.is_none());
 }
 
@@ -903,7 +952,15 @@ fn product_scoped_sales_rule_does_not_leak_to_another_model() {
         BillingMeter::ApiRequest,
         "1",
         "0.010000000000",
-        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+        metadata(
+            "official-api",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
     );
     let mut catalog = TestPricingCatalog::with_prices(vec![official]);
     let plan = catalog.plans[0].clone();
@@ -919,7 +976,8 @@ fn product_scoped_sales_rule_does_not_leak_to_another_model() {
     other_model_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
     other_model_rule.catalog_key = Some("openai/cn/another-model".to_owned());
     other_model_rule.formula_mode = "unit_price_override".to_owned();
-    other_model_rule.unit_price_override = Some(Money::usd("0.025000000000").expect("valid sales price"));
+    other_model_rule.unit_price_override =
+        Some(Money::usd("0.025000000000").expect("valid sales price"));
     catalog.rules.push(other_model_rule);
 
     let resolved = PricingResolver::new(&catalog)
@@ -939,7 +997,10 @@ fn product_scoped_sales_rule_does_not_leak_to_another_model() {
         })
         .expect("official fallback resolves");
 
-    assert_eq!(decimal("0.010000000000"), resolved.customer_charge.unit_price);
+    assert_eq!(
+        decimal("0.010000000000"),
+        resolved.customer_charge.unit_price
+    );
     assert!(resolved.pricing_record_identity.pricing_rule.is_none());
 }
 
@@ -949,7 +1010,15 @@ fn sales_price_with_a_different_currency_fails_before_billing() {
         BillingMeter::ApiRequest,
         "1",
         "0.010000000000",
-        metadata("official-api", "chargeable", "per_unit", "0", None, 100, vec![]),
+        metadata(
+            "official-api",
+            "chargeable",
+            "per_unit",
+            "0",
+            None,
+            100,
+            vec![],
+        ),
     );
     let mut catalog = TestPricingCatalog::with_prices(vec![official]);
     let plan = catalog.plans[0].clone();
@@ -965,7 +1034,8 @@ fn sales_price_with_a_different_currency_fails_before_billing() {
     sales_rule.meter_code = Some(BillingMeter::ApiRequest.code().to_owned());
     sales_rule.catalog_key = Some(CATALOG_KEY.to_owned());
     sales_rule.formula_mode = "unit_price_override".to_owned();
-    sales_rule.unit_price_override = Some(Money::new("CNY", "0.025000000000").expect("valid sales price"));
+    sales_rule.unit_price_override =
+        Some(Money::new("CNY", "0.025000000000").expect("valid sales price"));
     catalog.rules.push(sales_rule);
 
     let error = PricingResolver::new(&catalog)
@@ -985,7 +1055,9 @@ fn sales_price_with_a_different_currency_fails_before_billing() {
         })
         .expect_err("currency mismatch must fail closed");
 
-    assert!(error.to_string().contains("pricing rule unit price override currency mismatch"));
+    assert!(error
+        .to_string()
+        .contains("pricing rule unit price override currency mismatch"));
 }
 
 #[test]
@@ -1803,12 +1875,7 @@ fn expired_rates_are_never_selected() {
             .single()
             .expect("valid timestamp"),
     );
-    let price = official_price(
-        BillingMeter::LlmInputToken,
-        "1000",
-        "0.001",
-        metadata,
-    );
+    let price = official_price(BillingMeter::LlmInputToken, "1000", "0.001", metadata);
     let catalog = TestPricingCatalog::with_prices(vec![price]);
 
     let error = PricingResolver::new(&catalog)
@@ -1830,7 +1897,8 @@ fn expired_rates_are_never_selected() {
 
     let message = error.to_string();
     assert!(
-        message.contains("price not found") || message.contains("official reference price not found"),
+        message.contains("price not found")
+            || message.contains("official reference price not found"),
         "unexpected error: {message}"
     );
 }

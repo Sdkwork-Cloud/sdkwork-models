@@ -17,9 +17,7 @@ use crate::api::page_info::{offset_page_info, ApiPageInfo};
 use crate::api::request_id::{generate_server_request_id, RequestIdError};
 use sdkwork_utils_rust::SdkWorkResultCode;
 
-use crate::api::response::{
-    finish_success, finish_success_with_status, problem_for,
-};
+use crate::api::response::{finish_success, finish_success_with_status, problem_for};
 use crate::application::EntityUuidGenerator;
 use crate::domain::DomainError;
 use crate::ports::{

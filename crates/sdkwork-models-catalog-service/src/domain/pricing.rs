@@ -678,8 +678,14 @@ mod tests {
             .single()
             .expect("valid instant");
 
-        assert_eq!(Some("friday-night"), schedule.matched_window_code(friday_2330));
-        assert_eq!(Some("friday-night"), schedule.matched_window_code(saturday_0130));
+        assert_eq!(
+            Some("friday-night"),
+            schedule.matched_window_code(friday_2330)
+        );
+        assert_eq!(
+            Some("friday-night"),
+            schedule.matched_window_code(saturday_0130)
+        );
         assert_eq!(None, schedule.matched_window_code(saturday_0200));
     }
 

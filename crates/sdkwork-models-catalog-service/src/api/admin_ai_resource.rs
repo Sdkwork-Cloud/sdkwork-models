@@ -1659,14 +1659,18 @@ fn normalize_status(value: String) -> Result<String, AiResourceCommandBuildError
     }
 }
 
-fn normalize_route_kind(value: Option<String>) -> Result<Option<String>, AiResourceCommandBuildError> {
-    value.map(|value| match value.trim().to_ascii_lowercase().as_str() {
-        "model" => Ok("model".to_owned()),
-        "api" => Ok("api".to_owned()),
-        _ => Err(AiResourceCommandBuildError::BadRequest(
-            "routeKind must be one of model, api".to_owned(),
-        )),
-    }).transpose()
+fn normalize_route_kind(
+    value: Option<String>,
+) -> Result<Option<String>, AiResourceCommandBuildError> {
+    value
+        .map(|value| match value.trim().to_ascii_lowercase().as_str() {
+            "model" => Ok("model".to_owned()),
+            "api" => Ok("api".to_owned()),
+            _ => Err(AiResourceCommandBuildError::BadRequest(
+                "routeKind must be one of model, api".to_owned(),
+            )),
+        })
+        .transpose()
 }
 
 fn normalize_member_role(value: String) -> Result<String, AiResourceCommandBuildError> {
