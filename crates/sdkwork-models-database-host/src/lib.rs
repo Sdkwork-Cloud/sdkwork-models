@@ -67,6 +67,9 @@ pub fn connect_models_database(pool: DatabasePool) -> Result<ModelsDatabaseHost,
 
 /// Runtime-safe models bootstrap. The manifest default is connection-only;
 /// non-production auto-migration requires an explicit environment override.
+/// The explicit lifecycle command (`--migrate-databases`, marked by
+/// `SDKWORK_DATABASE_LIFECYCLE_COMMAND`) is the sanctioned production/staging
+/// migration path and is admitted; plain runtime processes stay fail-closed.
 pub async fn bootstrap_models_database(pool: DatabasePool) -> Result<ModelsDatabaseHost, String> {
     let host = connect_models_database(pool)?;
     let manifest = DatabaseManifest::from_file(host.module.manifest_path())
@@ -74,7 +77,7 @@ pub async fn bootstrap_models_database(pool: DatabasePool) -> Result<ModelsDatab
     let options = lifecycle_options_from_env("MODELS", &manifest);
     if options.auto_migrate {
         let environment = std::env::var("SDKWORK_MODELS_ENVIRONMENT").unwrap_or_default();
-        if production_like_environment(&environment) {
+        if production_like_environment(&environment) && !explicit_lifecycle_command() {
             return Err(
                 "production/staging runtime must not auto-migrate the models database; run the explicit lifecycle migrate command before startup"
                     .to_owned(),
@@ -147,6 +150,22 @@ fn production_like_environment(value: &str) -> bool {
     )
 }
 
+/// True when this process is the explicit release/operator lifecycle command
+/// (for example `sdkwork-api-cloud-gateway --migrate-databases`, which sets
+/// `SDKWORK_DATABASE_LIFECYCLE_COMMAND=migrate`). Plain runtime processes
+/// never set the marker, so the production/staging auto-migration guard stays
+/// fail-closed for them.
+fn explicit_lifecycle_command() -> bool {
+    matches!(
+        std::env::var("SDKWORK_DATABASE_LIFECYCLE_COMMAND")
+            .unwrap_or_default()
+            .trim()
+            .to_ascii_lowercase()
+            .as_str(),
+        "migrate" | "migrate-databases" | "explicit" | "operator"
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -157,5 +176,19 @@ mod tests {
         assert!(production_like_environment(" PROD "));
         assert!(production_like_environment("staging"));
         assert!(!production_like_environment("development"));
+    }
+
+    #[test]
+    fn explicit_lifecycle_command_recognizes_operator_marker_only() {
+        // The test process does not set the lifecycle-command marker.
+        assert!(!explicit_lifecycle_command());
+        unsafe { std::env::set_var("SDKWORK_DATABASE_LIFECYCLE_COMMAND", "migrate") };
+        assert!(explicit_lifecycle_command());
+        unsafe { std::env::set_var("SDKWORK_DATABASE_LIFECYCLE_COMMAND", " Migrate-Databases ") };
+        assert!(explicit_lifecycle_command());
+        unsafe { std::env::set_var("SDKWORK_DATABASE_LIFECYCLE_COMMAND", "serve") };
+        assert!(!explicit_lifecycle_command());
+        unsafe { std::env::remove_var("SDKWORK_DATABASE_LIFECYCLE_COMMAND") };
+        assert!(!explicit_lifecycle_command());
     }
 }
