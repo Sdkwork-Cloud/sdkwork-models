@@ -1,5 +1,6 @@
 //! Application API assembly bootstrap for sdkwork-models.
 
+use sdkwork_web_bootstrap::WebModule;
 use axum::Router;
 use sdkwork_database_sqlx::DatabasePool;
 use sdkwork_models_catalog_repository_sqlx::{
@@ -94,4 +95,11 @@ pub async fn assemble_business_routes() -> Result<ApiAssembly, String> {
 
 pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
     assemble_business_routes().await
+}
+
+/// Canonical Web Module definition for this application
+/// (API_ASSEMBLY_SPEC §4.1.1): the complete HTTP surface — every route,
+/// manifest, and OpenAPI document of this owner — as one installable module.
+pub async fn web_module() -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(assemble_api_router().await?))
 }

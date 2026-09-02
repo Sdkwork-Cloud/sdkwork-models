@@ -38,4 +38,5 @@ pub use price_service::{
 };
 pub use pricing_resolver::{
     PricingResolver, ResolveModelPriceQuery, ResolvedModelPrice, ResolvedPriceSource,
+    select_pricing_rule_for_dimensions,
 };

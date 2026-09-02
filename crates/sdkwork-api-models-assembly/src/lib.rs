@@ -7,7 +7,7 @@ mod contribution;
 mod entity_uuid_generator;
 mod generated;
 
-pub use bootstrap::{assemble_api_router, assemble_business_routes, ApiAssembly, ApiAssemblyContribution};
+pub use bootstrap::{assemble_api_router, ApiAssembly, ApiAssemblyContribution, assemble_business_routes, web_module};
 pub use contribution::assemble_app_api_contribution;
 
 /// Runs Models-owned database lifecycle before dependent assemblies load the

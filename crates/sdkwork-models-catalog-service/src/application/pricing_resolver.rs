@@ -625,7 +625,7 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         dimensions: &PricingDimensionContext,
         occurred_at: DateTime<Utc>,
     ) -> DomainResult<Option<crate::domain::PricingRule>> {
-        let mut rules = self
+        let rules = self
             .catalog
             .list_pricing_rules_for_plan(
                 plan.tenant_id,
@@ -635,36 +635,10 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
             )
             .into_iter()
             .filter(|rule| {
-                rule.pricing_plan_id == plan.id
-                    && rule.plan_code == plan.plan_code
-                    && rule.scope_matches(dimensions)
-                    && rule.matches_at(dimensions, occurred_at)
+                rule.pricing_plan_id == plan.id && rule.plan_code == plan.plan_code
             })
             .collect::<Vec<_>>();
-        rules.sort_by(|left, right| {
-            right
-                .specificity()
-                .cmp(&left.specificity())
-                .then_with(|| left.priority.cmp(&right.priority))
-                .then_with(|| right.effective_from.cmp(&left.effective_from))
-                .then_with(|| left.rule_code.cmp(&right.rule_code))
-        });
-        let Some(selected) = rules.first().cloned() else {
-            return Ok(None);
-        };
-        if rules.get(1).is_some_and(|next| {
-            selected.specificity() == next.specificity()
-                && selected.priority == next.priority
-                && selected.effective_from == next.effective_from
-                && selected.rule_code != next.rule_code
-        }) {
-            return Err(DomainError::new(format!(
-                "pricing rule ambiguous for plan {} at {}",
-                plan.plan_code,
-                occurred_at.to_rfc3339()
-            )));
-        }
-        Ok(Some(selected))
+        select_pricing_rule_for_dimensions(rules, dimensions, occurred_at, &plan.plan_code)
     }
 
     fn resolve_procurement_multipliers(
@@ -839,6 +813,53 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         );
         Ok(None)
     }
+}
+
+/// Selects the winning pricing rule for runtime dimensions.
+///
+/// This is the single authority for sales-rule precedence, shared by the
+/// runtime resolver ([`PricingResolver::find_pricing_rule`]) and the admin
+/// "effective price" preview so both surfaces can never disagree about which
+/// rule wins. The ordering is: scope + schedule/window match first, then
+/// specificity descending, priority ascending, effective_from descending, and
+/// rule_code ascending as the final deterministic tiebreak. Two candidates
+/// that still tie on every criterion except rule_code are ambiguous and fail
+/// closed.
+pub fn select_pricing_rule_for_dimensions(
+    rules: Vec<crate::domain::PricingRule>,
+    dimensions: &PricingDimensionContext,
+    occurred_at: DateTime<Utc>,
+    plan_code: &str,
+) -> DomainResult<Option<crate::domain::PricingRule>> {
+    let mut rules = rules
+        .into_iter()
+        .filter(|rule| {
+            rule.scope_matches(dimensions) && rule.matches_at(dimensions, occurred_at)
+        })
+        .collect::<Vec<_>>();
+    rules.sort_by(|left, right| {
+        right
+            .specificity()
+            .cmp(&left.specificity())
+            .then_with(|| left.priority.cmp(&right.priority))
+            .then_with(|| right.effective_from.cmp(&left.effective_from))
+            .then_with(|| left.rule_code.cmp(&right.rule_code))
+    });
+    let Some(selected) = rules.first().cloned() else {
+        return Ok(None);
+    };
+    if rules.get(1).is_some_and(|next| {
+        selected.specificity() == next.specificity()
+            && selected.priority == next.priority
+            && selected.effective_from == next.effective_from
+            && selected.rule_code != next.rule_code
+    }) {
+        return Err(DomainError::new(format!(
+            "pricing rule ambiguous for plan {plan_code} at {}",
+            occurred_at.to_rfc3339()
+        )));
+    }
+    Ok(Some(selected))
 }
 
 fn rate_specificity(price: &ModelPrice) -> usize {

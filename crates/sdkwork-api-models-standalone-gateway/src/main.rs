@@ -1,4 +1,5 @@
 use axum::Router;
+use sdkwork_web_bootstrap::ApiModuleRegistry;
 use sdkwork_api_models_assembly::assemble_api_router;
 use sdkwork_api_models_standalone_gateway::{
     application_cors_layer, models_health_router_with_database_pool,
@@ -13,9 +14,13 @@ async fn main() {
         info!("IAM session resolution enabled");
     }
 
-    let assembly = assemble_api_router()
+    let mut module_registry = ApiModuleRegistry::new();
+    module_registry.add_module(assemble_api_router()
         .await
-        .expect("models gateway assembly failed");
+        .expect("models gateway assembly failed"));
+    let assembly = module_registry
+        .try_compose("SDKWork Models API")
+        .unwrap_or_else(|error| panic!("SDKWork Models API module composition failed: {error}"));
 
     // Gateway-owned process infrastructure (readiness probe pool); the
     // assembly contribution carries the same role-resolved PostgreSQL config.
