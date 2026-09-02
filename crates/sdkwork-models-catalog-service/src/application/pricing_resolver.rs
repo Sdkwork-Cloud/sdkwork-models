@@ -206,8 +206,14 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
         // does not duplicate those catalog fields, so add them before sales
         // rule scope matching.
         if let Some(metadata) = official.rate_metadata.as_ref() {
-            rate_dimensions.insert("product_code", serde_json::json!(metadata.product_code.as_str()));
-            rate_dimensions.insert("operation_code", serde_json::json!(metadata.operation_code.as_str()));
+            rate_dimensions.insert(
+                "product_code",
+                serde_json::json!(metadata.product_code.as_str()),
+            );
+            rate_dimensions.insert(
+                "operation_code",
+                serde_json::json!(metadata.operation_code.as_str()),
+            );
         }
         let official_currency = official.unit_price.currency.clone();
         // The upstream cost is the procurement side of a routed account: it
@@ -313,8 +319,8 @@ impl<'a, C: PricingCatalog> PricingResolver<'a, C> {
                     customer_charge_before_sale_multiplier = unit_price.clone();
                 }
             } else {
-                let multiplied = customer_charge_before_sale_multiplier
-                    .checked_multiply(rule.multiplier)?;
+                let multiplied =
+                    customer_charge_before_sale_multiplier.checked_multiply(rule.multiplier)?;
                 customer_charge_before_sale_multiplier =
                     add_rule_markup(&multiplied, &rule.markup_amount, &rule.rule_code)?;
             }
@@ -982,18 +988,36 @@ impl RegionProbe {
 /// admin default billing region must rate against that regional price before
 /// borrowing the generic bucket:
 ///
-/// 1. the requested region,
+/// 1. the requested region — except the generic `global` bucket, which is a
+///    borrowing fallback rather than a specific region: when a distinct
+///    default billing region is configured, the default regional price is
+///    probed *before* the `global` borrow, so the default region wins
+///    regardless of whether the caller pre-replaced the region,
 /// 2. the configured default billing region (when set and distinct),
 /// 3. the generic `global` region - the documented `cn -> global` fallback,
 /// 4. any remaining region, so the resolved price is never empty.
 ///
 /// [`RegionProbe::Any`] is terminal and only runs when all exact probes found
 /// nothing, so a regional rate always wins over a borrowed one.
-fn billing_region_probes(
-    region_code: &str,
-    default_region_code: Option<&str>,
-) -> Vec<RegionProbe> {
+fn billing_region_probes(region_code: &str, default_region_code: Option<&str>) -> Vec<RegionProbe> {
     let mut exact: Vec<String> = Vec::new();
+    // The generic `global` bucket is a borrowing fallback, not a specific
+    // region. When the admin default billing region is configured and
+    // distinct, the default regional price must be probed before the `global`
+    // borrow — otherwise a request whose routed region stays on the `global`
+    // bucket would bill the generic price even though a regional default is
+    // configured. Specific requested regions (e.g. `us`) keep their
+    // first-probe position: the default region is only a fallback for regions
+    // the price book does not carry.
+    let normalized_requested = normalize_region_code(region_code);
+    if normalized_requested.eq_ignore_ascii_case(DEFAULT_PRICE_REGION_CODE) {
+        if let Some(default_region_code) = default_region_code {
+            let default_region_code = normalize_region_code(default_region_code);
+            if default_region_code != DEFAULT_PRICE_REGION_CODE {
+                push_distinct_exact(&mut exact, &default_region_code);
+            }
+        }
+    }
     push_distinct_exact(&mut exact, region_code);
     if let Some(default_region_code) = default_region_code {
         let default_region_code = normalize_region_code(default_region_code);
@@ -1224,11 +1248,7 @@ fn add_rule_markup(charge: &Money, markup: &Money, rule_code: &str) -> DomainRes
     charge.add(markup)
 }
 
-fn ensure_pricing_currency(
-    expected: &str,
-    actual: &str,
-    label: &str,
-) -> DomainResult<()> {
+fn ensure_pricing_currency(expected: &str, actual: &str, label: &str) -> DomainResult<()> {
     if expected == actual {
         Ok(())
     } else {
@@ -1243,4 +1263,72 @@ fn require_positive_multiplier(field: &str, value: DecimalValue) -> DomainResult
         return Err(DomainError::new(format!("{field} must be positive")));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod region_probe_chain_tests {
+    use super::{billing_region_probes, RegionProbe, DEFAULT_PRICE_REGION_CODE};
+
+    fn exact_regions(region_code: &str, default_region_code: Option<&str>) -> Vec<String> {
+        billing_region_probes(region_code, default_region_code)
+            .into_iter()
+            .filter_map(|probe| match probe {
+                RegionProbe::Exact(region) => Some(region),
+                RegionProbe::Any => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn default_region_is_probed_before_the_global_borrow() {
+        // The admin default billing region must win over the generic `global`
+        // bucket even when the routed region itself stays on `global` — this
+        // is the resolver-side guarantee behind "a configured default region
+        // is preferred over the global borrow".
+        assert_eq!(
+            exact_regions(DEFAULT_PRICE_REGION_CODE, Some("cn")),
+            vec!["cn".to_owned(), "global".to_owned()]
+        );
+        assert_eq!(
+            exact_regions(DEFAULT_PRICE_REGION_CODE, Some("CN")),
+            vec!["CN".to_owned(), "global".to_owned()],
+            "probe labels keep the authored case; matching is case-insensitive"
+        );
+        assert_eq!(
+            exact_regions("GLOBAL", Some("cn")),
+            vec!["cn".to_owned(), "GLOBAL".to_owned()],
+            "the generic-bucket classification is case-insensitive; probe labels keep the authored case"
+        );
+    }
+
+    #[test]
+    fn a_specific_requested_region_stays_first() {
+        assert_eq!(
+            exact_regions("us", Some("cn")),
+            vec!["us".to_owned(), "cn".to_owned(), "global".to_owned()]
+        );
+    }
+
+    #[test]
+    fn no_default_keeps_the_legacy_chain() {
+        assert_eq!(exact_regions("global", None), vec!["global".to_owned()]);
+        assert_eq!(
+            exact_regions("us", None),
+            vec!["us".to_owned(), "global".to_owned()]
+        );
+    }
+
+    #[test]
+    fn a_global_default_never_shadows_the_requested_region() {
+        // `global` as the configured default is a no-op: it must not reorder
+        // the chain or shadow a specific requested region.
+        assert_eq!(
+            exact_regions("us", Some("global")),
+            vec!["us".to_owned(), "global".to_owned()]
+        );
+        assert_eq!(
+            exact_regions("global", Some("global")),
+            vec!["global".to_owned()]
+        );
+    }
 }
