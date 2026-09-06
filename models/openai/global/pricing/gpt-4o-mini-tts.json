@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
       },
       "unitPrice": "0.600000",
@@ -41,7 +41,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
       },
       "unitPrice": "12.000000",

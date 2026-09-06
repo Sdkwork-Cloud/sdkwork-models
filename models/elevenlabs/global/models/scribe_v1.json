@@ -1,0 +1,46 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "audio"
+  ],
+  "catalogKey": "elevenlabs/scribe_v1",
+  "colorToken": "#7c2d12",
+  "description": "Legacy ElevenLabs Scribe v1 transcription model removed 2026-07-09; migrate to Scribe v2.",
+  "displayName": "Scribe v1",
+  "familyCode": "elevenlabs-tts",
+  "inputModalities": [
+    "text"
+  ],
+  "latencyP50Ms": 280,
+  "latencyP95Ms": 900,
+  "lifecycle": "deprecated",
+  "modelId": "scribe_v1",
+  "outputModalities": [
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "770.000000",
+  "regionCode": "global",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://elevenlabs.io/docs/changelog/2026/6/8"
+  },
+  "strengths": [
+    "Text to speech",
+    "Emotional expression",
+    "Multilingual"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.900000",
+  "vendorCode": "elevenlabs",
+  "vendorName": "ElevenLabs",
+  "winRate": "0.880000",
+  "usageScopes": [],
+  "codingVisible": false
+}

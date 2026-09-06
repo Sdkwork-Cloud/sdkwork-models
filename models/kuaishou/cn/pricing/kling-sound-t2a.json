@@ -14,8 +14,8 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
-        "sourceUrl": "https://app.klingai.com/cn/dev/document-api/productBilling/consumptionTable"
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://app.klingai.com/cn/dev/document-api/consumptionTable"
       },
       "unitPrice": "0.350000",
       "unitSize": "1",

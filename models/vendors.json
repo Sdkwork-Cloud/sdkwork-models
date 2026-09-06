@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "2026.08.31.1",
+  "catalogVersion": "2026.09.06.1",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -121,13 +121,13 @@
           "displayName": "OpenAI",
           "legalName": "OpenAI, Inc.",
           "marketScope": "global",
-          "modelCount": 27,
+          "modelCount": 31,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "openai/global/vendor.json",
-          "pricingFileCount": 27,
+          "pricingFileCount": 31,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 10,
@@ -258,13 +258,13 @@
           "displayName": "Anthropic",
           "legalName": "Anthropic, PBC",
           "marketScope": "global",
-          "modelCount": 8,
+          "modelCount": 10,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "anthropic/global/vendor.json",
-          "pricingFileCount": 8,
+          "pricingFileCount": 10,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 20,
@@ -403,13 +403,13 @@
           "displayName": "Google",
           "legalName": "Google LLC",
           "marketScope": "global",
-          "modelCount": 25,
+          "modelCount": 28,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "google/global/vendor.json",
-          "pricingFileCount": 25,
+          "pricingFileCount": 28,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 30,
@@ -534,13 +534,13 @@
           "displayName": "xAI",
           "legalName": "xAI",
           "marketScope": "global",
-          "modelCount": 11,
+          "modelCount": 12,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "xai/global/vendor.json",
-          "pricingFileCount": 11,
+          "pricingFileCount": 12,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 40,
@@ -808,13 +808,13 @@
           "displayName": "Alibaba Cloud",
           "legalName": "Alibaba Cloud",
           "marketScope": "china_mainland",
-          "modelCount": 10,
+          "modelCount": 11,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "alibaba/cn/vendor.json",
-          "pricingFileCount": 10,
+          "pricingFileCount": 11,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 50,
@@ -1020,13 +1020,13 @@
           "displayName": "Alibaba Cloud",
           "legalName": "Alibaba Cloud",
           "marketScope": "international",
-          "modelCount": 2,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "alibaba/global/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 51,
@@ -1284,13 +1284,13 @@
           "displayName": "DeepSeek",
           "legalName": "DeepSeek",
           "marketScope": "china_mainland",
-          "modelCount": 2,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "deepseek/cn/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 60,
@@ -1488,13 +1488,13 @@
           "displayName": "DeepSeek",
           "legalName": "DeepSeek",
           "marketScope": "international",
-          "modelCount": 2,
+          "modelCount": 3,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "deepseek/global/vendor.json",
-          "pricingFileCount": 2,
+          "pricingFileCount": 3,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 60,
@@ -1815,13 +1815,13 @@
           "displayName": "Zhipu AI",
           "legalName": "Zhipu AI",
           "marketScope": "china_mainland",
-          "modelCount": 5,
+          "modelCount": 7,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "zhipu/cn/vendor.json",
-          "pricingFileCount": 5,
+          "pricingFileCount": 7,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 80,
@@ -2188,13 +2188,13 @@
           "displayName": "Luma AI",
           "legalName": "Luma AI, Inc.",
           "marketScope": "global",
-          "modelCount": 3,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "luma_ai/global/vendor.json",
-          "pricingFileCount": 3,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 90,
@@ -2313,13 +2313,13 @@
           "displayName": "Vidu",
           "legalName": "ShengShu Technology",
           "marketScope": "china_mainland",
-          "modelCount": 5,
+          "modelCount": 6,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "vidu/cn/vendor.json",
-          "pricingFileCount": 5,
+          "pricingFileCount": 6,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 95,
@@ -2379,13 +2379,13 @@
           "displayName": "Vidu",
           "legalName": "ShengShu Technology",
           "marketScope": "global",
-          "modelCount": 5,
+          "modelCount": 6,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "vidu/global/vendor.json",
-          "pricingFileCount": 5,
+          "pricingFileCount": 6,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 96,
@@ -2687,13 +2687,13 @@
           "displayName": "Tencent Cloud",
           "legalName": "Tencent Cloud",
           "marketScope": "china_mainland",
-          "modelCount": 4,
+          "modelCount": 5,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "tencent/cn/vendor.json",
-          "pricingFileCount": 4,
+          "pricingFileCount": 5,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 100,
@@ -2820,13 +2820,13 @@
           "displayName": "ByteDance",
           "legalName": "ByteDance",
           "marketScope": "china_mainland",
-          "modelCount": 13,
+          "modelCount": 14,
           "openSource": false,
           "operatingRegions": [
             "CN"
           ],
           "path": "bytedance/cn/vendor.json",
-          "pricingFileCount": 13,
+          "pricingFileCount": 14,
           "rankingSnapshotCount": 1,
           "regionCode": "cn",
           "sortOrder": 110,
@@ -4154,13 +4154,13 @@
           "displayName": "ElevenLabs",
           "legalName": "ElevenLabs",
           "marketScope": "global",
-          "modelCount": 7,
+          "modelCount": 11,
           "openSource": false,
           "operatingRegions": [
             "GLOBAL"
           ],
           "path": "elevenlabs/global/vendor.json",
-          "pricingFileCount": 7,
+          "pricingFileCount": 11,
           "rankingSnapshotCount": 1,
           "regionCode": "global",
           "sortOrder": 170,

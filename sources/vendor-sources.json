@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.08.17.1",
-  "observedAt": "2026-08-13T00:00:00Z",
+  "catalogVersion": "2026.09.06.1",
+  "observedAt": "2026-09-06T00:00:00Z",
   "policy": {
     "officialFirst": true,
     "referenceRule": "external/new-api and external/sub2api may be used as cross-check references; official vendor URLs remain the preferred source for official price rows.",
@@ -35,7 +35,8 @@
         "additionalUrls": [
           "https://help.aliyun.com/zh/model-studio/",
           "https://developer.aliyun.com/article/1736226",
-          "https://qwenlm.github.io/blog/qwen3.8-max-preview/"
+          "https://qwenlm.github.io/blog/qwen3.8-max-preview/",
+          "https://platform.qianwenai.com/docs/changelog/models"
         ],
         "modelsUrl": "https://help.aliyun.com/zh/model-studio/text-generation-model",
         "pricingUrl": "https://help.aliyun.com/zh/model-studio/billing"
@@ -70,7 +71,8 @@
       "official": {
         "additionalUrls": [
           "https://dashscope-intl.aliyuncs.com/api/v1",
-          "https://www.qwencloud.com/models/qwen3.8-max"
+          "https://www.qwencloud.com/models/qwen3.8-max",
+          "https://platform.qianwenai.com/docs/changelog/models"
         ],
         "modelsUrl": "https://www.qwencloud.com/models/qwen3.7-max",
         "pricingUrl": "https://www.qwencloud.com/models/qwen3.7-max"
@@ -98,7 +100,8 @@
           "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
           "https://docs.anthropic.com/en/docs/about-claude/models",
           "https://www.anthropic.com/news/claude-sonnet-5",
-          "https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5"
+          "https://platform.claude.com/docs/en/about-claude/models/whats-new-opus-5",
+          "https://www.anthropic.com/claude-fable-and-mythos-5-1"
         ],
         "modelsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
         "pricingUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing"
@@ -327,6 +330,7 @@
       "official": {
         "additionalUrls": [
           "https://elevenlabs.io/docs/",
+          "https://elevenlabs.io/docs",
           "https://elevenlabs.io/pricing/api",
           "https://elevenlabs.io/docs/capabilities/sound-effects"
         ],
@@ -358,7 +362,9 @@
           "https://ai.google.dev/gemini-api/docs/models/gemini",
           "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/",
           "https://ai.google.dev/gemini-api/docs/imagen",
-          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/"
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-7-flash/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
         ],
         "modelsUrl": "https://ai.google.dev/gemini-api/docs/models",
         "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing"
@@ -681,7 +687,9 @@
           "https://developers.openai.com/api/docs/deprecations",
           "https://platform.openai.com/docs/guides/text-to-speech",
           "https://platform.openai.com/docs/guides/speech-to-text",
-          "https://openai.com/index/previewing-gpt-5-6-sol/"
+          "https://openai.com/index/previewing-gpt-5-6-sol/",
+          "https://openai.com/index/gpt-6-astra/",
+          "https://developers.openai.ac.cn/api/docs/guides/video-generation"
         ],
         "modelsUrl": "https://platform.openai.com/docs/models",
         "pricingUrl": "https://openai.com/api/pricing/"
@@ -839,7 +847,8 @@
       "official": {
         "additionalUrls": [
           "https://cloud.tencent.com/document/product/1729/",
-          "https://cloud.tencent.com/document/product/1823/130055"
+          "https://cloud.tencent.com/document/product/1823/130055",
+          "https://cloud.tencent.com.cn/product/tclm"
         ],
         "modelsUrl": "https://cloud.tencent.com/document/product/1729/104753",
         "pricingUrl": "https://cloud.tencent.com/document/product/1729/97731"
@@ -1072,7 +1081,8 @@
       "notes": "Zhipu AI mainland China operation with GLM chat, CogView image, CogVideoX video, and Embedding-3 models.",
       "official": {
         "additionalUrls": [
-          "https://docs.bigmodel.cn/"
+          "https://docs.bigmodel.cn/",
+          "https://open.bigmodel.cn/pricing"
         ],
         "modelsUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2",
         "pricingUrl": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"

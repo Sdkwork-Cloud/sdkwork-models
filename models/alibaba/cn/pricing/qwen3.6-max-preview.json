@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "9.000000",
@@ -41,7 +41,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,
@@ -76,7 +76,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "unitPrice": "54.000000",
@@ -104,7 +104,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/billing"
       },
       "thresholdTokens": 128000,

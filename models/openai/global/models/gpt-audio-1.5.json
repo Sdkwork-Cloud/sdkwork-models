@@ -1,0 +1,49 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "audio",
+    "chat"
+  ],
+  "catalogKey": "openai/gpt-audio-1.5",
+  "codingVisible": false,
+  "colorToken": "#6366f1",
+  "description": "OpenAI next-generation audio understanding model successor to the GPT-4o audio family for transcription and audio reasoning.",
+  "displayName": "GPT Audio 1.5",
+  "familyCode": "gpt-tts",
+  "inputModalities": [
+    "text",
+    "audio"
+  ],
+  "latencyP50Ms": 450,
+  "latencyP95Ms": 1500,
+  "lifecycle": "active",
+  "modelId": "gpt-audio-1.5",
+  "outputModalities": [
+    "text",
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "820.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/"
+  },
+  "strengths": [
+    "Text to speech",
+    "Voice instructions",
+    "Low latency"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.940000",
+  "usageScopes": [],
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.900000"
+}

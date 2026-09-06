@@ -1,0 +1,38 @@
+{
+  "catalogKey": "vidu/viduq3-mix",
+  "currency": "USD",
+  "modelId": "viduq3-mix",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "vidu-global-viduq3-mix-second-720p",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://platform.vidu.com/docs/pricing"
+      },
+      "unitPrice": "0.055000",
+      "unitSize": "1",
+      "priceBookCode": "models.vidu.global.official",
+      "productCode": "models.vidu.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "b4a1f4bbd757f446e8d09fdfed73f5cf42f4b1e2cba278c95f46762c648b87c1",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "vidu"
+}

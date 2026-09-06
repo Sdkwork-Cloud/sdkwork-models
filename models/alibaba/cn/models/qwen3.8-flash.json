@@ -1,0 +1,54 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "alibaba/qwen3.8-flash",
+  "codingVisible": true,
+  "colorToken": "#2563eb",
+  "contextTokens": 1000000,
+  "description": "Qwen3.8-Flash open-weight MoE model released on August 26, 2026 with native 1M context and multimodal understanding.",
+  "displayName": "Qwen3.8 Flash",
+  "familyCode": "qwen",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 700,
+  "latencyP95Ms": 2300,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 65536,
+  "modelId": "qwen3.8-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "900.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://platform.qianwenai.com/docs/changelog/models"
+  },
+  "strengths": [
+    "Long context",
+    "Coding",
+    "Chinese"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.980000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "alibaba",
+  "vendorName": "Alibaba Cloud",
+  "winRate": "0.900000"
+}

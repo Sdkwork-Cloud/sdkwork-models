@@ -1,7 +1,7 @@
 {
   "families": [
     {
-      "defaultModel": "gemini-3.6-flash",
+      "defaultModel": "gemini-3.8-flash",
       "displayName": "Gemini",
       "familyCode": "gemini",
       "familyType": "llm",

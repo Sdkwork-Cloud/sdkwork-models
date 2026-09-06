@@ -5,58 +5,70 @@
     {
       "items": [
         {
+          "catalogKey": "google/gemini-3.8-flash",
+          "modelId": "gemini-3.8-flash",
+          "pricingText": "$0.75 / 1M input; $3.75 / 1M output",
+          "rankNo": 1
+        },
+        {
+          "catalogKey": "google/gemini-3.7-flash",
+          "modelId": "gemini-3.7-flash",
+          "pricingText": "$0.75 / 1M input; $3.75 / 1M output",
+          "rankNo": 2
+        },
+        {
           "catalogKey": "google/gemini-3.6-flash",
           "modelId": "gemini-3.6-flash",
-          "pricingText": "$1.50 / 1M input; $7.50 / 1M output",
-          "rankNo": 1
+          "pricingText": "$0.75 / 1M input; $3.75 / 1M output",
+          "rankNo": 3
         },
         {
           "catalogKey": "google/gemini-3.5-flash-lite",
           "modelId": "gemini-3.5-flash-lite",
           "pricingText": "$0.30 / 1M input; $2.50 / 1M output",
-          "rankNo": 2
+          "rankNo": 4
         },
         {
           "catalogKey": "google/gemini-3.5-flash",
           "modelId": "gemini-3.5-flash",
           "pricingText": "$1.50 / 1M input; $9.00 / 1M output",
-          "rankNo": 3
+          "rankNo": 5
         },
         {
           "catalogKey": "google/gemini-3.1-pro-preview",
           "modelId": "gemini-3.1-pro-preview",
           "pricingText": "$2.00 / 1M input; $12.00 / 1M output",
-          "rankNo": 4
+          "rankNo": 6
         },
         {
           "catalogKey": "google/gemini-3-flash-preview",
           "modelId": "gemini-3-flash-preview",
           "pricingText": "$0.50 / 1M input; $3.00 / 1M output",
-          "rankNo": 5
+          "rankNo": 7
         },
         {
           "catalogKey": "google/gemini-3.1-flash-lite",
           "modelId": "gemini-3.1-flash-lite",
           "pricingText": "$0.10 / 1M input; $0.40 / 1M output",
-          "rankNo": 6
+          "rankNo": 8
         },
         {
           "catalogKey": "google/gemini-3.1-flash-lite-preview",
           "modelId": "gemini-3.1-flash-lite-preview",
           "pricingText": "$0.10 / 1M input; $0.40 / 1M output",
-          "rankNo": 7
+          "rankNo": 9
         },
         {
           "catalogKey": "google/gemini-3.1-flash-live-preview",
           "modelId": "gemini-3.1-flash-live-preview",
           "pricingText": "$0.50 / 1M text input; $3.00 / 1M audio/video input; $12.00 / 1M audio output",
-          "rankNo": 8
+          "rankNo": 10
         },
         {
           "catalogKey": "google/gemini-3.1-flash-image",
           "modelId": "gemini-3.1-flash-image",
           "pricingText": "$0.50 / 1M text input; $60.00 / 1M image output",
-          "rankNo": 9
+          "rankNo": 11
         },
         {
           "catalogKey": "google/gemini-3-pro-image",

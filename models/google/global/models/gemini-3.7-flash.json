@@ -1,0 +1,57 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "google/gemini-3.7-flash",
+  "colorToken": "#1d4ed8",
+  "contextTokens": 1048576,
+  "description": "Gemini 3.7 Flash workhorse model with improved agentic coding, tool use and long-context knowledge workflows. GA since 2026-08-12.",
+  "displayName": "Gemini 3.7 Flash",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 360,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 65535,
+  "modelId": "gemini-3.7-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1080.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-7-flash/"
+  },
+  "strengths": [
+    "Agents",
+    "Coding",
+    "Multimodal",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.997000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.970000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
+}

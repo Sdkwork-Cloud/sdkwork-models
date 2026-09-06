@@ -9,6 +9,14 @@
       "sortOrder": 10
     },
     {
+      "defaultModel": "gpt-6-astra",
+      "displayName": "GPT-6",
+      "familyCode": "gpt-6",
+      "familyType": "llm",
+      "primaryModality": "text",
+      "sortOrder": 12
+    },
+    {
       "defaultModel": "gpt-image-2",
       "displayName": "GPT Image",
       "familyCode": "gpt-image",

@@ -1,0 +1,66 @@
+{
+  "catalogKey": "openai/gpt-realtime-2.1-mini",
+  "currency": "USD",
+  "modelId": "gpt-realtime-2.1-mini",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2.1-mini-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/models"
+      },
+      "unitPrice": "2.000000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "d6c4f88748b54c667304534bad135a03b17a49fe48e8ac710f525e6e9d2b6515",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-06-14T00:00:00Z",
+      "meterCode": "llm_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-realtime-2.1-mini-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://platform.openai.com/docs/models"
+      },
+      "unitPrice": "8.000000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "65f467ff639520a4bfc6617894fb508c2981ca858ae4d7c9d6d249869c311cce",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "openai"
+}

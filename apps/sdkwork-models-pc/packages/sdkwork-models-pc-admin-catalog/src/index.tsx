@@ -160,6 +160,7 @@ export function ModelAdmin() {
   const [isVendorModalOpen, setIsVendorModalOpen] = useState(false);
   const [isModelModalOpen, setIsModelModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncNotice, setSyncNotice] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Model | null>(null);
   const [editingModel, setEditingModel] = useState<Model | null>(null);
   const [deletingModelId, setDeletingModelId] = useState<string | null>(null);
@@ -303,10 +304,19 @@ export function ModelAdmin() {
   };
 
   const handleSyncAll = async () => {
+    if (isSyncing) return;
+    if (!window.confirm(t('common.actions.syncModelCatalogConfirm'))) return;
     setIsSyncing(true);
     setLoadError(null);
+    setSyncNotice(null);
     try {
-      await ModelService.syncVendorsAndModels();
+      const report = await ModelService.syncVendorsAndModels();
+      setSyncNotice(t('common.actions.syncModelCatalogDone', {
+        version: report.catalogVersion || '—',
+        vendors: report.vendorCount,
+        models: report.modelCount,
+        prices: report.priceCount,
+      }));
       await loadInitialCatalog();
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : 'Failed to sync model catalog');
@@ -584,6 +594,11 @@ export function ModelAdmin() {
 
   return (
     <div className="flex min-h-0 h-full w-full flex-col bg-slate-50 dark:bg-[#121212] rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-white/5">
+      {syncNotice ? (
+        <div className="shrink-0 border-b border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300" role="status">
+          {syncNotice}
+        </div>
+      ) : null}
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* SIDEBAR - VENDORS */}
         <div className="w-64 bg-white dark:bg-[#1a1a1a] border-r border-slate-200 dark:border-white/10 flex flex-col shrink-0">
@@ -595,10 +610,13 @@ export function ModelAdmin() {
                   type="button"
                   onClick={handleSyncAll}
                   disabled={isSyncing}
-                  className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-slate-200"
+                  className="flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-slate-200"
                   title={isSyncing ? t('common.actions.syncingCatalog') : t('common.actions.syncModelCatalog')}
+                  aria-label={isSyncing ? t('common.actions.syncingCatalog') : t('common.actions.syncModelCatalog')}
+                  data-models-admin-catalog-sync
                 >
-                  {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                  {isSyncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                  <span className="hidden xl:inline">{isSyncing ? t('common.actions.syncingCatalog') : t('common.actions.syncModelCatalog')}</span>
                 </button>
                 <button type="button" onClick={openVendorModal} className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400" title={t('common.actions.addModelVendor')}>
                   <Plus className="w-4 h-4" />

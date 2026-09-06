@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "2026.08.17.1",
-  "observedAt": "2026-08-13T00:00:00Z",
+  "catalogVersion": "2026.09.06.1",
+  "observedAt": "2026-09-06T00:00:00Z",
   "schemaVersion": "1.1.0",
   "vendors": [
     {
@@ -10,14 +10,18 @@
         },
         {
           "modelId": "deepseek-v4-pro"
+        },
+        {
+          "modelId": "deepseek-v4-flash-vision-exp"
         }
       ],
-      "observedAt": "2026-08-13T00:00:00Z",
+      "observedAt": "2026-09-05T00:00:00Z",
       "officialUrls": [
-        "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+        "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+        "https://api-docs.deepseek.com/zh-cn/updates/"
       ],
       "regionCode": "cn",
-      "sourceSnapshotHash": "499ee4249775e74f51fff8023e00cea078865c8dc69273cb5828d0038c895022",
+      "sourceSnapshotHash": "ba7eda385bf76d3bf3a4f6e3daaab0154cb02d2ce4ddd2811eaf649bda97a671",
       "vendorCode": "deepseek"
     },
     {
@@ -27,14 +31,18 @@
         },
         {
           "modelId": "deepseek-v4-pro"
+        },
+        {
+          "modelId": "deepseek-v4-flash-vision-exp"
         }
       ],
-      "observedAt": "2026-08-13T00:00:00Z",
+      "observedAt": "2026-09-05T00:00:00Z",
       "officialUrls": [
-        "https://api-docs.deepseek.com/quick_start/pricing"
+        "https://api-docs.deepseek.com/quick_start/pricing",
+        "https://api-docs.deepseek.com/updates/"
       ],
       "regionCode": "global",
-      "sourceSnapshotHash": "352750da14fc75c92043e4b7689ea14d490b16402664885f70c624a8a668425d",
+      "sourceSnapshotHash": "2c32bdf1724bd596d92615149998ebc1c9b7b42930b0df078ed73b372ec88594",
       "vendorCode": "deepseek"
     },
     {
@@ -219,12 +227,29 @@
       "vendorCode": "moonshot"
     },
     {
-      "vendorCode": "xiaomi",
+      "models": [
+        {
+          "modelId": "mimo-v2.5-pro"
+        },
+        {
+          "modelId": "mimo-v2.5"
+        },
+        {
+          "modelId": "mimo-v2.5-pro-fp4-dflash"
+        },
+        {
+          "modelId": "mimo-v2.5-pro-ultraspeed"
+        }
+      ],
+      "observedAt": "2026-08-13T00:00:00Z",
+      "officialUrls": [
+        "https://platform.xiaomimimo.com"
+      ],
       "regionCode": "global",
-      "observedAt": "2026-08-13T00:00:00Z",
-      "officialUrls": [
-        "https://platform.xiaomimimo.com"
-      ],
+      "sourceSnapshotHash": "91661baded98ecdee5933af30b29676ee244a819e6f4eab273ff38e3c98ac1fa",
+      "vendorCode": "xiaomi"
+    },
+    {
       "models": [
         {
           "modelId": "mimo-v2.5-pro"
@@ -234,37 +259,20 @@
         },
         {
           "modelId": "mimo-v2.5-pro-fp4-dflash"
+        },
+        {
+          "modelId": "mimo-v2.5-pro-ultraspeed"
         }
       ],
-      "sourceSnapshotHash": "dc1c80097c07ebf5b9f2b9f0e53582fb2304e37e1336a14b9a7bd53cfcc6e6d9"
-    },
-    {
-      "vendorCode": "xiaomi",
-      "regionCode": "cn",
       "observedAt": "2026-08-13T00:00:00Z",
       "officialUrls": [
         "https://platform.xiaomimimo.com"
       ],
-      "models": [
-        {
-          "modelId": "mimo-v2.5-pro"
-        },
-        {
-          "modelId": "mimo-v2.5"
-        },
-        {
-          "modelId": "mimo-v2.5-pro-fp4-dflash"
-        }
-      ],
-      "sourceSnapshotHash": "49c880228c95e0d0a4717ae35b919476a3d5ee298edf49dd8dd58ffcbbc2aace"
+      "regionCode": "cn",
+      "sourceSnapshotHash": "7c66b8fe9b867aaf1edd0d3f430f7c3f3fa680a8306258af44ee3046ab939c4e",
+      "vendorCode": "xiaomi"
     },
     {
-      "vendorCode": "zhipu",
-      "regionCode": "cn",
-      "observedAt": "2026-08-13T00:00:00Z",
-      "officialUrls": [
-        "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
-      ],
       "models": [
         {
           "modelId": "glm-5.2"
@@ -280,9 +288,21 @@
         },
         {
           "modelId": "embedding-3"
+        },
+        {
+          "modelId": "glm-5.3"
+        },
+        {
+          "modelId": "glm-5.3-flash"
         }
       ],
-      "sourceSnapshotHash": "2d63b44b74c68a8d6f2439d71580e561f5469bd80e69ab0f5a124661033cc9db"
+      "observedAt": "2026-08-13T00:00:00Z",
+      "officialUrls": [
+        "https://docs.bigmodel.cn/cn/guide/models/text/glm-5.2"
+      ],
+      "regionCode": "cn",
+      "sourceSnapshotHash": "7189fd3ac03c9d62446477825d1a8b54891ac1f24cd89637b72a66fb6b349da6",
+      "vendorCode": "zhipu"
     }
   ]
 }

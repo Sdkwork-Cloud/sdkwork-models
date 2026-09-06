@@ -5,31 +5,31 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-07-23T00:00:00Z",
-      "meterCode": "api_request",
+      "effectiveFrom": "2026-08-05T00:00:00Z",
+      "meterCode": "video_output_second",
       "minimumQuantity": "0",
-      "priceId": "bfl-flux-3-api-request",
+      "priceId": "bfl-flux-3-video-second",
       "priceSide": "official",
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://docs.bfl.ai/quick_start/pricing"
       },
-      "unitPrice": "0.000000",
+      "unitPrice": "0.170000",
       "unitSize": "1",
       "priceBookCode": "models.black_forest_labs.global.official",
       "productCode": "models.black_forest_labs.video",
       "operationCode": "video.generate",
-      "billability": "unknown",
-      "chargeTiming": "request_accepted",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
       "calculationMode": "per_unit",
-      "quantityAggregation": "distinct_invocation",
+      "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "7cf18d870b9fd190cc7dbb6b3861f779328049ec4517225212af67d30e775030",
-      "priority": 100,
       "rateVariant": "standard",
-      "schedule": null
+      "schedule": null,
+      "priority": 100,
+      "rateHash": "49b5334d96e0f93082ff53c2daf9f5cdca7b58aebb10e4723936e5900a3cbc56"
     }
   ],
   "regionCode": "global",

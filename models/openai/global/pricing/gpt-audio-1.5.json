@@ -1,0 +1,66 @@
+{
+  "catalogKey": "openai/gpt-audio-1.5",
+  "currency": "USD",
+  "modelId": "gpt-audio-1.5",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "llm_input_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-audio-1.5-input",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
+      },
+      "unitPrice": "0.600000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "69d9295ac355c5107c26068dff61eda1f9f457db4f470a29cc29204135046e2c",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-02T00:00:00Z",
+      "meterCode": "audio_output_token",
+      "minimumQuantity": "0",
+      "priceId": "openai-gpt-audio-1.5-audio-output",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o-mini-tts"
+      },
+      "unitPrice": "12.000000",
+      "unitSize": "1000000",
+      "priceBookCode": "models.openai.global.official",
+      "productCode": "models.openai.audio",
+      "operationCode": "audio.generate",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "b64c2f4c6b758615a013e326cb753adb6537d4f0841138b30a1390b63e2a6537",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "openai"
+}

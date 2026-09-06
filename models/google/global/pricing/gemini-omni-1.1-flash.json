@@ -1,0 +1,38 @@
+{
+  "catalogKey": "google/gemini-omni-1.1-flash",
+  "currency": "USD",
+  "modelId": "gemini-omni-1.1-flash",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-27T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "google-gemini-omni-1.1-flash-second",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-06T00:00:00Z",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini"
+      },
+      "unitPrice": "0.400000",
+      "unitSize": "1",
+      "rateVariant": "standard",
+      "priceBookCode": "models.google.global.official",
+      "productCode": "models.google.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "priority": 100,
+      "schedule": null,
+      "rateHash": "beaa54881f0dafa5d299812a377abb2ccd76854551d2e946cea793481311f4b3"
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "google"
+}

@@ -14,7 +14,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://platform.vidu.cn/docs/pricing"
       },
       "tierCode": "under_5s",
@@ -50,7 +50,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-03T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://platform.vidu.cn/docs/pricing"
       },
       "tierCode": "under_10s",

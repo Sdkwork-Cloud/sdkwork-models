@@ -5,7 +5,7 @@
   "prices": [
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "effectiveFrom": "2026-08-21T00:00:00Z",
       "meterCode": "llm_input_token",
       "minimumQuantity": "0",
       "priceId": "openai-gpt-5-6-sol-input",
@@ -13,10 +13,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
-      "unitPrice": "5.000000",
+      "unitPrice": "4.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.openai.global.official",
       "productCode": "models.openai.chat",
@@ -26,14 +26,14 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "be0089de046fc949deccd2f020aff4444bc8e853108a77b5780e25dcfaf5df32",
+      "rateHash": "cefa4a7ca24b21f4ed6fa503b2a342a0e257298cce2861840f9ef1649f7bf587",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
     },
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "effectiveFrom": "2026-08-21T00:00:00Z",
       "meterCode": "llm_output_token",
       "minimumQuantity": "0",
       "priceId": "openai-gpt-5-6-sol-output",
@@ -41,10 +41,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
-      "unitPrice": "30.000000",
+      "unitPrice": "20.000000",
       "unitSize": "1000000",
       "priceBookCode": "models.openai.global.official",
       "productCode": "models.openai.chat",
@@ -54,14 +54,14 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "8744a707f13bb52bd6cc504116e25511a239cd4a45f88b66dabb5a8c67637d84",
+      "rateHash": "344644b7b2e8784a8b7f3ccb95fd84f74927c81fd300e053856947eb5e435d6e",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null
     },
     {
       "currency": "USD",
-      "effectiveFrom": "2026-06-26T00:00:00Z",
+      "effectiveFrom": "2026-08-21T00:00:00Z",
       "meterCode": "llm_cache_read_token",
       "minimumQuantity": "0",
       "priceId": "openai-gpt-5.6-sol-cache-read",
@@ -69,10 +69,10 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://openai.com/api/pricing/"
       },
-      "unitPrice": "0.500000",
+      "unitPrice": "0.400000",
       "unitSize": "1000000",
       "priceBookCode": "models.openai.global.official",
       "productCode": "models.openai.chat",
@@ -82,7 +82,7 @@
       "calculationMode": "per_unit",
       "quantityAggregation": "sum",
       "conditions": [],
-      "rateHash": "b516adbbd92f1aedaa28f1ff7fe4018f0d99cd237f0323e0da712cad9c28f07e",
+      "rateHash": "706a3a07cab3f2f75636b3c5a311b50d533a9c56b1d9af3dcce846c4ef55ec10",
       "priority": 100,
       "rateVariant": "standard",
       "schedule": null

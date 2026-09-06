@@ -1,0 +1,48 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "image"
+  ],
+  "catalogKey": "bytedance/doubao-seedream-5-0-pro-260628",
+  "colorToken": "#dc2626",
+  "description": "ByteDance Doubao Seedream 5.0 Pro image generation model released 2026-07-08, current Seedream flagship.",
+  "displayName": "Doubao Seedream 5.0 Pro",
+  "familyCode": "seedream",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 4500,
+  "latencyP95Ms": 16000,
+  "lifecycle": "active",
+  "modelId": "doubao-seedream-5-0-pro-260628",
+  "outputModalities": [
+    "image"
+  ],
+  "primaryCapability": "image",
+  "rankScore": "800.000000",
+  "regionCode": "cn",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://www.volcengine.com/docs/82379"
+  },
+  "strengths": [
+    "Text to image",
+    "Image editing",
+    "Multi-reference fusion",
+    "4K output"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "bytedance",
+  "vendorName": "ByteDance",
+  "winRate": "0.890000",
+  "usageScopes": [],
+  "codingVisible": false
+}

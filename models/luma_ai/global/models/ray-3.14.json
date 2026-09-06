@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "luma_ai/ray-3.14",
+  "colorToken": "#6366f1",
+  "description": "Luma Dream Machine Ray 3.14 predecessor to Ray 3.2; deprecation superseded by Ray 3.2.",
+  "displayName": "Ray 3.14 (Pi)",
+  "familyCode": "luma-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "deprecated",
+  "modelId": "ray-3.14",
+  "outputModalities": [
+    "video"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "870.000000",
+  "regionCode": "global",
+  "releaseStage": "deprecated",
+  "routingState": "catalog_only",
+  "schemaVersion": "1.0.0",
+  "shelfState": "hidden",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://docs.lumalabs.ai/docs/video-generation"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Video editing",
+    "HDR output"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.950000",
+  "vendorCode": "luma_ai",
+  "vendorName": "Luma AI",
+  "winRate": "0.900000",
+  "usageScopes": [],
+  "codingVisible": false
+}

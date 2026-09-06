@@ -1,0 +1,55 @@
+{
+  "apiFormat": "openai_responses",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "openai/gpt-6-astra",
+  "codingVisible": true,
+  "colorToken": "#111827",
+  "contextTokens": 1050000,
+  "description": "GPT-6 Astra, OpenAI's new flagship model released on 2026-09-03, leading the GPT-6 generation with 1.05M token context for the most demanding reasoning and long-horizon agentic work.",
+  "displayName": "GPT-6 Astra",
+  "familyCode": "gpt-6",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1000,
+  "latencyP95Ms": 3500,
+  "lifecycle": "active",
+  "maxInputTokens": 1050000,
+  "maxOutputTokens": 128000,
+  "modelId": "gpt-6-astra",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1250.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://openai.com/index/gpt-6-astra/"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "1.000000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.995000"
+}

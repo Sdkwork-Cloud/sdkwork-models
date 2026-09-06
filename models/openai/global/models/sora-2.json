@@ -6,7 +6,7 @@
   "catalogKey": "openai/sora-2",
   "codingVisible": false,
   "colorToken": "#10a37f",
-  "description": "OpenAI Sora 2 text-to-video model for cinematic video generation at 720p. OpenAI scheduled API shutdown on 2026-09-24; plan migration before that date.",
+  "description": "OpenAI Sora 2 text-to-video model for cinematic video generation at 720p. Deprecated, Videos API closes 2026-09-24; plan migration before that date.",
   "displayName": "Sora 2",
   "familyCode": "sora",
   "inputModalities": [
@@ -15,7 +15,7 @@
   ],
   "latencyP50Ms": 60000,
   "latencyP95Ms": 180000,
-  "lifecycle": "active",
+  "lifecycle": "deprecated",
   "modelId": "sora-2",
   "outputModalities": [
     "video"
@@ -23,13 +23,13 @@
   "primaryCapability": "video",
   "rankScore": "850.000000",
   "regionCode": "global",
-  "releaseStage": "active",
+  "releaseStage": "deprecated",
   "routingState": "enabled",
   "schemaVersion": "1.0.0",
   "shelfState": "listed",
   "source": {
-    "observedAt": "2026-08-13T00:00:00Z",
-    "sourceUrl": "https://developers.openai.com/api/docs/deprecations"
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://developers.openai.ac.cn/api/docs/guides/video-generation"
   },
   "strengths": [
     "Video generation",

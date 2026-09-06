@@ -1,0 +1,38 @@
+{
+  "catalogKey": "elevenlabs/eleven_v3_conversational",
+  "currency": "USD",
+  "modelId": "eleven_v3_conversational",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-08-20T00:00:00Z",
+      "meterCode": "tts_input_character",
+      "minimumQuantity": "0",
+      "priceId": "elevenlabs-eleven-v3-conversational-character",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://elevenlabs.io/pricing/api"
+      },
+      "unitPrice": "0.050000",
+      "unitSize": "1000",
+      "priceBookCode": "models.elevenlabs.global.official",
+      "productCode": "models.elevenlabs.audio",
+      "operationCode": "speech.synthesize",
+      "billability": "chargeable",
+      "chargeTiming": "usage_reported",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [],
+      "rateHash": "90648ecb527246ce70472adce6a859a3740512059062b8fac4bc1a68ed39456b",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "elevenlabs"
+}

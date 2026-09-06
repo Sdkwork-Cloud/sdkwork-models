@@ -1,0 +1,80 @@
+{
+  "catalogKey": "luma_ai/ray-3",
+  "currency": "USD",
+  "modelId": "ray-3",
+  "prices": [
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "luma-ai-global-ray-3-2-second-720p-5s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://docs.agents.lumalabs.ai/guides/pricing"
+      },
+      "tierCode": "dur_5s",
+      "unitPrice": "0.060000",
+      "unitSize": "1",
+      "priceBookCode": "models.luma_ai.global.official",
+      "productCode": "models.luma_ai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_5s"
+        }
+      ],
+      "rateHash": "7adde0df3688554990bd50c66b3760c7963b521a990e9947d1fa108298cc4d8d",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    },
+    {
+      "currency": "USD",
+      "effectiveFrom": "2026-07-14T00:00:00Z",
+      "meterCode": "video_output_second",
+      "minimumQuantity": "0",
+      "priceId": "luma-ai-global-ray-3-2-second-720p-10s",
+      "priceSide": "official",
+      "pricingScope": "model",
+      "quantityStep": "1",
+      "source": {
+        "observedAt": "2026-09-05T00:00:00Z",
+        "sourceUrl": "https://docs.agents.lumalabs.ai/guides/pricing"
+      },
+      "tierCode": "dur_10s",
+      "unitPrice": "0.090000",
+      "unitSize": "1",
+      "priceBookCode": "models.luma_ai.global.official",
+      "productCode": "models.luma_ai.video",
+      "operationCode": "video.generate",
+      "billability": "chargeable",
+      "chargeTiming": "successful_result",
+      "calculationMode": "per_unit",
+      "quantityAggregation": "sum",
+      "conditions": [
+        {
+          "dimensionCode": "tier_code",
+          "operator": "eq",
+          "value": "dur_10s"
+        }
+      ],
+      "rateHash": "ac436b6f76a2996b94bb995707e521e854324fd12bbcb060df8e079abdbcf565",
+      "priority": 100,
+      "rateVariant": "standard",
+      "schedule": null
+    }
+  ],
+  "regionCode": "global",
+  "schemaVersion": "2.0.0",
+  "vendorCode": "luma_ai"
+}

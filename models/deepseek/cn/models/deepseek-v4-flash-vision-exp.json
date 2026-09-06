@@ -1,0 +1,54 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "deepseek/deepseek-v4-flash-vision-exp",
+  "codingVisible": true,
+  "colorToken": "#0f766e",
+  "contextTokens": 1048576,
+  "description": "DeepSeek V4 Flash Vision experimental model adding image input and visual understanding to the V4 Flash text tier. API since 2026-08-21.",
+  "displayName": "DeepSeek V4 Flash Vision (Exp)",
+  "familyCode": "deepseek",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 500,
+  "latencyP95Ms": 1900,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 393216,
+  "modelId": "deepseek-v4-flash-vision-exp",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "870.000000",
+  "regionCode": "cn",
+  "releaseStage": "preview",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://api-docs.deepseek.com/zh-cn/updates/"
+  },
+  "strengths": [
+    "Vision understanding",
+    "Low latency",
+    "Coding"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.900000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "deepseek",
+  "vendorName": "DeepSeek",
+  "winRate": "0.860000"
+}

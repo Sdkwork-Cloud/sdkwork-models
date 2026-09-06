@@ -1,0 +1,48 @@
+{
+  "apiFormat": "vendor_native",
+  "capabilities": [
+    "video"
+  ],
+  "catalogKey": "vidu/viduq3-mix",
+  "colorToken": "#7c3aed",
+  "description": "Vidu Q3 Mix text-to-video and reference-to-video base tier with 16-bit HDR motion, CN pricing.",
+  "displayName": "Vidu Q3 Mix",
+  "familyCode": "vidu-video",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 60000,
+  "latencyP95Ms": 180000,
+  "lifecycle": "active",
+  "modelId": "viduq3-mix",
+  "outputModalities": [
+    "video",
+    "audio"
+  ],
+  "primaryCapability": "video",
+  "rankScore": "840.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://platform.vidu.com/docs/pricing"
+  },
+  "strengths": [
+    "Text to video",
+    "Image to video",
+    "Fast generation"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": false,
+  "supportsTools": false,
+  "trendScore": "0.930000",
+  "vendorCode": "vidu",
+  "vendorName": "Vidu",
+  "winRate": "0.880000",
+  "usageScopes": [],
+  "codingVisible": false
+}

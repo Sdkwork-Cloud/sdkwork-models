@@ -1,0 +1,57 @@
+{
+  "apiFormat": "openai_compatible",
+  "capabilities": [
+    "chat",
+    "audio"
+  ],
+  "catalogKey": "openai/gpt-realtime-2.1",
+  "codingVisible": true,
+  "colorToken": "#6366f1",
+  "contextTokens": 128000,
+  "description": "OpenAI next-generation realtime reasoning model successor to GPT Realtime 2, retaining text/audio/image multimodal realtime interactions.",
+  "displayName": "GPT Realtime 2.1",
+  "familyCode": "gpt-realtime",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio"
+  ],
+  "latencyP50Ms": 160,
+  "latencyP95Ms": 650,
+  "lifecycle": "active",
+  "maxInputTokens": 128000,
+  "maxOutputTokens": 32000,
+  "modelId": "gpt-realtime-2.1",
+  "outputModalities": [
+    "text",
+    "audio"
+  ],
+  "primaryCapability": "audio",
+  "rankScore": "875.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/"
+  },
+  "strengths": [
+    "Realtime",
+    "Voice",
+    "Reasoning",
+    "Tool use"
+  ],
+  "supportsJsonSchema": false,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.990000",
+  "usageScopes": [
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "openai",
+  "vendorName": "OpenAI",
+  "winRate": "0.940000"
+}

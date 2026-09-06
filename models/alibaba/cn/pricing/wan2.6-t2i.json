@@ -13,7 +13,7 @@
       "pricingScope": "model",
       "quantityStep": "1",
       "source": {
-        "observedAt": "2026-08-13T00:00:00Z",
+        "observedAt": "2026-09-05T00:00:00Z",
         "sourceUrl": "https://help.aliyun.com/zh/model-studio/model-training-and-deployment-billing"
       },
       "unitPrice": "0.200000",

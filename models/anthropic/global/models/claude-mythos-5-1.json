@@ -1,0 +1,56 @@
+{
+  "apiFormat": "anthropic_messages",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "anthropic/claude-mythos-5-1",
+  "codingVisible": true,
+  "colorToken": "#7c2d12",
+  "contextTokens": 1000000,
+  "description": "Claude Mythos 5.1, the restricted-access flagship modeled on Claude Fable 5.1 released on 2026-09-01, limited to Project Glasswing invitees, with 1M token context and $10/$50 per 1M tokens.",
+  "displayName": "Claude Mythos 5.1",
+  "familyCode": "claude",
+  "inputModalities": [
+    "text",
+    "image"
+  ],
+  "latencyP50Ms": 1000,
+  "latencyP95Ms": 3500,
+  "lifecycle": "active",
+  "maxInputTokens": 1000000,
+  "maxOutputTokens": 128000,
+  "modelId": "claude-mythos-5-1",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1300.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-06T00:00:00Z",
+    "sourceUrl": "https://www.anthropic.com/claude-fable-and-mythos-5-1"
+  },
+  "strengths": [
+    "Reasoning",
+    "Coding",
+    "Agents",
+    "Long context",
+    "Adaptive thinking"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "1.000000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "vendorCode": "anthropic",
+  "vendorName": "Anthropic",
+  "winRate": "0.995000"
+}

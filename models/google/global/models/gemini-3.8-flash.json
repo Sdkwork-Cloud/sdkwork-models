@@ -1,0 +1,57 @@
+{
+  "apiFormat": "google_gemini",
+  "capabilities": [
+    "chat"
+  ],
+  "catalogKey": "google/gemini-3.8-flash",
+  "colorToken": "#1d4ed8",
+  "contextTokens": 1048576,
+  "description": "Gemini 3.8 Flash current workhorse model building on 3.7 Flash with stronger software engineering and agentic knowledge workflows, customizable thinking levels. GA since 2026-09-02.",
+  "displayName": "Gemini 3.8 Flash",
+  "familyCode": "gemini",
+  "inputModalities": [
+    "text",
+    "image",
+    "audio",
+    "video"
+  ],
+  "latencyP50Ms": 360,
+  "latencyP95Ms": 1200,
+  "lifecycle": "active",
+  "maxInputTokens": 1048576,
+  "maxOutputTokens": 65535,
+  "modelId": "gemini-3.8-flash",
+  "outputModalities": [
+    "text"
+  ],
+  "primaryCapability": "chat",
+  "rankScore": "1110.000000",
+  "regionCode": "global",
+  "releaseStage": "active",
+  "routingState": "enabled",
+  "schemaVersion": "1.0.0",
+  "shelfState": "listed",
+  "source": {
+    "observedAt": "2026-09-05T00:00:00Z",
+    "sourceUrl": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/"
+  },
+  "strengths": [
+    "Agents",
+    "Coding",
+    "Multimodal",
+    "Long context"
+  ],
+  "supportsJsonSchema": true,
+  "supportsStreaming": true,
+  "supportsTools": true,
+  "trendScore": "0.998000",
+  "vendorCode": "google",
+  "vendorName": "Google",
+  "winRate": "0.975000",
+  "usageScopes": [
+    "coding",
+    "chat",
+    "agent"
+  ],
+  "codingVisible": true
+}

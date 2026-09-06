@@ -1,11 +1,11 @@
 {
   "families": [
     {
-      "defaultModel": "flux-2-pro",
+      "defaultModel": "flux-3",
       "displayName": "FLUX",
       "familyCode": "flux",
-      "familyType": "image",
-      "primaryModality": "image",
+      "familyType": "multimodal",
+      "primaryModality": "video",
       "sortOrder": 10
     }
   ],
